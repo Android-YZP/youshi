@@ -1,10 +1,12 @@
 package com.mkch.youshi.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.mkch.youshi.R;
 
 /**
  * Created by SunnyJiang on 2016/8/18.
@@ -19,10 +21,8 @@ public class TodayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.fragment_home, container, false);
-//        findView(view);
-//        return view;
-        return null;
+        View view = inflater.inflate(R.layout.fragment_today, container, false);
+        return view;
     }
 
     @Override
