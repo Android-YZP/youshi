@@ -27,6 +27,5 @@ public class MainActivity extends BaseActivity {
     private void clickBtn1(View view){
         LogUtil.d("button1 click-------------------");
     }
-
-//    new Callback.CommonCallback<Str>
+    
 }
