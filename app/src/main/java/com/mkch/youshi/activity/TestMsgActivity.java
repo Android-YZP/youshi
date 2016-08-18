@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.fragment.MessageFragment;
+import com.mkch.youshi.fragment.TodayFragment;
 
 /**
  * Created by SunnyJiang on 2016/8/18.
@@ -16,7 +17,8 @@ public class TestMsgActivity extends Activity{
         setContentView(R.layout.activity_test_msg);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.frag_test_msg, new MessageFragment()).commit();
+                    .add(R.id.frag_test_msg, new TodayFragment()).commit();
+
         }
     }
 }
