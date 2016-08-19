@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF" >
+
+    <TextView
+        android:id="@+id/tvtext"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:gravity="center" />
+
+    <ImageView      
+        android:id="@+id/ivtext"
+        android:background="#FFF"
+        android:src="@drawable/yuanquan"
+        android:layout_width="45dp"
+        android:layout_height="40dp"
+        android:gravity="center"/>
+</LinearLayout>
