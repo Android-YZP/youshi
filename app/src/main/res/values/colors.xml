@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- |common main topbar -->
+    <color name="common_topbar_text_font_color">#ffffff</color>
+    <color name="common_topbar_bg_color">#0b6ed3</color>
+    <color name="common_white_color">#ffffff</color>
+    <color name="common_bg_color">#f7f5f5</color>
+    <color name="common_et_text_font_color">#959595</color>
+    <color name="common_content_dark_text_font_color">#0b6ed3</color>
+
+    <!-- login -->
+    <color name="user_login_username_or_password_color">#d2d2d2</color>
+    <color name="user_login_selector_btn_color">#0b6ed3</color>
+    <color name="user_login_selector_btn_color_no">#7f0b6ed3</color>
+    <color name="user_login_reg_or_forget_color">#3d4859</color>
+    <color name="user_reg_phone_et_text_font_color">#959595</color>
 </resources>

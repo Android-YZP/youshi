@@ -2,4 +2,65 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- |common main topbar -->
+    <dimen name="common_topbar_height">44dp</dimen>
+    <dimen name="common_topbar_text_font_size">16sp</dimen>
+    <dimen name="common_et_text_font_size">13sp</dimen>
+    <color name="common_et_bg_border_color">#d2d2d2</color>
+    <color name="common_content_text_font_color">#959595</color>
+
+    <!-- |creativedetail start -->
+    <!-- topbar -->
+    <dimen name="creativedetail_topbar_img_back_width">10dp</dimen>
+    <dimen name="creativedetail_topbar_img_back_height">20dp</dimen>
+    <dimen name="creativedetail_topbar_margin_left">20dp</dimen>
+
+    <!-- user login -->
+    <dimen name="user_login_username_or_password_or_commit_height">45dp</dimen>
+    <dimen name="user_login_username_margin_top">50dp</dimen>
+    <dimen name="user_login_drawable_padding">5dp</dimen>
+    <dimen name="user_login_edit_padding">10dp</dimen>
+    <dimen name="user_login_password_margin_top">15dp</dimen>
+    <dimen name="user_login_commit_text_font_size">16sp</dimen>
+    <dimen name="user_login_commit_margin_top">17dp</dimen>
+    <dimen name="user_login_reg_or_forget_margin_top">28dp</dimen>
+    <dimen name="user_login_common_comptent_margin_top">60dp</dimen>
+    <dimen name="user_login_common_comptent_margin_left_or_right">28dp</dimen>
+    <dimen name="user_login_reg_or_forget_font_size">14sp</dimen>
+    <dimen name="user_login_visit_by_easy_font_size">14sp</dimen>
+    <dimen name="user_login_btn_visit_by_easy_width">160dp</dimen>
+    <dimen name="user_login_btn_visit_by_easy_height">35dp</dimen>
+    <dimen name="user_login_btn_visit_by_easy_margin_bottom">40dp</dimen>
+    <dimen name="user_login_logo_width">130dp</dimen>
+    <dimen name="user_login_logo_height">105dp</dimen>
+
+    <!-- user reg phone -->
+    <dimen name="user_reg_phone_et_height">44dp</dimen>
+    <dimen name="user_reg_phone_et_width">250dp</dimen>
+    <dimen name="user_reg_phone_et_phone_margin_top">10dp</dimen>
+    <dimen name="user_reg_phone_et_phone_text_padding_left">25dp</dimen>
+    <dimen name="user_reg_phone_et_phone_text_font_size">13sp</dimen>
+    <dimen name="user_reg_phone_btn_getcode_margin_top">15dp</dimen>
+    <dimen name="user_reg_phone_btn_margin_top">30dp</dimen>
+    <dimen name="user_reg_phone_btn_getcode_height">40dp</dimen>
+    <dimen name="user_reg_phone_btn_getcode_margin_left_or_right">12dp</dimen>
+    <dimen name="user_reg_phone_btn_getcode_text_font_size">14sp</dimen>
+    <dimen name="user_reg_phone_text_read_protocal_margin_top">21dp</dimen>
+    <dimen name="user_reg_phone_text_read_protocal_margin_left">8dp</dimen>
+    <dimen name="user_reg_phone_text_read_protocal_text_font_size">14sp</dimen>
+    <dimen name="user_reg_phone_checkbox_read_protocal_width_or_height">16dp</dimen>
+
+    <!-- user reg code -->
+    <dimen name="user_reg_code_intro_line_height">47dp</dimen>
+    <dimen name="user_reg_code_intro_line_margin_left_or_right">25dp</dimen>
+    <dimen name="user_reg_code_intro_text_margin_top_or_bottom">18dp</dimen>
+    <dimen name="user_reg_code_intro_text_font_size">12sp</dimen>
+    <dimen name="creative_deploy_et_title_text_padding_left">15dp</dimen>
+    <dimen name="creative_deploy_et_intro_text_padding_top">15dp</dimen>
+    <dimen name="creative_deploy_et_margin_top">10dp</dimen>
+
+    <!-- user reg code -->
+    <dimen name="user_forget_phone_btn_margin_left">15dp</dimen>
+    <dimen name="user_forget_phone_btn_getcode_margin_left_or_right">12dp</dimen>
 </resources>
