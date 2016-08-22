@@ -23,6 +23,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.TestNetActivity;
 import com.mkch.youshi.fragment.month.MonthActivity;
 import com.mkch.youshi.fragment.week.DateAdapter;
 import com.mkch.youshi.fragment.week.SpecialCalendar;
@@ -151,6 +152,12 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                     startActivity(new Intent(getActivity(), MonthActivity.class));
             }
         });
+        mIvWeekdayAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), TestNetActivity.class));
+            }
+        });
     }
 
     @Override
@@ -238,7 +245,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         gridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         gridView.setVerticalSpacing(1);
         gridView.setHorizontalSpacing(1);
-        gridView.setOnTouchListener(new View.OnTouchListener() {
+        gridView.setOnTouchListener(new View.OnTouchListener  () {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gestureDetector.onTouchEvent(event);

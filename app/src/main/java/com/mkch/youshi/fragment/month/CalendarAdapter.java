@@ -85,9 +85,7 @@ public class CalendarAdapter extends BaseAdapter {
             if (stepMonth % 12 == 0) {
             }
         }
-        //就这样吧，在她身边总是可以把自己最糟糕的一面表现出来，我和她彻底结束了
-        //结束吧。就这样结束吧，没有什么了。
-        //我需要找一个自信一点的人；
+
         currentYear = String.valueOf(stepYear); // 得到当前的年份
         currentMonth = String.valueOf(stepMonth); // 得到本月
         // （jumpMonth为滑动的次数，每滑动一次就增加一月或减一月）

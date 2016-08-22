@@ -8,9 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -20,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
-
 import com.mkch.youshi.R;
 
 import org.xutils.common.util.LogUtil;
@@ -33,7 +29,6 @@ public class MonthActivity extends AppCompatActivity{
     private static final int SUCCESS = 1;
     //    private GestureDetector gestureDetector = null;
     private CalendarAdapter calV = null;
-    private ViewFlipper flipper = null;
     private GridView gridView = null;
     private static int jumpMonth = 0; // 每次滑动，增加或减去一个月,默认为0（即显示当前月）
     private static int jumpYear = 0; // 滑动跨越一年，则增加或者减去一年,默认为0(即当前年)
@@ -41,10 +36,6 @@ public class MonthActivity extends AppCompatActivity{
     private int month_c = 0;
     private int day_c = 0;
     private String currentDate = "";
-    /**
-     * 每次添加gridview到viewflipper中时给的标记
-     */
-    private int gvFlag = 0;
     /**
      * 当前的年月，现在日历顶端
      */
@@ -117,17 +108,14 @@ public class MonthActivity extends AppCompatActivity{
     //查找布局文件的对象
     private void findView() {
         currentMonth = (TextView) findViewById(R.id.tv_month_date);
-//        prevMonth = (ImageView) findViewById(R.id.prevMonth);
-//        nextMonth = (ImageView) findViewById(R.id.nextMonth);
         viewPager = (ViewPager) findViewById(R.id.vp);
-        flipper = (ViewFlipper) findViewById(R.id.flipper);//用于添加详细的日期数据
     }
 
 //    //初始化手势识别器
 //    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 //        @Override
 //        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            int gvFlag = 0; // 每次添加gridview到viewflipper中时给的标记
+//            int gvFlag = 0; // 每次添加gridview到viewflipper中时给的标记.0
 //            if (e1.getY() - e2.getY() > 120) {
 //                // 像左滑动
 //                enterNextMonth(gvFlag);
@@ -152,12 +140,6 @@ public class MonthActivity extends AppCompatActivity{
         calV = new CalendarAdapter(this, this.getResources(), jumpMonth, jumpYear, year_c, month_c, day_c);
         gridView.setAdapter(calV);
         addTextToTopTextView(currentMonth); // 移动到下一月后，将当月显示在头标题中
-        gvFlag++;
-        flipper.addView(gridView, gvFlag);
-        flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_in));
-        flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_out));
-        flipper.showNext();
-        flipper.removeViewAt(0);
     }
 
 //    // 更新日历视图
@@ -208,13 +190,7 @@ public class MonthActivity extends AppCompatActivity{
         jumpMonth--; // 上一个月
         calV = new CalendarAdapter(this, this.getResources(), jumpMonth, jumpYear, year_c, month_c, day_c);
         gridView.setAdapter(calV);
-        gvFlag++;
         addTextToTopTextView(currentMonth); // 移动到上一月后，将当月显示在头标题中
-        flipper.addView(gridView, gvFlag);
-        flipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_in));
-        flipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_out));
-        flipper.showPrevious();
-        flipper.removeViewAt(0);
     }
 
     /**
@@ -258,7 +234,6 @@ public class MonthActivity extends AppCompatActivity{
 //        });
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // 点击任何一个item，得到这个item的日期(排除点击的是周日到周六(点击不响应))
@@ -337,13 +312,10 @@ public class MonthActivity extends AppCompatActivity{
 
             @Override
             public void onClick(View arg0) {
-                flipper.clearAnimation();
                 Toast.makeText(MonthActivity.this, "点击时间了", Toast.LENGTH_SHORT).show();
                 calV = new CalendarAdapter(MonthActivity.this, getResources(), 2015, 7, 4);
                 addGridView();//添加一个GridView布局显示当前月的数据
                 gridView.setAdapter(calV);//设置Adapter显示数据
-                flipper.removeAllViews();//把flipper中移除所有数据
-                flipper.addView(gridView);//将GridView添加到flipper中
                 addTextToTopTextView(currentMonth);//顶部的当前日期显示
                 //计算出与当前位置的偏差。
                 jumpMonth = -13;//1年龄3个月
