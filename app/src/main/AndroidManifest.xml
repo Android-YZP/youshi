@@ -40,6 +40,11 @@
             android:name=".activity.UserForgotCodeActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+
+        <activity
+            android:name=".fragment.month.MonthActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".activity.TestNetActivity"></activity>
     </application>
 
 </manifest>
