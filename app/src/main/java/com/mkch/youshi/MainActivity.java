@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import com.mkch.youshi.activity.BaseActivity;
 
+import org.xutils.common.Callback;
 import org.xutils.common.util.LogUtil;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -26,4 +27,5 @@ public class MainActivity extends BaseActivity {
     private void clickBtn1(View view){
         LogUtil.d("button1 click-------------------");
     }
+    
 }
