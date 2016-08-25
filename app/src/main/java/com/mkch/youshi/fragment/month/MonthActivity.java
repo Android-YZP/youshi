@@ -116,6 +116,7 @@ public class MonthActivity extends AppCompatActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
                 Date parseDate = sdf.parse(_chooseDate);
                 currentDate = sdf.format(parseDate); // 当期日期
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -296,6 +297,7 @@ public class MonthActivity extends AppCompatActivity {
                     Intent intent = new Intent(MonthActivity.this, TestMsgActivity.class);
                     intent.putExtra("Date",_ChooseDate);
                     finish();
+                    jumpMonth = 0;
                     startActivity(intent);
                 }
             }
@@ -310,6 +312,7 @@ public class MonthActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                jumpMonth = 0;
                 startActivity(new Intent(MonthActivity.this,TestMsgActivity.class));
             }
         });
