@@ -27,9 +27,12 @@ public class TestMsgActivity extends Activity{
         if (savedInstanceState == null){
             getFragmentManager().beginTransaction()
                     .add(R.id.frag_test_msg, new TodayFragment()).commit();
-
-
         }
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 }

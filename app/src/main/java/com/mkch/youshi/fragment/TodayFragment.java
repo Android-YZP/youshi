@@ -85,8 +85,26 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         findView(view);
         setListener();
+        initCalView();
+        return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Intent intent = getActivity().getIntent();
+        String _MonthChooseDate = intent.getStringExtra("Date");
+        Log.d("YZP.............",_MonthChooseDate+"YZP");
+        if (_MonthChooseDate!=null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
+            initData();
+            updateUI(); //刷新界面
+        }
+    }
+
+    //初始化日历视图
+    private void initCalView() {
         gestureDetector = new GestureDetector(this);
-        flipper1 = (ViewFlipper) view.findViewById(R.id.flipper1);
         dateAdapter = new DateAdapter(getActivity(), getResources(), currentYear,
                 currentMonth, currentWeek, currentNum, selectPostion,
                 currentWeek == 1 ? true : false);
@@ -94,22 +112,18 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         dayNumbers = dateAdapter.getDayNumbers();
         gridView.setAdapter(dateAdapter);
         //标注当前日期位置的背景,
-//        selectPostion = dateAdapter.getTodayPosition();
         selectPostion = dateAdapter.getTodayPosition(year_c + "", month_c + "", day_c + "");
         gridView.setSelection(selectPostion);
-        //标注选择位置的背景
-//        selectPostion = dateAdapter.getTodayPosition("2015","4","22");
-//        gridView.setSelection(selectPostion);
         flipper1.addView(gridView, 0);
-        return view;
     }
 
-    //初始化数据
+    //初始化日历数据
     private void initData() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
         Intent intent = getActivity().getIntent();
         String _MonthChooseDate = intent.getStringExtra("Date");
+        Log.d("YZP3",_MonthChooseDate+"-----------------");
         if (_MonthChooseDate == null){
             _MonthChooseDate = sdf.format(date);
         }
@@ -147,7 +161,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         mTvWeekDayMonth = (TextView) view.findViewById(R.id.tv_weekday_month);
         mIvWeekdayAdd = (ImageView) view.findViewById(R.id.iv_weekday_add);
         mIvWeekdaySearch = (ImageView) view.findViewById(R.id.iv_weekday_search);
-
+        flipper1 = (ViewFlipper) view.findViewById(R.id.flipper1);
         //获取从日历界面传递过来的日期,1.用传递过来的日期
         //2.用当前的日期
         mTvWeekDayMonth.setText(month_c + "月");
@@ -161,13 +175,12 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             public void onClick(View v) {
                 //点击月份把当前选择的日期传递过去,
                 //如果传过去的是今天的日期则直接启动,不携带参数传过去
-
                 if (mChooseDate == null) mChooseDate = "今日";
                 LogUtil.d("androidYZP" + mChooseDate);
                 Intent _intent = new Intent(getActivity(), MonthActivity.class);
 //                //得到用户当前标记的日期
                 _intent.putExtra("ChooseDate", mChooseDate);
-                getActivity().finish();
+//                getActivity().finish();
                 startActivity(_intent);
             }
         });
@@ -182,13 +195,33 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        initData();//初始化数据
-//        setListener();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+
+    //刷新界面
+    private void updateUI() {
+        addGridView();
+        getCurrent();
+        dateAdapter = new DateAdapter(getActivity(), getResources(), currentYear,
+                currentMonth, currentWeek, currentNum, selectPostion,
+                currentWeek == 1 ? true : false);
+        dayNumbers = dateAdapter.getDayNumbers();
+        gridView.setAdapter(dateAdapter);
+        //储存当前用户选择的日期
+        mChooseDate = dateAdapter.getCurrentYear(selectPostion) + "-"
+                + dateAdapter.getCurrentMonth(selectPostion) + "-"
+                + dayNumbers[selectPostion];
+
+        mTvWeekDayMonth.setText(dateAdapter.getCurrentMonth(selectPostion) + "月");
+        flipper1.addView(gridView);//添加一个日历视图
+        dateAdapter.setSeclection(selectPostion);//选中默认位置
+        selectPostion = dateAdapter.getTodayPosition(year_c + "", month_c + "", day_c + "");//标注选中的背景
+        this.flipper1.setInAnimation(AnimationUtils.loadAnimation(getActivity(),//动画
+                R.anim.push_left_in));
+        this.flipper1.setOutAnimation(AnimationUtils.loadAnimation(getActivity(),
+                R.anim.push_left_out));
+        this.flipper1.showNext();
+        flipper1.removeViewAt(0);//移除第一个不用的视图
     }
 
     @Override
@@ -226,6 +259,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     }
 
     /**
+     * 得到一周的最后一天
      * @param year
      * @param month
      */
@@ -234,12 +268,14 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 sc.getDaysOfMonth(isLeapyear, month));
     }
 
+    //得到某年某月的信息
     public void getCalendar(int year, int month) {
         isLeapyear = sc.isLeapYear(year); // 是否为闰年
         daysOfMonth = sc.getDaysOfMonth(isLeapyear, month); // 某月的总天数
         dayOfWeek = sc.getWeekdayOfMonth(year, month); // 某月第一天为星期几
     }
 
+    //得到这个月有几周
     public int getWeeksOfMonth() {
         // getCalendar(year, month);
         int preMonthRelax = 0;

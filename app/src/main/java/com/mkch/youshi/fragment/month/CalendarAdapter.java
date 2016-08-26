@@ -156,7 +156,7 @@ public class CalendarAdapter extends BaseAdapter {
             String mCurrentDay = showYear + "-" + showMonth + "-" + sp;
             textView.setTextColor(Color.BLACK);// 当月字体设黑
 
-            if (mCurrentDay.contains("2017-2")){//对特定日期的样式定制
+            if (mCurrentDay.contains("2017-2")){//对特定日期的View处理
                 textView.setTextColor(Color.RED);
             }else if (mCurrentDay.contains("2017-3")){
                 textView.setTextColor(Color.YELLOW);
@@ -317,5 +317,7 @@ public class CalendarAdapter extends BaseAdapter {
 
     public void setCyclical(String cyclical) {
         this.cyclical = cyclical;
-    }
+}
+
+
 }
