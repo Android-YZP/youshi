@@ -8,14 +8,8 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
-public class UserLoginActivity extends Activity {
-
-	private EditText mEtAccount;//用户名
-	private EditText mEtPassword;//密码
-	private Button mBtnLogin;//登录按钮
-	private TextView mTvGoRegister;//去注册
-	private TextView mTvGoForgot;//去忘记密码
-
+public class GroupChatActivity extends Activity {
+	private TextView mTvTitle;
 
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
@@ -24,17 +18,27 @@ public class UserLoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_login);
+		setContentView(R.layout.activity_group_chat);
 		initView();
+		initData();
 //		setListener();
 	}
 
 	private void initView() {
-		mEtAccount = (EditText)findViewById(R.id.et_user_login_account);
-		mEtPassword = (EditText)findViewById(R.id.et_user_login_password);
-		mBtnLogin = (Button)findViewById(R.id.btn_user_login_commit);
-		mTvGoRegister = (TextView)findViewById(R.id.tv_user_login_reg);
-		mTvGoForgot = (TextView)findViewById(R.id.tv_user_login_forget);
+		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+//		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
+//
+//		//手机号介绍信息
+//		mTvPhoneInfo = (TextView)findViewById(R.id.tv_user_forgot_intro);
+//		//验证码
+//		mEtSmsCode = (EditText)findViewById(R.id.et_user_forgot_code);
+//		//新密码和确认密码
+//		mEtPassword = (EditText)findViewById(R.id.et_user_forgot_password);
+//		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
+	}
+
+	private void initData() {
+		mTvTitle.setText("群聊");
 	}
 
 //	private void setListener() {

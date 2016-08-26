@@ -63,4 +63,9 @@
     <!-- user reg code -->
     <dimen name="user_forget_phone_btn_margin_left">15dp</dimen>
     <dimen name="user_forget_phone_btn_getcode_margin_left_or_right">12dp</dimen>
+
+    <!-- contacts list -->
+    <dimen name="youshi_friend_member_search_input_width">340dp</dimen>
+    <dimen name="youshi_friend_member_search_input_height">28dp</dimen>
+    <dimen name="youshi_contact_content_height">55dp</dimen>
 </resources>

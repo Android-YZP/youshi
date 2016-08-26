@@ -13,12 +13,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
         </activity>
-        <activity android:name=".activity.TestMsgActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.TestMsgActivity"/>
+
         <activity
             android:name=".activity.UserLoginActivity"
             android:label="@string/app_name"
@@ -40,7 +36,19 @@
             android:name=".activity.UserForgotCodeActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-
+        <activity
+            android:name=".activity.GroupChatActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+        <activity
+            android:name=".activity.AddFriendsActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />

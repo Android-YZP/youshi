@@ -2,20 +2,17 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
+import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 
-public class UserLoginActivity extends Activity {
-
-	private EditText mEtAccount;//用户名
-	private EditText mEtPassword;//密码
-	private Button mBtnLogin;//登录按钮
-	private TextView mTvGoRegister;//去注册
-	private TextView mTvGoForgot;//去忘记密码
-
+public class AddFriendsActivity extends Activity {
+	private TextView mTvTitle;
+	private ListView mListView;
 
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
@@ -24,17 +21,30 @@ public class UserLoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_login);
+		setContentView(R.layout.activity_add_friends);
 		initView();
+		initData();
 //		setListener();
 	}
 
 	private void initView() {
-		mEtAccount = (EditText)findViewById(R.id.et_user_login_account);
-		mEtPassword = (EditText)findViewById(R.id.et_user_login_password);
-		mBtnLogin = (Button)findViewById(R.id.btn_user_login_commit);
-		mTvGoRegister = (TextView)findViewById(R.id.tv_user_login_reg);
-		mTvGoForgot = (TextView)findViewById(R.id.tv_user_login_forget);
+		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+		mListView = (ListView) findViewById(R.id.youshi_add_friend_methods);
+//		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
+//
+//		//手机号介绍信息
+//		mTvPhoneInfo = (TextView)findViewById(R.id.tv_user_forgot_intro);
+//		//验证码
+//		mEtSmsCode = (EditText)findViewById(R.id.et_user_forgot_code);
+//		//新密码和确认密码
+//		mEtPassword = (EditText)findViewById(R.id.et_user_forgot_password);
+//		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
+	}
+
+	private void initData() {
+		mTvTitle.setText("添加好友");
+		ListAdapter mAdapter = new AddFriendsMethodsListAdapter(AddFriendsActivity.this);
+		mListView.setAdapter(mAdapter);
 	}
 
 //	private void setListener() {
