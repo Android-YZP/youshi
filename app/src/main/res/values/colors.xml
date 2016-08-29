@@ -4,6 +4,12 @@
     <color name="colorPrimaryDark">#0b6ed3</color>
     <color name="colorAccent">#FF4081</color>
 
+    <!-- |main-bottom-tabbar -->
+    <color name="main_tabbar_bg_color">#ffffff</color>
+    <color name="main_tabbar_item_text_font_color_unsel">#959595</color>
+    <color name="main_tabbar_item_text_font_color_sel">#0b6ed3</color>
+    <color name="main_tabbar_border_color">#d2d2d2</color>
+
     <!-- |common main topbar -->
     <color name="common_topbar_text_font_color">#ffffff</color>
     <color name="common_topbar_bg_color">#0b6ed3</color>

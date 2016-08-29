@@ -3,6 +3,14 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- |main-bottom-tabbar -->
+    <dimen name="main_tabbar_height">49dp</dimen>
+    <dimen name="main_tabbar_bg_border_size">1px</dimen>
+    <dimen name="main_tabbar_item_img_width_or_height">25dp</dimen>
+    <dimen name="main_tabbar_item_text_font_size">10sp</dimen>
+    <dimen name="main_tabbar_item_text_margin_top">3dp</dimen>
+    <dimen name="main_tabbar_item_text_deploy_font_size">35dp</dimen>
+
     <!-- |common main topbar -->
     <dimen name="common_topbar_height">44dp</dimen>
     <dimen name="common_topbar_text_font_size">16sp</dimen>
