@@ -12,7 +12,7 @@
         android:background="@drawable/bg_cut_line" />
 
     <LinearLayout
-        android:id="@+id/add_friend_content"
+        android:id="@+id/contact_classification_content"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/youshi_contact_height"
         android:background="@android:color/white"
@@ -23,7 +23,7 @@
         android:paddingTop="5dp">
 
         <ImageView
-            android:id="@+id/add_friend_image"
+            android:id="@+id/contact_classification_image"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:contentDescription="@null"
@@ -32,7 +32,7 @@
             android:src="@drawable/default_head_rect" />
 
         <TextView
-            android:id="@+id/add_friend_title"
+            android:id="@+id/contact_classification_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -44,14 +44,10 @@
             android:textColor="#474747"
             android:textSize="16sp" />
 
-        <ImageView
-            android:id="@+id/add_friend_enter"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow" />
+        <TextView
+            android:id="@+id/contact_classification_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

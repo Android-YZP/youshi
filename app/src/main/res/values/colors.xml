@@ -8,7 +8,7 @@
     <color name="common_topbar_text_font_color">#ffffff</color>
     <color name="common_topbar_bg_color">#0b6ed3</color>
     <color name="common_white_color">#ffffff</color>
-    <color name="common_bg_color">#f7f5f5</color>
+    <color name="common_bg_color">#F1F1F1</color>
     <color name="common_et_text_font_color">#959595</color>
     <color name="common_content_dark_text_font_color">#0b6ed3</color>
 
@@ -18,4 +18,13 @@
     <color name="user_login_selector_btn_color_no">#7f0b6ed3</color>
     <color name="user_login_reg_or_forget_color">#3d4859</color>
     <color name="user_reg_phone_et_text_font_color">#959595</color>
+
+    <!-- new friend -->
+    <color name="new_friend_name_color">#313131</color>
+    <color name="new_friend_remark_color">#474747</color>
+
+    <!-- friend information -->
+    <color name="friend_information_name_color">#959595</color>
+    <color name="delete_friend_selector_btn_color">#e63543</color>
+    <color name="delete_friend_selector_btn_color_no">#7fe63543</color>
 </resources>

@@ -3,13 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/common_bg_color"
-     >
+    android:background="@color/common_bg_color">
+
     <include 
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"
-        />
+        layout="@layout/layout_common_topbar"/>
     
     <EditText 
         android:id="@+id/et_user_reg_password"
@@ -22,8 +21,7 @@
         android:textColor="@color/common_et_text_font_color"
         android:textSize="@dimen/common_et_text_font_size"
         android:maxLength="20"
-        android:background="@drawable/bg_border_common_et"
-        />
+        android:background="@drawable/bg_border_common_et"/>
     
     <EditText 
         android:id="@+id/et_user_reg_password_again"
@@ -36,8 +34,7 @@
         android:textColor="@color/common_et_text_font_color"
         android:textSize="@dimen/common_et_text_font_size"
         android:maxLength="20"
-        android:background="@drawable/bg_border_common_et"
-        />
+        android:background="@drawable/bg_border_common_et"/>
     
     <Button 
         android:id="@+id/btn_user_reg_register_commit"
@@ -50,6 +47,5 @@
         android:layout_marginTop="@dimen/user_reg_phone_btn_margin_top"
         android:layout_marginLeft="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
         android:layout_marginRight="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
-        android:background="@drawable/selector_btn_user_login"
-        />
+        android:background="@drawable/selector_btn_user_login"/>
 </LinearLayout>
