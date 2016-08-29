@@ -74,6 +74,17 @@
     <dimen name="member_search_input_et_text_size">14sp</dimen>
     <dimen name="youshi_contact_height">55dp</dimen>
 
+    <!-- contact list -->
+    <dimen name="contact_list_catalog_padding_top_or_bottom">5dp</dimen>
+    <dimen name="contact_list_catalog_padding_left">10dp</dimen>
+
+    <!-- contact count -->
+    <dimen name="contact_count_padding_top_or_bottom">15dp</dimen>
+    <dimen name="contact_count_size">16sp</dimen>
+
+    <!-- add friend -->
+    <dimen name="add_friend_enter_width_or_height">25dp</dimen>
+
     <!-- new friend -->
     <dimen name="new_friend_add_phone_height">80dp</dimen>
     <dimen name="new_friend_add_phone_padding_top_or_bottom">5dp</dimen>

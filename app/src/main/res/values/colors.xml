@@ -19,6 +19,12 @@
     <color name="user_login_reg_or_forget_color">#3d4859</color>
     <color name="user_reg_phone_et_text_font_color">#959595</color>
 
+    <!-- contact list -->
+    <color name="contact_list_catalog_text_color">#ebebeb</color>
+
+    <!-- contact count -->
+    <color name="contact_count_bg_color">#ebebeb</color>
+
     <!-- new friend -->
     <color name="new_friend_name_color">#313131</color>
     <color name="new_friend_remark_color">#474747</color>
