@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class TestMsgActivity extends KJActivity implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
 
-    @BindView(id = R.id.youshi_friend_member)
+    @BindView(id = R.id.list_contacts)
     private ListView mListView;
     private TextView mFooterView;
 
@@ -62,9 +62,9 @@ public class TestMsgActivity extends KJActivity implements SideBar
     @Override
     public void initWidget() {
         super.initWidget();
-        SideBar mSideBar = (SideBar) findViewById(R.id.youshi_friend_sidrbar);
-        TextView mDialog = (TextView) findViewById(R.id.youshi_friend_dialog);
-        EditText mSearchInput = (EditText) findViewById(R.id.youshi_friend_member_search_input);
+        SideBar mSideBar = (SideBar) findViewById(R.id.sidebar_contacts);
+        TextView mDialog = (TextView) findViewById(R.id.dialog_contacts);
+        EditText mSearchInput = (EditText) findViewById(R.id.search_input_contacts);
 
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);

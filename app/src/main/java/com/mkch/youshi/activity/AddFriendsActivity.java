@@ -29,7 +29,7 @@ public class AddFriendsActivity extends Activity {
 
 	private void initView() {
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
-		mListView = (ListView) findViewById(R.id.youshi_add_friend_methods);
+		mListView = (ListView) findViewById(R.id.list_add_friends);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
