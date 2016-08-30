@@ -82,6 +82,17 @@
     <dimen name="member_search_input_et_text_size">14sp</dimen>
     <dimen name="youshi_contact_height">55dp</dimen>
 
+    <!-- contact list -->
+    <dimen name="contact_list_catalog_padding_top_or_bottom">5dp</dimen>
+    <dimen name="contact_list_catalog_padding_left">10dp</dimen>
+
+    <!-- contact count -->
+    <dimen name="contact_count_padding_top_or_bottom">15dp</dimen>
+    <dimen name="contact_count_size">16sp</dimen>
+
+    <!-- add friend -->
+    <dimen name="add_friend_enter_width_or_height">25dp</dimen>
+
     <!-- new friend -->
     <dimen name="new_friend_add_phone_height">80dp</dimen>
     <dimen name="new_friend_add_phone_padding_top_or_bottom">5dp</dimen>
@@ -107,13 +118,18 @@
     <dimen name="friend_information_head_margin_left">20dp</dimen>
     <dimen name="friend_information_remark_margin_left">10dp</dimen>
     <dimen name="friend_information_setting_height">44dp</dimen>
-    <dimen name="friend_information_setting_padding_left">25dp</dimen>
+    <dimen name="friend_information_setting_padding_left">14dp</dimen>
     <dimen name="friend_information_address_height">62dp</dimen>
-    <dimen name="friend_information_address_padding_left">10dp</dimen>
+    <dimen name="friend_information_label_height">31dp</dimen>
+    <dimen name="friend_information_address_padding_left">16dp</dimen>
+    <dimen name="friend_information_label_padding_left">44dp</dimen>
     <dimen name="friend_information_send_margin_left_or_right">10dp</dimen>
 
-    <!-- information setting-->
+    <!-- information setting -->
     <dimen name="information_setting_checkbox_margin_right">20dp</dimen>
     <dimen name="information_setting_divide_line_margin_left_or_right">20dp</dimen>
     <dimen name="information_setting_delete_margin_bottom">20dp</dimen>
+
+    <!-- remark information -->
+    <dimen name="remark_information_divide_line_margin_left_or_right">10dp</dimen>
 </resources>

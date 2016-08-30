@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/common_bg_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_remark_information_back"
+            android:layout_width="@dimen/creativedetail_topbar_img_back_width"
+            android:layout_height="@dimen/creativedetail_topbar_img_back_height"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/creativedetail_topbar_margin_left"
+            android:background="@drawable/common_back"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="备注信息"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_remark_information_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
+            android:text="完成"
+            android:textColor="@color/common_white_color"
+            android:textSize="@dimen/friend_information_text_more_size"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_remark_information_remark"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:text="备注名"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size"/>
+    
+    <EditText
+        android:id="@+id/et_remark_information_remark"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="通过备注名记住联系人"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_label"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:text="标签"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_label"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="通过标签给联系人分类"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:text="电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_phone1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:inputType="phone"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_line1"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_phone2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:inputType="phone"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_line2"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_phone3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:inputType="phone"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_line3"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_phone4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:inputType="phone"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_line4"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_phone5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加电话号码"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:inputType="phone"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_remark_information_describe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:text="描述"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size"/>
+
+    <EditText
+        android:id="@+id/et_remark_information_describe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:hint="添加更多备注信息"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:textSize="@dimen/friend_information_text_more_size"
+        android:background="@color/common_white_color"/>
+</LinearLayout>
