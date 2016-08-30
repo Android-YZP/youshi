@@ -164,7 +164,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         flipper1 = (ViewFlipper) view.findViewById(R.id.flipper1);
         //获取从日历界面传递过来的日期,1.用传递过来的日期
         //2.用当前的日期
-        mTvWeekDayMonth.setText(month_c + "月");
+        mTvWeekDayMonth.setText(year_c+"/"+month_c );
     }
 
     //设置事件的监听
@@ -197,22 +197,21 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         super.onActivityCreated(savedInstanceState);
     }
 
-
     //刷新界面
     private void updateUI() {
         addGridView();
         getCurrent();
         dateAdapter = new DateAdapter(getActivity(), getResources(), currentYear,
                 currentMonth, currentWeek, currentNum, selectPostion,
-                currentWeek == 1 ? true : false);
+                currentWeek == 1);
         dayNumbers = dateAdapter.getDayNumbers();
         gridView.setAdapter(dateAdapter);
         //储存当前用户选择的日期
         mChooseDate = dateAdapter.getCurrentYear(selectPostion) + "-"
                 + dateAdapter.getCurrentMonth(selectPostion) + "-"
                 + dayNumbers[selectPostion];
-
-        mTvWeekDayMonth.setText(dateAdapter.getCurrentMonth(selectPostion) + "月");
+        mTvWeekDayMonth.setText(dateAdapter.getCurrentYear(selectPostion) + "/"
+                + dateAdapter.getCurrentMonth(selectPostion));
         flipper1.addView(gridView);//添加一个日历视图
         dateAdapter.setSeclection(selectPostion);//选中默认位置
         selectPostion = dateAdapter.getTodayPosition(year_c + "", month_c + "", day_c + "");//标注选中的背景
@@ -251,8 +250,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
 
     /**
      * 判断某年某月的第一天为星期几
-     *
-     * @return
      */
     public int getWhichDayOfWeek(int year, int month) {
         return sc.getWeekdayOfMonth(year, month);
@@ -372,8 +369,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             mChooseDate = dateAdapter.getCurrentYear(selectPostion) + "-"
                     + dateAdapter.getCurrentMonth(selectPostion) + "-"
                     + dayNumbers[selectPostion];
-
-            mTvWeekDayMonth.setText(dateAdapter.getCurrentMonth(selectPostion) + "月");
+            mTvWeekDayMonth.setText(dateAdapter.getCurrentYear(selectPostion) + "/"
+                    + dateAdapter.getCurrentMonth(selectPostion));
             gvFlag++;
             flipper1.addView(gridView, gvFlag);
             dateAdapter.setSeclection(selectPostion);
@@ -384,7 +381,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             this.flipper1.showNext();
             flipper1.removeViewAt(0);
             return true;
-
         } else if (e1.getX() - e2.getX() < -80) {
             addGridView();
             currentWeek--;
@@ -398,7 +394,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             mChooseDate = dateAdapter.getCurrentYear(selectPostion) + "-"
                     + dateAdapter.getCurrentMonth(selectPostion) + "-"
                     + dayNumbers[selectPostion] + "-";
-            mTvWeekDayMonth.setText(dateAdapter.getCurrentMonth(selectPostion) + "月");
+            mTvWeekDayMonth.setText(dateAdapter.getCurrentYear(selectPostion) + "/"
+                    + dateAdapter.getCurrentMonth(selectPostion));
             gvFlag++;
             flipper1.addView(gridView, gvFlag);
             dateAdapter.setSeclection(selectPostion);
