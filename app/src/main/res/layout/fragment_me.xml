@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/common_bg_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_name_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:background="@color/common_white_color"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_me_head"
+            android:layout_width="@dimen/friend_information_head_width_or_height"
+            android:layout_height="@dimen/friend_information_head_width_or_height"
+            android:layout_marginLeft="@dimen/friend_information_head_margin_left"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/maillist"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/friend_information_remark_margin_left"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_me_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/new_friend_name_color"
+                android:text="我是昵称"
+                android:textSize="@dimen/friend_information_text_more_size"/>
+
+            <TextView
+                android:id="@+id/tv_friend_information_youshi_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/friend_information_name_color"
+                android:text="优时号: 13812345678"
+                android:textSize="@dimen/friend_information_text_remark_size"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/add_friend_enter_width_or_height"
+            android:layout_height="@dimen/add_friend_enter_width_or_height"
+            android:layout_marginRight="@dimen/new_friend_content_padding_left_or_right"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@drawable/me_code"/>
+
+        <ImageView
+            android:layout_width="@dimen/add_friend_enter_width_or_height"
+            android:layout_height="@dimen/add_friend_enter_width_or_height"
+            android:layout_marginRight="@dimen/new_friend_content_padding_left_or_right"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@drawable/list_arrow"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line"/>
+
+    <LinearLayout
+        android:id="@+id/add_friend_content"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/youshi_contact_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <ImageView
+            android:id="@+id/add_friend_image"
+            android:layout_width="@dimen/new_friend_content_head_width_or_height"
+            android:layout_height="@dimen/new_friend_content_head_width_or_height"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_head_rect"/>
+
+        <TextView
+            android:id="@+id/add_friend_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/new_friend_content_name_size"/>
+
+        <ImageView
+            android:id="@+id/add_friend_enter"
+            android:layout_width="@dimen/add_friend_enter_width_or_height"
+            android:layout_height="@dimen/add_friend_enter_width_or_height"
+            android:contentDescription="@null"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@drawable/list_arrow"/>
+    </LinearLayout>
+</LinearLayout>
