@@ -135,7 +135,7 @@ public class CalendarAdapter extends BaseAdapter {
         ImageView IvView = (ImageView) convertView.findViewById(R.id.ivtext);
         String d = dayNumber[position].split("\\.")[0];
 //		String dv = dayNumber[position].split("\\.")[1];
-//        Log.d("YZP", "dv" + "///" + d);
+//        Log.d("YZP", "dv///" + d+"-----------"+dayNumber[position] + "------"+showYear+"--"+showMonth);
         SpannableString sp = new SpannableString(d);//填充农历和阳历的地方
 //		sp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //		sp.setSpan(new RelativeSizeSpan(1.2f), 0, d.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -145,12 +145,26 @@ public class CalendarAdapter extends BaseAdapter {
         // sp.setSpan(new ForegroundColorSpan(Color.MAGENTA), 14, 16,
         // Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         textView.setText(sp);
-//        Log.d("YZP", "sp" + "***" + sp);
+
+
         textView.setTextColor(Color.TRANSPARENT);
         IvView.setVisibility(View.INVISIBLE);
         if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
-            // 当前月信息显示
-            textView.setTextColor(Color.BLUE);// 当月字体设黑
+
+            // 当前月具体日期,测试显示大圆圈控件
+            Log.d("YZP---------",showYear + "-" + showMonth + "-" + sp);
+            String mCurrentDay = showYear + "-" + showMonth + "-" + sp;
+            textView.setTextColor(Color.BLACK);// 当月字体设黑
+
+            if (mCurrentDay.contains("2017-2")){//对特定日期的View处理
+                textView.setTextColor(Color.RED);
+            }else if (mCurrentDay.contains("2017-3")){
+                textView.setTextColor(Color.YELLOW);
+            }else if (mCurrentDay.contains("2017-4")){
+                textView.setTextColor(Color.GRAY);
+            }
+
+
             IvView.setVisibility(View.VISIBLE);//当月图标直接显示
 
 //			drawable = res.getDrawable(R.drawable.calendar_item_selected_bg);
@@ -182,7 +196,7 @@ public class CalendarAdapter extends BaseAdapter {
         daysOfMonth = sc.getDaysOfMonth(isLeapyear, month); // 某月的总天数
         dayOfWeek = sc.getWeekdayOfMonth(year, month); // 某月第一天为星期几
         lastDaysOfMonth = sc.getDaysOfMonth(isLeapyear, month - 1); // 上一个月的总天数
-        Log.d("DAY", isLeapyear + " ======  " + daysOfMonth + "  ============  " + dayOfWeek + "  =========   " + lastDaysOfMonth);
+//        Log.d("DAY", isLeapyear + " ======  " + daysOfMonth + "  ============  " + dayOfWeek + "  =========   " + lastDaysOfMonth);
         getweek(year, month);
     }
 
@@ -229,7 +243,7 @@ public class CalendarAdapter extends BaseAdapter {
         for (int i = 0; i < dayNumber.length; i++) {
             abc = abc + dayNumber[i] + ":";
         }
-        Log.d("DAYNUMBER", abc);
+//        Log.d("DAYNUMBER", abc);
 
     }
 
@@ -303,5 +317,7 @@ public class CalendarAdapter extends BaseAdapter {
 
     public void setCyclical(String cyclical) {
         this.cyclical = cyclical;
-    }
+}
+
+
 }

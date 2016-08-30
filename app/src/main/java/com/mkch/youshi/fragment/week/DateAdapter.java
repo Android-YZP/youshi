@@ -243,6 +243,8 @@ public class DateAdapter extends BaseAdapter {
 		ImageView ivCalendar = (ImageView) convertView
 				.findViewById(R.id.iv_calendar);
 		tvCalendar.setText(dayNumber[position]);
+
+
 		/**
 		 * 大圆圈显示策略
 		 * 1.传入日程安排的数据集合

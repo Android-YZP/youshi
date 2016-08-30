@@ -1,31 +1,43 @@
 package com.mkch.youshi.fragment.month;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.TestMsgActivity;
 
 import org.xutils.common.util.LogUtil;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MonthActivity extends AppCompatActivity{
+public class MonthActivity extends AppCompatActivity {
     private static final int SUCCESS = 1;
     //    private GestureDetector gestureDetector = null;
     private CalendarAdapter calV = null;
@@ -36,6 +48,11 @@ public class MonthActivity extends AppCompatActivity{
     private int month_c = 0;
     private int day_c = 0;
     private String currentDate = "";
+    private NumberPicker mNpSelectYear;
+    private NumberPicker mNpSelectMonth;
+    private TextView mTvNumPicMonthTitle;
+    private TextView mTvNumPicYearTitle;
+
     /**
      * 当前的年月，现在日历顶端
      */
@@ -64,7 +81,10 @@ public class MonthActivity extends AppCompatActivity{
             }
         }
     };
+
     private int temp = 498;
+    private int mCurrentPos = 0;
+    private ImageView mIvBack;
 
     public MonthActivity() {
         Date date = new Date();
@@ -87,52 +107,49 @@ public class MonthActivity extends AppCompatActivity{
     //初始化数据
     private void initData() {
         //CalendarCard[] views = new CalendarCard[3];
+        //拿到从周视图传递过来的数据
+        Intent _intent = getIntent();
+        String _chooseDate = _intent.getStringExtra("ChooseDate");
+        LogUtil.d(_chooseDate+"------------------------------");
+        //如果检测到不是当天的日期,就改变月视图的初始值
+        if (!_chooseDate.contains("今日")){
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
+                Date parseDate = sdf.parse(_chooseDate);
+                currentDate = sdf.format(parseDate); // 当期日期
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            year_c = Integer.parseInt(currentDate.split("-")[0]);
+            month_c = Integer.parseInt(currentDate.split("-")[1]);
+            day_c = Integer.parseInt(currentDate.split("-")[2]);
+        }
+        //初始化6个页面
         GridView[] views = new GridView[6];//初始化数据
         for (int i = 0; i < 6; i++) {
             GridView gridView = addGridView2();
             calV = new CalendarAdapter(this, getResources(), jumpMonth + i, jumpYear, year_c, month_c, day_c);
             gridView.setAdapter(calV);
             views[i] = gridView;
-            LogUtil.d(i+"YZP");
+            LogUtil.d(i + "YZP");
         }
         gridViewPagerAdapter = new PagerAdapter<>(views);
         viewPager.setAdapter(gridViewPagerAdapter);
         viewPager.setCurrentItem(498);
         //初始化日期Adapter,用于显示数据
-        calV = new CalendarAdapter(this, getResources(), jumpMonth, jumpYear, year_c, month_c, day_c);
-        addGridView();//添加一个GridView布局显示当前月的数据
-        gridView.setAdapter(calV);//设置Adapter显示数据
-        addTextToTopTextView(currentMonth);//顶部的当前日期显示
+        currentMonth.setText(year_c + "年" + month_c + "月");
     }
 
     //查找布局文件的对象
     private void findView() {
         currentMonth = (TextView) findViewById(R.id.tv_month_date);
+        mIvBack = (ImageView) findViewById(R.id.iv_month_back);
         viewPager = (ViewPager) findViewById(R.id.vp);
     }
 
-//    //初始化手势识别器
-//    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-//        @Override
-//        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            int gvFlag = 0; // 每次添加gridview到viewflipper中时给的标记.0
-//            if (e1.getY() - e2.getY() > 120) {
-//                // 像左滑动
-//                enterNextMonth(gvFlag);
-//                return true;
-//            } else if (e1.getY() - e2.getY() < -120) {
-//                // 向右滑动
-//                enterPrevMonth(gvFlag);
-//                return true;
-//            }
-//            return false;
-//        }
-//    }
-
     /**
      * 移动到下一个月
-     *
-     * @param gvFlag
      */
     private void enterNextMonth(int gvFlag) {
         addGridView(); // 添加一个gridView
@@ -142,17 +159,22 @@ public class MonthActivity extends AppCompatActivity{
         addTextToTopTextView(currentMonth); // 移动到下一月后，将当月显示在头标题中
     }
 
-//    // 更新日历视图
-//    private void updateCalendarView(int arg0) {
-//        mShowViews = adapter.getAllItems();
-//        if (mDirection == SildeDirection.RIGHT) {
-//            mShowViews[arg0 % mShowViews.length].rightSlide();
-//        } else if (mDirection == SildeDirection.LEFT) {
-//            mShowViews[arg0 % mShowViews.length].leftSlide();
-//        }
-//        mDirection = SildeDirection.NO_SILDE;
-//    }
-
+    /**
+     * 选择事件事件的处理
+     * 拿到GridView重新设置Adapter
+     */
+    private void enterNextMonth3(final int pos, final int year, final int month) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GridView[] allItems = gridViewPagerAdapter.getAllItems();
+                allItem = allItems[pos % allItems.length];
+                calV = new CalendarAdapter(MonthActivity.this, getResources(), year, month, 4);
+//                mHandler.sendEmptyMessage(SUCCESS);
+                mHandler.sendEmptyMessageDelayed(SUCCESS, 200);
+            }
+        }).start();
+    }
 
     /**
      * 左右滑动事件的处理
@@ -163,16 +185,16 @@ public class MonthActivity extends AppCompatActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                temp = pos - temp;
+                temp = pos - temp;//判断是左还是右划的算法。
                 if (temp > 0) {
-                    jumpMonth++;
+                    if (jumpMonth != (2049 - year_c) * 12 + (12 - month_c))//判断是否到2049年12月，到达这一个月就不再让jumpMonth增加，
+                        jumpMonth++;
                     temp = pos;
-                } else {
+                } else if (temp < 0) {
                     jumpMonth--;
                     temp = pos;
                 }
                 GridView[] allItems = gridViewPagerAdapter.getAllItems();
-                Log.d("posYZP", "YZP" + (pos % allItems.length));
                 allItem = allItems[pos % allItems.length];
                 calV = new CalendarAdapter(MonthActivity.this, MonthActivity.this.getResources(), jumpMonth, jumpYear, year_c, month_c, day_c);
 //                mHandler.sendEmptyMessage(SUCCESS);
@@ -183,7 +205,8 @@ public class MonthActivity extends AppCompatActivity{
 
     /**
      * 移动到上一个月
-     *  @param gvFlag
+     *
+     * @param gvFlag
      */
     private void enterPrevMonth(int gvFlag) {
         addGridView(); // 添加一个gridView
@@ -195,6 +218,7 @@ public class MonthActivity extends AppCompatActivity{
 
     /**
      * 添加头部的年份 闰哪月等信息
+     *
      * @param view
      */
     public void addTextToTopTextView(TextView view) {
@@ -202,6 +226,7 @@ public class MonthActivity extends AppCompatActivity{
         // draw = getResources().getDrawable(R.drawable.top_day);
         // view.setBackgroundDrawable(draw);
         textDate.append(calV.getShowYear()).append("年").append(calV.getShowMonth()).append("月").append("\t");
+        LogUtil.d(calV.getShowMonth() + "----------------");
         view.setText(textDate);
     }
 
@@ -226,37 +251,12 @@ public class MonthActivity extends AppCompatActivity{
         // 去除gridView边框
         gridView.setVerticalSpacing(1);
         gridView.setHorizontalSpacing(1);
-//        gridView.setOnTouchListener(new View.OnTouchListener() {
-//            // 将gridview中的触摸事件回传给gestureDetector
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return MonthActivity.this.gestureDetector.onTouchEvent(event);
-//            }
-//        });
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                // 点击任何一个item，得到这个item的日期(排除点击的是周日到周六(点击不响应))
-                int startPosition = calV.getStartPositon();
-                int endPosition = calV.getEndPosition();
-                if (startPosition <= position + 7 && position <= endPosition - 7) {
-                    String scheduleDay = calV.getDateByClickItem(position).split("\\.")[0]; // 这一天的阳历
-                    // String scheduleLunarDay =
-                    // calV.getDateByClickItem(position).split("\\.")[1];
-                    // //这一天的阴历
-                    String scheduleYear = calV.getShowYear();
-                    String scheduleMonth = calV.getShowMonth();
-                    Toast.makeText(MonthActivity.this, scheduleYear + "-" + scheduleMonth + "-" + scheduleDay, Toast.LENGTH_SHORT).show();
-                    // Toast.makeText(CalendarActivity.this, "点击了该条目",
-                    // Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         gridView.setLayoutParams(params);
     }
 
     private GridView addGridView2() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
         // 取得屏幕的宽度和高度
         WindowManager windowManager = getWindowManager();
         Display display = windowManager.getDefaultDisplay();
@@ -265,7 +265,6 @@ public class MonthActivity extends AppCompatActivity{
         GridView _gridView = new GridView(this);
         _gridView.setNumColumns(7);
         _gridView.setColumnWidth(40);
-        // gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         if (Width == 720 && Height == 1280) {
             _gridView.setColumnWidth(40);
         }
@@ -274,18 +273,12 @@ public class MonthActivity extends AppCompatActivity{
         // 去除gridView边框
         _gridView.setVerticalSpacing(1);
         _gridView.setHorizontalSpacing(1);
-//        _gridView.setOnTouchListener(new View.OnTouchListener() {
-//            // 将gridview中的触摸事件回传给gestureDetector
-//
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return MonthActivity.this.gestureDetector.onTouchEvent(event);
-//            }
-//        });
 
         _gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // 点击任何一个item，得到这个item的日期(排除点击的是周日到周六(点击不响应))
+                calV= (CalendarAdapter) arg0.getAdapter();//得到当前的adapter
                 int startPosition = calV.getStartPositon();
                 int endPosition = calV.getEndPosition();
                 if (startPosition <= position + 7 && position <= endPosition - 7) {
@@ -299,6 +292,14 @@ public class MonthActivity extends AppCompatActivity{
                     // Toast.LENGTH_SHORT).show();
 //                    TextView textView = (TextView) arg1.findViewById(R.id.tvtext);
 //                    textView.setTextColor(Color.RED);
+
+                    //跳转周视图界面
+                    String _ChooseDate = scheduleYear + "-" + scheduleMonth + "-" + scheduleDay;
+                    Intent intent = new Intent(MonthActivity.this, TestMsgActivity.class);
+                    intent.putExtra("Date",_ChooseDate);
+                    finish();
+                    jumpMonth = 0;
+                    startActivity(intent);
                 }
             }
         });
@@ -308,26 +309,27 @@ public class MonthActivity extends AppCompatActivity{
 
     //设置监听
     private void setListener() {
-        currentMonth.setOnClickListener(new View.OnClickListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                jumpMonth = 0;
+                startActivity(new Intent(MonthActivity.this,TestMsgActivity.class));
+            }
+        });
 
+        currentMonth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Toast.makeText(MonthActivity.this, "点击时间了", Toast.LENGTH_SHORT).show();
-                calV = new CalendarAdapter(MonthActivity.this, getResources(), 2015, 7, 4);
-                addGridView();//添加一个GridView布局显示当前月的数据
-                gridView.setAdapter(calV);//设置Adapter显示数据
-                addTextToTopTextView(currentMonth);//顶部的当前日期显示
-                //计算出与当前位置的偏差。
-                jumpMonth = -13;//1年龄3个月
+                showSelectDialog(year_c, month_c, year_c + "", month_c + "");
             }
         });
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
             @Override
             public void onPageSelected(int position) {
-                Log.d("viewPager的位置", "YZP" + position);
                 enterNextMonth2(position);
+                mCurrentPos = position;
             }
 
             @Override
@@ -340,9 +342,70 @@ public class MonthActivity extends AppCompatActivity{
 
             }
         });
-
-
     }
 
+    /**
+     * 弹出日期选择框
+     */
+    private void showSelectDialog(int CurrentValueYear, int CurrentValueMonth, String CurrentYear, String CurrentMonth) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MonthActivity.this);
+        final LayoutInflater inflater = LayoutInflater.from(MonthActivity.this);
+        View v = inflater.inflate(R.layout.num_picker_dialog, null);
+        mNpSelectYear = (NumberPicker) v.findViewById(R.id.np_select_year);
+        mTvNumPicMonthTitle = (TextView) v.findViewById(R.id.tv_number_picker_month_title);
+        mTvNumPicYearTitle = (TextView) v.findViewById(R.id.tv_number_picker_year_title);
+        mNpSelectMonth = (NumberPicker) v.findViewById(R.id.np_select_month);
+        mNpSelectYear.setMinValue(1945);//初始化年设置属性
+        mNpSelectYear.setMaxValue(2049);
+        mNpSelectYear.setValue(CurrentValueYear);
+        mNpSelectMonth.setMinValue(1);//初始化月设置属性
+        mNpSelectMonth.setMaxValue(12);
+        mNpSelectMonth.setValue(CurrentValueMonth);
+        mTvNumPicYearTitle.setText(CurrentYear + "年");
+        mTvNumPicMonthTitle.setText(CurrentMonth + "月");
+        builder.setView(v);
+        mNpSelectYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mTvNumPicYearTitle.setText(newVal + "年");
+            }
+        });
+        mNpSelectMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mTvNumPicMonthTitle.setText(newVal + "月");
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                int valueYear = mNpSelectYear.getValue();
+                int valueMonth = mNpSelectMonth.getValue();
+                enterNextMonth3(mCurrentPos, valueYear, valueMonth);//刷新界面
+                //计算跳转的位置
+                jumpMonth = (valueYear - year_c) * 12 + (valueMonth - month_c);//跳转到选择的位置
+            }
+        });
+        builder.create().show();
+    }
+
+    /**
+     * 监听Back键按下事件,方法1:
+     * 注意:
+     * super.onBackPressed()会自动调用finish()方法,关闭
+     * 当前Activity.
+     * 若要屏蔽Back键盘,注释该行代码即可
+     */
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        jumpMonth = 0;
+        System.out.println("按下了back键   onBackPressed()");
+        startActivity(new Intent(MonthActivity.this,TestMsgActivity.class));
+    }
 
 }

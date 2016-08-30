@@ -8,7 +8,7 @@ import android.widget.GridView;
 /**
  * Created by Smith on 2016/8/12.
  */
-public class PagerAdapter<V extends GridView> extends android.support.v4.view.PagerAdapter{
+public class PagerAdapter<V extends GridView> extends android.support.v4.view.PagerAdapter {
     private V[] views;
 
     /**
@@ -17,6 +17,11 @@ public class PagerAdapter<V extends GridView> extends android.support.v4.view.Pa
     public PagerAdapter(V[] views) {
         super();
         this.views = views;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     @Override
