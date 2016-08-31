@@ -63,8 +63,8 @@ public class TestMsgActivity extends KJActivity implements SideBar
     public void initWidget() {
         super.initWidget();
         SideBar mSideBar = (SideBar) findViewById(R.id.sidebar_contacts);
-        TextView mDialog = (TextView) findViewById(R.id.dialog_contacts);
-        EditText mSearchInput = (EditText) findViewById(R.id.search_input_contacts);
+        TextView mDialog = (TextView) findViewById(R.id.tv_contacts_dialog);
+        EditText mSearchInput = (EditText) findViewById(R.id.et_contacts_search);
 
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);
