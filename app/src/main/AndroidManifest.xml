@@ -42,6 +42,7 @@
         <activity android:name=".activity.AddPersonalEventActivity"/>
         <activity android:name=".activity.AddPersonalHabitActivity"/>
         <activity android:name=".activity.ReviseNameActivity"/>
+        <activity android:name=".activity.SearchEventActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">

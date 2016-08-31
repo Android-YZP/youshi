@@ -10,15 +10,35 @@
         layout="@layout/add_event_common_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
+    <!--前半部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
 
     <include
         layout="@layout/add_event_theme"
         android:layout_width="match_parent"
-        android:layout_height="148dp" />
+        android:layout_height="150dp" />
+    <!--中间部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
 
     <include
         layout="@layout/add_event_middle"
         android:layout_width="match_parent"
-        android:layout_height="132dp" />
+        android:layout_height="135dp" />
+    <!--后半部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
+
+    <include
+        layout="@layout/add_event_end"
+        android:layout_width="match_parent"
+        android:layout_height="135dp" />
 
 </LinearLayout>

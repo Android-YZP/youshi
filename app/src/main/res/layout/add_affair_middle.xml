@@ -4,59 +4,71 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View style="@style/lineOfAffairList" />
-    <!--全天-->
+    <View
+        style="@style/lineOfAffairList"/>
+    <!--日期-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
         <TextView
             style="@style/firstOfAffairList"
-            android:text="全天" />
+            android:text="日期" />
 
-        <CheckBox
+        <TextView
             style="@style/lastOfAffairList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@drawable/selector_common_checkbox_allow"
-            android:button="@null" />
-
+            android:text="2016年8月7日至8月14日" />
     </RelativeLayout>
 
     <View
         style="@style/lineOfAffairList"
         android:layout_marginLeft="15dp" />
 
-    <!--开始时间-->
+    <!--周-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
         <TextView
             style="@style/firstOfAffairList"
-            android:text="开始时间" />
+            android:text="周" />
 
         <TextView
             style="@style/lastOfAffairList"
-            android:text="2016年8月1日 周四" />
+            android:text="周一 周二 周三" />
     </RelativeLayout>
 
     <View
         style="@style/lineOfAffairList"
         android:layout_marginLeft="15dp" />
-    <!--结束时间-->
+    <!--时间段选择-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
         <TextView
             style="@style/firstOfAffairList"
-            android:text="结束时间" />
+            android:text="时间段选择" />
 
         <TextView
             style="@style/lastOfAffairList"
-            android:text="2016年8月2日 周四" />
+            android:drawableRight="@drawable/list_arrow"
+            android:drawablePadding="7dp"
+            android:text="已选择" />
+    </RelativeLayout>
+
+    <!--总时长-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="总时长" />
+
+        <TextView
+            style="@style/lastOfAffairList"
+            android:text="1小时" />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View style="@style/lineOfAffairList" />
+    <!--参与人-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="参与人" />
+
+        <TextView
+            style="@style/lastOfAffairList"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/btn_add"
+            android:text="莫莫莫" />
+    </RelativeLayout>
+
+    <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
+
+    <!--报送-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="报送" />
+
+        <TextView
+            style="@style/lastOfAffairList"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/btn_add"
+            android:text="莫莫莫" />
+    </RelativeLayout>
+
+    <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
+
+    <!--提前提醒-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="提前提醒" />
+
+        <TextView
+            style="@style/lastOfAffairList"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/list_arrow"
+            android:text="无" />
+    </RelativeLayout>
+
+    <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
+    <!--上传附件-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="上传附件" />
+
+        <TextView
+            style="@style/lastOfAffairList"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/icon_attachments" />
+
+    </RelativeLayout>
+
+    <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
+
+    <!--备注-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="备注" />
+
+        <!--去除edittext的默认光标-->
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <EditText
+            style="@style/textStyleGray24"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="请添加备注"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mkch.youshi.activity.AddManyPeopleEventActivity">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="填加多人事件界面"
-    />
-</RelativeLayout>
+
+    <include
+        layout="@layout/add_event_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+    <!--前半部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
+
+    <include
+        layout="@layout/add_event_theme"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+    <!--中间部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
+
+    <include
+        layout="@layout/add_event_middle"
+        android:layout_width="match_parent"
+        android:layout_height="135dp" />
+    <!--中间部分-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#f1f1f1" />
+
+    <include
+        layout="@layout/add_many_people_event_end"
+        android:layout_width="match_parent"
+        android:layout_height="226dp" />
+</LinearLayout>

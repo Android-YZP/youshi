@@ -5,8 +5,7 @@
     android:orientation="vertical">
 
     <View
-        style="@style/lineOfAffairList"
-        android:layout_marginTop="10dp" />
+        style="@style/lineOfAffairList" />
     <!--主题-->
     <RelativeLayout
         android:layout_width="match_parent"
@@ -130,9 +129,12 @@
             style="@style/firstOfAffairList"
             android:text="地址" />
 
-        <ImageView
+        <TextView
             style="@style/lastOfAffairList"
-            android:src="@drawable/list_arrow" />
+            android:text="宜兴"
+            android:drawableRight="@drawable/list_arrow"
+            android:drawablePadding="8dp"
+            />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />
