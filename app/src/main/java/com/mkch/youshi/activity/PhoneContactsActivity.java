@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
+import com.mkch.youshi.adapter.PhoneContactsListAdapter;
 
 public class PhoneContactsActivity extends Activity {
 
 	private ImageView mIvBack;
 	private TextView mTvTitle;
+	private ListView mListView;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -31,6 +33,7 @@ public class PhoneContactsActivity extends Activity {
 	private void initView() {
 		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+		mListView = (ListView) findViewById(R.id.list_phone_contacts);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -44,6 +47,8 @@ public class PhoneContactsActivity extends Activity {
 
 	private void initData() {
 		mTvTitle.setText("手机通讯录");
+		ListAdapter mAdapter = new AddFriendsMethodsListAdapter(PhoneContactsActivity.this);
+		mListView.setAdapter(mAdapter);
 	}
 
 	private void setListener() {

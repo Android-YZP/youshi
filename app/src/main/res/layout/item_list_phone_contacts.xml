@@ -11,7 +11,6 @@
         android:background="@drawable/bg_cut_line"/>
 
     <LinearLayout
-        android:id="@+id/layout_phone_contacts_content"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/new_friend_content_height"
         android:background="@android:color/white"
@@ -22,7 +21,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/head_phone_contacts"
+            android:id="@+id/iv_phone_contacts_head"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:contentDescription="@null"
@@ -31,7 +30,7 @@
             android:src="@drawable/default_head_rect"/>
 
             <TextView
-                android:id="@+id/phone_contacts_name"
+                android:id="@+id/tv_phone_contacts_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

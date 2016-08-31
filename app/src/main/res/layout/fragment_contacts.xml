@@ -45,7 +45,7 @@
             android:paddingTop="@dimen/youshi_friend_member_search_input_padding_top_or_bottom">
 
             <com.mkch.youshi.view.CustomEditText
-                android:id="@+id/search_input_contacts"
+                android:id="@+id/et_contacts_search"
                 android:layout_width="@dimen/youshi_friend_member_search_input_width"
                 android:layout_height="@dimen/youshi_friend_member_search_input_height"
                 android:layout_gravity="center_vertical"
@@ -189,7 +189,7 @@
                 android:scrollbars="none"/>
 
             <TextView
-                android:id="@+id/dialog_contacts"
+                android:id="@+id/tv_contacts_dialog"
                 android:layout_width="80.0dip"
                 android:layout_height="80.0dip"
                 android:layout_gravity="center"
