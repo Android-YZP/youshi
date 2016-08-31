@@ -11,7 +11,6 @@
         android:background="@drawable/bg_cut_line"/>
 
     <LinearLayout
-        android:id="@+id/add_friend_content"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/youshi_contact_height"
         android:background="@android:color/white"
@@ -22,7 +21,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/add_friend_image"
+            android:id="@+id/iv_add_friend_image"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:contentDescription="@null"
@@ -31,7 +30,7 @@
             android:src="@drawable/default_head_rect"/>
 
         <TextView
-            android:id="@+id/add_friend_title"
+            android:id="@+id/tv_add_friend_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -44,7 +43,6 @@
             android:textSize="@dimen/new_friend_content_name_size"/>
 
         <ImageView
-            android:id="@+id/add_friend_enter"
             android:layout_width="@dimen/user_center_arrow_width_or_height"
             android:layout_height="@dimen/user_center_arrow_width_or_height"
             android:contentDescription="@null"

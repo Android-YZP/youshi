@@ -46,9 +46,9 @@ public class AddFriendsMethodsListAdapter extends BaseAdapter implements ListAda
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_list_add_friends, null);
         }
-        ImageView ivAddFriendsItem = (ImageView) convertView.findViewById(R.id.add_friend_image);
+        ImageView ivAddFriendsItem = (ImageView) convertView.findViewById(R.id.iv_add_friend_image);
         ivAddFriendsItem.setImageResource(addMethodsPics[position]);
-        TextView tvAddFriendsItem = (TextView) convertView.findViewById(R.id.add_friend_title);
+        TextView tvAddFriendsItem = (TextView) convertView.findViewById(R.id.tv_add_friend_name);
         tvAddFriendsItem.setText(addMethodsTitles[position]);
         return convertView;
     }
