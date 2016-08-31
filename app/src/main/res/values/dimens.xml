@@ -73,6 +73,7 @@
     <dimen name="user_forget_phone_btn_getcode_margin_left_or_right">12dp</dimen>
 
     <!-- contacts -->
+    <dimen name="contacts_image_add_friends_width_or_height">20dp</dimen>
     <dimen name="youshi_friend_member_search_input_width">340dp</dimen>
     <dimen name="youshi_friend_member_search_input_height">28dp</dimen>
     <dimen name="friend_member_search_input_padding_left_or_right">10dp</dimen>
@@ -104,7 +105,7 @@
     <dimen name="new_friend_content_padding_top_or_bottom">5dp</dimen>
     <dimen name="new_friend_content_padding_left_or_right">15dp</dimen>
     <dimen name="new_friend_content_head_width_or_height">35dp</dimen>
-    <dimen name="new_friend_content_name_margin_left">8dp</dimen>
+    <dimen name="new_friend_content_name_margin_left">15dp</dimen>
     <dimen name="new_friend_content_name_size">16sp</dimen>
     <dimen name="new_friend_content_remark_size">12sp</dimen>
 

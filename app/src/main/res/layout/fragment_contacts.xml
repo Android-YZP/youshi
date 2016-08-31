@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/iv_contacts_topbar_add_friend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/contacts_image_add_friends_width_or_height"
+            android:layout_height="@dimen/contacts_image_add_friends_width_or_height"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
@@ -38,7 +38,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#fffffbfa"
+            android:background="@color/common_bg_color"
             android:paddingBottom="@dimen/youshi_friend_member_search_input_padding_top_or_bottom"
             android:paddingLeft="@dimen/friend_member_search_input_padding_left_or_right"
             android:paddingRight="@dimen/friend_member_search_input_padding_left_or_right"
@@ -56,6 +56,9 @@
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="搜索"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textCursorDrawable="@null"
                 android:imeOptions="actionSearch"
                 android:paddingBottom="@dimen/member_search_input_et_padding_top_or_bottom"
                 android:paddingTop="@dimen/member_search_input_et_padding_top_or_bottom"
@@ -64,6 +67,111 @@
                 android:textColorHint="#ffb5b5b5"
                 android:textSize="@dimen/member_search_input_et_text_size"/>
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_contacts_new_friend"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/youshi_contact_height"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+                android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+                android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+                android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+                <ImageView
+                    android:layout_width="@dimen/new_friend_content_head_width_or_height"
+                    android:layout_height="@dimen/new_friend_content_head_width_or_height"
+                    android:contentDescription="@null"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/newfriend"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="新的朋友"
+                    android:textColor="@color/new_friend_name_color"
+                    android:textSize="@dimen/new_friend_content_name_size"/>
+
+                <TextView
+                    android:id="@+id/tv_contacts_new_friend_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/delete_friend_selector_btn_color"
+                    android:text="1"
+                    android:textColor="@color/common_white_color"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+                android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
+                android:layout_height="1px"
+                android:background="@drawable/bg_cut_line"/>
+
+        <LinearLayout
+            android:id="@+id/layout_contacts_group_chat"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/youshi_contact_height"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+            android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+            android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+            android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+            <ImageView
+                android:layout_width="@dimen/new_friend_content_head_width_or_height"
+                android:layout_height="@dimen/new_friend_content_head_width_or_height"
+                android:contentDescription="@null"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitXY"
+                android:src="@drawable/groupchat"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="群聊"
+                android:textColor="@color/new_friend_name_color"
+                android:textSize="@dimen/new_friend_content_name_size"/>
+
+            <TextView
+                android:id="@+id/tv_contacts_group_chat_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@color/delete_friend_selector_btn_color"
+                android:text="1"
+                android:textColor="@color/common_white_color"/>
+        </LinearLayout>
+    </LinearLayout>
 
         <FrameLayout
             android:layout_width="fill_parent"

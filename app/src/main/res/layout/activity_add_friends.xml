@@ -40,6 +40,7 @@
                 android:paddingBottom="@dimen/member_search_input_et_padding_top_or_bottom"
                 android:paddingTop="@dimen/member_search_input_et_padding_top_or_bottom"
                 android:singleLine="true"
+                android:textCursorDrawable="@null"
                 android:textColor="@android:color/black"
                 android:textColorHint="#ffb5b5b5"
                 android:textSize="@dimen/member_search_input_et_text_size"/>

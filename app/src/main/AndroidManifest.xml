@@ -37,6 +37,7 @@
         <activity android:name=".activity.MyFileActivity"/>
         <activity android:name=".activity.MyCollectionActivity"/>
         <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.ReviseNameActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">

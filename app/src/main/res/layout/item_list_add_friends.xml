@@ -45,8 +45,8 @@
 
         <ImageView
             android:id="@+id/add_friend_enter"
-            android:layout_width="@dimen/add_friend_enter_width_or_height"
-            android:layout_height="@dimen/add_friend_enter_width_or_height"
+            android:layout_width="@dimen/user_center_arrow_width_or_height"
+            android:layout_height="@dimen/user_center_arrow_width_or_height"
             android:contentDescription="@null"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
