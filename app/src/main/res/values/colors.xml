@@ -17,6 +17,9 @@
     <color name="common_bg_color">#F1F1F1</color>
     <color name="common_et_text_font_color">#959595</color>
     <color name="common_content_dark_text_font_color">#0b6ed3</color>
+    <color name="common_et_bg_border_color">#d2d2d2</color>
+    <color name="common_content_text_font_color">#959595</color>
+    <color name="common_line_bg_color">#d2d2d2</color>
 
     <!-- login -->
     <color name="user_login_username_or_password_color">#d2d2d2</color>
@@ -43,4 +46,6 @@
     <color name="week_gray">#959595</color>
     <color name="week_day_line">#959595</color>
     <color name="common_gary_week_color">#959595</color>
+    <color name="message_search_part_bg_color">#f1f1f1</color>
+
 </resources>

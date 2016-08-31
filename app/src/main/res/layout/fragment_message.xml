@@ -5,10 +5,49 @@
               android:background="@color/common_white_color"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="消息"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/common_topbar_text_font_size"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/message_search_part_height"
+        android:background="@color/message_search_part_bg_color"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/et_message_search"
+            style="@style/commonEditTextStyle"
+            />
+    </LinearLayout>
+
+    <View
+        style="@style/commonLineStyle"
+        />
+
+    <ListView
+        android:id="@+id/lv_message_msgs"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="这是消息界面"
-        android:textColor="@color/common_content_text_font_color"
+        android:layout_marginLeft="14dp"
+        android:divider="@color/common_line_bg_color"
+        android:dividerHeight="1px"
+        ></ListView>
+
+    <View
+        style="@style/commonLineStyle"
         />
 </LinearLayout>
