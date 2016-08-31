@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/common_bg_color">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        layout="@layout/layout_common_topbar" />
+
+    <TextView
+        android:id="@+id/tv_information_setting_setting"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:text="设置备注和标签"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textSize="@dimen/friend_information_text_size"
+        android:background="@color/common_white_color"/>
+
+    <TextView
+        android:id="@+id/tv_information_setting_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:text="把他推荐给朋友"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textColor="@color/new_friend_name_color"
+        android:textSize="@dimen/friend_information_text_size"
+        android:background="@color/common_white_color"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:orientation="horizontal"
+        android:background="@color/common_white_color">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="不让他看我的表盘"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/friend_information_setting_padding_left"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_size" />
+
+        <CheckBox
+            android:id="@+id/cb_information_setting_look_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
+            android:checked="false"
+            style="@style/MyCheckBox"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/add_friend_line"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="@dimen/information_setting_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+        android:layout_height="1px"
+        android:background="@drawable/bg_cut_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:orientation="horizontal"
+        android:background="@color/common_white_color">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="不看他的表盘"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/friend_information_setting_padding_left"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_size" />
+
+        <CheckBox
+            android:id="@+id/cb_information_setting_look_him"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
+            android:checked="false"
+            style="@style/MyCheckBox"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_information_setting_delete_friend"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+        android:layout_marginLeft="@dimen/friend_information_send_margin_left_or_right"
+        android:layout_marginRight="@dimen/friend_information_send_margin_left_or_right"
+        android:layout_marginBottom="@dimen/information_setting_delete_margin_bottom"
+        android:text="删除"
+        android:textSize="@dimen/user_login_commit_text_font_size"
+        android:textColor="@color/common_white_color"
+        android:gravity="center"
+        android:background="@drawable/selector_btn_delete_friend"
+        />
+</LinearLayout>

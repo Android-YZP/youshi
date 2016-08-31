@@ -4,24 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mkch.youshi.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView"/>
+    <com.mkch.youshi.view.IndexTabBarLayout
+        android:id="@+id/myIndexTabBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/main_tabbar_height"
+        android:layout_alignParentBottom="true"
+        ></com.mkch.youshi.view.IndexTabBarLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="按钮1"
-        android:id="@+id/btn_main_1"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+    <View
+        android:id="@+id/myIndexLine"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_above="@id/myIndexTabBarLayout"
+        android:background="@color/main_tabbar_border_color"
+        />
+
+    <com.mkch.youshi.view.NoScrollViewPager
+        android:id="@+id/myViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/myIndexLine"
+        >
+    </com.mkch.youshi.view.NoScrollViewPager>
 </RelativeLayout>

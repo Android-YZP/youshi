@@ -154,16 +154,8 @@ public class CalendarAdapter extends BaseAdapter {
             // 当前月具体日期,测试显示大圆圈控件
             Log.d("YZP---------",showYear + "-" + showMonth + "-" + sp);
             String mCurrentDay = showYear + "-" + showMonth + "-" + sp;
-            textView.setTextColor(Color.BLACK);// 当月字体设黑
 
-            if (mCurrentDay.contains("2017-2")){//对特定日期的View处理
-                textView.setTextColor(Color.RED);
-            }else if (mCurrentDay.contains("2017-3")){
-                textView.setTextColor(Color.YELLOW);
-            }else if (mCurrentDay.contains("2017-4")){
-                textView.setTextColor(Color.GRAY);
-            }
-
+            textView.setTextColor(Color.rgb(31, 31, 31));// 当月字体设黑
 
             IvView.setVisibility(View.VISIBLE);//当月图标直接显示
 
@@ -171,7 +163,7 @@ public class CalendarAdapter extends BaseAdapter {
             drawable = new ColorDrawable(Color.rgb(23, 126, 214));
             if (position % 7 == 0 || position % 7 == 6) {
                 // 当前月信息显示
-                textView.setTextColor(Color.rgb(23, 126, 214));// 当月字体设黑
+                textView.setTextColor(Color.rgb(95, 95, 95));// 当月字体设黑
 //				drawable = res.getDrawable(R.drawable.calendar_item_selected_bg);
                 drawable = new ColorDrawable(Color.rgb(23, 126, 214));
             }

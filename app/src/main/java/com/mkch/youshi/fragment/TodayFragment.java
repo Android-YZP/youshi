@@ -1,10 +1,11 @@
 package com.mkch.youshi.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -12,18 +13,22 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.activity.TestNetActivity;
+import com.mkch.youshi.activity.AddManyPeopleEventActivity;
+import com.mkch.youshi.activity.AddPersonalActivity;
+import com.mkch.youshi.activity.SearchEventActivity;
 import com.mkch.youshi.fragment.month.MonthActivity;
 import com.mkch.youshi.fragment.week.DateAdapter;
 import com.mkch.youshi.fragment.week.SpecialCalendar;
@@ -70,6 +75,10 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     private ImageView mIvWeekdayAdd;
     private ImageView mIvWeekdaySearch;
     private String mChooseDate = null;
+    private int mMidth;
+    private int mHeight;
+    private PopupWindow popupWindow;
+
     public TodayFragment() {
     }
 
@@ -77,6 +86,12 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
+
+        //得到屏幕的宽度和高度
+        WindowManager wm = (WindowManager) getContext()
+                .getSystemService(Context.WINDOW_SERVICE);
+        mMidth = wm.getDefaultDisplay().getWidth();
+        mHeight = wm.getDefaultDisplay().getHeight();
     }
 
     @Override
@@ -95,8 +110,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         super.onResume();
         Intent intent = getActivity().getIntent();
         String _MonthChooseDate = intent.getStringExtra("Date");
-        Log.d("YZP.............",_MonthChooseDate+"YZP");
-        if (_MonthChooseDate!=null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
+        Log.d("YZP.............", _MonthChooseDate + "YZP");
+        if (_MonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
             initData();
             updateUI(); //刷新界面
         }
@@ -107,7 +122,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         gestureDetector = new GestureDetector(this);
         dateAdapter = new DateAdapter(getActivity(), getResources(), currentYear,
                 currentMonth, currentWeek, currentNum, selectPostion,
-                currentWeek == 1 ? true : false);
+                currentWeek == 1);
         addGridView();
         dayNumbers = dateAdapter.getDayNumbers();
         gridView.setAdapter(dateAdapter);
@@ -123,8 +138,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
         Intent intent = getActivity().getIntent();
         String _MonthChooseDate = intent.getStringExtra("Date");
-        Log.d("YZP3",_MonthChooseDate+"-----------------");
-        if (_MonthChooseDate == null){
+        Log.d("YZP3", _MonthChooseDate + "-----------------");
+        if (_MonthChooseDate == null) {
             _MonthChooseDate = sdf.format(date);
         }
         currentDate = _MonthChooseDate;
@@ -164,7 +179,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         flipper1 = (ViewFlipper) view.findViewById(R.id.flipper1);
         //获取从日历界面传递过来的日期,1.用传递过来的日期
         //2.用当前的日期
-        mTvWeekDayMonth.setText(year_c+"/"+month_c );
+        mTvWeekDayMonth.setText(year_c + "/" + month_c);
     }
 
     //设置事件的监听
@@ -187,10 +202,71 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         mIvWeekdayAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), TestNetActivity.class));
+                showPopupWindow(v);
+            }
+        });
+        mIvWeekdaySearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null)
+                    startActivity(new Intent(getActivity(), SearchEventActivity.class));
             }
         });
     }
+
+    /**
+     * 显示事件的添加框
+     *
+     * @param view
+     */
+    private void showPopupWindow(View view) {
+
+        // 一个自定义的布局，作为显示的内容
+        View contentView = LayoutInflater.from(getActivity()).inflate(
+                R.layout.layout_pop_window, null);
+        LinearLayout _LlBackground = (LinearLayout) contentView.findViewById(R.id.ll_background);
+        TextView _TvPersonalEvent = (TextView) contentView.findViewById(R.id.tv_personal_event);
+        TextView _TvManyPeopleEvent = (TextView) contentView.findViewById(R.id.tv_many_people_event);
+
+        _LlBackground.getBackground().setAlpha(180);
+        //个人事件按钮
+        _TvPersonalEvent.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null)
+                    startActivity(new Intent(getActivity(), AddPersonalActivity.class));
+                popupWindow.dismiss();
+            }
+        });
+
+        // 多人事件按钮
+        _TvManyPeopleEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null)
+                    startActivity(new Intent(getActivity(), AddManyPeopleEventActivity.class));
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow = new PopupWindow(contentView,
+                400, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+
+        ColorDrawable dw = new ColorDrawable(0000);
+        popupWindow.setBackgroundDrawable(dw);
+        // 设置好参数之后再show
+        popupWindow.showAsDropDown(view);
+
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -257,6 +333,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
 
     /**
      * 得到一周的最后一天
+     *
      * @param year
      * @param month
      */

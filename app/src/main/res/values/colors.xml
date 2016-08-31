@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#0b6ed3</color>
+    <color name="colorPrimaryDark">#0b6ed3</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="week_gray">#FF888888</color>
+
+    <!-- |main-bottom-tabbar -->
+    <color name="main_tabbar_bg_color">#ffffff</color>
+    <color name="main_tabbar_item_text_font_color_unsel">#959595</color>
+    <color name="main_tabbar_item_text_font_color_sel">#0b6ed3</color>
+    <color name="main_tabbar_border_color">#d2d2d2</color>
+    <color name="week_day_line">#d2d2d2</color>
+
+    <!-- |common main topbar -->
+    <color name="common_topbar_text_font_color">#ffffff</color>
+    <color name="common_topbar_bg_color">#0b6ed3</color>
+    <color name="common_white_color">#ffffff</color>
+    <color name="common_black_color">#d2d2d2</color>
+    <color name="common_all_black_color">#000000</color>
+    <color name="common_gary_color">#70000000</color>
+    <color name="common_gary_week_color">#959595</color>
+    <color name="common_bg_color">#F1F1F1</color>
+    <color name="common_et_text_font_color">#959595</color>
+    <color name="common_content_dark_text_font_color">#0b6ed3</color>
+
+    <!-- login -->
+    <color name="user_login_username_or_password_color">#d2d2d2</color>
+    <color name="user_login_selector_btn_color">#0b6ed3</color>
+    <color name="user_login_selector_btn_color_no">#7f0b6ed3</color>
+    <color name="user_login_reg_or_forget_color">#3d4859</color>
+    <color name="user_reg_phone_et_text_font_color">#959595</color>
+
+    <!-- new friend -->
+    <color name="new_friend_name_color">#313131</color>
+    <color name="new_friend_remark_color">#474747</color>
+
+    <!-- friend information -->
+    <color name="friend_information_name_color">#959595</color>
+    <color name="delete_friend_selector_btn_color">#e63543</color>
+    <color name="personal_event_text_color">#313131</color>
+    <color name="delete_friend_selector_btn_color_no">#7fe63543</color>
+
+    <!--文字的颜色大小-->
+    <color name="text_white">#7fe63543</color>
+    <color name="text_gray">#959595</color>
+    <color name="text_black">#313131</color>
+
 </resources>
