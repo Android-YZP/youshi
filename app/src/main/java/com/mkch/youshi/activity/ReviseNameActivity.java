@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
-public class SettingActivity extends Activity {
+public class ReviseNameActivity extends Activity {
 
 	private ImageView mIvBack;
 	private TextView mTvTitle;
@@ -19,7 +19,7 @@ public class SettingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_setting);
+		setContentView(R.layout.activity_revise_name);
 		initView();
 		initData();
 		setListener();
@@ -39,15 +39,15 @@ public class SettingActivity extends Activity {
 //		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
 	}
 
-	private void initData()  {
-		mTvTitle.setText("设置");
+	private void initData() {
+		mTvTitle.setText("修改昵称");
 	}
 
 	private void setListener() {
 		mIvBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				SettingActivity.this.finish();
+				ReviseNameActivity.this.finish();
 			}
 		});
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
@@ -96,42 +96,20 @@ public class SettingActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserLoginOnClickListener implements OnClickListener{
+//	private class UserInformationOnClickListener implements View.OnClickListener {
 //
-//		@Override
-//		public void onClick(View view) {
-//			Intent _intent = null;
-//			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
+//	@Override
+//	public void onClick(View view) {
+//		Intent _intent = null;
+//		switch (view.getId()) {
+//			case R.id.iv_common_topbar_back:
+//				UserInformationActivity.this.finish();
 //				break;
 //			default:
 //				break;
-//			}
 //		}
+//	}
+//}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

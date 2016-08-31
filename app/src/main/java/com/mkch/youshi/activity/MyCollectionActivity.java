@@ -2,11 +2,16 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
 public class MyCollectionActivity extends Activity {
 
+	private ImageView mIvBack;
+	private TextView mTvTitle;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -17,10 +22,12 @@ public class MyCollectionActivity extends Activity {
 		setContentView(R.layout.activity_my_collection);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
+		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
+		mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -32,15 +39,22 @@ public class MyCollectionActivity extends Activity {
 //		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
 	}
 
-	private void initData() {
+	private void initData()  {
+		mTvTitle.setText("我的收藏");
 	}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				MyCollectionActivity.this.finish();
+			}
+		});
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;

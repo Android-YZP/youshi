@@ -2,6 +2,8 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,8 +12,9 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 
 public class PhoneContactsActivity extends Activity {
-	private TextView mTvTitle;
 
+	private ImageView mIvBack;
+	private TextView mTvTitle;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -22,10 +25,11 @@ public class PhoneContactsActivity extends Activity {
 		setContentView(R.layout.activity_phone_contacts);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
+		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
@@ -42,12 +46,18 @@ public class PhoneContactsActivity extends Activity {
 		mTvTitle.setText("手机通讯录");
 	}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				PhoneContactsActivity.this.finish();
+			}
+		});
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;

@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-
         android:name=".config.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/login_logo"
@@ -43,6 +42,7 @@
         <activity android:name=".activity.AddPersonalAffairActivity"/>
         <activity android:name=".activity.AddPersonalEventActivity"/>
         <activity android:name=".activity.AddPersonalHabitActivity"/>
+        <activity android:name=".activity.ReviseNameActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">

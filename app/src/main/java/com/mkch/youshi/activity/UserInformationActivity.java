@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class UserInformationActivity extends Activity {
 
 	private ImageView mIvBack;
 	private TextView mTvTitle;
+	private LinearLayout mLayoutName;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -33,6 +35,7 @@ public class UserInformationActivity extends Activity {
 	private void initView() {
 		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
+		mLayoutName = (LinearLayout) findViewById(R.id.layout_user_information_name);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -55,6 +58,7 @@ public class UserInformationActivity extends Activity {
 				UserInformationActivity.this.finish();
 			}
 		});
+		mLayoutName.setOnClickListener(new UserInformationOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
@@ -101,20 +105,20 @@ public class UserInformationActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserInformationOnClickListener implements View.OnClickListener {
-//
-//	@Override
-//	public void onClick(View view) {
-//		Intent _intent = null;
-//		switch (view.getId()) {
-//			case R.id.iv_common_topbar_back:
-//				UserInformationActivity.this.finish();
-//				break;
-//			default:
-//				break;
-//		}
-//	}
-//}
+	private class UserInformationOnClickListener implements View.OnClickListener {
+	@Override
+	public void onClick(View view) {
+		Intent _intent = null;
+		switch (view.getId()) {
+			case R.id.layout_user_information_name:
+				_intent = new Intent(UserInformationActivity.this,ReviseNameActivity.class);
+				startActivity(_intent);
+				break;
+			default:
+				break;
+		}
+	}
+}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {
