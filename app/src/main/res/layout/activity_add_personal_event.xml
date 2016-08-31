@@ -14,11 +14,11 @@
     <include
         layout="@layout/add_event_theme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_parent" />
+        android:layout_height="148dp" />
 
     <include
         layout="@layout/add_event_middle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_parent" />
+        android:layout_height="132dp" />
 
 </LinearLayout>
