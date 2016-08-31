@@ -18,11 +18,11 @@
     </style>
 
     <!-- 自定义checkbox主题 -->
-    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-    <item name="android:button">@drawable/selector_common_checkbox</item>
-    <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
-    <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
-    </style>
+    <!--<style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">-->
+    <!--<item name="android:button">@drawable/selector_common_checkbox</item>-->
+    <!--<item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>-->
+    <!--<item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>-->
+    <!--</style>-->
 
     <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_common_checkbox_allow</item>
@@ -68,10 +68,15 @@
     <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
     </style>
 
-    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/selector_common_checkbox_allow</item>
-        <item name="android:maxHeight">10.0dp</item>
-        <item name="android:height">31dp</item>
-        <item name="android:width">51dp</item>
-    </style>
+    <!--<style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">-->
+        <!--<item name="android:button">@drawable/selector_common_checkbox_allow</item>-->
+        <!--<item name="android:maxHeight">10.0dp</item>-->
+        <!--<item name="android:height">31dp</item>-->
+        <!--<item name="android:width">51dp</item>-->
+    <!--</style>-->
+    <color name="personal_event_text_color">#313131</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_black">#313131</color>
+    <color name="text_gray">#959595</color>
+    <dimen name="person_event_text_font_size">14sp</dimen>
 </resources>

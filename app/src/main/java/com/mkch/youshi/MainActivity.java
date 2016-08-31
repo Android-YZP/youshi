@@ -13,6 +13,7 @@ import com.mkch.youshi.fragment.MessageFragment;
 import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
 import com.mkch.youshi.view.IndexTabBarLayout;
+import com.mkch.youshi.view.NoScrollViewPager;
 
 import org.xutils.view.annotation.ContentView;
 
@@ -21,7 +22,7 @@ public class MainActivity extends BaseActivity {
 
     private IndexTabBarLayout mIndexTabBarLayout;//底部整个控件
 
-    private ViewPager mViewPager;
+    private NoScrollViewPager mViewPager;
 
     private int CACHE_PAGES = 3;
     //四个fragment
@@ -58,7 +59,7 @@ public class MainActivity extends BaseActivity {
      */
     private void findView() {
         mIndexTabBarLayout=(IndexTabBarLayout)findViewById(R.id.myIndexTabBarLayout);
-        mViewPager = (ViewPager)findViewById(R.id.myViewPager);
+        mViewPager = (NoScrollViewPager)findViewById(R.id.myViewPager);
         mViewPager.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         mViewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
