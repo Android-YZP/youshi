@@ -10,7 +10,9 @@
         layout="@layout/add_event_common_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
-
     <include layout="@layout/add_event_theme" />
+    <include layout="@layout/add_event_middle"/>
+
+
 
 </LinearLayout>
