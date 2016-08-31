@@ -24,7 +24,7 @@ public class TestNetActivity extends AppCompatActivity {
         RequestParams params = new RequestParams("http://www.baidu.com");
         x.http().get(params, new Callback.CommonCallback<String>() {
             @Override
-                public void onCancelled(Callback.CancelledException arg0) {
+            public void onCancelled(Callback.CancelledException arg0) {
                 LogUtil.d("取消");
             }
 

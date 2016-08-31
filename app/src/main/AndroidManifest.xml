@@ -21,54 +21,23 @@
         </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity"/>
-        <activity
-            android:name=".activity.UserLoginActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"/>
-        <activity
-            android:name=".activity.UserRegPhoneActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.UserRegCodeActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.UserRegUserNameActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.UserForgotCodeActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.GroupChatActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.AddFriendsActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.NewFriendActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.PhoneContactsActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.FriendInformationActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.InformationSettingActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
-        <activity
-            android:name=".activity.RemarkInformationActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" />
+        <activity android:name=".activity.UserLoginActivity"/>
+        <activity android:name=".activity.UserRegPhoneActivity"/>
+        <activity android:name=".activity.UserRegCodeActivity"/>
+        <activity android:name=".activity.UserRegUserNameActivity"/>
+        <activity android:name=".activity.UserForgotCodeActivity"/>
+        <activity android:name=".activity.GroupChatActivity"/>
+        <activity android:name=".activity.AddFriendsActivity"/>
+        <activity android:name=".activity.NewFriendActivity"/>
+        <activity android:name=".activity.PhoneContactsActivity"/>
+        <activity android:name=".activity.FriendInformationActivity"/>
+        <activity android:name=".activity.InformationSettingActivity"/>
+        <activity android:name=".activity.RemarkInformationActivity"/>
+        <activity android:name=".activity.UserInformationActivity"/>
+        <activity android:name=".activity.MyFileActivity"/>
+        <activity android:name=".activity.MyCollectionActivity"/>
+        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.ReviseNameActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">

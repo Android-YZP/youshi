@@ -243,6 +243,9 @@ public class DateAdapter extends BaseAdapter {
 		ImageView ivCalendar = (ImageView) convertView
 				.findViewById(R.id.iv_calendar);
 		tvCalendar.setText(dayNumber[position]);
+
+		Log.d("YZP--------------------",position+"------------------");
+
 		/**
 		 * 大圆圈显示策略
 		 * 1.传入日程安排的数据集合
@@ -267,6 +270,10 @@ public class DateAdapter extends BaseAdapter {
 			tvCalendar.setSelected(false);
 			tvCalendar.setTextColor(Color.BLACK);
 			tvCalendar.setBackgroundColor(Color.TRANSPARENT);
+		}
+
+		if (position == 0||position == 6){
+			tvCalendar.setTextColor(Color.GRAY);
 		}
 		return convertView;
 	}

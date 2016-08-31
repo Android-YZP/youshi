@@ -1,8 +1,12 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -11,9 +15,10 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 
 public class AddFriendsActivity extends Activity {
+
+	private ImageView mIvBack;
 	private TextView mTvTitle;
 	private ListView mListView;
-
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -24,10 +29,11 @@ public class AddFriendsActivity extends Activity {
 		setContentView(R.layout.activity_add_friends);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
+		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
 		mListView = (ListView) findViewById(R.id.list_add_friends);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
@@ -47,12 +53,34 @@ public class AddFriendsActivity extends Activity {
 		mListView.setAdapter(mAdapter);
 	}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				AddFriendsActivity.this.finish();
+			}
+		});
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent _intent = null;
+				switch (position){
+					case 0:
+                        _intent = new Intent(AddFriendsActivity.this,PhoneContactsActivity.class);
+						startActivity(_intent);
+						break;
+					case 1:
+						break;
+					default:
+						break;
+				}
+			}
+		});
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;
