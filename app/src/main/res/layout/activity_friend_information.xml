@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/friend_information_remark_margin_left"
+            android:layout_marginLeft="@dimen/friend_information_name_margin_left"
             android:orientation="vertical">
 
             <TextView

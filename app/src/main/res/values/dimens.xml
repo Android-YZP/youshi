@@ -116,7 +116,7 @@
     <dimen name="friend_information_margin_top">10dp</dimen>
     <dimen name="friend_information_head_width_or_height">60dp</dimen>
     <dimen name="friend_information_head_margin_left">20dp</dimen>
-    <dimen name="friend_information_remark_margin_left">10dp</dimen>
+    <dimen name="friend_information_name_margin_left">10dp</dimen>
     <dimen name="friend_information_setting_height">44dp</dimen>
     <dimen name="friend_information_setting_padding_left">14dp</dimen>
     <dimen name="friend_information_address_height">62dp</dimen>
@@ -132,4 +132,13 @@
 
     <!-- remark information -->
     <dimen name="remark_information_divide_line_margin_left_or_right">10dp</dimen>
+
+    <!-- user center -->
+    <dimen name="user_center_head_width_or_height">50dp</dimen>
+    <dimen name="user_center_name_margin_left">20dp</dimen>
+    <dimen name="user_center_type_margin_left">20dp</dimen>
+    <dimen name="user_center_arrow_width_or_height">20dp</dimen>
+
+    <!-- user information -->
+    <dimen name="user_information_layout_head_height">90dp</dimen>
 </resources>
