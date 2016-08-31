@@ -11,45 +11,46 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="60sp"
-            android:background="#00f" />
+            android:layout_height="@dimen/common_topbar_height"
+            android:background="@color/common_topbar_bg_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60sp"
+            android:layout_height="@dimen/common_topbar_height"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_weekday_month"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:drawableLeft="@drawable/nav_back"
+                android:drawablePadding="5dp"
                 android:gravity="center"
-                android:padding="1dp"
+                android:paddingLeft="15dp"
                 android:text="9月"
-                android:drawableLeft="@mipmap/ic_launcher"
                 android:textColor="#fff"
-                android:textSize="20dp" />
+                android:textSize="16sp" />
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+                android:layout_weight="1" />
 
             <ImageView
                 android:id="@+id/iv_weekday_search"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:src="@mipmap/ic_launcher"
-                />
+                android:paddingRight="15dp"
+                android:src="@drawable/nav_search" />
+
             <ImageView
                 android:id="@+id/iv_weekday_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:padding="1dp"
-                android:src="@mipmap/ic_launcher"
-                />
+                android:layout_gravity="center_horizontal"
+                android:paddingRight="15dp"
+                android:src="@drawable/nav_increase" />
 
         </LinearLayout>
     </FrameLayout>
@@ -59,56 +60,72 @@
         android:id="@+id/ll_week"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周日" />
+            android:text="日"
+            android:textColor="@color/common_gary_week_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周一" />
+            android:text="一"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周二" />
+            android:text="二"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周三" />
+            android:text="三"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周四" />
+            android:text="四"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周五" />
+            android:text="五"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="周六" />
+            android:text="六"
+            android:textColor="@color/common_gary_week_color"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ViewFlipper
@@ -117,12 +134,23 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_week" />
     <TextView
-        android:id="@+id/tv_date"
-        android:layout_below="@id/flipper1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        />
+        android:layout_height="1px"
+        android:layout_below="@id/flipper1"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="@color/week_day_line"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/flipper1"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/content_dial"
+        android:gravity="center" />
 
 
 </LinearLayout>

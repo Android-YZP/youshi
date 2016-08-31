@@ -9,11 +9,14 @@
         android:id="@+id/tvtext"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:textSize="18sp"
+        android:layout_gravity="center"
         android:gravity="center" />
 
     <ImageView      
         android:id="@+id/ivtext"
         android:background="#FFF"
+        android:layout_gravity="center"
         android:src="@drawable/yuanquan"
         android:layout_width="45dp"
         android:layout_height="40dp"
