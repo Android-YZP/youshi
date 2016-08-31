@@ -42,7 +42,7 @@ public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer
     @Override
     public void convert(AdapterHolder holder, Contact item, boolean isScrolling, int position) {
 
-        holder.setText(R.id.contact_title, item.getName());
+        holder.setText(R.id.contact_name, item.getName());
         ImageView headImg = holder.getView(R.id.contact_head);
         if (isScrolling) {
             kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);

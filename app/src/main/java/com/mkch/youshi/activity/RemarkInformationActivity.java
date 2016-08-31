@@ -1,19 +1,18 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
-import org.w3c.dom.Text;
+public class RemarkInformationActivity extends Activity {
 
-public class FriendInformationActivity extends Activity {
-
-	private TextView mRemark,mLine1,mLine2,mLine3,mLine4,mLine5,mLine6;
-	private LinearLayout mLayoutPhone,mLayoutLabel,mLayoutDescribe;
+	private EditText mPhone1,mPhone2,mPhone3,mPhone4,mPhone5;
+	private TextView mLine1,mLine2,mLine3,mLine4,mLine5;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -21,23 +20,22 @@ public class FriendInformationActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_friend_information);
+		setContentView(R.layout.activity_remark_information);
 		initView();
 		initData();
 //		setListener();
 	}
 
 	private void initView() {
-		mRemark = (TextView) findViewById(R.id.tv_friend_information_setting);
-		mLayoutPhone = (LinearLayout) findViewById(R.id.layout_friend_information_phone);
-		mLayoutLabel = (LinearLayout) findViewById(R.id.layout_friend_information_label);
-		mLayoutDescribe = (LinearLayout) findViewById(R.id.layout_friend_information_describe);
-		mLine1 = (TextView) findViewById(R.id.tv_friend_information_line1);
-		mLine2 = (TextView) findViewById(R.id.tv_friend_information_line2);
-		mLine3 = (TextView) findViewById(R.id.tv_friend_information_line3);
-		mLine4 = (TextView) findViewById(R.id.tv_friend_information_line4);
-		mLine5 = (TextView) findViewById(R.id.tv_friend_information_line5);
-		mLine6 = (TextView) findViewById(R.id.tv_friend_information_line6);
+		mPhone1 = (EditText) findViewById(R.id.et_remark_information_phone1);
+		mPhone2 = (EditText) findViewById(R.id.et_remark_information_phone2);
+		mPhone3 = (EditText) findViewById(R.id.et_remark_information_phone3);
+		mPhone4 = (EditText) findViewById(R.id.et_remark_information_phone4);
+		mPhone5 = (EditText) findViewById(R.id.et_remark_information_phone5);
+		mLine1 = (TextView) findViewById(R.id.tv_remark_information_line1);
+		mLine2 = (TextView) findViewById(R.id.tv_remark_information_line2);
+		mLine3 = (TextView) findViewById(R.id.tv_remark_information_line3);
+		mLine4 = (TextView) findViewById(R.id.tv_remark_information_line4);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -50,11 +48,14 @@ public class FriendInformationActivity extends Activity {
 	}
 
 	private void initData() {
-		mLayoutPhone.setVisibility(View.GONE);
-		mLayoutLabel.setVisibility(View.GONE);
-		mLayoutDescribe.setVisibility(View.GONE);
-		mLine5.setVisibility(View.GONE);
-		mLine6.setVisibility(View.GONE);
+        mPhone2.setVisibility(View.GONE);
+		mLine1.setVisibility(View.GONE);
+		mPhone3.setVisibility(View.GONE);
+		mLine2.setVisibility(View.GONE);
+		mPhone4.setVisibility(View.GONE);
+		mLine3.setVisibility(View.GONE);
+		mPhone5.setVisibility(View.GONE);
+		mLine4.setVisibility(View.GONE);
 	}
 
 //	private void setListener() {

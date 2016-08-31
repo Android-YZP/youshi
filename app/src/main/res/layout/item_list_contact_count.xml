@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ebebeb"
+    android:background="@color/contact_count_bg_color"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="15dp"
-    android:paddingTop="15dp"
-    android:textSize="15sp"
+    android:paddingBottom="@dimen/contact_count_padding_top_or_bottom"
+    android:paddingTop="@dimen/contact_count_padding_top_or_bottom"
+    android:textSize="@dimen/contact_count_size"
     tools:text="10位联系人">
-
 </TextView>

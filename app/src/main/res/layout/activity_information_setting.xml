@@ -8,7 +8,7 @@
     <include
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar" />
+        layout="@layout/layout_common_topbar"/>
 
     <TextView
         android:id="@+id/tv_information_setting_setting"
@@ -49,7 +49,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_size" />
+            android:textSize="@dimen/friend_information_text_size"/>
 
         <CheckBox
             android:id="@+id/cb_information_setting_look_me"
@@ -62,12 +62,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/add_friend_line"
         android:layout_width="fill_parent"
         android:layout_marginLeft="@dimen/information_setting_divide_line_margin_left_or_right"
         android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
         android:layout_height="1px"
-        android:background="@drawable/bg_cut_line" />
+        android:background="@drawable/bg_cut_line"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -83,7 +82,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_size" />
+            android:textSize="@dimen/friend_information_text_size"/>
 
         <CheckBox
             android:id="@+id/cb_information_setting_look_him"
@@ -112,6 +111,5 @@
         android:textSize="@dimen/user_login_commit_text_font_size"
         android:textColor="@color/common_white_color"
         android:gravity="center"
-        android:background="@drawable/selector_btn_delete_friend"
-        />
+        android:background="@drawable/selector_btn_delete_friend"/>
 </LinearLayout>

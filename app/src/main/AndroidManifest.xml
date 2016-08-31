@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mkch.youshi">
-
+          package="com.mkch.youshi">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -11,73 +10,38 @@
         android:icon="@drawable/login_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
         </activity>
-        <activity android:name=".activity.TestMsgActivity" />
-        <activity
-            android:name=".activity.UserLoginActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.UserRegPhoneActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.UserRegCodeActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.UserRegUserNameActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.UserForgotCodeActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.GroupChatActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.AddFriendsActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.NewFriendActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.PhoneContactsActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.FriendInformationActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
-        <activity
-            android:name=".activity.InformationSettingActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
+        <activity android:name=".activity.TestMsgActivity"/>
+        <activity android:name=".activity.UserLoginActivity"/>
+        <activity android:name=".activity.UserRegPhoneActivity"/>
+        <activity android:name=".activity.UserRegCodeActivity"/>
+        <activity android:name=".activity.UserRegUserNameActivity"/>
+        <activity android:name=".activity.UserForgotCodeActivity"/>
+        <activity android:name=".activity.GroupChatActivity"/>
+        <activity android:name=".activity.AddFriendsActivity"/>
+        <activity android:name=".activity.NewFriendActivity"/>
+        <activity android:name=".activity.PhoneContactsActivity"/>
+        <activity android:name=".activity.FriendInformationActivity"/>
+        <activity android:name=".activity.InformationSettingActivity"/>
+        <activity android:name=".activity.RemarkInformationActivity"/>
+        <activity android:name=".activity.UserInformationActivity"/>
+        <activity android:name=".activity.MyFileActivity"/>
+        <activity android:name=".activity.MyCollectionActivity"/>
+        <activity android:name=".activity.SettingActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".activity.TestNetActivity" />
-        <activity android:name=".activity.AddPersonalActivity" />
-        <activity android:name=".activity.AddManyPeopleEventActivity" />
-        <activity android:name=".activity.SearchEventActivity" />
-        <activity android:name=".activity.AddPersonalEventActivity" />
-        <activity android:name=".activity.AddPersonalAffairActivity" />
-        <activity android:name=".activity.AddPersonalHabitActivity"></activity>
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.TestNetActivity"/>
     </application>
 
 </manifest>
