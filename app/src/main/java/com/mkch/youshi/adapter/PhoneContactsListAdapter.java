@@ -46,10 +46,10 @@ public class PhoneContactsListAdapter extends BaseAdapter implements ListAdapter
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_list_phone_contacts, null);
         }
-        ImageView ivAddFriendsItem = (ImageView) convertView.findViewById(R.id.iv_phone_contacts_head);
-        ivAddFriendsItem.setImageResource(phoneContactsHead[position]);
-        TextView tvAddFriendsItem = (TextView) convertView.findViewById(R.id.tv_phone_contacts_name);
-        tvAddFriendsItem.setText(phoneContactsName[position]);
+        ImageView ivPhoneContactsItem = (ImageView) convertView.findViewById(R.id.iv_phone_contacts_head);
+        ivPhoneContactsItem.setImageResource(phoneContactsHead[position]);
+        TextView tvPhoneContactsItem = (TextView) convertView.findViewById(R.id.tv_phone_contacts_name);
+        tvPhoneContactsItem.setText(phoneContactsName[position]);
         return convertView;
     }
 }

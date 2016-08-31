@@ -42,16 +42,16 @@ public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer
     @Override
     public void convert(AdapterHolder holder, Contact item, boolean isScrolling, int position) {
 
-        holder.setText(R.id.contact_name, item.getName());
-        ImageView headImg = holder.getView(R.id.contact_head);
+        holder.setText(R.id.tv_contact_name, item.getName());
+        ImageView headImg = holder.getView(R.id.iv_contact_head);
         if (isScrolling) {
             kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);
         } else {
             kjb.displayWithLoadBitmap(headImg, item.getUrl(), R.drawable.default_head_rect);
         }
 
-        TextView tvLetter = holder.getView(R.id.contact_catalog);
-        TextView tvLine = holder.getView(R.id.contact_line);
+        TextView tvLetter = holder.getView(R.id.tv_contact_catalog);
+        TextView tvLine = holder.getView(R.id.tv_contact_line);
 
         //如果是第0个那么一定显示#号
         if (position == 0) {

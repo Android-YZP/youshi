@@ -1,20 +1,25 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
+import com.mkch.youshi.adapter.NewFriendListAdapter;
 
 public class NewFriendActivity extends Activity {
 
 	private ImageView mIvBack;
 	private TextView mTvTitle;
+	private LinearLayout mLayoutAddPhone;
+	private ListView mListView;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -31,6 +36,8 @@ public class NewFriendActivity extends Activity {
 	private void initView() {
 		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+		mLayoutAddPhone = (LinearLayout) findViewById(R.id.layout_new_friend_add_phone);
+		mListView = (ListView) findViewById(R.id.list_new_friend);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -44,6 +51,8 @@ public class NewFriendActivity extends Activity {
 
 	private void initData() {
 		mTvTitle.setText("新的朋友");
+		ListAdapter mAdapter = new NewFriendListAdapter(NewFriendActivity.this);
+		mListView.setAdapter(mAdapter);
 	}
 
 	private void setListener() {
@@ -53,6 +62,7 @@ public class NewFriendActivity extends Activity {
 				NewFriendActivity.this.finish();
 			}
 		});
+		mLayoutAddPhone.setOnClickListener(new NewFriendOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
@@ -99,42 +109,24 @@ public class NewFriendActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserLoginOnClickListener implements OnClickListener{
-//
-//		@Override
-//		public void onClick(View view) {
-//			Intent _intent = null;
-//			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
+	/**
+	* 自定义点击监听类
+	* @author JLJ
+	*/
+	private class NewFriendOnClickListener implements View.OnClickListener{
+		@Override
+		public void onClick(View v) {
+				Intent _intent = null;
+				switch (v.getId()) {
+					case R.id.layout_new_friend_add_phone:
+						_intent = new Intent(NewFriendActivity.this, PhoneContactsActivity.class);
+						startActivity(_intent);
+						break;
+					default:
+						break;
+				}
+		}
+	}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

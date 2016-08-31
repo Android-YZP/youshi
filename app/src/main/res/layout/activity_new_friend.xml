@@ -25,7 +25,7 @@
             android:paddingTop="@dimen/youshi_friend_member_search_input_padding_top_or_bottom">
 
             <com.mkch.youshi.view.CustomEditText
-                android:id="@+id/search_input_new_friend"
+                android:id="@+id/et_new_friend_search"
                 android:layout_width="@dimen/youshi_friend_member_search_input_width"
                 android:layout_height="@dimen/youshi_friend_member_search_input_height"
                 android:layout_gravity="center_vertical"
@@ -34,6 +34,7 @@
                 android:drawablePadding="@dimen/friend_member_search_input_drawable_padding"
                 android:drawableRight="@drawable/ic_edit_text_delbtn"
                 android:freezesText="true"
+                android:textCursorDrawable="@null"
                 android:gravity="center_vertical"
                 android:hint="搜索"
                 android:imeOptions="actionSearch"
@@ -46,7 +47,7 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/layout_new_friend_phone"
+            android:id="@+id/layout_new_friend_add_phone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/new_friend_add_phone_height"
             android:background="@color/common_white_color"
@@ -60,6 +61,7 @@
                android:layout_height="wrap_content"
                android:drawableTop="@drawable/phone"
                android:drawablePadding="@dimen/new_friend_add_phone_text_padding"
+               android:textColor="@color/friend_information_name_color"
                android:text="添加手机联系人"/>
         </LinearLayout>
 
@@ -72,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/bg_cut_line"
+                android:divider="@drawable/list_item_divider"
                 android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
