@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
     android:orientation="vertical">
 
     <FrameLayout
@@ -11,8 +10,8 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#00f" />
+            android:layout_height="@dimen/common_topbar_height"
+            android:background="#0b6ed3" />
 
         <TextView
             android:id="@+id/tv_month_date"
@@ -30,8 +29,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:paddingLeft="10dp"
-            android:src="@drawable/nav_back"
-            android:textColor="#fff" />
+            android:src="@drawable/nav_back" />
     </FrameLayout>
 
     <!--<LinearLayout-->

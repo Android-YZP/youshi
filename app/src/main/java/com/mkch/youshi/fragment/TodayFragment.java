@@ -231,7 +231,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         _LlBackground.getBackground().setAlpha(180);
         //个人事件按钮
         _TvPersonalEvent.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (getActivity() != null)

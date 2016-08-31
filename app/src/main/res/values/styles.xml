@@ -68,12 +68,30 @@
     <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
     </style>
 
-    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/selector_common_checkbox_allow</item>
-        <item name="android:maxHeight">10.0dp</item>
-        <item name="android:height">31dp</item>
-        <item name="android:width">51dp</item>
+    <style name="lastOfAffairList" parent="textStyleGray24">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">20dp</item>
     </style>
+
+    <style name="firstOfAffairList" parent="textStyleBlack28">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">15dp</item>
+    </style>
+
+    <style name="lineOfAffairList">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/week_day_line</item>
+    </style>
+
+    <color name="personal_event_text_color">#313131</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_black">#313131</color>
+    <color name="text_gray">#959595</color>
+    <dimen name="person_event_text_font_size">14sp</dimen>
 
     <!--消息列表-自定义搜索框风格-->
     <style name="commonEditTextStyle">

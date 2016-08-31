@@ -42,6 +42,10 @@
     <color name="friend_information_name_color">#959595</color>
     <color name="delete_friend_selector_btn_color">#e63543</color>
     <color name="delete_friend_selector_btn_color_no">#7fe63543</color>
+    <color name="common_black_color">#313131</color>
+    <color name="week_gray">#959595</color>
+    <color name="week_day_line">#959595</color>
+    <color name="common_gary_week_color">#959595</color>
     <color name="message_search_part_bg_color">#f1f1f1</color>
 
 </resources>

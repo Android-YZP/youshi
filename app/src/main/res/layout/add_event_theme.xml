@@ -5,38 +5,26 @@
     android:orientation="vertical">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="10dp"
-        android:background="@color/week_day_line" />
+        style="@style/lineOfAffairList"
+        android:layout_marginTop="10dp" />
     <!--主题-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
         <TextView
-            style="@style/textStyleBlack28"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
+            style="@style/firstOfAffairList"
             android:text="主题" />
 
         <TextView
-            style="@style/textStyleGray24"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
+            style="@style/lastOfAffairList"
             android:text="会议" />
 
     </RelativeLayout>
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="15dp"
-        android:background="@color/week_day_line" />
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
     <!--标签-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,17 +32,14 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/textStyleBlack28"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
+            style="@style/firstOfAffairList"
             android:text="标签" />
 
         <RadioGroup
             android:id="@+id/gr_label"
             android:layout_width="match_parent"
-            android:layout_marginLeft="40dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -63,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:button="@null"
                 android:layout_weight="1"
+                android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/person_selector"
                 android:gravity="center"
@@ -75,11 +60,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/work_selector"
                 android:gravity="center"
-                android:layout_weight="1"
                 android:text="工作" />
 
             <RadioButton
@@ -87,11 +72,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/entertainment_selector"
                 android:gravity="center"
-                android:layout_weight="1"
                 android:text="娱乐" />
 
             <RadioButton
@@ -99,43 +84,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/important_selector"
                 android:gravity="center"
-                android:layout_weight="1"
                 android:text="重要" />
+
             <RadioButton
                 android:id="@+id/rb_health"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/health_selector"
                 android:gravity="center"
-                android:layout_weight="1"
                 android:text="健康" />
+
             <RadioButton
                 android:id="@+id/rb_other"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/other_selector"
                 android:gravity="center"
                 android:text="其他" />
-
-
         </RadioGroup>
     </LinearLayout>
 
     <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
+
+    <!--地址-->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="15dp"
-        android:background="@color/week_day_line" />
+        android:layout_height="44dp">
+
+        <TextView
+            style="@style/firstOfAffairList"
+            android:text="地址" />
+
+        <ImageView
+            style="@style/lastOfAffairList"
+            android:src="@drawable/list_arrow" />
+    </RelativeLayout>
+
+    <View style="@style/lineOfAffairList" />
 </LinearLayout>
