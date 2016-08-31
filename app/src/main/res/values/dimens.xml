@@ -14,9 +14,11 @@
     <!-- |common main topbar -->
     <dimen name="common_topbar_height">44dp</dimen>
     <dimen name="common_topbar_text_font_size">16sp</dimen>
-    <dimen name="common_et_text_font_size">13sp</dimen>
-    <color name="common_et_bg_border_color">#d2d2d2</color>
-    <color name="common_content_text_font_color">#959595</color>
+    <dimen name="common_et_height">28dp</dimen>
+    <dimen name="common_et_text_font_size">14sp</dimen>
+    <dimen name="common_et_padding_left">10dp</dimen>
+    <dimen name="common_et_drawable_padding">8dp</dimen>
+
 
     <!-- |creativedetail start -->
     <!-- topbar -->
@@ -142,4 +144,16 @@
 
     <!-- user information -->
     <dimen name="user_information_layout_head_height">90dp</dimen>
+
+
+
+
+    <!--index message-->
+    <dimen name="message_search_part_height">44dp</dimen>
+    <dimen name="message_et_search_margin_left_or_right">18dp</dimen>
+    <dimen name="item_message_one_msg_width_or_height">40dp</dimen>
+    <dimen name="item_message_one_msg_headpic_margin_right">15dp</dimen>
+    <dimen name="item_message_one_msg_round_width_or_height">30dp</dimen>
+    <dimen name="item_message_one_msg_height">60dp</dimen>
+
 </resources>
