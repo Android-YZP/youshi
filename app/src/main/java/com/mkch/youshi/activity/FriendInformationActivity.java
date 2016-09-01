@@ -15,7 +15,7 @@ import org.w3c.dom.Text;
 public class FriendInformationActivity extends Activity {
 
 	private ImageView mIvBack;
-	private TextView mTvMore,mTvRemark,mSetting,mTvLine1,mTvLine2,mTvLine3,mTvLine4,mTvLine5,mTvLine6;
+	private TextView mTvMore,mTvRemark,mTvSetting,mTvLine1,mTvLine2,mTvLine3,mTvLine4,mTvLine5,mTvLine6;
 	private LinearLayout mLayoutPhone,mLayoutLabel,mLayoutDescribe;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
@@ -33,7 +33,7 @@ public class FriendInformationActivity extends Activity {
 	private void initView() {
 		mIvBack = (ImageView) findViewById(R.id.iv_friend_information_back);
 		mTvMore = (TextView) findViewById(R.id.tv_friend_information_more);
-		mSetting = (TextView) findViewById(R.id.tv_friend_information_setting);
+		mTvSetting = (TextView) findViewById(R.id.tv_friend_information_setting);
 		mTvRemark = (TextView) findViewById(R.id.tv_friend_information_setting);
 		mLayoutPhone = (LinearLayout) findViewById(R.id.layout_friend_information_phone);
 		mLayoutLabel = (LinearLayout) findViewById(R.id.layout_friend_information_label);
@@ -71,7 +71,7 @@ public class FriendInformationActivity extends Activity {
 			}
 		});
 		mTvMore.setOnClickListener(new FriendInformationOnClickListener());
-		mSetting.setOnClickListener(new FriendInformationOnClickListener());
+		mTvSetting.setOnClickListener(new FriendInformationOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
