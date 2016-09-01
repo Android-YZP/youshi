@@ -132,7 +132,7 @@ public class FriendInformationActivity extends Activity {
 					startActivity(_intent);
 					break;
 				case R.id.tv_friend_information_setting:
-					_intent = new Intent(FriendInformationActivity.this,InformationSettingActivity.class);
+					_intent = new Intent(FriendInformationActivity.this,RemarkInformationActivity.class);
 					startActivity(_intent);
 					break;
 				default:

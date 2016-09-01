@@ -12,12 +12,8 @@
 
         <ImageView
             android:id="@+id/iv_friend_information_back"
-            android:layout_width="@dimen/creativedetail_topbar_img_back_width"
-            android:layout_height="@dimen/creativedetail_topbar_img_back_height"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/creativedetail_topbar_margin_left"
-            android:background="@drawable/common_back"/>
+            android:src="@drawable/nav_back"
+            style="@style/commonTopbarBackStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -148,7 +144,7 @@
                     android:id="@+id/tv_friend_information_line1"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                    android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
                     android:layout_height="1px"
                     android:background="@drawable/bg_cut_line"/>
 
@@ -166,7 +162,7 @@
                     android:id="@+id/tv_friend_information_line2"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                    android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
                     android:layout_height="1px"
                     android:background="@drawable/bg_cut_line"/>
 
@@ -184,7 +180,7 @@
                     android:id="@+id/tv_friend_information_line3"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                    android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
                     android:layout_height="1px"
                     android:background="@drawable/bg_cut_line"/>
 
@@ -202,7 +198,7 @@
                     android:id="@+id/tv_friend_information_line4"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                    android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
                     android:layout_height="1px"
                     android:background="@drawable/bg_cut_line"/>
 
@@ -221,7 +217,7 @@
         <TextView
             android:id="@+id/tv_friend_information_line5"
             android:layout_width="fill_parent"
-            android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
             android:layout_height="1px"
             android:background="@drawable/bg_cut_line"/>
 
@@ -255,7 +251,7 @@
         <TextView
             android:id="@+id/tv_friend_information_line6"
             android:layout_width="fill_parent"
-            android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
             android:layout_height="1px"
             android:background="@drawable/bg_cut_line"/>
 

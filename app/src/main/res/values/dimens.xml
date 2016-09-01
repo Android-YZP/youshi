@@ -130,7 +130,6 @@
 
     <!-- information setting -->
     <dimen name="information_setting_checkbox_margin_right">20dp</dimen>
-    <dimen name="information_setting_divide_line_margin_left_or_right">20dp</dimen>
     <dimen name="information_setting_delete_margin_bottom">20dp</dimen>
 
     <!-- remark information -->
