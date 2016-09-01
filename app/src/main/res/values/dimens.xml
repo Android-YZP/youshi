@@ -155,4 +155,7 @@
     <dimen name="item_message_one_msg_height">60dp</dimen>
     <dimen name="common_chat_img_width_or_height">28dp</dimen>
 
+    <!-- chat -->
+    <dimen name="chat_list_left_headpic_width_or_height">40dp</dimen>
+
 </resources>

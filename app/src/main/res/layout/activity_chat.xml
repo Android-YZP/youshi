@@ -38,6 +38,7 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_chart_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -65,21 +66,59 @@
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="10dp"
                 />
-            <EditText
+            <ImageView
+                android:id="@+id/iv_chat_go_keyboard"
+                android:layout_width="@dimen/common_chat_img_width_or_height"
+                android:layout_height="@dimen/common_chat_img_width_or_height"
+                android:background="@drawable/chat_keyboard"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                android:id="@+id/line_keyboard_comptonts_use"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+                <EditText
+                    android:id="@+id/et_chat_input"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="36dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/common_black_color"
+                    android:background="@drawable/sharp_chat_input_bg"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_chat_go_expression"
+                    android:layout_width="@dimen/common_chat_img_width_or_height"
+                    android:layout_height="@dimen/common_chat_img_width_or_height"
+                    android:background="@drawable/chat_expression"
+                    android:layout_marginLeft="9dp"
+                    />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_chat_voice_use"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="36dp"
-                android:textSize="14sp"
-                android:textColor="@color/common_black_color"
-                android:background="@drawable/sharp_chat_input_bg"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="按住 说话"
+                android:textColor="#5b5b5b"
+                style="@style/common_text_black_28"
+                android:background="@drawable/selector_btn_chat_speek"
+                android:visibility="gone"
                 />
-            <ImageView
-                android:id="@+id/iv_chat_go_expression"
-                android:layout_width="@dimen/common_chat_img_width_or_height"
-                android:layout_height="@dimen/common_chat_img_width_or_height"
-                android:background="@drawable/chat_expression"
-                android:layout_marginLeft="9dp"
-                />
+
             <ImageView
                 android:id="@+id/iv_chat_go_more_action"
                 android:layout_width="@dimen/common_chat_img_width_or_height"
@@ -97,6 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:orientation="vertical"
+        android:visibility="gone"
         >
         <View
             style="@style/commonLineInputStyle"/>
