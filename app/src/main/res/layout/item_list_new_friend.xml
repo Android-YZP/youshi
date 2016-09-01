@@ -5,11 +5,6 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
-
     <LinearLayout
         android:id="@+id/layout_new_friend_content"
         android:layout_width="fill_parent"
@@ -22,7 +17,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/head_new_friend"
+            android:id="@+id/iv_new_friend_head"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:contentDescription="@null"
@@ -38,33 +33,34 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/new_friend_content_name"
+                android:id="@+id/tv_new_friend_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/new_friend_name_color"
-                android:textSize="@dimen/new_friend_content_name_size"/>
+                android:textSize="@dimen/friend_information_text_more_size"/>
 
             <TextView
-                android:id="@+id/new_friend_content_remark"
+                android:id="@+id/tv_new_friend_remark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/new_friend_remark_color"
+                android:textColor="@color/friend_information_name_color"
                 android:textSize="@dimen/new_friend_content_remark_size"/>
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_new_friend_content_add"
+            android:id="@+id/btn_new_friend_add"
             android:layout_gravity="center_vertical"
             android:layout_width="@dimen/new_friend_add_btn_width"
             android:layout_height="@dimen/new_friend_add_btn_height"
-            android:text="添加"
+            android:text="接受"
             android:textColor="@color/common_white_color"
+            android:textSize="@dimen/friend_information_text_more_size"
             android:background="@drawable/selector_btn_user_login"/>
     </LinearLayout>
 </LinearLayout>
