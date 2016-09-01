@@ -146,8 +146,6 @@
     <dimen name="user_information_layout_head_height">90dp</dimen>
 
 
-
-
     <!--index message-->
     <dimen name="message_search_part_height">44dp</dimen>
     <dimen name="message_et_search_margin_left_or_right">18dp</dimen>
@@ -155,5 +153,6 @@
     <dimen name="item_message_one_msg_headpic_margin_right">15dp</dimen>
     <dimen name="item_message_one_msg_round_width_or_height">30dp</dimen>
     <dimen name="item_message_one_msg_height">60dp</dimen>
+    <dimen name="common_chat_img_width_or_height">28dp</dimen>
 
 </resources>

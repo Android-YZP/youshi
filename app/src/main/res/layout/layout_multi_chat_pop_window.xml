@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/line_background"
+        android:layout_width="115dp"
+        android:layout_height="144dp"
+        android:background="@drawable/activity_add_bg"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="25dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="9dp"
+        android:paddingRight="6dp"
+        android:layout_marginRight="5dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/line_chat_pop_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="6dp"
+            >
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/downmenu_event"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="多人事件"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="#fff" />
+
+        <LinearLayout
+            android:id="@+id/line_chat_pop_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="6dp"
+            >
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/downmenu_edit"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="编辑"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="#fff" />
+
+        <LinearLayout
+            android:id="@+id/line_chat_pop_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="6dp"
+            >
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/downmenu_group"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="群组"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

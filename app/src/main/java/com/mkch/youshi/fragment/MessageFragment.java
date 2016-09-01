@@ -1,13 +1,17 @@
 package com.mkch.youshi.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChatActivity;
+import com.mkch.youshi.activity.MultiChatActivity;
 import com.mkch.youshi.adapter.MessageBoxListAdapter;
 import com.mkch.youshi.bean.MessageBox;
 
@@ -46,7 +50,10 @@ public class MessageFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initData();//初始化数据
+        setListener();
     }
+
+
 
     /**
      * 初始化数据
@@ -67,6 +74,28 @@ public class MessageFragment extends Fragment {
         //设置适配器
         mLvMsgs.setAdapter(mAdapter);
 
+    }
+
+    private void setListener() {
+        //点击某一项消息
+        mLvMsgs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //暂时用switch代替
+                Intent _intent = null;
+                switch (position){
+                    case 0:
+                        _intent = new Intent(getActivity(), ChatActivity.class);
+                        startActivity(_intent);
+                        break;
+                    case 1:
+                        _intent = new Intent(getActivity(), MultiChatActivity.class);
+                        startActivity(_intent);
+                        break;
+                }
+
+            }
+        });
     }
 
     @Override

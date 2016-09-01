@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mkch.youshi.activity.ChatActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color" >
+
+        <ImageView
+            android:id="@+id/iv_multi_chat_topbar_back"
+            android:src="@drawable/nav_back"
+            style="@style/commonTopbarBackStyle"/>
+
+        <TextView
+            android:id="@+id/tv_multi_chat_topbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="标题"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/common_topbar_text_font_size"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_multi_chat_topbar_actions"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="14dp"
+            android:src="@drawable/chat_more"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+</LinearLayout>
