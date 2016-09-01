@@ -105,6 +105,11 @@ public class UserInformationActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
+	/**
+	 * 自定义点击监听类
+	 * @author JLJ
+	 *
+	 */
 	private class UserInformationOnClickListener implements View.OnClickListener {
 	@Override
 	public void onClick(View view) {
