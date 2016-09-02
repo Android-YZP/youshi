@@ -122,7 +122,7 @@ public class ChatActivity extends BaseActivity {
         mRvList.setLayoutManager(_layout_manager);
         //初始化list聊天数据
         m_chart_list = new ArrayList<>();
-        m_chart_list.add(new ChatBean("张三","你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊",ChatBean.MESSAGE_TYPE_IN,"2016-09-01 14:50"));
+        m_chart_list.add(new ChatBean("张三","你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊",ChatBean.MESSAGE_TYPE_IN,"2016-09-01 14:50"));
         m_chart_list.add(new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10"));
         m_chart_list.add(new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23"));
         m_chart_list.add(new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25"));

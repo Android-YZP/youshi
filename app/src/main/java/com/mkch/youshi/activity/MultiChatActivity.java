@@ -90,7 +90,7 @@ public class MultiChatActivity extends BaseActivity {
         _line_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MultiChatActivity.this, AddPersonalActivity.class));
+                startActivity(new Intent(MultiChatActivity.this, GroupDetailActivity.class));
                 popupWindow.dismiss();
             }
         });

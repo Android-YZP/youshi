@@ -8,17 +8,18 @@
     <application
         android:name=".config.MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/login_logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-        </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity"/>
         <activity android:name=".activity.UserLoginActivity"/>
@@ -45,7 +46,7 @@
         <activity android:name=".activity.ReviseNameActivity"/>
         <activity android:name=".activity.ReviseYoushiNumberActivity"/>
         <activity android:name=".activity.ReviseSignatureActivity"/>
-        <activity android:name=".activity.SearchEventActivity" />
+        <activity android:name=".activity.SearchEventActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">
@@ -53,11 +54,11 @@
         <activity android:name=".activity.TestNetActivity"/>
         <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.TestNetActivity" />
-        <activity android:name=".activity.ChooseAddressActivity" />
-        <activity android:name=".activity.ChooseSomeoneActivity" />
-        <activity android:name=".activity.ChooseRemindBeforeActivity"></activity>
+        <activity android:name=".activity.ChooseAddressActivity"/>
+        <activity android:name=".activity.ChooseSomeoneActivity"/>
+        <activity android:name=".activity.ChooseRemindBeforeActivity"/>
+        <activity android:name=".activity.GroupDetailActivity">
+        </activity>
     </application>
 
 </manifest>
