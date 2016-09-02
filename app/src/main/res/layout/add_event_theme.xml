@@ -4,21 +4,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View
-        style="@style/lineOfAffairList"
-        android:layout_marginTop="10dp" />
+    <View style="@style/lineOfAffairList" />
     <!--主题-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp">
-
         <TextView
             style="@style/firstOfAffairList"
             android:text="主题" />
-
-        <TextView
-            style="@style/lastOfAffairList"
-            android:text="会议" />
+        <!--去除edittext的默认光标-->
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="0px"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+        <EditText
+            android:id="@+id/et_theme"
+            style="@style/textStyleGray24"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@null"
+            android:gravity="end|center"
+            android:textCursorDrawable="@null"
+            android:hint="会议" />
 
     </RelativeLayout>
 
@@ -123,6 +133,7 @@
 
     <!--地址-->
     <RelativeLayout
+        android:id="@+id/rl_choose_address"
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
@@ -130,9 +141,11 @@
             style="@style/firstOfAffairList"
             android:text="地址" />
 
-        <ImageView
+        <TextView
             style="@style/lastOfAffairList"
-            android:src="@drawable/list_arrow" />
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/list_arrow"
+            android:text="宜兴" />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />

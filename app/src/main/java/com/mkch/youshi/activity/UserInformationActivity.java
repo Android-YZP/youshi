@@ -1,6 +1,9 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +21,7 @@ public class UserInformationActivity extends Activity {
 
 	private ImageView mIvBack;
 	private TextView mTvTitle;
-	private LinearLayout mLayoutName;
+	private LinearLayout mLayoutName,mLayoutYoushiNumber,mLayoutSex,mLayoutSignature;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -36,6 +39,9 @@ public class UserInformationActivity extends Activity {
 		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
 		mLayoutName = (LinearLayout) findViewById(R.id.layout_user_information_name);
+		mLayoutYoushiNumber = (LinearLayout) findViewById(R.id.layout_user_information_youshi_number);
+		mLayoutSex = (LinearLayout) findViewById(R.id.layout_user_information_sex);
+		mLayoutSignature = (LinearLayout) findViewById(R.id.layout_user_information_signature);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -59,6 +65,20 @@ public class UserInformationActivity extends Activity {
 			}
 		});
 		mLayoutName.setOnClickListener(new UserInformationOnClickListener());
+		mLayoutYoushiNumber.setOnClickListener(new UserInformationOnClickListener());
+		mLayoutSex.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				new AlertDialog.Builder(UserInformationActivity.this).setTitle("您的性别为").setSingleChoiceItems(
+						new String[] { "男", "女" }, 0, new DialogInterface.OnClickListener(){
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						}).show();
+			}
+		});
+		mLayoutSignature.setOnClickListener(new UserInformationOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
@@ -117,6 +137,14 @@ public class UserInformationActivity extends Activity {
 		switch (view.getId()) {
 			case R.id.layout_user_information_name:
 				_intent = new Intent(UserInformationActivity.this,ReviseNameActivity.class);
+				startActivity(_intent);
+				break;
+			case R.id.layout_user_information_youshi_number:
+				_intent = new Intent(UserInformationActivity.this,ReviseYoushiNumberActivity.class);
+				startActivity(_intent);
+				break;
+			case R.id.layout_user_information_signature:
+				_intent = new Intent(UserInformationActivity.this,ReviseSignatureActivity.class);
 				startActivity(_intent);
 				break;
 			default:

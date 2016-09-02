@@ -5,7 +5,7 @@
     android:background="@color/common_topbar_bg_color">
 
     <TextView
-        android:id="@+id/tv_add__event_cancel"
+        android:id="@+id/tv_add_event_cancel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -17,7 +17,7 @@
         />
 
     <TextView
-        android:id="@+id/tv_add__event_title"
+        android:id="@+id/tv_add_event_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -26,7 +26,7 @@
         android:textSize="@dimen/common_topbar_text_font_size"
     />
     <TextView
-        android:id="@+id/tv_add__event_complete"
+        android:id="@+id/tv_add_event_complete"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"

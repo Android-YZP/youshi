@@ -6,12 +6,8 @@
 
     <ImageView
         android:id="@+id/iv_common_topbar_back"
-        android:layout_width="@dimen/creativedetail_topbar_img_back_width"
-        android:layout_height="@dimen/creativedetail_topbar_img_back_height"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/creativedetail_topbar_margin_left"
-        android:background="@drawable/common_back"/>
+        android:src="@drawable/nav_back"
+        style="@style/commonTopbarBackStyle"/>
 
     <TextView
         android:id="@+id/tv_common_topbar_title"

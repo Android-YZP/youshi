@@ -12,23 +12,23 @@ import android.view.MotionEvent;
 /**
  * 自定义文本输入框，增加清空按钮
  */
-public class CustomEditText extends AppCompatEditText {
+public class EventCustomEditText extends AppCompatEditText {
 
     private Drawable mLeft, mTop, mRight, mBottom;
 
     private Rect mBounds;
 
-    public CustomEditText(Context context) {
+    public EventCustomEditText(Context context) {
         super(context);
         init();
     }
 
-    public CustomEditText(Context context, AttributeSet attrs, int defStyle) {
+    public EventCustomEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
-    public CustomEditText(Context context, AttributeSet attrs) {
+    public EventCustomEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }

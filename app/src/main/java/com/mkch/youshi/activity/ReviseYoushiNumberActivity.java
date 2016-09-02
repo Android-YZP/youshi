@@ -1,21 +1,17 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 
-public class InformationSettingActivity extends Activity {
+public class ReviseYoushiNumberActivity extends Activity {
 
 	private ImageView mIvBack;
-	private TextView mTvTitle,mTvSetting;
+	private TextView mTvTitle;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -23,7 +19,7 @@ public class InformationSettingActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_information_setting);
+		setContentView(R.layout.activity_revise_youshi_number);
 		initView();
 		initData();
 		setListener();
@@ -31,8 +27,7 @@ public class InformationSettingActivity extends Activity {
 
 	private void initView() {
 		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
-		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
-		mTvSetting = (TextView) findViewById(R.id.tv_information_setting_setting);
+		mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -44,16 +39,17 @@ public class InformationSettingActivity extends Activity {
 //		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
 	}
 
-	private void initData() {mTvTitle.setText("资料设置");}
+	private void initData() {
+		mTvTitle.setText("设置优时号");
+	}
 
 	private void setListener() {
 		mIvBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				InformationSettingActivity.this.finish();
+				ReviseYoushiNumberActivity.this.finish();
 			}
 		});
-		mTvSetting.setOnClickListener(new InformationSettingOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
@@ -100,24 +96,20 @@ public class InformationSettingActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-	/**
-	* 自定义点击监听类
-	* @author JLJ
-	*/
-	private class InformationSettingOnClickListener implements View.OnClickListener {
-		@Override
-		public void onClick(View view) {
-			Intent _intent = null;
-			switch (view.getId()) {
-				case R.id.tv_information_setting_setting:
-					_intent = new Intent(InformationSettingActivity.this,RemarkInformationActivity.class);
-					startActivity(_intent);
-					break;
-				default:
-					break;
-			}
-		}
-	}
+//	private class UserInformationOnClickListener implements View.OnClickListener {
+//
+//	@Override
+//	public void onClick(View view) {
+//		Intent _intent = null;
+//		switch (view.getId()) {
+//			case R.id.iv_common_topbar_back:
+//				UserInformationActivity.this.finish();
+//				break;
+//			default:
+//				break;
+//		}
+//	}
+//}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

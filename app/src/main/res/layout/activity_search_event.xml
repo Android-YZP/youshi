@@ -2,11 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_height="@dimen/common_topbar_height"
+    android:background="@color/common_topbar_bg_color"
     tools:context="com.mkch.youshi.activity.SearchEventActivity">
 
+    <EditText
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_search_input"
+        android:drawableLeft="@drawable/icon_search"
+        android:drawablePadding="8dp"
+        android:hint="搜索日程"
+        android:textColorHint="#ffb5b5b5"
+        android:textColor="@color/common_black_color"
+        android:textSize="@dimen/common_topbar_text_font_size" />
+
+    <TextView
+        android:id="@+id/tv_add__event_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:paddingRight="15dp"
+        android:text="取消"
+        android:textColor="@color/common_topbar_text_font_color"
+        android:textSize="@dimen/common_topbar_text_font_size" />
 </RelativeLayout>
+

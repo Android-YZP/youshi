@@ -15,36 +15,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/common_bg_color"
-            android:paddingBottom="@dimen/youshi_friend_member_search_input_padding_top_or_bottom"
-            android:paddingLeft="@dimen/friend_member_search_input_padding_left_or_right"
-            android:paddingRight="@dimen/friend_member_search_input_padding_left_or_right"
-            android:paddingTop="@dimen/youshi_friend_member_search_input_padding_top_or_bottom">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/message_search_part_height"
+            android:background="@color/message_search_part_bg_color"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <com.mkch.youshi.view.CustomEditText
+            <EditText
                 android:id="@+id/et_add_friends_search"
-                android:layout_width="@dimen/youshi_friend_member_search_input_width"
-                android:layout_height="@dimen/youshi_friend_member_search_input_height"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/bg_search_input"
-                android:drawableLeft="@drawable/ic_search"
-                android:drawablePadding="@dimen/friend_member_search_input_drawable_padding"
-                android:drawableRight="@drawable/ic_edit_text_delbtn"
-                android:freezesText="true"
-                android:gravity="center_vertical"
-                android:hint="搜索"
-                android:imeOptions="actionSearch"
-                android:paddingBottom="@dimen/member_search_input_et_padding_top_or_bottom"
-                android:paddingTop="@dimen/member_search_input_et_padding_top_or_bottom"
-                android:singleLine="true"
-                android:textCursorDrawable="@null"
-                android:textColor="@android:color/black"
-                android:textColorHint="#ffb5b5b5"
-                android:textSize="@dimen/member_search_input_et_text_size"/>
-        </RelativeLayout>
+                style="@style/commonEditTextStyle" />
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="fill_parent"

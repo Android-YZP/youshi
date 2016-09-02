@@ -11,12 +11,12 @@
         layout="@layout/layout_common_topbar"/>
 
     <EditText
-        android:id="@+id/et_revise_name"
+        android:id="@+id/et_revise_youshi_number"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:layout_marginTop="@dimen/user_reg_phone_et_phone_margin_top"
-        android:hint="请输入新的昵称"
+        android:hint="请设置您的优时号"
         android:textCursorDrawable="@null"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
@@ -24,8 +24,17 @@
         android:maxLength="20"
         android:background="@drawable/bg_border_common_et"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注意：优时号只能设置一次，设置之后无法修改"
+        android:textColor="@color/user_reg_phone_et_text_font_color"
+        android:textSize="@dimen/user_reg_phone_text_read_protocal_text_font_size"
+        android:layout_marginTop="@dimen/friend_member_search_input_drawable_padding"
+        android:layout_gravity="center_horizontal"/>
+
     <Button
-        android:id="@+id/btn_revise_name_confirm"
+        android:id="@+id/btn_revise_youshi_number_confirm"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_btn_getcode_height"
         android:text="确定"
