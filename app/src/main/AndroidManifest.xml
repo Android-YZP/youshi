@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mkch.youshi">
-
+          package="com.mkch.youshi">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,11 +14,10 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity" />
         <activity android:name=".activity.UserLoginActivity" />
@@ -47,6 +45,11 @@
         <activity android:name=".activity.SearchEventActivity" />
         <activity
             android:name=".fragment.month.MonthActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".activity.TestNetActivity"/>
+        <activity android:name=".activity.ChatActivity"/>
+        <activity android:name=".activity.MultiChatActivity"/>
             android:screenOrientation="portrait" />
         <activity android:name=".activity.TestNetActivity" />
         <activity android:name=".activity.ChooseAddressActivity" />

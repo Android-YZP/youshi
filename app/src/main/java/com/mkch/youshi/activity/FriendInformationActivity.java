@@ -1,8 +1,10 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,7 +14,8 @@ import org.w3c.dom.Text;
 
 public class FriendInformationActivity extends Activity {
 
-	private TextView mRemark,mLine1,mLine2,mLine3,mLine4,mLine5,mLine6;
+	private ImageView mIvBack;
+	private TextView mTvMore,mTvRemark,mTvSetting,mTvLine1,mTvLine2,mTvLine3,mTvLine4,mTvLine5,mTvLine6;
 	private LinearLayout mLayoutPhone,mLayoutLabel,mLayoutDescribe;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
@@ -24,20 +27,23 @@ public class FriendInformationActivity extends Activity {
 		setContentView(R.layout.activity_friend_information);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
-		mRemark = (TextView) findViewById(R.id.tv_friend_information_setting);
+		mIvBack = (ImageView) findViewById(R.id.iv_friend_information_back);
+		mTvMore = (TextView) findViewById(R.id.tv_friend_information_more);
+		mTvSetting = (TextView) findViewById(R.id.tv_friend_information_setting);
+		mTvRemark = (TextView) findViewById(R.id.tv_friend_information_setting);
 		mLayoutPhone = (LinearLayout) findViewById(R.id.layout_friend_information_phone);
 		mLayoutLabel = (LinearLayout) findViewById(R.id.layout_friend_information_label);
 		mLayoutDescribe = (LinearLayout) findViewById(R.id.layout_friend_information_describe);
-		mLine1 = (TextView) findViewById(R.id.tv_friend_information_line1);
-		mLine2 = (TextView) findViewById(R.id.tv_friend_information_line2);
-		mLine3 = (TextView) findViewById(R.id.tv_friend_information_line3);
-		mLine4 = (TextView) findViewById(R.id.tv_friend_information_line4);
-		mLine5 = (TextView) findViewById(R.id.tv_friend_information_line5);
-		mLine6 = (TextView) findViewById(R.id.tv_friend_information_line6);
+		mTvLine1 = (TextView) findViewById(R.id.tv_friend_information_line1);
+		mTvLine2 = (TextView) findViewById(R.id.tv_friend_information_line2);
+		mTvLine3 = (TextView) findViewById(R.id.tv_friend_information_line3);
+		mTvLine4 = (TextView) findViewById(R.id.tv_friend_information_line4);
+		mTvLine5 = (TextView) findViewById(R.id.tv_friend_information_line5);
+		mTvLine6 = (TextView) findViewById(R.id.tv_friend_information_line6);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -53,16 +59,24 @@ public class FriendInformationActivity extends Activity {
 		mLayoutPhone.setVisibility(View.GONE);
 		mLayoutLabel.setVisibility(View.GONE);
 		mLayoutDescribe.setVisibility(View.GONE);
-		mLine5.setVisibility(View.GONE);
-		mLine6.setVisibility(View.GONE);
+		mTvLine5.setVisibility(View.GONE);
+		mTvLine6.setVisibility(View.GONE);
 	}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				FriendInformationActivity.this.finish();
+			}
+		});
+		mTvMore.setOnClickListener(new FriendInformationOnClickListener());
+		mTvSetting.setOnClickListener(new FriendInformationOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;
@@ -104,42 +118,28 @@ public class FriendInformationActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserLoginOnClickListener implements OnClickListener{
-//
-//		@Override
-//		public void onClick(View view) {
-//			Intent _intent = null;
-//			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
+	/**
+	* 自定义点击监听类
+	* @author JLJ
+	*/
+	private class FriendInformationOnClickListener implements View.OnClickListener {
+		@Override
+		public void onClick(View view) {
+			Intent _intent = null;
+			switch (view.getId()) {
+				case R.id.tv_friend_information_more:
+					_intent = new Intent(FriendInformationActivity.this,InformationSettingActivity.class);
+					startActivity(_intent);
+					break;
+				case R.id.tv_friend_information_setting:
+					_intent = new Intent(FriendInformationActivity.this,RemarkInformationActivity.class);
+					startActivity(_intent);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/contact_catalog"
+        android:id="@+id/tv_contact_catalog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/contact_count_bg_color"
@@ -16,13 +16,13 @@
         android:textColor="@color/contact_list_catalog_text_color"/>
 
     <TextView
-        android:id="@+id/contact_line"
+        android:id="@+id/tv_contact_line"
         android:layout_width="fill_parent"
         android:layout_height="1px"
         android:background="@drawable/bg_cut_line"/>
 
     <LinearLayout
-        android:id="@+id/contact_content"
+        android:id="@+id/layout_contact_content"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/youshi_contact_height"
         android:background="@android:color/white"
@@ -33,7 +33,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/contact_head"
+            android:id="@+id/iv_contact_head"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:contentDescription="@null"
@@ -42,7 +42,7 @@
             android:src="@drawable/default_head_rect"/>
 
         <TextView
-            android:id="@+id/contact_name"
+            android:id="@+id/tv_contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -51,6 +51,6 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/new_friend_content_name_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size"/>
     </LinearLayout>
 </LinearLayout>

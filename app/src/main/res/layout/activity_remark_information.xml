@@ -12,12 +12,8 @@
 
         <ImageView
             android:id="@+id/iv_remark_information_back"
-            android:layout_width="@dimen/creativedetail_topbar_img_back_width"
-            android:layout_height="@dimen/creativedetail_topbar_img_back_height"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="@dimen/creativedetail_topbar_margin_left"
-            android:background="@drawable/common_back"/>
+            android:src="@drawable/nav_back"
+            style="@style/commonTopbarBackStyle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +37,6 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/tv_remark_information_remark"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:text="备注名"
@@ -56,6 +51,7 @@
         android:layout_height="@dimen/friend_information_setting_height"
         android:hint="通过备注名记住联系人"
         android:gravity="center_vertical"
+        android:textCursorDrawable="@null"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
@@ -63,7 +59,6 @@
         android:background="@color/common_white_color"/>
 
     <TextView
-        android:id="@+id/tv_remark_information_label"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:text="标签"
@@ -79,13 +74,13 @@
         android:hint="通过标签给联系人分类"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
     <TextView
-        android:id="@+id/tv_remark_information_phone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:text="电话号码"
@@ -101,6 +96,7 @@
         android:hint="添加电话号码"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:inputType="phone"
@@ -122,6 +118,7 @@
         android:hint="添加电话号码"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:inputType="phone"
@@ -143,6 +140,7 @@
         android:hint="添加电话号码"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:inputType="phone"
@@ -164,6 +162,7 @@
         android:hint="添加电话号码"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:inputType="phone"
@@ -185,6 +184,7 @@
         android:hint="添加电话号码"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:inputType="phone"
@@ -192,7 +192,6 @@
         android:background="@color/common_white_color"/>
 
     <TextView
-        android:id="@+id/tv_remark_information_describe"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:text="描述"
@@ -208,6 +207,7 @@
         android:hint="添加更多备注信息"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:textCursorDrawable="@null"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/friend_information_text_more_size"

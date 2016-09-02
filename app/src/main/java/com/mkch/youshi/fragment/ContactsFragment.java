@@ -11,14 +11,18 @@ import android.widget.LinearLayout;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddFriendsActivity;
+import com.mkch.youshi.activity.FriendInformationActivity;
+import com.mkch.youshi.activity.GroupChatActivity;
 import com.mkch.youshi.activity.MyCollectionActivity;
 import com.mkch.youshi.activity.MyFileActivity;
+import com.mkch.youshi.activity.NewFriendActivity;
 import com.mkch.youshi.activity.SettingActivity;
 import com.mkch.youshi.activity.UserInformationActivity;
 
 public class ContactsFragment extends Fragment {
 
 	private ImageView mIvAddFriend;
+	private LinearLayout mLayoutNewFriend,mLayoutGroupChat,mLayoutTest;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -31,6 +35,7 @@ public class ContactsFragment extends Fragment {
 		findView(view);
 		return view;
 	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -53,6 +58,9 @@ public class ContactsFragment extends Fragment {
 	 */
 	private void findView(View view) {
 		mIvAddFriend = (ImageView) view.findViewById(R.id.iv_contacts_topbar_add_friend);
+		mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
+		mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
+		mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
 	}
 
 	/**
@@ -60,6 +68,9 @@ public class ContactsFragment extends Fragment {
 	 */
 	private void setListener() {
 		mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
+		mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
+		mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
+		mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
 	}
 
 	/**
@@ -75,6 +86,18 @@ public class ContactsFragment extends Fragment {
 				switch (v.getId()) {
 					case R.id.iv_contacts_topbar_add_friend:
 						_intent = new Intent(getActivity(), AddFriendsActivity.class);
+						getActivity().startActivity(_intent);
+						break;
+					case R.id.layout_contacts_new_friend:
+						_intent = new Intent(getActivity(), NewFriendActivity.class);
+						getActivity().startActivity(_intent);
+						break;
+					case R.id.layout_contacts_group_chat:
+						_intent = new Intent(getActivity(), GroupChatActivity.class);
+						getActivity().startActivity(_intent);
+						break;
+					case R.id.layout_contacts_test:
+						_intent = new Intent(getActivity(), FriendInformationActivity.class);
 						getActivity().startActivity(_intent);
 						break;
 					default:

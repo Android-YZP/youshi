@@ -1,7 +1,10 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,8 +13,9 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 
 public class InformationSettingActivity extends Activity {
-	private TextView mTvTitle;
 
+	private ImageView mIvBack;
+	private TextView mTvTitle,mTvSetting;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -22,11 +26,13 @@ public class InformationSettingActivity extends Activity {
 		setContentView(R.layout.activity_information_setting);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
+		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
 		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+		mTvSetting = (TextView) findViewById(R.id.tv_information_setting_setting);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -38,16 +44,21 @@ public class InformationSettingActivity extends Activity {
 //		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
 	}
 
-	private void initData() {
-		mTvTitle.setText("资料设置");
-	}
+	private void initData() {mTvTitle.setText("资料设置");}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				InformationSettingActivity.this.finish();
+			}
+		});
+		mTvSetting.setOnClickListener(new InformationSettingOnClickListener());
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;
@@ -89,42 +100,24 @@ public class InformationSettingActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserLoginOnClickListener implements OnClickListener{
-//
-//		@Override
-//		public void onClick(View view) {
-//			Intent _intent = null;
-//			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
+	/**
+	* 自定义点击监听类
+	* @author JLJ
+	*/
+	private class InformationSettingOnClickListener implements View.OnClickListener {
+		@Override
+		public void onClick(View view) {
+			Intent _intent = null;
+			switch (view.getId()) {
+				case R.id.tv_information_setting_setting:
+					_intent = new Intent(InformationSettingActivity.this,RemarkInformationActivity.class);
+					startActivity(_intent);
+					break;
+				default:
+					break;
+			}
+		}
+	}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

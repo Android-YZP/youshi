@@ -1,18 +1,20 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
 public class RemarkInformationActivity extends Activity {
 
-	private EditText mPhone1,mPhone2,mPhone3,mPhone4,mPhone5;
-	private TextView mLine1,mLine2,mLine3,mLine4,mLine5;
+	private ImageView mIvBack;
+	private EditText mEtPhone1, mEtPhone2,mEtPhone3,mEtPhone4,mEtPhone5;
+	private TextView mTvFinish,mTvLine1,mTvLine2,mTvLine3,mTvLine4;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -23,19 +25,21 @@ public class RemarkInformationActivity extends Activity {
 		setContentView(R.layout.activity_remark_information);
 		initView();
 		initData();
-//		setListener();
+		setListener();
 	}
 
 	private void initView() {
-		mPhone1 = (EditText) findViewById(R.id.et_remark_information_phone1);
-		mPhone2 = (EditText) findViewById(R.id.et_remark_information_phone2);
-		mPhone3 = (EditText) findViewById(R.id.et_remark_information_phone3);
-		mPhone4 = (EditText) findViewById(R.id.et_remark_information_phone4);
-		mPhone5 = (EditText) findViewById(R.id.et_remark_information_phone5);
-		mLine1 = (TextView) findViewById(R.id.tv_remark_information_line1);
-		mLine2 = (TextView) findViewById(R.id.tv_remark_information_line2);
-		mLine3 = (TextView) findViewById(R.id.tv_remark_information_line3);
-		mLine4 = (TextView) findViewById(R.id.tv_remark_information_line4);
+		mIvBack = (ImageView) findViewById(R.id.iv_remark_information_back);
+		mTvFinish = (TextView) findViewById(R.id.tv_remark_information_finish);
+		mEtPhone1 = (EditText) findViewById(R.id.et_remark_information_phone1);
+		mEtPhone2 = (EditText) findViewById(R.id.et_remark_information_phone2);
+		mEtPhone3 = (EditText) findViewById(R.id.et_remark_information_phone3);
+		mEtPhone4 = (EditText) findViewById(R.id.et_remark_information_phone4);
+		mEtPhone5 = (EditText) findViewById(R.id.et_remark_information_phone5);
+		mTvLine1 = (TextView) findViewById(R.id.tv_remark_information_line1);
+		mTvLine2 = (TextView) findViewById(R.id.tv_remark_information_line2);
+		mTvLine3 = (TextView) findViewById(R.id.tv_remark_information_line3);
+		mTvLine4 = (TextView) findViewById(R.id.tv_remark_information_line4);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -48,22 +52,34 @@ public class RemarkInformationActivity extends Activity {
 	}
 
 	private void initData() {
-        mPhone2.setVisibility(View.GONE);
-		mLine1.setVisibility(View.GONE);
-		mPhone3.setVisibility(View.GONE);
-		mLine2.setVisibility(View.GONE);
-		mPhone4.setVisibility(View.GONE);
-		mLine3.setVisibility(View.GONE);
-		mPhone5.setVisibility(View.GONE);
-		mLine4.setVisibility(View.GONE);
+        mEtPhone2.setVisibility(View.GONE);
+		mTvLine1.setVisibility(View.GONE);
+		mEtPhone3.setVisibility(View.GONE);
+		mTvLine2.setVisibility(View.GONE);
+		mEtPhone4.setVisibility(View.GONE);
+		mTvLine3.setVisibility(View.GONE);
+		mEtPhone5.setVisibility(View.GONE);
+		mTvLine4.setVisibility(View.GONE);
 	}
 
-//	private void setListener() {
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				RemarkInformationActivity.this.finish();
+			}
+		});
+		mTvFinish.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				RemarkInformationActivity.this.finish();
+			}
+		});
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
 //		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
 //		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-//	}
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;
@@ -105,42 +121,24 @@ public class RemarkInformationActivity extends Activity {
 //		UserLoginActivity.this.finish();
 //	}
 //
-//	private class UserLoginOnClickListener implements OnClickListener{
-//
+//	/**
+//	* 自定义点击监听类
+//	* @author JLJ
+//	*/
+//	private class InformationSettingOnClickListener implements View.OnClickListener {
 //		@Override
 //		public void onClick(View view) {
 //			Intent _intent = null;
 //			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
-//				break;
-//			default:
-//				break;
+//				case R.id.tv_information_setting_setting:
+//					_intent = new Intent(RemarkInformationActivity.this,FriendInformationActivity.class);
+//					startActivity(_intent);
+//					break;
+//				default:
+//					break;
 //			}
 //		}
+//	}
 //
 //		private void userLoginFromNet(final String account, final String password) {
 //			new Thread(new Runnable() {

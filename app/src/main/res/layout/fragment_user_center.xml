@@ -128,8 +128,8 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/information_setting_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
         android:layout_height="1px"
         android:background="@drawable/bg_cut_line"/>
 
@@ -176,8 +176,8 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/information_setting_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/information_setting_divide_line_margin_left_or_right"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
         android:layout_height="1px"
         android:background="@drawable/bg_cut_line"/>
 

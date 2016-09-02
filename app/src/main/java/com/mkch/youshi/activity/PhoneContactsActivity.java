@@ -47,7 +47,7 @@ public class PhoneContactsActivity extends Activity {
 
 	private void initData() {
 		mTvTitle.setText("手机通讯录");
-		ListAdapter mAdapter = new AddFriendsMethodsListAdapter(PhoneContactsActivity.this);
+		ListAdapter mAdapter = new PhoneContactsListAdapter(PhoneContactsActivity.this);
 		mListView.setAdapter(mAdapter);
 	}
 

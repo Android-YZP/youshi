@@ -25,7 +25,7 @@
             android:paddingTop="@dimen/youshi_friend_member_search_input_padding_top_or_bottom">
 
             <com.mkch.youshi.view.CustomEditText
-                android:id="@+id/group_chat_search_input"
+                android:id="@+id/et_group_chat_search"
                 android:layout_width="@dimen/youshi_friend_member_search_input_width"
                 android:layout_height="@dimen/youshi_friend_member_search_input_height"
                 android:layout_gravity="center_vertical"
@@ -36,6 +36,7 @@
                 android:freezesText="true"
                 android:gravity="center_vertical"
                 android:hint="搜索"
+                android:textCursorDrawable="@null"
                 android:imeOptions="actionSearch"
                 android:paddingBottom="@dimen/member_search_input_et_padding_top_or_bottom"
                 android:paddingTop="@dimen/member_search_input_et_padding_top_or_bottom"
@@ -54,14 +55,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:cacheColorHint="@android:color/transparent"
-                android:divider="@drawable/bg_cut_line"
+                android:divider="@drawable/list_item_divider"
                 android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
                 android:scrollbars="none"/>
 
             <TextView
-                android:id="@+id/dialog_group_chat"
+                android:id="@+id/tv_group_chat_dialog"
                 android:layout_width="80.0dip"
                 android:layout_height="80.0dip"
                 android:layout_gravity="center"
