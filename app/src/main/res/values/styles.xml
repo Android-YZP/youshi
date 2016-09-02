@@ -106,6 +106,8 @@
         <item name="android:background">@color/common_white_color</item>
         <item name="android:textSize">@dimen/common_et_text_font_size</item>
         <item name="android:textColor">@color/common_et_text_font_color</item>
+        <item name="android:textColorHint">@color/common_content_text_font_color</item>
+        <item name="android:textCursorDrawable">@null</item>
         <item name="android:drawableLeft">@drawable/icon_search</item>
         <item name="android:paddingLeft">@dimen/common_et_padding_left</item>
         <item name="android:drawablePadding">@dimen/common_et_drawable_padding</item>
@@ -165,6 +167,5 @@
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
-
 
 </resources>

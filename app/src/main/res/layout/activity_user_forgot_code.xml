@@ -92,7 +92,7 @@
         android:background="@drawable/selector_btn_user_login"/>
     
     <TextView
-	        android:id="@+id/tv_user_forgot_code_get_again"
+	        android:id="@+id/tv_user_forgot_code_intro"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="重新发送验证码(60s)"
