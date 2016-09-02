@@ -41,8 +41,6 @@
         <item name="android:textSize">@dimen/person_event_text_font_size</item>
     </style>
 
-
-
     <style name="textStyleWhite24">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_white</item>
@@ -158,6 +156,5 @@
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
-
 
 </resources>
