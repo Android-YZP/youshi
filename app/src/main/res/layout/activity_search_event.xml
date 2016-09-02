@@ -9,7 +9,6 @@
     <EditText
         android:layout_width="240dp"
         android:layout_height="wrap_content"
-
         android:layout_centerInParent="true"
         android:background="@drawable/bg_search_input"
         android:drawableLeft="@drawable/icon_search"

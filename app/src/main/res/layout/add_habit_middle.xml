@@ -8,6 +8,7 @@
         style="@style/lineOfAffairList"/>
     <!--周期-->
     <RelativeLayout
+        android:id="@+id/rl_habit_circle"
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
@@ -26,6 +27,7 @@
 
     <!--周-->
     <RelativeLayout
+        android:id="@+id/rl_habit_week"
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
@@ -43,6 +45,7 @@
         android:layout_marginLeft="15dp" />
     <!--时间段选择-->
     <RelativeLayout
+        android:id="@+id/rl_habit_choose_time"
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
@@ -56,9 +59,12 @@
             android:drawablePadding="7dp"
             android:text="已选择" />
     </RelativeLayout>
-
+    <View
+        style="@style/lineOfAffairList"
+        android:layout_marginLeft="15dp" />
     <!--时长-->
     <RelativeLayout
+        android:id="@+id/rl_habit_all_time"
         android:layout_width="match_parent"
         android:layout_height="44dp">
 

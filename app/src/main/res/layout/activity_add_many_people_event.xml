@@ -29,8 +29,8 @@
     <include
         layout="@layout/add_event_middle"
         android:layout_width="match_parent"
-        android:layout_height="135dp" />
-    <!--中间部分-->
+        android:layout_height="134dp" />
+    <!--后面部分-->
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"

@@ -83,6 +83,12 @@
         <item name="android:background">@color/week_day_line</item>
     </style>
 
+    <style name="lineOfDialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">5px</item>
+        <item name="android:background">@color/week_day_line</item>
+    </style>
+
     <color name="personal_event_text_color">#313131</color>
     <color name="text_white">#ffffff</color>
     <color name="text_black">#313131</color>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:padding="10dp"
+        android:text="2016年9月2日 8:05"
+        android:textColor="@color/week_day_line"
+        android:textSize="28sp" />
+
+    <View style="@style/lineOfDialog" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:id="@+id/np_year"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+        </NumberPicker>
+
+        <NumberPicker
+            android:id="@+id/np_month"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+        </NumberPicker>
+
+        <NumberPicker
+            android:id="@+id/np_day"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+        </NumberPicker>
+
+        <NumberPicker
+            android:id="@+id/np_hour"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/common_et_padding_left">
+
+        </NumberPicker>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=":"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <NumberPicker
+            android:id="@+id/np_min"
+            android:layout_width="55dp"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        style="@style/lineOfAffairList"
+        android:paddingTop="10dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="完成"
+        android:textColor="@color/text_black"
+        android:textSize="18sp" />
+
+</LinearLayout>

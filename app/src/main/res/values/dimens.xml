@@ -17,6 +17,7 @@
     <dimen name="common_et_height">28dp</dimen>
     <dimen name="common_et_text_font_size">14sp</dimen>
     <dimen name="common_et_padding_left">10dp</dimen>
+    <dimen name="common_np_padding_left">20dp</dimen>
     <dimen name="common_et_drawable_padding">8dp</dimen>
 
 
@@ -144,8 +145,6 @@
 
     <!-- user information -->
     <dimen name="user_information_layout_head_height">90dp</dimen>
-
-
 
 
     <!--index message-->
