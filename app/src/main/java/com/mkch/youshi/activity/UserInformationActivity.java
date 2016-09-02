@@ -20,8 +20,11 @@ import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 public class UserInformationActivity extends Activity {
 
 	private ImageView mIvBack;
-	private TextView mTvTitle;
+	private TextView mTvTitle,mTvSex;
 	private LinearLayout mLayoutName,mLayoutYoushiNumber,mLayoutSex,mLayoutSignature;
+	//保存选择的性别
+	private String[] sex_list = {"男", "女"};
+	private int checkedItem = 0;
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
@@ -41,6 +44,7 @@ public class UserInformationActivity extends Activity {
 		mLayoutName = (LinearLayout) findViewById(R.id.layout_user_information_name);
 		mLayoutYoushiNumber = (LinearLayout) findViewById(R.id.layout_user_information_youshi_number);
 		mLayoutSex = (LinearLayout) findViewById(R.id.layout_user_information_sex);
+		mTvSex = (TextView) findViewById(R.id.tv_user_information_sex);
 		mLayoutSignature = (LinearLayout) findViewById(R.id.layout_user_information_signature);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
@@ -66,13 +70,16 @@ public class UserInformationActivity extends Activity {
 		});
 		mLayoutName.setOnClickListener(new UserInformationOnClickListener());
 		mLayoutYoushiNumber.setOnClickListener(new UserInformationOnClickListener());
+		//弹出对话框，用户选择性别后更新界面
 		mLayoutSex.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new AlertDialog.Builder(UserInformationActivity.this).setTitle("您的性别为").setSingleChoiceItems(
-						new String[] { "男", "女" }, 0, new DialogInterface.OnClickListener(){
+						sex_list, checkedItem, new DialogInterface.OnClickListener(){
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
+								checkedItem = which;
+								mTvSex.setText(sex_list[which]);
 								dialog.dismiss();
 							}
 						}).show();
