@@ -162,8 +162,8 @@ public class ChatActivity extends BaseActivity {
             }
             mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
             break;
+        }
     }
-}
 
     /**
      * 切换键盘和语音
