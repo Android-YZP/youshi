@@ -21,7 +21,7 @@ import com.mkch.youshi.activity.UserInformationActivity;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 import com.mkch.youshi.adapter.FileListAdapter;
 
-public class FileFragment extends Fragment {
+public class MyCollectionFragment extends Fragment {
 
     private SwipeRefreshLayout mSRLayout;
     private ListView mListView;

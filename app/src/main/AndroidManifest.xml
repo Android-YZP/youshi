@@ -49,6 +49,7 @@
         <activity android:name=".activity.SearchEventActivity"/>
         <activity android:name=".activity.FilePreviewActivity"/>
         <activity android:name=".activity.FilePreviewPicActivity"/>
+        <activity android:name=".activity.LocalFileActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait">
