@@ -36,6 +36,14 @@
             android:textSize="@dimen/friend_information_text_more_size"/>
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <View
         style="@style/commonLineStyle"
         android:layout_marginTop="@dimen/friend_information_margin_top"/>
@@ -328,6 +336,7 @@
         android:layout_gravity="center"
         android:padding="10dp"
         android:src="@drawable/content_dial"/>
+
     <Button
         android:id="@+id/btn_friend_information_send_message"
         android:layout_width="match_parent"
@@ -353,4 +362,6 @@
         android:textColor="@color/common_topbar_bg_color"
         android:gravity="center"
         android:background="@drawable/selector_btn_send_event"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

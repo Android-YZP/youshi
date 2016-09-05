@@ -10,12 +10,15 @@
         android:layout_height="@dimen/common_topbar_height"
         layout="@layout/layout_common_topbar"/>
 
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <EditText
         android:id="@+id/et_revise_youshi_number"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:layout_marginTop="@dimen/user_reg_phone_et_phone_margin_top"
         android:hint="请设置您的优时号"
         android:textCursorDrawable="@null"
         android:textColor="@color/common_et_text_font_color"
@@ -23,6 +26,9 @@
         android:textSize="@dimen/common_et_text_font_size"
         android:maxLength="20"
         android:background="@drawable/bg_border_common_et"/>
+
+    <View
+        style="@style/commonLineStyle"/>
 
     <TextView
         android:layout_width="wrap_content"

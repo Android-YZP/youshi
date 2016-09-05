@@ -158,4 +158,16 @@
     <!-- chat -->
     <dimen name="chat_list_left_headpic_width_or_height">40dp</dimen>
 
+    <!-- file preview -->
+    <dimen name="file_preview_image_width_or_height">90dp</dimen>
+    <dimen name="file_preview_image_margin_top">83dp</dimen>
+    <dimen name="file_preview_file_name_margin_top">25dp</dimen>
+    <dimen name="file_preview_text_name_size">16sp</dimen>
+    <dimen name="file_preview_file_size_margin_top">15dp</dimen>
+    <dimen name="file_preview_btn_preview_width">300dp</dimen>
+    <dimen name="file_preview_btn_preview_height">40dp</dimen>
+    <dimen name="file_preview_btn_preview_margin_top">28dp</dimen>
+    <dimen name="file_preview_text_preview_size">14sp</dimen>
+    <dimen name="file_preview_layout_bottom_height">49dp</dimen>
+    <dimen name="file_preview_open_margin_top">10dp</dimen>
 </resources>

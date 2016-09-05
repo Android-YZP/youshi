@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/common_bg_color">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        layout="@layout/layout_common_topbar"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/preview_pic"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/file_preview_layout_bottom_height"
+        android:orientation="horizontal"
+        android:background="@color/common_white_color"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="其他软件打开"
+            android:layout_marginLeft="@dimen/file_preview_open_margin_top"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="转发"
+            android:layout_marginLeft="@dimen/file_preview_open_margin_top"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="收藏"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="删除"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+    </LinearLayout>
+</LinearLayout>

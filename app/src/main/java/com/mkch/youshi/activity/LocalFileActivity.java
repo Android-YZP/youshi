@@ -15,12 +15,12 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.fragment.MyCollectionFragment;
 import com.mkch.youshi.view.FileTabBarLayout;
 
-public class MyCollectionActivity extends BaseActivity {
+public class LocalFileActivity extends BaseActivity {
 
     private ImageView mIvBack;
     private TextView mTvTitle;
     private FileTabBarLayout mFileTabBarLayout;
-    private ViewPager mViewPagerFile;
+    private ViewPager mViewPagerLocalFile;
     private final static int FLAG_ITEM_0 = 0;
     private final static int FLAG_ITEM_1 = 1;
     private final static int FLAG_ITEM_2 = 2;
@@ -39,7 +39,7 @@ public class MyCollectionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_collection);
+        setContentView(R.layout.activity_local_file);
         initView();
         initData();
         setListener();
@@ -49,8 +49,8 @@ public class MyCollectionActivity extends BaseActivity {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
         mFileTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_my_collection_tabbar);
-        mViewPagerFile = (ViewPager) findViewById(R.id.viewPager_my_collection);
-        mViewPagerFile.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
+        mViewPagerLocalFile = (ViewPager) findViewById(R.id.viewPager_my_collection);
+        mViewPagerLocalFile.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         //初始化屏幕宽度
         DisplayMetrics outMetrics = new DisplayMetrics();
         getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
@@ -61,14 +61,14 @@ public class MyCollectionActivity extends BaseActivity {
 
     private void initData() {
         mTvTitle.setText("我的收藏");
-        mViewPagerFile.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
+        mViewPagerLocalFile.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
     }
 
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyCollectionActivity.this.finish();
+                LocalFileActivity.this.finish();
             }
         });
         mFileTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
@@ -76,25 +76,25 @@ public class MyCollectionActivity extends BaseActivity {
             public void clickItem(int id) {
                 switch (id) {
                     case R.id.tv_file_item0:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
+                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
                         break;
                     case R.id.tv_file_item1:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_1);
+                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_1);
                         break;
                     case R.id.tv_file_item2:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_2);
+                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_2);
                         break;
                     case R.id.tv_file_item3:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_3);
+                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_3);
                         break;
                     case R.id.tv_file_item4:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_4);
+                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_4);
                         break;
                 }
             }
         });
 
-        mViewPagerFile.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPagerLocalFile.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mFileTabBarLayout.changeTabBarItems(position);
@@ -105,14 +105,14 @@ public class MyCollectionActivity extends BaseActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 //从左到右
                 if (currentIndex == position) {
-                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                    LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
                             .getLayoutParams();
                     layoutParam.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
                     tabUnderLine.setLayoutParams(layoutParam);
                 }
                 //从右到左
                 else if (currentIndex > position) {
-                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                    LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
                             .getLayoutParams();
                     layoutParam.leftMargin = (int) (-(1 - positionOffset) * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
                     tabUnderLine.setLayoutParams(layoutParam);
@@ -161,7 +161,7 @@ public class MyCollectionActivity extends BaseActivity {
     //初始化tab下划线
     private void initTabUnderLine() {
         tabUnderLine = (View) findViewById(R.id.tab_file_under_line);
-        LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine.getLayoutParams();
+        LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine.getLayoutParams();
         layoutParam.width = screenWidth / fragSize;
         tabUnderLine.setLayoutParams(layoutParam);
     }
