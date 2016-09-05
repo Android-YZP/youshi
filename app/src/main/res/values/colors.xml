@@ -48,4 +48,13 @@
     <color name="common_gary_week_color">#959595</color>
     <color name="message_search_part_bg_color">#f1f1f1</color>
 
+    <!--today cycicle label type color-->
+    <color name="clock_kedu">#dddddd</color>
+    <color name="cycicle_color_1">#2ca8e1</color>
+    <color name="cycicle_color_2">#27b7b3</color>
+    <color name="cycicle_color_3">#fac139</color>
+    <color name="cycicle_color_4">#ef8d27</color>
+    <color name="cycicle_color_5">#ec1f79</color>
+    <color name="cycicle_color_6">#92288f</color>
+
 </resources>
