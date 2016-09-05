@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 /**
- * 添加好友方式列表
+ * 手机联系人列表
  * Created by SunnyJiang on 2016/8/18.
  */
 public class PhoneContactsListAdapter extends BaseAdapter implements ListAdapter{

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * 列表适配器
+ * 联系人列表适配器
  *
  * @author kymjs (http://www.kymjs.com/) on 9/16/15.
  */

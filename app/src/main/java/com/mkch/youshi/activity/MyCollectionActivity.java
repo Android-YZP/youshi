@@ -1,188 +1,168 @@
 package com.mkch.youshi.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.fragment.FileFragment;
+import com.mkch.youshi.view.FileTabBarLayout;
 
-public class MyCollectionActivity extends Activity {
+public class MyCollectionActivity extends BaseActivity {
 
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-//	//业务层
-//	private IUserBusiness mUserBusiness = new UserBusinessImp();
-//	private static ProgressDialog mProgressDialog = null;
-//	private User mUser;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_my_collection);
-		initView();
-		initData();
-		setListener();
-	}
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private FileTabBarLayout mFileTabBarLayout;
+    private ViewPager mViewPagerFile;
+    private final static int FLAG_ITEM_0 = 0;
+    private final static int FLAG_ITEM_1 = 1;
+    private final static int FLAG_ITEM_2 = 2;
+    private final static int FLAG_ITEM_3 = 3;
+    private final static int FLAG_ITEM_4 = 4;
+    //下划线
+    private View tabUnderLine;
+    //当前页面
+    private int currentIndex;
+    //屏幕宽度
+    private int screenWidth;
+    //页面总个数
+    private int fragSize = 5;
+    //设置预加载界面数量
+    private int CACHE_PAGES = 4;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_collection);
+        initView();
+        initData();
+        setListener();
+    }
 
-	private void initView() {
-		mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
-		mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-//		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
-//
-//		//手机号介绍信息
-//		mTvPhoneInfo = (TextView)findViewById(R.id.tv_user_forgot_intro);
-//		//验证码
-//		mEtSmsCode = (EditText)findViewById(R.id.et_user_forgot_code);
-//		//新密码和确认密码
-//		mEtPassword = (EditText)findViewById(R.id.et_user_forgot_password);
-//		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
-	}
+    private void initView() {
+        mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
+        mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
+        mFileTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_file_tabbar);
+        mViewPagerFile = (ViewPager) findViewById(R.id.viewPager_file);
+        mViewPagerFile.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
+        //初始化屏幕宽度
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        screenWidth = outMetrics.widthPixels;
+        //初始化tab选中后的下划线
+        initTabUnderLine();
+    }
 
-	private void initData()  {
-		mTvTitle.setText("我的收藏");
-	}
+    private void initData() {
+        mTvTitle.setText("我的收藏");
+        mViewPagerFile.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
+    }
 
-	private void setListener() {
-		mIvBack.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				MyCollectionActivity.this.finish();
-			}
-		});
-//		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());
-//		mTvGoRegister.setOnClickListener(new UserLoginOnClickListener());
-//		mTvGoForgot.setOnClickListener(new UserLoginOnClickListener());
-//		mBtnVisitByEasy.setOnClickListener(new UserLoginOnClickListener());
-	}
-//
-//	private static class MyHandler extends Handler{
-//		private final WeakReference<Activity> mActivity;
-//		public MyHandler(UserLoginActivity activity) {
-//			mActivity = new WeakReference<Activity>(activity);
-//		}
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			if(mProgressDialog!=null){
-//				mProgressDialog.dismiss();
-//			}
-//			int flag = msg.what;
-//			switch (flag) {
-//			case 0:
-//				String errorMsg = (String)msg.getData().getSerializable("ErrorMsg");
-//				((UserLoginActivity)mActivity.get()).showTip(errorMsg);
-//				break;
-//			case CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS:
-//				((UserLoginActivity)mActivity.get()).saveUserInfo();
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//	}
-//
-//	private MyHandler handler = new MyHandler(this);
-//
-//	private void showTip(String str){
-//		Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-//	}
-//
-//	public void saveUserInfo() {
-//		//保存用户信息，并关闭该界面
-//		Log.d(CommonConstants.LOGCAT_TAG_NAME+"_user_login_info", mUser.toString());
-//		CommonUtil.saveUserInfo(mUser,this);
-//		Toast.makeText(UserLoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
-//		UserLoginActivity.this.finish();
-//	}
-//
-//	private class UserLoginOnClickListener implements OnClickListener{
-//
-//		@Override
-//		public void onClick(View view) {
-//			Intent _intent = null;
-//			switch (view.getId()) {
-//			case R.id.btn_user_login_commit:
-//				String account = mEtAccount.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//
-//				if(account==null||account.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//
-//				//弹出加载进度条
-//				mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在玩命登录中...",true,true);
-//				//开启副线程-发起登录
-//				userLoginFromNet(account,password);
-//				break;
-//			case R.id.tv_user_login_reg:
-//				_intent = new Intent(UserLoginActivity.this,UserRegPhoneActivity.class);
-//				startActivity(_intent);
-//				break;
-//			case R.id.tv_user_login_forget:
-//				_intent = new Intent(UserLoginActivity.this,UserForgotCodeActivity.class);
-//				startActivity(_intent);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//
-//		private void userLoginFromNet(final String account, final String password) {
-//			new Thread(new Runnable() {
-//				@Override
-//				public void run() {
-//					try {
-//						String result = mUserBusiness.getUserLogin(account,password);
-//						Log.d(CommonConstants.LOGCAT_TAG_NAME + "_result_user_login_getUserLogin", result);
-//						JSONObject jsonObj = new JSONObject(result);
-//						boolean Success = jsonObj.getBoolean("success");
-//						if(Success){
-//							//填充用户信息
-//							fullUserInfo(jsonObj);
-//							//获取成功
-//							handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
-//						}else{
-//							//获取错误代码，并查询出错误文字
-//							String errorMsg = jsonObj.getString("errorMsg");
-//							CommonUtil.sendErrorMessage(errorMsg,handler);
-//						}
-//					} catch (ConnectTimeoutException e) {
-//						e.printStackTrace();
-//						CommonUtil.sendErrorMessage(CommonConstants.MSG_REQUEST_TIMEOUT,handler);
-//					}catch (SocketTimeoutException e) {
-//						e.printStackTrace();
-//						CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_RESPONSE_TIMEOUT,handler);
-//					}
-//					catch (ServiceException e) {
-//						e.printStackTrace();
-//						CommonUtil.sendErrorMessage(e.getMessage(),handler);
-//					} catch (Exception e) {
-//						//what = 0;sendmsg 0;
-//						CommonUtil.sendErrorMessage("注册-用户登录："+CommonConstants.MSG_GET_ERROR,handler);
-//					}
-//				}
-//				/**
-//				 * 填充用户信息
-//				 * @param jsonObj
-//				 */
-//				private void fullUserInfo(JSONObject jsonObj) {
-//					mUser = new User();
-//					mUser.setAccount(JsonUtils.getString(jsonObj, "account"));
-//					mUser.setPassword(JsonUtils.getString(jsonObj, "password"));
-//					mUser.setId(JsonUtils.getInt(jsonObj, "id"));
-//					mUser.setUserImg(JsonUtils.getString(jsonObj, "userImg"));
-//					mUser.setUsername(JsonUtils.getString(jsonObj, "username"));
-//					mUser.setMobile(JsonUtils.getString(jsonObj, "mobile"));
-//					mUser.setVerifyCode(JsonUtils.getString(jsonObj, "verifyCode"));
-//				}
-//			}).start();
-//		}
-//
-//	}
+    private void setListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyCollectionActivity.this.finish();
+            }
+        });
+        mFileTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
+            @Override
+            public void clickItem(int id) {
+                switch (id) {
+                    case R.id.tv_file_item0:
+                        mViewPagerFile.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
+                        break;
+                    case R.id.tv_file_item1:
+                        mViewPagerFile.setCurrentItem(FLAG_ITEM_1);
+                        break;
+                    case R.id.tv_file_item2:
+                        mViewPagerFile.setCurrentItem(FLAG_ITEM_2);
+                        break;
+                    case R.id.tv_file_item3:
+                        mViewPagerFile.setCurrentItem(FLAG_ITEM_3);
+                        break;
+                    case R.id.tv_file_item4:
+                        mViewPagerFile.setCurrentItem(FLAG_ITEM_4);
+                        break;
+                }
+            }
+        });
+
+        mViewPagerFile.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mFileTabBarLayout.changeTabBarItems(position);
+                currentIndex = position;//当前页
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //从左到右
+                if (currentIndex == position) {
+                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                            .getLayoutParams();
+                    layoutParam.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
+                    tabUnderLine.setLayoutParams(layoutParam);
+                }
+                //从右到左
+                else if (currentIndex > position) {
+                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                            .getLayoutParams();
+                    layoutParam.leftMargin = (int) (-(1 - positionOffset) * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
+                    tabUnderLine.setLayoutParams(layoutParam);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int position) {
+            }
+        });
+    }
+
+    /**
+     * 自定义ViewPager的适配器
+     *
+     * @author JLJ
+     */
+    private class FileFragmentPagerAdapter extends FragmentPagerAdapter {
+        public FileFragmentPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int postion) {
+            switch (postion) {
+                case FLAG_ITEM_0:
+                    return new FileFragment();
+                case FLAG_ITEM_1:
+                    return new FileFragment();
+                case FLAG_ITEM_2:
+                    return new FileFragment();
+                case FLAG_ITEM_3:
+                    return new FileFragment();
+                case FLAG_ITEM_4:
+                    return new FileFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
+    }
+
+    //初始化tab下划线
+    private void initTabUnderLine() {
+        tabUnderLine = (View) findViewById(R.id.tab_file_under_line);
+        LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine.getLayoutParams();
+        layoutParam.width = screenWidth / fragSize;
+        tabUnderLine.setLayoutParams(layoutParam);
+    }
 }

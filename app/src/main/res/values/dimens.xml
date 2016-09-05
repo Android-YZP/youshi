@@ -134,7 +134,7 @@
     <dimen name="information_setting_delete_margin_bottom">20dp</dimen>
 
     <!-- remark information -->
-    <dimen name="remark_information_divide_line_margin_left_or_right">10dp</dimen>
+    <dimen name="remark_information_divide_line_margin_left_or_right">14dp</dimen>
 
     <!-- user center -->
     <dimen name="user_center_head_width_or_height">50dp</dimen>

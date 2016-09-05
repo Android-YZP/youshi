@@ -6,8 +6,9 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/layout_file"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/youshi_contact_height"
+        android:layout_height="@dimen/new_friend_content_height"
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
@@ -16,7 +17,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/iv_add_friend_image"
+            android:id="@+id/iv_file_image"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:contentDescription="@null"
@@ -24,20 +25,32 @@
             android:scaleType="fitXY"
             android:src="@drawable/default_head_rect"/>
 
-        <TextView
-            android:id="@+id/tv_add_friend_name"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:orientation="vertical">
 
-        <ImageView
-            style="@style/commonArrowStyle"/>
+            <TextView
+                android:id="@+id/tv_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/new_friend_name_color"
+                android:textSize="@dimen/friend_information_text_size"/>
+
+            <TextView
+                android:id="@+id/tv_file_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/friend_information_name_color"
+                android:textSize="@dimen/new_friend_content_remark_size"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

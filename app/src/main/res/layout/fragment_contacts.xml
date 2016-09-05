@@ -55,6 +55,9 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
+            <View
+                style="@style/commonLineStyle"/>
+
             <LinearLayout
                 android:id="@+id/layout_contacts_new_friend"
                 android:layout_width="fill_parent"
@@ -89,12 +92,9 @@
 
                 <TextView
                     android:id="@+id/tv_contacts_new_friend_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="8"
                     android:layout_gravity="center_vertical"
-                    android:text="1"
-                    style="@style/commonMsgNumsStyle"
-                    android:textColor="@color/common_white_color"/>
+                    style="@style/commonMsgNumsStyle"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -104,11 +104,9 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-                android:layout_height="1px"
-                android:background="@drawable/bg_cut_line"/>
+            <View
+                style="@style/commonLineStyle"
+                android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
         <LinearLayout
             android:id="@+id/layout_contacts_group_chat"
@@ -144,20 +142,14 @@
 
             <TextView
                 android:id="@+id/tv_contacts_group_chat_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:text="24"
                 android:layout_gravity="center_vertical"
-                style="@style/commonMsgNumsStyle"
-                android:text="10"
-                android:textColor="@color/common_white_color"/>
+                style="@style/commonMsgNumsStyle"/>
         </LinearLayout>
     </LinearLayout>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-            android:layout_height="1px"
-            android:background="@drawable/bg_cut_line"/>
+        <View
+            style="@style/commonLineStyle"/>
 
         <LinearLayout
             android:id="@+id/layout_contacts_test"

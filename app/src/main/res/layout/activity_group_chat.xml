@@ -27,6 +27,9 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
+        <View
+            style="@style/commonLineStyle"/>
+
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
@@ -41,17 +44,20 @@
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
                 android:scrollbars="none"/>
-
-            <TextView
-                android:id="@+id/tv_group_chat_dialog"
-                android:layout_width="80.0dip"
-                android:layout_height="80.0dip"
-                android:layout_gravity="center"
-                android:background="@drawable/contact_select_pinyin_bg"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="45sp"
-                android:visibility="gone"/>
         </FrameLayout>
+
+        <View
+            style="@style/commonLineStyle"/>
+
+        <TextView
+            android:id="@+id/tv_group_chat_dialog"
+            android:layout_width="80.0dip"
+            android:layout_height="80.0dip"
+            android:layout_gravity="center"
+            android:background="@drawable/contact_select_pinyin_bg"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="45sp"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>

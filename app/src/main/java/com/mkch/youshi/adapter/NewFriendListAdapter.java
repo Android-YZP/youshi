@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 /**
- * 添加好友方式列表
+ * 新的朋友列表
  * Created by SunnyJiang on 2016/8/18.
  */
 public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{

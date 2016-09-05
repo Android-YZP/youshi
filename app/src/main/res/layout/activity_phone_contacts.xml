@@ -27,6 +27,9 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
+        <View
+            style="@style/commonLineStyle"/>
+
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
@@ -53,5 +56,8 @@
                 android:textSize="45sp"
                 android:visibility="gone"/>
         </FrameLayout>
+
+        <View
+            style="@style/commonLineStyle"/>
     </LinearLayout>
 </LinearLayout>
