@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.FilePreviewActivity;
+import com.mkch.youshi.activity.FilePreviewPicActivity;
 import com.mkch.youshi.activity.PhoneContactsActivity;
 import com.mkch.youshi.activity.UserInformationActivity;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
@@ -65,6 +66,10 @@ public class FileFragment extends Fragment {
                 switch (position){
                     case 0:
                         _intent = new Intent(getActivity(),FilePreviewActivity.class);
+                        startActivity(_intent);
+                        break;
+                    case 3:
+                        _intent = new Intent(getActivity(),FilePreviewPicActivity.class);
                         startActivity(_intent);
                         break;
                 }

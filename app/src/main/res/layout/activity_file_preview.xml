@@ -51,10 +51,14 @@
             android:background="@drawable/selector_btn_user_login"/>
     </LinearLayout>
 
+    <View
+        style="@style/commonLineStyle"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/file_preview_layout_bottom_height"
         android:orientation="horizontal"
+        android:background="@color/common_white_color"
         android:gravity="center_vertical">
 
         <TextView
