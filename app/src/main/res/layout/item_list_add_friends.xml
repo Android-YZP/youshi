@@ -38,11 +38,6 @@
             android:textSize="@dimen/friend_information_text_more_size"/>
 
         <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+            style="@style/commonArrowStyle"/>
     </LinearLayout>
 </LinearLayout>

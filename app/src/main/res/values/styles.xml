@@ -180,4 +180,12 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <!--所有的进入箭头style-->
+    <style name="commonArrowStyle">
+        <item name="android:layout_width">@dimen/user_center_arrow_width_or_height</item>
+        <item name="android:layout_height">@dimen/user_center_arrow_width_or_height</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:src">@drawable/list_arrow</item>
+    </style>
 </resources>

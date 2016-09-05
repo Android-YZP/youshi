@@ -75,13 +75,8 @@
             android:src="@drawable/me_code"/>
 
         <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:layout_marginRight="@dimen/new_friend_content_padding_left_or_right"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+            style="@style/commonArrowStyle"
+            android:layout_marginRight="@dimen/new_friend_content_padding_left_or_right"/>
     </LinearLayout>
 
     <LinearLayout
@@ -118,12 +113,7 @@
             android:textSize="@dimen/friend_information_text_more_size"/>
 
         <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+            style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
@@ -163,12 +153,7 @@
             android:textSize="@dimen/friend_information_text_more_size"/>
 
         <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+            style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
@@ -208,11 +193,6 @@
             android:textSize="@dimen/friend_information_text_more_size"/>
 
         <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+            style="@style/commonArrowStyle" />
     </LinearLayout>
 </LinearLayout>
