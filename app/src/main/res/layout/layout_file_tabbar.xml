@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/common_topbar_height"
+    android:orientation="vertical"
+    android:background="@color/main_tabbar_bg_color">
+
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="43dp"
+	    android:paddingTop="2dp"
+	    android:orientation="horizontal"
+	    android:gravity="center_vertical">
+
+	    <TextView 
+	        android:id="@+id/tv_file_item0"
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:text="文档"
+	        android:textColor="@color/main_tabbar_item_text_font_color_unsel"
+	        android:textSize="@dimen/friend_information_text_size"/>
+
+		<TextView 
+	        android:id="@+id/tv_file_item1"
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:text="相册"
+			android:textColor="@color/main_tabbar_item_text_font_color_unsel"
+			android:textSize="@dimen/friend_information_text_size"/>
+
+		<TextView 
+	        android:id="@+id/tv_file_item2"
+	        android:layout_width="0dp"
+	        android:layout_weight="1"
+	        android:layout_height="match_parent"
+	        android:gravity="center"
+	        android:text="视频"
+			android:textColor="@color/main_tabbar_item_text_font_color_unsel"
+			android:textSize="@dimen/friend_information_text_size"/>
+
+		<TextView
+			android:id="@+id/tv_file_item3"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:text="音频"
+			android:textColor="@color/main_tabbar_item_text_font_color_unsel"
+			android:textSize="@dimen/friend_information_text_size"/>
+
+		<TextView
+			android:id="@+id/tv_file_item4"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="match_parent"
+			android:gravity="center"
+			android:text="其他"
+			android:textColor="@color/main_tabbar_item_text_font_color_unsel"
+			android:textSize="@dimen/friend_information_text_size"/>
+	</LinearLayout>
+
+    <TextView
+        android:id="@+id/tab_file_under_line"
+        android:layout_width="75dp"
+        android:layout_height="1dp"
+        android:background="@color/common_topbar_bg_color" >
+    </TextView>
+</LinearLayout>

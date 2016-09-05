@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 /**
- * 添加好友方式列表
+ * 群聊列表
  * Created by SunnyJiang on 2016/8/18.
  */
 public class GroupChatListAdapter extends BaseAdapter implements ListAdapter{
@@ -46,10 +46,10 @@ public class GroupChatListAdapter extends BaseAdapter implements ListAdapter{
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_list_group_chat, null);
         }
-        ImageView ivAddFriendsItem = (ImageView) convertView.findViewById(R.id.iv_group_chat_image);
-        ivAddFriendsItem.setImageResource(groupChatPics[position]);
-        TextView tvAddFriendsItem = (TextView) convertView.findViewById(R.id.tv_group_chat_name);
-        tvAddFriendsItem.setText(groupChatNames[position]);
+        ImageView ivGroupChatItem = (ImageView) convertView.findViewById(R.id.iv_group_chat_image);
+        ivGroupChatItem.setImageResource(groupChatPics[position]);
+        TextView tvGroupChatItem = (TextView) convertView.findViewById(R.id.tv_group_chat_name);
+        tvGroupChatItem.setText(groupChatNames[position]);
         return convertView;
     }
 }
