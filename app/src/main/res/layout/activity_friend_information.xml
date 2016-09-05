@@ -328,6 +328,7 @@
         android:layout_gravity="center"
         android:padding="10dp"
         android:src="@drawable/content_dial"/>
+
     <Button
         android:id="@+id/btn_friend_information_send_message"
         android:layout_width="match_parent"

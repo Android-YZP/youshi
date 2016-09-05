@@ -46,11 +46,9 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:id="@+id/layout_user_center_my_collection"
@@ -88,8 +86,6 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"/>
 </LinearLayout>

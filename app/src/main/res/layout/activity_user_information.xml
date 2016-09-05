@@ -10,13 +10,16 @@
         android:layout_height="@dimen/common_topbar_height"
         layout="@layout/layout_common_topbar"/>
 
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <LinearLayout
         android:id="@+id/layout_user_information_head"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/user_information_layout_head_height"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
         android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
         android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
@@ -46,13 +49,19 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
+    <View
+        style="@style/commonLineStyle"/>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <LinearLayout
         android:id="@+id/layout_user_information_name"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/youshi_contact_height"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
         android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
         android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
@@ -92,11 +101,9 @@
             android:src="@drawable/list_arrow"/>
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:id="@+id/layout_user_information_youshi_number"
@@ -138,11 +145,9 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:id="@+id/layout_user_information_code"
@@ -180,13 +185,19 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
+    <View
+        style="@style/commonLineStyle"/>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <LinearLayout
         android:id="@+id/layout_user_information_sex"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/youshi_contact_height"
         android:background="@android:color/white"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
         android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
         android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
@@ -221,11 +232,9 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:id="@+id/layout_user_information_address"
@@ -267,11 +276,9 @@
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:id="@+id/layout_user_information_signature"
@@ -312,4 +319,7 @@
         <ImageView
             style="@style/commonArrowStyle" />
     </LinearLayout>
+
+    <View
+        style="@style/commonLineStyle"/>
 </LinearLayout>

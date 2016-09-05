@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/common_bg_color">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        layout="@layout/layout_common_topbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/file_preview_image_width_or_height"
+            android:layout_height="@dimen/file_preview_image_width_or_height"
+            android:layout_marginTop="@dimen/file_preview_image_margin_top"
+            android:src="@drawable/preview"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/file_preview_file_name_margin_top"
+            android:textSize="@dimen/file_preview_text_name_size"
+            android:textColor="@color/new_friend_name_color"
+            android:text="企业网站需求分析说明书.txt"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/file_preview_file_size_margin_top"
+            android:textSize="@dimen/file_preview_text_name_size"
+            android:textColor="@color/common_et_text_font_color"
+            android:text="678.23k"/>
+
+        <Button
+            android:id="@+id/btn_file_preview"
+            android:layout_width="@dimen/file_preview_btn_preview_width"
+            android:layout_height="@dimen/file_preview_btn_preview_height"
+            android:layout_marginTop="@dimen/file_preview_btn_preview_margin_top"
+            android:text="在线预览"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:textColor="@color/common_white_color"
+            android:gravity="center"
+            android:background="@drawable/selector_btn_user_login"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/file_preview_layout_bottom_height"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="下载原文件"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="转发"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="收藏"
+            android:textSize="@dimen/file_preview_text_preview_size"
+            android:gravity="center"
+            android:textColor="@color/common_topbar_bg_color"/>
+    </LinearLayout>
+</LinearLayout>
