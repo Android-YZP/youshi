@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mkch.youshi.activity.ChooseTimeActivity">
+
+
+    <include
+        layout="@layout/add_event_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="10dp" />
+
+    <ListView
+        android:id="@+id/lv_choose_time"
+        android:divider="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        style="@style/commonLineStyle"/>
+
+</LinearLayout>

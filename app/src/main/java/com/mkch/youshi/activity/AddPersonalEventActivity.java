@@ -3,6 +3,7 @@ package com.mkch.youshi.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -27,17 +28,43 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private EditText mEtTheme;
     private TextView mTvStartTime;
     private TextView mTvEndTime;
+    private Boolean isAllDay = false;
+    private int mCurrentYear;
+    private int mCurrentMonth;
+    private int mCurrentDay;
+    private int mCurrentHour;
+    private int mCurrentMinute;
+    private TextView mTvCancel;
+    private TextView mTvComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_event);
         initView();
+        initData();
         setListener();
+    }
+
+    private void initData() {
+        Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
+        t.setToNow(); // 取得系统时间。
+        mCurrentYear = t.year;
+        mCurrentMonth = t.month + 1;
+        mCurrentDay = t.monthDay;
+        mCurrentHour = t.hour;
+        mCurrentMinute = t.minute;
+        mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
+        mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+
+
     }
 
 
     private void initView() {
+        mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
@@ -81,16 +108,17 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mCbAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    Toast.makeText(AddPersonalEventActivity.this, "选择了全天",
-                            Toast.LENGTH_SHORT).show();
-                }
+                isAllDay = isChecked;
+                mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
+                mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+
             }
         });
         mStartTime.setOnClickListener(this);
         mEndTime.setOnClickListener(this);
         mSubmission.setOnClickListener(this);
         mRemindBefore.setOnClickListener(this);
+        mTvComplete.setOnClickListener(this);
     }
 
     @Override
@@ -101,15 +129,21 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, ChooseAddressActivity.class));
                 break;
-
             //中间部分的点击事件
             case R.id.rl_start_time://开始时间
-                DialogFactory.showOptionDialog(this);
+                if (isAllDay) {
+                    DialogFactory.showAllDayOptionDialog(this, mTvStartTime);
+                } else {
+                    DialogFactory.showOptionDialog(this, mTvStartTime);
+                }
                 break;
             case R.id.rl_end_time://结束时间
-                DialogFactory.showDateDialog(this, mTvEndTime);
+                if (isAllDay) {
+                    DialogFactory.showAllDayOptionDialog(this, mTvEndTime);
+                } else {
+                    DialogFactory.showOptionDialog(this, mTvEndTime);
+                }
                 break;
-
             //后半部分的点击事件
             case R.id.rl_submission://报送
                 startActivity(new Intent(AddPersonalEventActivity.
@@ -119,11 +153,12 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, ChooseRemindBeforeActivity.class));
                 break;
+            case R.id.tv_add__event_complete://取消
+                startActivity(new Intent(AddPersonalEventActivity.
+                        this, CalendarActivity.class));
+                break;
             default:
                 break;
         }
-
     }
-
-
 }

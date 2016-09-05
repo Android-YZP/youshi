@@ -51,7 +51,10 @@
         <activity android:name=".activity.TestNetActivity" />
         <activity android:name=".activity.ChooseAddressActivity" />
         <activity android:name=".activity.ChooseSomeoneActivity" />
-        <activity android:name=".activity.ChooseRemindBeforeActivity"></activity>
+        <activity android:name=".activity.ChooseRemindBeforeActivity" />
+        <activity android:name=".activity.CalendarActivity" />
+        <activity android:name=".activity.ChooseTimeActivity" />
+        <activity android:name=".activity.ChooseWeekActivity"></activity>
     </application>
 
 </manifest>
