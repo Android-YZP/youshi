@@ -44,7 +44,10 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/friend_information_name_color"
         android:textSize="@dimen/friend_information_text_more_size"/>
-    
+
+    <View
+        style="@style/commonLineStyle"/>
+
     <EditText
         android:id="@+id/et_remark_information_remark"
         android:layout_width="match_parent"
@@ -58,27 +61,8 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/friend_information_setting_height"
-        android:text="标签"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/friend_information_setting_padding_left"
-        android:textColor="@color/friend_information_name_color"
-        android:textSize="@dimen/friend_information_text_more_size"/>
-
-    <EditText
-        android:id="@+id/et_remark_information_label"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/friend_information_setting_height"
-        android:hint="通过标签给联系人分类"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/friend_information_setting_padding_left"
-        android:textCursorDrawable="@null"
-        android:textColor="@color/new_friend_name_color"
-        android:textColorHint="@color/user_login_username_or_password_color"
-        android:textSize="@dimen/friend_information_text_more_size"
-        android:background="@color/common_white_color"/>
+    <View
+        style="@style/commonLineStyle"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -88,6 +72,9 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/friend_information_name_color"
         android:textSize="@dimen/friend_information_text_more_size"/>
+
+    <View
+        style="@style/commonLineStyle"/>
 
     <EditText
         android:id="@+id/et_remark_information_phone1"
@@ -103,13 +90,11 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
-    <TextView
+    <View
         android:id="@+id/tv_remark_information_line1"
-        android:layout_width="fill_parent"
+        style="@style/commonLineStyle"
         android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <EditText
         android:id="@+id/et_remark_information_phone2"
@@ -125,13 +110,11 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
-    <TextView
-        android:id="@+id/tv_remark_information_line2"
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View
+    android:id="@+id/tv_remark_information_line2"
+    style="@style/commonLineStyle"
+    android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
+    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <EditText
         android:id="@+id/et_remark_information_phone3"
@@ -147,13 +130,11 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
-    <TextView
+    <View
         android:id="@+id/tv_remark_information_line3"
-        android:layout_width="fill_parent"
+        style="@style/commonLineStyle"
         android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <EditText
         android:id="@+id/et_remark_information_phone4"
@@ -169,13 +150,11 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
-    <TextView
+    <View
         android:id="@+id/tv_remark_information_line4"
-        android:layout_width="fill_parent"
+        style="@style/commonLineStyle"
         android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+        android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <EditText
         android:id="@+id/et_remark_information_phone5"
@@ -191,6 +170,9 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
+    <View
+        style="@style/commonLineStyle"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
@@ -199,6 +181,9 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/friend_information_name_color"
         android:textSize="@dimen/friend_information_text_more_size"/>
+
+    <View
+        style="@style/commonLineStyle"/>
 
     <EditText
         android:id="@+id/et_remark_information_describe"
@@ -212,4 +197,7 @@
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
+
+    <View
+        style="@style/commonLineStyle"/>
 </LinearLayout>

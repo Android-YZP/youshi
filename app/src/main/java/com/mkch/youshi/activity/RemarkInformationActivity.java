@@ -14,7 +14,8 @@ public class RemarkInformationActivity extends Activity {
 
 	private ImageView mIvBack;
 	private EditText mEtPhone1, mEtPhone2,mEtPhone3,mEtPhone4,mEtPhone5;
-	private TextView mTvFinish,mTvLine1,mTvLine2,mTvLine3,mTvLine4;
+	private TextView mTvFinish;
+	private View mLine1,mLine2,mLine3,mLine4;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,21 +33,21 @@ public class RemarkInformationActivity extends Activity {
 		mEtPhone3 = (EditText) findViewById(R.id.et_remark_information_phone3);
 		mEtPhone4 = (EditText) findViewById(R.id.et_remark_information_phone4);
 		mEtPhone5 = (EditText) findViewById(R.id.et_remark_information_phone5);
-		mTvLine1 = (TextView) findViewById(R.id.tv_remark_information_line1);
-		mTvLine2 = (TextView) findViewById(R.id.tv_remark_information_line2);
-		mTvLine3 = (TextView) findViewById(R.id.tv_remark_information_line3);
-		mTvLine4 = (TextView) findViewById(R.id.tv_remark_information_line4);
+		mLine1 = (View) findViewById(R.id.tv_remark_information_line1);
+		mLine2 = (View) findViewById(R.id.tv_remark_information_line2);
+		mLine3 = (View) findViewById(R.id.tv_remark_information_line3);
+		mLine4 = (View) findViewById(R.id.tv_remark_information_line4);
 	}
 
 	private void initData() {
         mEtPhone2.setVisibility(View.GONE);
-		mTvLine1.setVisibility(View.GONE);
+		mLine1.setVisibility(View.GONE);
 		mEtPhone3.setVisibility(View.GONE);
-		mTvLine2.setVisibility(View.GONE);
+		mLine2.setVisibility(View.GONE);
 		mEtPhone4.setVisibility(View.GONE);
-		mTvLine3.setVisibility(View.GONE);
+		mLine3.setVisibility(View.GONE);
 		mEtPhone5.setVisibility(View.GONE);
-		mTvLine4.setVisibility(View.GONE);
+		mLine4.setVisibility(View.GONE);
 	}
 
 	private void setListener() {

@@ -27,6 +27,9 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
+        <View
+            style="@style/commonLineStyle"/>
+
         <LinearLayout
             android:id="@+id/layout_new_friend_add_phone"
             android:layout_width="match_parent"
@@ -34,7 +37,6 @@
             android:background="@color/common_white_color"
             android:paddingTop="@dimen/new_friend_add_phone_padding_top_or_bottom"
             android:paddingBottom="@dimen/new_friend_add_phone_padding_top_or_bottom"
-            android:layout_marginBottom="@dimen/new_friend_add_phone_margin_bottom"
             android:gravity="center">
 
            <TextView
@@ -45,6 +47,13 @@
                android:textColor="@color/friend_information_name_color"
                android:text="添加手机联系人"/>
         </LinearLayout>
+
+        <View
+            style="@style/commonLineStyle"
+            android:layout_marginBottom="@dimen/new_friend_add_phone_margin_bottom"/>
+
+        <View
+            style="@style/commonLineStyle"/>
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -61,5 +70,8 @@
                 android:listSelector="@android:color/transparent"
                 android:scrollbars="none"/>
         </FrameLayout>
+
+        <View
+            style="@style/commonLineStyle"/>
     </LinearLayout>
 </LinearLayout>

@@ -10,23 +10,32 @@
         android:layout_height="@dimen/common_topbar_height"
         layout="@layout/layout_common_topbar"/>
 
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <TextView
         android:id="@+id/tv_information_setting_setting"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
-        android:text="设置备注和标签"
+        android:text="设置备注信息"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
+    <View
+        style="@style/commonLineStyle"/>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <TextView
         android:id="@+id/tv_information_setting_recommend"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:text="把他推荐给朋友"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
@@ -34,10 +43,16 @@
         android:textSize="@dimen/friend_information_text_more_size"
         android:background="@color/common_white_color"/>
 
+    <View
+        style="@style/commonLineStyle"/>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:orientation="horizontal"
         android:background="@color/common_white_color">
 
@@ -92,6 +107,9 @@
             android:checked="false"
             style="@style/MyCheckBox"/>
     </LinearLayout>
+
+    <View
+        style="@style/commonLineStyle"/>
 
     <LinearLayout
         android:layout_width="match_parent"
