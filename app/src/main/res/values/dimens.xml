@@ -17,6 +17,7 @@
     <dimen name="common_et_height">28dp</dimen>
     <dimen name="common_et_text_font_size">14sp</dimen>
     <dimen name="common_et_padding_left">10dp</dimen>
+    <dimen name="common_np_padding_left">20dp</dimen>
     <dimen name="common_et_drawable_padding">8dp</dimen>
 
 
@@ -153,5 +154,8 @@
     <dimen name="item_message_one_msg_round_width_or_height">30dp</dimen>
     <dimen name="item_message_one_msg_height">60dp</dimen>
     <dimen name="common_chat_img_width_or_height">28dp</dimen>
+
+    <!-- chat -->
+    <dimen name="chat_list_left_headpic_width_or_height">40dp</dimen>
 
 </resources>

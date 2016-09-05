@@ -216,7 +216,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
 
     /**
      * 显示事件的添加框
-     *
      * @param view
      */
     private void showPopupWindow(View view) {

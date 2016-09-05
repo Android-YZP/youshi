@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="weekName">
         <item name="android:layout_width">0.0dip</item>
         <item name="android:layout_height">wrap_content</item>
@@ -19,9 +20,11 @@
 
     <!-- 自定义checkbox主题 -->
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-    <item name="android:button">@drawable/selector_common_checkbox</item>
-    <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
-    <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
+        <item name="android:button">@drawable/selector_common_checkbox</item>
+        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
+        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
     </style>
 
     <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
@@ -41,40 +44,48 @@
         <item name="android:textSize">@dimen/person_event_text_font_size</item>
     </style>
 
+
+    <!--白色24号字体-->
     <style name="textStyleWhite24">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_white</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
-
+    <!--黑色28号字体-->
     <style name="textStyleBlack28">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_black</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
-
+    <!--灰色24号字体-->
     <style name="textStyleGray24">
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/text_gray</item>
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">12sp</item>
     </style>
-
+    <!--事件编辑界面右边样式-->
     <style name="lastOfAffairList" parent="textStyleGray24">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_marginRight">20dp</item>
     </style>
-
+    <!--事件编辑界面左边大标题样式-->
     <style name="firstOfAffairList" parent="textStyleBlack28">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">15dp</item>
     </style>
-
+    <!--事件编辑界面边界线样式-->
     <style name="lineOfAffairList">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/week_day_line</item>
+    </style>
+
+    <style name="lineOfDialog">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">5px</item>
         <item name="android:background">@color/week_day_line</item>
     </style>
 
@@ -143,6 +154,18 @@
     <style name="common_text_gray_24">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#959595</item>
+    </style>
+
+    <!--聊天消息名字-浅黑色24px字体-->
+    <style name="common_text_username_24">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#626262</item>
+    </style>
+
+    <!--聊天消息名字-消息白色24px字体-->
+    <style name="common_text_msg_content_white_28">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
     </style>
 
     <!--所有界面的返回按钮-->
