@@ -8,9 +8,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.util.DialogFactory;
 
 public class AddPersonalAffairActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +26,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private RelativeLayout mSubmission;
     private RelativeLayout mRemindBefore;
     private LinearLayout mRemark;
+    private TextView mTwoDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
 
         mAffairDate = (RelativeLayout) findViewById(R.id.rl_affair_date);
+        mTwoDate = (TextView) findViewById(R.id.tv_two_date);
         mAffairWeek = (RelativeLayout) findViewById(R.id.rl_affair_week);
         mAffairChooseTime = (RelativeLayout) findViewById(R.id.rl_affair_choose_time);
         mAffairAllTime = (RelativeLayout) findViewById(R.id.rl_affair_all_time);
@@ -59,6 +63,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.rb_work:
+
                         break;
                     case R.id.rb_entertainment:
                         break;
@@ -102,16 +107,16 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 break;
 
             case R.id.rl_affair_date://日期
-                Toast.makeText(AddPersonalAffairActivity.this, "1",
-                        Toast.LENGTH_SHORT).show();
+               DialogFactory.showTwoDayOptionDialog(this,mTwoDate);
                 break;
             case R.id.rl_affair_week://周
-                Toast.makeText(AddPersonalAffairActivity.this, "2",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalAffairActivity.this,
+                        ChooseWeekActivity.class));
                 break;
             case R.id.rl_affair_choose_time://选择时间
-                Toast.makeText(AddPersonalAffairActivity.this, "3",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalAffairActivity.this,
+                        ChooseTimeActivity.class));
+
                 break;
             case R.id.rl_affair_all_time://总时长
                 Toast.makeText(AddPersonalAffairActivity.this, "4",
@@ -120,12 +125,12 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
 
             //后半部分的点击事件
             case R.id.rl_submission://报送
-                Toast.makeText(AddPersonalAffairActivity.this, "1",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalAffairActivity.
+                        this, ChooseSomeoneActivity.class));
                 break;
             case R.id.rl_remind_before://提前提醒
-                Toast.makeText(AddPersonalAffairActivity.this, "2",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalAffairActivity.
+                        this, ChooseRemindBeforeActivity.class));
                 break;
             default:
                 break;

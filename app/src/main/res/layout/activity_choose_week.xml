@@ -4,20 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.mkch.youshi.activity.ChooseRemindBeforeActivity">
+    tools:context="com.mkch.youshi.activity.ChooseWeekActivity">
 
     <include
-        layout="@layout/layout_common_topbar"
+        layout="@layout/add_event_common_topbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
-    <!--十分钟之前-->
+    <!--星期日-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
-            android:id="@+id/cb_all_day"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -32,7 +31,187 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="10分钟之前" />
+                android:text="星期日" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期一-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期一" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期二-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期二" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期三-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期三" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期四-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期四" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期五-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期五" />
+
+            <View
+                style="@style/lineOfAffairList"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--星期六-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyleBlack28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="星期六" />
 
             <View
                 style="@style/lineOfAffairList"
@@ -42,7 +221,7 @@
     </LinearLayout>
 
 
-    <!--三十分钟之前-->
+    <!--每天-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
@@ -63,100 +242,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="30分钟之前" />
-
-            <View
-                style="@style/lineOfAffairList"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
-    </LinearLayout>
-
-
-    <!--一小时分钟之前-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/remind_checkbox_style"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/textStyleBlack28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="1小时之前" />
-
-            <View
-                style="@style/lineOfAffairList"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
-    </LinearLayout>
-
-
-    <!--一天之前-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/remind_checkbox_style"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/textStyleBlack28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="1天之前" />
-
-            <View
-                style="@style/lineOfAffairList"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
-    </LinearLayout>
-
-
-    <!--自定义-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/remind_checkbox_style"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/textStyleBlack28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:text="自定义" />
+                android:text="每天" />
 
             <View
                 style="@style/lineOfAffairList"

@@ -22,27 +22,11 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <NumberPicker
-            android:id="@+id/np_year"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"></NumberPicker>
+
+
 
         <NumberPicker
-            android:id="@+id/np_month"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-        </NumberPicker>
-
-        <NumberPicker
-            android:id="@+id/np_day"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-        </NumberPicker>
-
-        <NumberPicker
-            android:id="@+id/np_hour"
+            android:id="@+id/np_starter_hour"
             android:layout_width="55dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/common_et_padding_left">
@@ -58,7 +42,38 @@
             android:textSize="20sp" />
 
         <NumberPicker
-            android:id="@+id/np_min"
+            android:id="@+id/np_starter_min"
+            android:layout_width="55dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="至"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <NumberPicker
+            android:id="@+id/np_end_hour"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/common_et_padding_left">
+
+        </NumberPicker>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=":"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <NumberPicker
+            android:id="@+id/np_end_min"
             android:layout_width="55dp"
             android:layout_height="match_parent" />
     </LinearLayout>
