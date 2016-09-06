@@ -60,8 +60,12 @@
         <activity android:name=".activity.CalendarActivity" />
         <activity android:name=".activity.ChooseTimeActivity" />
         <activity android:name=".activity.ChooseWeekActivity"></activity>
+
+        <!--消息-->
         <activity android:name=".activity.GroupDetailActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
+        <activity android:name=".activity.ChatActivity"/>
+
     </application>
 
 </manifest>
