@@ -58,4 +58,11 @@
     <color name="cycicle_color_5">#ec1f79</color>
     <color name="cycicle_color_6">#92288f</color>
 
+    <!--tabpager-->
+    <color name="tab_text_color_selected">#ff0b6ed3</color> <!-- 选中文字颜色 -->
+    <color name="tab_text_color_normal">#ff737373</color> <!-- 未选中文字颜色 -->
+
+    <color name="bg_tab_pressed">#00000000</color><!-- 蓝色 -->
+    <color name="bg_tab_normal">#00000000</color>
+
 </resources>

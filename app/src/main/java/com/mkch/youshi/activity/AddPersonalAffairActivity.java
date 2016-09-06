@@ -30,6 +30,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_affair);
         initView();
@@ -101,7 +102,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_choose_address://选择日期
+            case R.id.rl_choose_address://选择地址
                 startActivity(new Intent(AddPersonalAffairActivity.this,
                         ChooseAddressActivity.class));
                 break;

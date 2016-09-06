@@ -111,7 +111,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 isAllDay = isChecked;
                 mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
                 mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
-
             }
         });
         mStartTime.setOnClickListener(this);
@@ -153,7 +152,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, ChooseRemindBeforeActivity.class));
                 break;
-            case R.id.tv_add__event_complete://取消
+            case R.id.tv_add__event_complete://完成
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, CalendarActivity.class));
                 break;

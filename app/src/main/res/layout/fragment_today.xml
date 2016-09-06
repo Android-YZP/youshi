@@ -55,7 +55,6 @@
         </LinearLayout>
     </FrameLayout>
 
-
     <LinearLayout
         android:id="@+id/ll_week"
         android:layout_width="match_parent"
