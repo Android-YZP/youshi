@@ -2,44 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <EditText
         android:id="@+id/et_revise_signature"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
-        android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
+        android:background="@drawable/bg_border_common_et"
         android:hint="请输入新的个性签名"
-        android:textCursorDrawable="@null"
+        android:maxLength="20"
+        android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textSize="@dimen/common_et_text_font_size"
-        android:maxLength="20"
-        android:background="@drawable/bg_border_common_et"/>
+        android:textCursorDrawable="@null"
+        android:textSize="@dimen/common_et_text_font_size" />
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <Button
         android:id="@+id/btn_revise_signature_confirm"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_btn_getcode_height"
-        android:text="确定"
-        android:textSize="@dimen/common_et_text_font_size"
-        android:textColor="@color/common_white_color"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/user_reg_phone_btn_getcode_margin_top"
         android:layout_marginLeft="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
         android:layout_marginRight="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
-        android:background="@drawable/selector_btn_user_login"/>
+        android:layout_marginTop="@dimen/user_reg_phone_btn_getcode_margin_top"
+        android:background="@drawable/selector_btn_user_login"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/common_white_color"
+        android:textSize="@dimen/common_et_text_font_size" />
 </LinearLayout>

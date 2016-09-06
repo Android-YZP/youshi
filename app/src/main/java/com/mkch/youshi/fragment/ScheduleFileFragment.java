@@ -15,16 +15,15 @@ import android.widget.ListView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.FilePreviewActivity;
-import com.mkch.youshi.activity.FilePreviewPicActivity;
-import com.mkch.youshi.adapter.DropBoxListAdapter;
-import com.mkch.youshi.adapter.MyCollectionListAdapter;
+import com.mkch.youshi.activity.ScheduleDetailActivity;
+import com.mkch.youshi.adapter.ScheduleListAdapter;
 
-public class MyCollectionFragment extends Fragment {
+public class ScheduleFileFragment extends Fragment {
 
     private SwipeRefreshLayout mSRLayout;
     private ListView mListView;
     //长按后选择的操作列表
-    private String[] operation_list = {"下载", "转发", "删除"};
+    private String[] operation_list = {"下载", "转发"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +52,7 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void initData() {
-        ListAdapter mAdapter = new MyCollectionListAdapter(getActivity());
+        ListAdapter mAdapter = new ScheduleListAdapter(getActivity());
         mListView.setAdapter(mAdapter);
     }
 
@@ -64,18 +63,14 @@ public class MyCollectionFragment extends Fragment {
                 Intent _intent = null;
                 switch (position) {
                     case 0:
-                        _intent = new Intent(getActivity(), FilePreviewActivity.class);
-                        startActivity(_intent);
-                        break;
-                    case 3:
-                        _intent = new Intent(getActivity(), FilePreviewPicActivity.class);
+                        _intent = new Intent(getActivity(), ScheduleDetailActivity.class);
                         startActivity(_intent);
                         break;
                 }
             }
         });
 
-        //长按文件或收藏，弹出对话框选择操作
+        //长按单个日程文件，弹出对话框选择操作
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

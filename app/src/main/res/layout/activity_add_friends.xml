@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,8 +27,7 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -43,10 +42,9 @@
                 android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
         </FrameLayout>
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
     </LinearLayout>
 </LinearLayout>

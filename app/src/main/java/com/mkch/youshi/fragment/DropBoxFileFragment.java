@@ -17,14 +17,13 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.activity.FilePreviewActivity;
 import com.mkch.youshi.activity.FilePreviewPicActivity;
 import com.mkch.youshi.adapter.DropBoxListAdapter;
-import com.mkch.youshi.adapter.MyCollectionListAdapter;
 
-public class MyCollectionFragment extends Fragment {
+public class DropBoxFileFragment extends Fragment {
 
     private SwipeRefreshLayout mSRLayout;
     private ListView mListView;
-    //长按后选择的操作列表
-    private String[] operation_list = {"下载", "转发", "删除"};
+    //保存选择的性别
+    private String[] operation_list = {"重命名", "删除"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,7 +52,7 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void initData() {
-        ListAdapter mAdapter = new MyCollectionListAdapter(getActivity());
+        ListAdapter mAdapter = new DropBoxListAdapter(getActivity());
         mListView.setAdapter(mAdapter);
     }
 

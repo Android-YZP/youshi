@@ -1,74 +1,69 @@
-package com.mkch.youshi.fragment;
+package com.mkch.youshi.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.activity.FilePreviewActivity;
-import com.mkch.youshi.activity.FilePreviewPicActivity;
-import com.mkch.youshi.adapter.DropBoxListAdapter;
-import com.mkch.youshi.adapter.MyCollectionListAdapter;
+import com.mkch.youshi.adapter.GroupChatListAdapter;
+import com.mkch.youshi.adapter.ScheduleDetailAdapter;
 
-public class MyCollectionFragment extends Fragment {
+public class ScheduleDetailActivity extends Activity {
 
-    private SwipeRefreshLayout mSRLayout;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
     private ListView mListView;
     //长按后选择的操作列表
     private String[] operation_list = {"下载", "转发", "删除"};
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_file, container, false);
-        findView(view);
-        return view;
-    }
-
-    private void findView(View view) {
-        mSRLayout = (SwipeRefreshLayout) view.findViewById(R.id.srlayout_file);
-        mSRLayout.setColorSchemeColors(R.color.common_topbar_bg_color);
-        mListView = (ListView) view.findViewById(R.id.list_file);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_schedule_detail);
+        initView();
         initData();
         setListener();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initView() {
+        mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
+        mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
+        mListView = (ListView) findViewById(R.id.list_schedule_detail);
     }
 
     private void initData() {
-        ListAdapter mAdapter = new MyCollectionListAdapter(getActivity());
+        mTvTitle.setText("周末一起烧烤");
+        ListAdapter mAdapter = new ScheduleDetailAdapter(ScheduleDetailActivity.this);
         mListView.setAdapter(mAdapter);
     }
 
     private void setListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ScheduleDetailActivity.this.finish();
+            }
+        });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent _intent = null;
                 switch (position) {
                     case 0:
-                        _intent = new Intent(getActivity(), FilePreviewActivity.class);
+                        _intent = new Intent(ScheduleDetailActivity.this, FilePreviewPicActivity.class);
                         startActivity(_intent);
                         break;
                     case 3:
-                        _intent = new Intent(getActivity(), FilePreviewPicActivity.class);
+                        _intent = new Intent(ScheduleDetailActivity.this, FilePreviewActivity.class);
                         startActivity(_intent);
                         break;
                 }
@@ -79,7 +74,7 @@ public class MyCollectionFragment extends Fragment {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                new AlertDialog.Builder(getActivity()).setItems(operation_list, new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(ScheduleDetailActivity.this).setItems(operation_list, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

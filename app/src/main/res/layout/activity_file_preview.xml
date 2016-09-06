@@ -2,90 +2,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="@dimen/file_preview_image_width_or_height"
             android:layout_height="@dimen/file_preview_image_width_or_height"
             android:layout_marginTop="@dimen/file_preview_image_margin_top"
-            android:src="@drawable/preview"/>
+            android:src="@drawable/preview" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/file_preview_file_name_margin_top"
-            android:textSize="@dimen/file_preview_text_name_size"
+            android:text="企业网站需求分析说明书.txt"
             android:textColor="@color/new_friend_name_color"
-            android:text="企业网站需求分析说明书.txt"/>
+            android:textSize="@dimen/file_preview_text_name_size" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/file_preview_file_size_margin_top"
-            android:textSize="@dimen/file_preview_text_name_size"
+            android:text="678.23k"
             android:textColor="@color/common_et_text_font_color"
-            android:text="678.23k"/>
+            android:textSize="@dimen/file_preview_text_name_size" />
 
         <Button
             android:id="@+id/btn_file_preview"
             android:layout_width="@dimen/file_preview_btn_preview_width"
             android:layout_height="@dimen/file_preview_btn_preview_height"
             android:layout_marginTop="@dimen/file_preview_btn_preview_margin_top"
-            android:text="在线预览"
-            android:textSize="@dimen/file_preview_text_preview_size"
-            android:textColor="@color/common_white_color"
+            android:background="@drawable/selector_btn_user_login"
             android:gravity="center"
-            android:background="@drawable/selector_btn_user_login"/>
+            android:text="在线预览"
+            android:textColor="@color/common_white_color"
+            android:textSize="@dimen/file_preview_text_preview_size" />
     </LinearLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/file_preview_layout_bottom_height"
-        android:orientation="horizontal"
         android:background="@color/common_white_color"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="下载原文件"
-            android:textSize="@dimen/file_preview_text_preview_size"
-            android:gravity="center"
-            android:textColor="@color/common_topbar_bg_color"/>
+            android:textColor="@color/common_topbar_bg_color"
+            android:textSize="@dimen/file_preview_text_preview_size" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="转发"
-            android:textSize="@dimen/file_preview_text_preview_size"
-            android:gravity="center"
-            android:textColor="@color/common_topbar_bg_color"/>
+            android:textColor="@color/common_topbar_bg_color"
+            android:textSize="@dimen/file_preview_text_preview_size" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="收藏"
-            android:textSize="@dimen/file_preview_text_preview_size"
             android:gravity="center"
-            android:textColor="@color/common_topbar_bg_color"/>
+            android:text="收藏"
+            android:textColor="@color/common_topbar_bg_color"
+            android:textSize="@dimen/file_preview_text_preview_size" />
     </LinearLayout>
 </LinearLayout>

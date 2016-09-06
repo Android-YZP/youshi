@@ -27,8 +27,7 @@
         android:maxLength="20"
         android:background="@drawable/bg_border_common_et"/>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <Button
         android:id="@+id/btn_revise_name_confirm"

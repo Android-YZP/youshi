@@ -12,29 +12,30 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserRegPhoneActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	private Button mBtnCommitPhone;
-	//手机号
-	private EditText mEtPhone;
-	//是否选中checkbox
-	private CheckBox mCbIsRead;
-	private TextView mTvIsRead;
-	private TextView mTvProtocal;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private Button mBtnCommitPhone;
+    //手机号
+    private EditText mEtPhone;
+    //是否选中checkbox
+    private CheckBox mCbIsRead;
+    private TextView mTvIsRead;
+    private TextView mTvProtocal;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private String mPhone;
-	
-	private static ProgressDialog mProgressDialog = null;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_reg_phone);
+
+    private static ProgressDialog mProgressDialog = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_reg_phone);
 //		initView();
 //		initData();
 //		setListener();
-	}
+    }
 
 //	private void initView() {
 //		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);

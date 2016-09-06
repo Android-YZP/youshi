@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,33 +27,31 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
 
         <LinearLayout
             android:id="@+id/layout_new_friend_add_phone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/new_friend_add_phone_height"
             android:background="@color/common_white_color"
-            android:paddingTop="@dimen/new_friend_add_phone_padding_top_or_bottom"
+            android:gravity="center"
             android:paddingBottom="@dimen/new_friend_add_phone_padding_top_or_bottom"
-            android:gravity="center">
+            android:paddingTop="@dimen/new_friend_add_phone_padding_top_or_bottom">
 
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:drawableTop="@drawable/phone"
-               android:drawablePadding="@dimen/new_friend_add_phone_text_padding"
-               android:textColor="@color/friend_information_name_color"
-               android:text="添加手机联系人"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/new_friend_add_phone_text_padding"
+                android:drawableTop="@drawable/phone"
+                android:text="添加手机联系人"
+                android:textColor="@color/friend_information_name_color" />
         </LinearLayout>
 
         <View
             style="@style/commonLineStyle"
-            android:layout_marginBottom="@dimen/new_friend_add_phone_margin_bottom"/>
+            android:layout_marginBottom="@dimen/new_friend_add_phone_margin_bottom" />
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -68,10 +66,9 @@
                 android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
         </FrameLayout>
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
     </LinearLayout>
 </LinearLayout>

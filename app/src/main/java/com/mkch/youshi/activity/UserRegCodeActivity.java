@@ -12,40 +12,41 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserRegCodeActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	private Button mBtnCommitCode;
-	
-	//手机号和验证码
-	private String mPhone;
-	private String mSmsCode;
-	
-	//手机介绍信息
-	private TextView mTvPhoneInfo;
-	private TextView mTvGetSmsAgain;
-	
-	//验证码
-	private EditText mEtSmsCode;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private Button mBtnCommitCode;
+
+    //手机号和验证码
+    private String mPhone;
+    private String mSmsCode;
+
+    //手机介绍信息
+    private TextView mTvPhoneInfo;
+    private TextView mTvGetSmsAgain;
+
+    //验证码
+    private EditText mEtSmsCode;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
-	
-	private static ProgressDialog mProgressDialog = null;
-	
-	//定义倒计时handler
-	private static Handler getcodeHandler;
-	private int num;
-	
-	private Thread mDownTimeThread;
-	private boolean mStopThread = false;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_reg_code);
+
+    private static ProgressDialog mProgressDialog = null;
+
+    //定义倒计时handler
+    private static Handler getcodeHandler;
+    private int num;
+
+    private Thread mDownTimeThread;
+    private boolean mStopThread = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_reg_code);
 //		initView();
 //		initData();
 //		setListener();
-	}
+    }
 
 //	@Override
 //	protected void onDestroy() {

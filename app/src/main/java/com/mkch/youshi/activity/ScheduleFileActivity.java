@@ -13,14 +13,16 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.fragment.MyCollectionFragment;
+import com.mkch.youshi.fragment.ScheduleFileFragment;
 import com.mkch.youshi.view.FileTabBarLayout;
+import com.mkch.youshi.view.ScheduleFileTabBarLayout;
 
-public class MyCollectionActivity extends BaseActivity {
+public class ScheduleFileActivity extends BaseActivity {
 
     private ImageView mIvBack;
     private TextView mTvTitle;
-    private FileTabBarLayout mFileTabBarLayout;
-    private ViewPager mViewPagerFile;
+    private ScheduleFileTabBarLayout mScheduleTabBarLayout;
+    private ViewPager mViewPagerSchedule;
     private final static int FLAG_ITEM_0 = 0;
     private final static int FLAG_ITEM_1 = 1;
     private final static int FLAG_ITEM_2 = 2;
@@ -40,7 +42,7 @@ public class MyCollectionActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_collection);
+        setContentView(R.layout.activity_schedule_file);
         initView();
         initData();
         setListener();
@@ -49,9 +51,9 @@ public class MyCollectionActivity extends BaseActivity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-        mFileTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_my_collection_tabbar);
-        mViewPagerFile = (ViewPager) findViewById(R.id.viewPager_my_collection);
-        mViewPagerFile.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
+        mScheduleTabBarLayout = (ScheduleFileTabBarLayout) findViewById(R.id.custom_schedule_file_tabbar);
+        mViewPagerSchedule = (ViewPager) findViewById(R.id.viewPager_schedule_file);
+        mViewPagerSchedule.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         //初始化屏幕宽度
         DisplayMetrics outMetrics = new DisplayMetrics();
         getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
@@ -61,44 +63,44 @@ public class MyCollectionActivity extends BaseActivity {
     }
 
     private void initData() {
-        mTvTitle.setText("我的收藏");
-        mViewPagerFile.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
+        mTvTitle.setText("日程文件");
+        mViewPagerSchedule.setAdapter(new ScheduleFragmentPagerAdapter(this.getSupportFragmentManager()));
     }
 
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyCollectionActivity.this.finish();
+                ScheduleFileActivity.this.finish();
             }
         });
-        mFileTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
+        mScheduleTabBarLayout.setOnItemClickListener(new ScheduleFileTabBarLayout.IScheduleTabBarCallBackListener() {
             @Override
             public void clickItem(int id) {
                 switch (id) {
-                    case R.id.tv_file_item0:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
+                    case R.id.tv_schedule_file_item0:
+                        mViewPagerSchedule.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
                         break;
-                    case R.id.tv_file_item1:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_1);
+                    case R.id.tv_schedule_file_item1:
+                        mViewPagerSchedule.setCurrentItem(FLAG_ITEM_1);
                         break;
-                    case R.id.tv_file_item2:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_2);
+                    case R.id.tv_schedule_file_item2:
+                        mViewPagerSchedule.setCurrentItem(FLAG_ITEM_2);
                         break;
-                    case R.id.tv_file_item3:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_3);
+                    case R.id.tv_schedule_file_item3:
+                        mViewPagerSchedule.setCurrentItem(FLAG_ITEM_3);
                         break;
-                    case R.id.tv_file_item4:
-                        mViewPagerFile.setCurrentItem(FLAG_ITEM_4);
+                    case R.id.tv_schedule_file_item4:
+                        mViewPagerSchedule.setCurrentItem(FLAG_ITEM_4);
                         break;
                 }
             }
         });
 
-        mViewPagerFile.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPagerSchedule.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mFileTabBarLayout.changeTabBarItems(position);
+                mScheduleTabBarLayout.changeTabBarItems(position);
                 currentIndex = position;//当前页
             }
 
@@ -106,14 +108,14 @@ public class MyCollectionActivity extends BaseActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 //从左到右
                 if (currentIndex == position) {
-                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                    LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
                             .getLayoutParams();
                     layoutParam.leftMargin = (int) (positionOffset * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
                     tabUnderLine.setLayoutParams(layoutParam);
                 }
                 //从右到左
                 else if (currentIndex > position) {
-                    LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine
+                    LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
                             .getLayoutParams();
                     layoutParam.leftMargin = (int) (-(1 - positionOffset) * (screenWidth * 1.0 / fragSize) + currentIndex * (screenWidth / fragSize));
                     tabUnderLine.setLayoutParams(layoutParam);
@@ -131,8 +133,8 @@ public class MyCollectionActivity extends BaseActivity {
      *
      * @author JLJ
      */
-    private class FileFragmentPagerAdapter extends FragmentPagerAdapter {
-        public FileFragmentPagerAdapter(FragmentManager fm) {
+    private class ScheduleFragmentPagerAdapter extends FragmentPagerAdapter {
+        public ScheduleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -140,15 +142,15 @@ public class MyCollectionActivity extends BaseActivity {
         public Fragment getItem(int postion) {
             switch (postion) {
                 case FLAG_ITEM_0:
-                    return new MyCollectionFragment();
+                    return new ScheduleFileFragment();
                 case FLAG_ITEM_1:
-                    return new MyCollectionFragment();
+                    return new ScheduleFileFragment();
                 case FLAG_ITEM_2:
-                    return new MyCollectionFragment();
+                    return new ScheduleFileFragment();
                 case FLAG_ITEM_3:
-                    return new MyCollectionFragment();
+                    return new ScheduleFileFragment();
                 case FLAG_ITEM_4:
-                    return new MyCollectionFragment();
+                    return new ScheduleFileFragment();
             }
             return null;
         }
@@ -161,8 +163,8 @@ public class MyCollectionActivity extends BaseActivity {
 
     //初始化tab下划线
     private void initTabUnderLine() {
-        tabUnderLine = (View) findViewById(R.id.tab_file_under_line);
-        LinearLayout.LayoutParams layoutParam = (android.widget.LinearLayout.LayoutParams) tabUnderLine.getLayoutParams();
+        tabUnderLine = (View) findViewById(R.id.tab_schedule_file_under_line);
+        LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine.getLayoutParams();
         layoutParam.width = screenWidth / fragSize;
         tabUnderLine.setLayoutParams(layoutParam);
     }

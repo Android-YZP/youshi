@@ -12,40 +12,41 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserForgotCodeActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	private Button mBtnCommitCode;
-	
-	//手机号和验证码
-	private String mPhone;
-	private String mSmsCode;
-	
-	//手机介绍信息
-	private TextView mTvPhoneInfo;
-	//再次获取验证码
-	private TextView mTvGetSmsAgain;
-	
-	//验证码
-	private EditText mEtSmsCode;
-	private EditText mEtPassword;
-	private EditText mEtPassAgain;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private Button mBtnCommitCode;
+
+    //手机号和验证码
+    private String mPhone;
+    private String mSmsCode;
+
+    //手机介绍信息
+    private TextView mTvPhoneInfo;
+    //再次获取验证码
+    private TextView mTvGetSmsAgain;
+
+    //验证码
+    private EditText mEtSmsCode;
+    private EditText mEtPassword;
+    private EditText mEtPassAgain;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
-	
-	private static ProgressDialog mProgressDialog = null;
-	
-	//定义倒计时handler
-	private static Handler getcodeHandler;
-	private int num;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_forgot_code);
+
+    private static ProgressDialog mProgressDialog = null;
+
+    //定义倒计时handler
+    private static Handler getcodeHandler;
+    private int num;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_forgot_code);
 //		initView();
 //		initData();
 //		setListener();
-	}
+    }
 
 //	private void initView() {
 //		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);

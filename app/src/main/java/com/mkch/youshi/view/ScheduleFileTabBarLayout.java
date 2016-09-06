@@ -9,17 +9,17 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 
-public class FileTabBarLayout extends LinearLayout {
+public class ScheduleFileTabBarLayout extends LinearLayout {
 
     //tabbar的回调接口
-    public interface IFileTabBarCallBackListener {
+    public interface IScheduleTabBarCallBackListener {
         public void clickItem(int id);//按了某一项后
     }
 
-    IFileTabBarCallBackListener fileTabBarCallBackListener = null;
+    IScheduleTabBarCallBackListener scheduleTabBarCallBackListener = null;
 
-    public void setOnItemClickListener(IFileTabBarCallBackListener fileTabBarCallBackListener) {
-        this.fileTabBarCallBackListener = fileTabBarCallBackListener;
+    public void setOnItemClickListener(IScheduleTabBarCallBackListener scheduleTabBarCallBackListener) {
+        this.scheduleTabBarCallBackListener = scheduleTabBarCallBackListener;
     }
 
     LayoutInflater inflater;
@@ -30,25 +30,25 @@ public class FileTabBarLayout extends LinearLayout {
     private final static int FLAG_ITEM_3 = 3;
     private final static int FLAG_ITEM_4 = 4;
 
-    public FileTabBarLayout(Context context, AttributeSet attrs) {
+    public ScheduleFileTabBarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
     private void initView() {
         inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.layout_file_tabbar, this);
+        View view = inflater.inflate(R.layout.layout_schedule_file_tabbar, this);
         findView(view);
         initData();
         setListener();
     }
 
     private void findView(View view) {
-        mTvItem0 = (TextView) view.findViewById(R.id.tv_file_item0);
-        mTvItem1 = (TextView) view.findViewById(R.id.tv_file_item1);
-        mTvItem2 = (TextView) view.findViewById(R.id.tv_file_item2);
-        mTvItem3 = (TextView) view.findViewById(R.id.tv_file_item3);
-        mTvItem4 = (TextView) view.findViewById(R.id.tv_file_item4);
+        mTvItem0 = (TextView) view.findViewById(R.id.tv_schedule_file_item0);
+        mTvItem1 = (TextView) view.findViewById(R.id.tv_schedule_file_item1);
+        mTvItem2 = (TextView) view.findViewById(R.id.tv_schedule_file_item2);
+        mTvItem3 = (TextView) view.findViewById(R.id.tv_schedule_file_item3);
+        mTvItem4 = (TextView) view.findViewById(R.id.tv_schedule_file_item4);
     }
 
     private void initData() {
@@ -71,26 +71,26 @@ public class FileTabBarLayout extends LinearLayout {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tv_file_item0:
+                case R.id.tv_schedule_file_item0:
                     //1-改变文字的颜色;
                     changeTabBarItems(FLAG_ITEM_0);
                     break;
-                case R.id.tv_file_item1:
+                case R.id.tv_schedule_file_item1:
                     changeTabBarItems(FLAG_ITEM_1);
                     break;
-                case R.id.tv_file_item2:
+                case R.id.tv_schedule_file_item2:
                     changeTabBarItems(FLAG_ITEM_2);
                     break;
-                case R.id.tv_file_item3:
+                case R.id.tv_schedule_file_item3:
                     changeTabBarItems(FLAG_ITEM_3);
                     break;
-                case R.id.tv_file_item4:
+                case R.id.tv_schedule_file_item4:
                     changeTabBarItems(FLAG_ITEM_4);
                     break;
             }
             //2-实现页面的切换
-            if (fileTabBarCallBackListener != null) {
-                fileTabBarCallBackListener.clickItem(view.getId());
+            if (scheduleTabBarCallBackListener != null) {
+                scheduleTabBarCallBackListener.clickItem(view.getId());
             }
         }
     }

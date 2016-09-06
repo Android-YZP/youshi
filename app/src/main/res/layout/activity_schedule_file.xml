@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
 
-    <com.mkch.youshi.view.FileTabBarLayout
-        android:id="@+id/custom_my_collection_tabbar"
+    <com.mkch.youshi.view.ScheduleFileTabBarLayout
+        android:id="@+id/custom_schedule_file_tabbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"></com.mkch.youshi.view.FileTabBarLayout>
+        android:layout_height="@dimen/common_topbar_height"></com.mkch.youshi.view.ScheduleFileTabBarLayout>
 
     <View style="@style/commonLineStyle" />
 
@@ -22,7 +22,7 @@
         android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager_my_collection"
+        android:id="@+id/viewPager_schedule_file"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
 </LinearLayout>

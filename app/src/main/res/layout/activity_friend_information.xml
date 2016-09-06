@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/iv_friend_information_back"
             style="@style/commonTopbarBackStyle"
-            android:src="@drawable/nav_back"/>
+            android:src="@drawable/nav_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
             android:text="好友资料"
             android:textColor="@color/common_topbar_text_font_color"
             android:textSize="@dimen/friend_information_text_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_friend_information_more"
@@ -33,7 +33,7 @@
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
             android:text="更多"
             android:textColor="@color/common_white_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
     </RelativeLayout>
 
     <ScrollView
@@ -48,7 +48,7 @@
 
             <View
                 style="@style/commonLineStyle"
-                android:layout_marginTop="@dimen/friend_information_margin_top"/>
+                android:layout_marginTop="@dimen/friend_information_margin_top" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                     android:layout_height="@dimen/friend_information_head_width_or_height"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/friend_information_head_margin_left"
-                    android:src="@drawable/maillist"/>
+                    android:src="@drawable/maillist" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -80,7 +80,7 @@
                         android:singleLine="true"
                         android:text="我是备注"
                         android:textColor="@color/new_friend_name_color"
-                        android:textSize="@dimen/friend_information_text_more_size"/>
+                        android:textSize="@dimen/friend_information_text_more_size" />
 
                     <TextView
                         android:id="@+id/tv_friend_information_youshi_number"
@@ -90,7 +90,7 @@
                         android:singleLine="true"
                         android:text="优时号: 13812345678"
                         android:textColor="@color/friend_information_name_color"
-                        android:textSize="@dimen/friend_information_text_remark_size"/>
+                        android:textSize="@dimen/friend_information_text_remark_size" />
 
                     <TextView
                         android:id="@+id/tv_friend_information_name"
@@ -100,15 +100,15 @@
                         android:singleLine="true"
                         android:text="昵称: 我是昵称"
                         android:textColor="@color/friend_information_name_color"
-                        android:textSize="@dimen/friend_information_text_remark_size"/>
+                        android:textSize="@dimen/friend_information_text_remark_size" />
                 </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/commonLineStyle"/>
+            <View style="@style/commonLineStyle" />
 
             <View
                 style="@style/commonLineStyle"
-                android:layout_marginTop="@dimen/friend_information_margin_top"/>
+                android:layout_marginTop="@dimen/friend_information_margin_top" />
 
             <TextView
                 android:id="@+id/tv_friend_information_setting"
@@ -119,9 +119,9 @@
                 android:paddingLeft="@dimen/friend_information_setting_padding_left"
                 android:text="设置备注信息"
                 android:textColor="@color/new_friend_name_color"
-                android:textSize="@dimen/friend_information_text_more_size"/>
+                android:textSize="@dimen/friend_information_text_more_size" />
 
-            <View style="@style/commonLineStyle"/>
+            <View style="@style/commonLineStyle" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -142,7 +142,7 @@
                         android:gravity="center_vertical"
                         android:text="电话号码"
                         android:textColor="@color/new_friend_name_color"
-                        android:textSize="@dimen/friend_information_text_more_size"/>
+                        android:textSize="@dimen/friend_information_text_more_size" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -157,13 +157,13 @@
                             android:paddingLeft="@dimen/friend_information_address_padding_left"
                             android:text="13812345678"
                             android:textColor="@color/friend_information_name_color"
-                            android:textSize="@dimen/friend_information_text_remark_size"/>
+                            android:textSize="@dimen/friend_information_text_remark_size" />
 
                         <View
                             android:id="@+id/tv_friend_information_line1"
                             style="@style/commonLineStyle"
                             android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                         <TextView
                             android:id="@+id/tv_friend_information_phone2"
@@ -173,13 +173,13 @@
                             android:paddingLeft="@dimen/friend_information_address_padding_left"
                             android:text="13812345678"
                             android:textColor="@color/friend_information_name_color"
-                            android:textSize="@dimen/friend_information_text_remark_size"/>
+                            android:textSize="@dimen/friend_information_text_remark_size" />
 
                         <View
                             android:id="@+id/tv_friend_information_line2"
                             style="@style/commonLineStyle"
                             android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                         <TextView
                             android:id="@+id/tv_friend_information_phone3"
@@ -189,13 +189,13 @@
                             android:paddingLeft="@dimen/friend_information_address_padding_left"
                             android:text="13812345678"
                             android:textColor="@color/friend_information_name_color"
-                            android:textSize="@dimen/friend_information_text_remark_size"/>
+                            android:textSize="@dimen/friend_information_text_remark_size" />
 
                         <View
                             android:id="@+id/tv_friend_information_line3"
                             style="@style/commonLineStyle"
                             android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                         <TextView
                             android:id="@+id/tv_friend_information_phone4"
@@ -205,13 +205,13 @@
                             android:paddingLeft="@dimen/friend_information_address_padding_left"
                             android:text="13812345678"
                             android:textColor="@color/friend_information_name_color"
-                            android:textSize="@dimen/friend_information_text_remark_size"/>
+                            android:textSize="@dimen/friend_information_text_remark_size" />
 
                         <View
                             android:id="@+id/tv_friend_information_line4"
                             style="@style/commonLineStyle"
                             android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                            android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                         <TextView
                             android:id="@+id/tv_friend_information_phone5"
@@ -221,7 +221,7 @@
                             android:paddingLeft="@dimen/friend_information_address_padding_left"
                             android:text="13812345678"
                             android:textColor="@color/friend_information_name_color"
-                            android:textSize="@dimen/friend_information_text_remark_size"/>
+                            android:textSize="@dimen/friend_information_text_remark_size" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -229,7 +229,7 @@
                     android:id="@+id/tv_friend_information_line5"
                     style="@style/commonLineStyle"
                     android:layout_marginLeft="@dimen/friend_information_address_padding_left"
-                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                    android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                 <LinearLayout
                     android:id="@+id/layout_friend_information_describe"
@@ -243,7 +243,7 @@
                         android:gravity="center_vertical"
                         android:text="描述"
                         android:textColor="@color/new_friend_name_color"
-                        android:textSize="@dimen/friend_information_text_more_size"/>
+                        android:textSize="@dimen/friend_information_text_more_size" />
 
                     <TextView
                         android:id="@+id/tv_friend_information_describe"
@@ -255,17 +255,17 @@
                         android:singleLine="true"
                         android:text="我是描述"
                         android:textColor="@color/friend_information_name_color"
-                        android:textSize="@dimen/friend_information_text_remark_size"/>
+                        android:textSize="@dimen/friend_information_text_remark_size" />
                 </LinearLayout>
             </LinearLayout>
 
             <View
                 android:id="@+id/tv_friend_information_line6"
-                style="@style/commonLineStyle"/>
+                style="@style/commonLineStyle" />
 
             <View
                 style="@style/commonLineStyle"
-                android:layout_marginTop="@dimen/friend_information_margin_top"/>
+                android:layout_marginTop="@dimen/friend_information_margin_top" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -286,7 +286,7 @@
                         android:gravity="center_vertical"
                         android:text="地区"
                         android:textColor="@color/new_friend_name_color"
-                        android:textSize="@dimen/friend_information_text_more_size"/>
+                        android:textSize="@dimen/friend_information_text_more_size" />
 
                     <TextView
                         android:id="@+id/tv_friend_information_address"
@@ -296,7 +296,7 @@
                         android:paddingLeft="@dimen/friend_information_label_padding_left"
                         android:text="江苏无锡"
                         android:textColor="@color/friend_information_name_color"
-                        android:textSize="@dimen/friend_information_text_remark_size"/>
+                        android:textSize="@dimen/friend_information_text_remark_size" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -311,7 +311,7 @@
                         android:gravity="center_vertical"
                         android:text="个性签名"
                         android:textColor="@color/new_friend_name_color"
-                        android:textSize="@dimen/friend_information_text_more_size"/>
+                        android:textSize="@dimen/friend_information_text_more_size" />
 
                     <TextView
                         android:id="@+id/tv_friend_information_signature"
@@ -323,18 +323,18 @@
                         android:singleLine="true"
                         android:text="我是个性签名"
                         android:textColor="@color/friend_information_name_color"
-                        android:textSize="@dimen/friend_information_text_remark_size"/>
+                        android:textSize="@dimen/friend_information_text_remark_size" />
                 </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/commonLineStyle"/>
+            <View style="@style/commonLineStyle" />
 
             <ImageView
                 android:layout_width="210dp"
                 android:layout_height="210dp"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:src="@drawable/content_dial"/>
+                android:src="@drawable/content_dial" />
 
             <Button
                 android:id="@+id/btn_friend_information_send_message"
@@ -347,21 +347,21 @@
                 android:gravity="center"
                 android:text="发消息"
                 android:textColor="@color/common_white_color"
-                android:textSize="@dimen/friend_information_text_more_size"/>
+                android:textSize="@dimen/friend_information_text_more_size" />
 
             <Button
                 android:id="@+id/btn_friend_information_send_event"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+                android:layout_marginBottom="@dimen/friend_information_btn_margin_bottom"
                 android:layout_marginLeft="@dimen/friend_information_send_margin_left_or_right"
                 android:layout_marginRight="@dimen/friend_information_send_margin_left_or_right"
                 android:layout_marginTop="@dimen/friend_information_margin_top"
-                android:layout_marginBottom="20dp"
                 android:background="@drawable/selector_btn_send_event"
                 android:gravity="center"
                 android:text="发起事件"
                 android:textColor="@color/common_topbar_bg_color"
-                android:textSize="@dimen/friend_information_text_more_size"/>
+                android:textSize="@dimen/friend_information_text_more_size" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

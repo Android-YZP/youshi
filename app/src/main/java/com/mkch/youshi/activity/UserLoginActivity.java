@@ -10,32 +10,32 @@ import com.mkch.youshi.R;
 
 public class UserLoginActivity extends Activity {
 
-	private EditText mEtAccount;//用户名
-	private EditText mEtPassword;//密码
-	private Button mBtnLogin;//登录按钮
-	private TextView mTvGoRegister;//去注册
-	private TextView mTvGoForgot;//去忘记密码
+    private EditText mEtAccount;//用户名
+    private EditText mEtPassword;//密码
+    private Button mBtnLogin;//登录按钮
+    private TextView mTvGoRegister;//去注册
+    private TextView mTvGoForgot;//去忘记密码
 
 
-//	//业务层
+    //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private static ProgressDialog mProgressDialog = null;
 //	private User mUser;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_login);
-		initView();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_login);
+        initView();
 //		setListener();
-	}
+    }
 
-	private void initView() {
-		mEtAccount = (EditText)findViewById(R.id.et_user_login_account);
-		mEtPassword = (EditText)findViewById(R.id.et_user_login_password);
-		mBtnLogin = (Button)findViewById(R.id.btn_user_login_commit);
-		mTvGoRegister = (TextView)findViewById(R.id.tv_user_login_reg);
-		mTvGoForgot = (TextView)findViewById(R.id.tv_user_login_forget);
-	}
+    private void initView() {
+        mEtAccount = (EditText) findViewById(R.id.et_user_login_account);
+        mEtPassword = (EditText) findViewById(R.id.et_user_login_password);
+        mBtnLogin = (Button) findViewById(R.id.btn_user_login_commit);
+        mTvGoRegister = (TextView) findViewById(R.id.tv_user_login_reg);
+        mTvGoForgot = (TextView) findViewById(R.id.tv_user_login_forget);
+    }
 
 //	private void setListener() {
 //		mBtnLogin.setOnClickListener(new UserLoginOnClickListener());

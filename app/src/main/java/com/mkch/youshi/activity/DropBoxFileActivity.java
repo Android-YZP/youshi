@@ -12,15 +12,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.fragment.DropBoxFileFragment;
 import com.mkch.youshi.fragment.MyCollectionFragment;
 import com.mkch.youshi.view.FileTabBarLayout;
 
-public class LocalFileActivity extends BaseActivity {
+public class DropBoxFileActivity extends BaseActivity {
 
     private ImageView mIvBack;
-    private TextView mTvTitle;
-    private FileTabBarLayout mFileTabBarLayout;
-    private ViewPager mViewPagerLocalFile;
+    private FileTabBarLayout mDropBoxTabBarLayout;
+    private ViewPager mViewPagerDropBox;
     private final static int FLAG_ITEM_0 = 0;
     private final static int FLAG_ITEM_1 = 1;
     private final static int FLAG_ITEM_2 = 2;
@@ -36,21 +36,21 @@ public class LocalFileActivity extends BaseActivity {
     private int fragSize = 5;
     //设置预加载界面数量
     private int CACHE_PAGES = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_file);
+        setContentView(R.layout.activity_dropbox_file);
         initView();
         initData();
         setListener();
     }
 
     private void initView() {
-        mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
-        mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-        mFileTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_my_collection_tabbar);
-        mViewPagerLocalFile = (ViewPager) findViewById(R.id.viewPager_my_collection);
-        mViewPagerLocalFile.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
+        mIvBack = (ImageView) findViewById(R.id.iv_drop_box_file_back);
+        mDropBoxTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_dropbox_file_tabbar);
+        mViewPagerDropBox = (ViewPager) findViewById(R.id.viewPager_dropbox_file);
+        mViewPagerDropBox.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         //初始化屏幕宽度
         DisplayMetrics outMetrics = new DisplayMetrics();
         getWindow().getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
@@ -60,44 +60,43 @@ public class LocalFileActivity extends BaseActivity {
     }
 
     private void initData() {
-        mTvTitle.setText("我的收藏");
-        mViewPagerLocalFile.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
+        mViewPagerDropBox.setAdapter(new FileFragmentPagerAdapter(this.getSupportFragmentManager()));
     }
 
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalFileActivity.this.finish();
+                DropBoxFileActivity.this.finish();
             }
         });
-        mFileTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
+        mDropBoxTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
             @Override
             public void clickItem(int id) {
                 switch (id) {
                     case R.id.tv_file_item0:
-                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
+                        mViewPagerDropBox.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
                         break;
                     case R.id.tv_file_item1:
-                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_1);
+                        mViewPagerDropBox.setCurrentItem(FLAG_ITEM_1);
                         break;
                     case R.id.tv_file_item2:
-                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_2);
+                        mViewPagerDropBox.setCurrentItem(FLAG_ITEM_2);
                         break;
                     case R.id.tv_file_item3:
-                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_3);
+                        mViewPagerDropBox.setCurrentItem(FLAG_ITEM_3);
                         break;
                     case R.id.tv_file_item4:
-                        mViewPagerLocalFile.setCurrentItem(FLAG_ITEM_4);
+                        mViewPagerDropBox.setCurrentItem(FLAG_ITEM_4);
                         break;
                 }
             }
         });
 
-        mViewPagerLocalFile.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPagerDropBox.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mFileTabBarLayout.changeTabBarItems(position);
+                mDropBoxTabBarLayout.changeTabBarItems(position);
                 currentIndex = position;//当前页
             }
 
@@ -139,15 +138,15 @@ public class LocalFileActivity extends BaseActivity {
         public Fragment getItem(int postion) {
             switch (postion) {
                 case FLAG_ITEM_0:
-                    return new MyCollectionFragment();
+                    return new DropBoxFileFragment();
                 case FLAG_ITEM_1:
-                    return new MyCollectionFragment();
+                    return new DropBoxFileFragment();
                 case FLAG_ITEM_2:
-                    return new MyCollectionFragment();
+                    return new DropBoxFileFragment();
                 case FLAG_ITEM_3:
-                    return new MyCollectionFragment();
+                    return new DropBoxFileFragment();
                 case FLAG_ITEM_4:
-                    return new MyCollectionFragment();
+                    return new DropBoxFileFragment();
             }
             return null;
         }

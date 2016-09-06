@@ -21,89 +21,91 @@ import com.mkch.youshi.activity.UserInformationActivity;
 
 public class ContactsFragment extends Fragment {
 
-	private ImageView mIvAddFriend;
-	private LinearLayout mLayoutNewFriend,mLayoutGroupChat,mLayoutTest;
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+    private ImageView mIvAddFriend;
+    private LinearLayout mLayoutNewFriend, mLayoutGroupChat, mLayoutTest;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-		findView(view);
-		return view;
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setListener();
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
+        findView(view);
+        return view;
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListener();
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
-	/**
-	 * 查找所有view
-	 * @param view
-	 */
-	private void findView(View view) {
-		mIvAddFriend = (ImageView) view.findViewById(R.id.iv_contacts_topbar_add_friend);
-		mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
-		mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
-		mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
-	/**
-	 * 设置监听器
-	 */
-	private void setListener() {
-		mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
-		mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
-		mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
-		mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
-	}
+    /**
+     * 查找所有view
+     *
+     * @param view
+     */
+    private void findView(View view) {
+        mIvAddFriend = (ImageView) view.findViewById(R.id.iv_contacts_topbar_add_friend);
+        mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
+        mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
+        mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
+    }
 
-	/**
-	 * 自定义点击监听类
-	 * @author JLJ
-	 *
-	 */
-	private class MyContactsOnClickListener implements View.OnClickListener{
-		@Override
-		public void onClick(View v) {
-			if (getActivity()!=null) {
-				Intent _intent = null;
-				switch (v.getId()) {
-					case R.id.iv_contacts_topbar_add_friend:
-						_intent = new Intent(getActivity(), AddFriendsActivity.class);
-						getActivity().startActivity(_intent);
-						break;
-					case R.id.layout_contacts_new_friend:
-						_intent = new Intent(getActivity(), NewFriendActivity.class);
-						getActivity().startActivity(_intent);
-						break;
-					case R.id.layout_contacts_group_chat:
-						_intent = new Intent(getActivity(), GroupChatActivity.class);
-						getActivity().startActivity(_intent);
-						break;
-					case R.id.layout_contacts_test:
-						_intent = new Intent(getActivity(), FriendInformationActivity.class);
-						getActivity().startActivity(_intent);
-						break;
-					default:
-						break;
-				}
-			}
-		}
-	}
+    /**
+     * 设置监听器
+     */
+    private void setListener() {
+        mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
+        mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
+        mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
+        mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
+    }
+
+    /**
+     * 自定义点击监听类
+     *
+     * @author JLJ
+     */
+    private class MyContactsOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (getActivity() != null) {
+                Intent _intent = null;
+                switch (v.getId()) {
+                    case R.id.iv_contacts_topbar_add_friend:
+                        _intent = new Intent(getActivity(), AddFriendsActivity.class);
+                        getActivity().startActivity(_intent);
+                        break;
+                    case R.id.layout_contacts_new_friend:
+                        _intent = new Intent(getActivity(), NewFriendActivity.class);
+                        getActivity().startActivity(_intent);
+                        break;
+                    case R.id.layout_contacts_group_chat:
+                        _intent = new Intent(getActivity(), GroupChatActivity.class);
+                        getActivity().startActivity(_intent);
+                        break;
+                    case R.id.layout_contacts_test:
+                        _intent = new Intent(getActivity(), FriendInformationActivity.class);
+                        getActivity().startActivity(_intent);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }

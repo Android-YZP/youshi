@@ -11,31 +11,32 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserRegUserNameActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	
-	//用户名、密码和确认密码
-	private EditText mEtUsername;
-	private EditText mEtPassword;
-	private EditText mEtPassAgain;
-	private Button mBtnRegister;
-	
-	private String mPhone;
-	private String mCode;
-	private String mPassword;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+
+    //用户名、密码和确认密码
+    private EditText mEtUsername;
+    private EditText mEtPassword;
+    private EditText mEtPassAgain;
+    private Button mBtnRegister;
+
+    private String mPhone;
+    private String mCode;
+    private String mPassword;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
-	
-	private static ProgressDialog mProgressDialog = null;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_reg_username);
+
+    private static ProgressDialog mProgressDialog = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_reg_username);
 //		initView();
 //		initData();
 //		setListener();
-	}
+    }
 
 //	private void initView() {
 //		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);

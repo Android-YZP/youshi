@@ -128,6 +128,7 @@
     <dimen name="friend_information_address_padding_left">16dp</dimen>
     <dimen name="friend_information_label_padding_left">44dp</dimen>
     <dimen name="friend_information_send_margin_left_or_right">10dp</dimen>
+    <dimen name="friend_information_btn_margin_bottom">20dp</dimen>
 
     <!-- information setting -->
     <dimen name="information_setting_checkbox_margin_right">20dp</dimen>

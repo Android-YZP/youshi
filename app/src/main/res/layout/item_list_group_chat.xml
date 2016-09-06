@@ -19,22 +19,22 @@
             android:id="@+id/iv_group_chat_image"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
-            android:contentDescription="@null"
             android:layout_gravity="center_vertical"
+            android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/default_head_rect"/>
+            android:src="@drawable/default_head_rect" />
 
         <TextView
             android:id="@+id/tv_group_chat_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
     </LinearLayout>
 </LinearLayout>
