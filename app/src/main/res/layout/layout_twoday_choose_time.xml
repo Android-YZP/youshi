@@ -4,17 +4,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/btn_dialog_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/btn_back"
+            android:text="开始时间"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+
+        <Button
+            android:id="@+id/btn_dialog_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/text_white"
+            android:text="结束时间"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <View style="@style/lineOfDialog" />
+
     <TextView
         android:id="@+id/tv_dialog_time_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:padding="18dp"
+        android:padding="10dp"
         android:text="2016年9月2日 8:05"
         android:textColor="@color/common_topbar_bg_color"
         android:textSize="20sp" />
 
-    <View style="@style/lineOfDialog" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,37 +61,19 @@
         <NumberPicker
             android:id="@+id/np_month"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp">
 
         </NumberPicker>
 
         <NumberPicker
             android:id="@+id/np_day"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp">
 
         </NumberPicker>
 
-        <NumberPicker
-            android:id="@+id/np_hour"
-            android:layout_width="55dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/common_et_padding_left">
-
-        </NumberPicker>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text=":"
-            android:textColor="#000"
-            android:textSize="20sp" />
-
-        <NumberPicker
-            android:id="@+id/np_min"
-            android:layout_width="55dp"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
     <View

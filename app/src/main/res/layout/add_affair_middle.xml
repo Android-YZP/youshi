@@ -17,6 +17,7 @@
             android:text="日期" />
 
         <TextView
+            android:id="@+id/tv_two_date"
             style="@style/lastOfAffairList"
             android:text="2016年8月7日至8月14日" />
     </RelativeLayout>
