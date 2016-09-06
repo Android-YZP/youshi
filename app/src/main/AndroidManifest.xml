@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mkch.youshi">
+    package="com.mkch.youshi">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".config.MyApplication"
@@ -21,47 +21,47 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TestMsgActivity"/>
-        <activity android:name=".activity.UserLoginActivity"/>
-        <activity android:name=".activity.UserRegPhoneActivity"/>
-        <activity android:name=".activity.UserRegCodeActivity"/>
-        <activity android:name=".activity.UserRegUserNameActivity"/>
-        <activity android:name=".activity.UserForgotCodeActivity"/>
-        <activity android:name=".activity.GroupChatActivity"/>
-        <activity android:name=".activity.AddFriendsActivity"/>
-        <activity android:name=".activity.NewFriendActivity"/>
-        <activity android:name=".activity.PhoneContactsActivity"/>
-        <activity android:name=".activity.FriendInformationActivity"/>
-        <activity android:name=".activity.InformationSettingActivity"/>
-        <activity android:name=".activity.RemarkInformationActivity"/>
-        <activity android:name=".activity.UserInformationActivity"/>
-        <activity android:name=".activity.MyFileActivity"/>
-        <activity android:name=".activity.MyCollectionActivity"/>
-        <activity android:name=".activity.SettingActivity"/>
-        <activity android:name=".activity.AddPersonalActivity"/>
-        <activity android:name=".activity.AddManyPeopleEventActivity"/>
-        <activity android:name=".activity.AddPersonalAffairActivity"/>
-        <activity android:name=".activity.AddPersonalEventActivity"/>
-        <activity android:name=".activity.AddPersonalHabitActivity"/>
-        <activity android:name=".activity.ReviseNameActivity"/>
+        <activity android:name=".activity.TestMsgActivity" />
+        <activity android:name=".activity.UserLoginActivity" />
+        <activity android:name=".activity.UserRegPhoneActivity" />
+        <activity android:name=".activity.UserRegCodeActivity" />
+        <activity android:name=".activity.UserRegUserNameActivity" />
+        <activity android:name=".activity.UserForgotCodeActivity" />
+        <activity android:name=".activity.GroupChatActivity" />
+        <activity android:name=".activity.AddFriendsActivity" />
+        <activity android:name=".activity.NewFriendActivity" />
+        <activity android:name=".activity.PhoneContactsActivity" />
+        <activity android:name=".activity.FriendInformationActivity" />
+        <activity android:name=".activity.InformationSettingActivity" />
+        <activity android:name=".activity.RemarkInformationActivity" />
+        <activity android:name=".activity.UserInformationActivity" />
+        <activity android:name=".activity.MyFileActivity" />
+        <activity android:name=".activity.MyCollectionActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.AddPersonalActivity" />
+        <activity android:name=".activity.AddManyPeopleEventActivity" />
+        <activity android:name=".activity.AddPersonalAffairActivity" />
+        <activity android:name=".activity.AddPersonalEventActivity" />
+        <activity android:name=".activity.AddPersonalHabitActivity" />
+        <activity android:name=".activity.ReviseNameActivity" />
+        <activity android:name=".activity.SearchEventActivity" />
         <activity android:name=".activity.ReviseYoushiNumberActivity"/>
         <activity android:name=".activity.ReviseSignatureActivity"/>
-        <activity android:name=".activity.SearchEventActivity"/>
         <activity android:name=".activity.FilePreviewActivity"/>
         <activity android:name=".activity.FilePreviewPicActivity"/>
         <activity android:name=".activity.LocalFileActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".activity.TestNetActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.TestNetActivity" />
+        <activity android:name=".activity.ChooseAddressActivity" />
+        <activity android:name=".activity.ChooseSomeoneActivity" />
+        <activity android:name=".activity.ChooseRemindBeforeActivity" />
+        <activity android:name=".activity.CalendarActivity" />
+        <activity android:name=".activity.ChooseTimeActivity" />
+        <activity android:name=".activity.ChooseWeekActivity"></activity>
+        <activity android:name=".activity.GroupDetailActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
-        <activity android:name=".activity.ChooseAddressActivity"/>
-        <activity android:name=".activity.ChooseSomeoneActivity"/>
-        <activity android:name=".activity.ChooseRemindBeforeActivity"/>
-        <activity android:name=".activity.GroupDetailActivity">
-        </activity>
     </application>
 
 </manifest>
