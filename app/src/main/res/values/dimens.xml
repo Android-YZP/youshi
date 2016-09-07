@@ -171,4 +171,7 @@
     <dimen name="file_preview_text_preview_size">14sp</dimen>
     <dimen name="file_preview_layout_bottom_height">49dp</dimen>
     <dimen name="file_preview_open_margin_top">10dp</dimen>
+
+    <!-- setting -->
+    <dimen name="setting_text_quit_margin_top">20dp</dimen>
 </resources>

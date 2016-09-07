@@ -30,9 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="头像"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -70,9 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="昵称"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -84,19 +78,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:singleLine="true"
             android:text="昵称"
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
@@ -119,9 +106,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="优时号"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -133,7 +117,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:singleLine="true"
             android:text="未设置"
             android:textColor="@color/friend_information_name_color"
@@ -162,9 +145,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="二维码"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -203,9 +183,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="性别"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -216,9 +193,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="男"
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
@@ -246,9 +220,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="地区"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
@@ -260,7 +231,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:singleLine="true"
             android:text="江苏无锡"
             android:textColor="@color/friend_information_name_color"
@@ -289,9 +259,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:text="个性签名"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />

@@ -58,4 +58,6 @@
     <color name="cycicle_color_5">#ec1f79</color>
     <color name="cycicle_color_6">#92288f</color>
 
+    <!-- setting -->
+    <color name="setting_text_quit_color">#fe204a</color>
 </resources>
