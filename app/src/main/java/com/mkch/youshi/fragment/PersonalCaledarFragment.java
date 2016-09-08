@@ -1,11 +1,13 @@
 package com.mkch.youshi.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -13,7 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.EventBean;
+import com.mkch.youshi.activity.PersonalDetialEventActivity;
+import com.mkch.youshi.activity.PersonalDetialHabitActivity;
+import com.mkch.youshi.activity.PersonalDetialsAffairActivity;
+import com.mkch.youshi.bean.PersonalEventBean;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.MyProgress;
 
@@ -25,7 +30,7 @@ import java.util.ArrayList;
 public class PersonalCaledarFragment extends Fragment {
 
     private ListView mLvPersonCalendar;
-    private ArrayList<EventBean> mEventBeens;
+    private ArrayList<PersonalEventBean> mEventBeens;
 
     @Nullable
     @Override
@@ -34,6 +39,7 @@ public class PersonalCaledarFragment extends Fragment {
         View view = inflater.inflate(R.layout.personal_caledar_fragment, container, false);
         initView(view);
         initData();
+        initListener();
         return view;
     }
 
@@ -55,10 +61,34 @@ public class PersonalCaledarFragment extends Fragment {
         mLvPersonCalendar.setAdapter(new MyAdapter());
     }
 
-
     private void initView(View view) {
         mLvPersonCalendar = (ListView) view.findViewById(R.id.lv_personal_caledar);
     }
+
+
+    private void initListener() {
+        mLvPersonCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int kind = mEventBeens.get(position).getKind();
+                Intent intent = null;
+                if (kind == PersonalEventBean.PERSONAL_EVENT) {
+                     intent = new Intent(UIUtils.getContext(),
+                            PersonalDetialEventActivity.class);
+                } else if (kind == PersonalEventBean.PERSONAL_AFFAIR) {
+                     intent = new Intent(UIUtils.getContext(),
+                            PersonalDetialsAffairActivity.class);
+                } else if (kind == PersonalEventBean.PERSONAL_HABIT) {
+                     intent = new Intent(UIUtils.getContext(),
+                            PersonalDetialHabitActivity.class);
+                }
+                if (intent!=null){
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
     class MyAdapter extends BaseAdapter {
 
         @Override
@@ -95,7 +125,7 @@ public class PersonalCaledarFragment extends Fragment {
             _tvTheme.setText(theme);//设置主题
 
             //判断是何种类型,进行不同的显示
-            if (kind == EventBean.PERSONAL_EVENT){
+            if (kind == PersonalEventBean.PERSONAL_EVENT) {
                 _tvTimeStop.setVisibility(View.VISIBLE);
                 _pbProgress.setVisibility(View.INVISIBLE);
                 _mbProgress.setVisibility(View.INVISIBLE);
@@ -103,8 +133,8 @@ public class PersonalCaledarFragment extends Fragment {
                 _tvTimeAndStopTime.setVisibility(View.INVISIBLE);
 
                 //设置进度显示
-                _tvTimeStop.setText(mEventBeens.get(position).getEndTime()+"截止");
-            }else if (kind == EventBean.PERSONAL_AFFAIR){
+                _tvTimeStop.setText(mEventBeens.get(position).getEndTime() + "截止");
+            } else if (kind == PersonalEventBean.PERSONAL_AFFAIR) {
                 _mbProgress.setVisibility(View.GONE);
                 _tvTimeStop.setVisibility(View.GONE);
                 _pbProgress.setVisibility(View.VISIBLE);
@@ -114,29 +144,29 @@ public class PersonalCaledarFragment extends Fragment {
                 //设置进度显示
                 int progress = mEventBeens.get(position).getProgress();
                 _pbProgress.setSecondaryProgress(progress);
-                _pbProgress.setProgress(progress-3);
+                _pbProgress.setProgress(progress - 3);
                 _tvProgress.setText(progress + "%");
-                _tvTimeAndStopTime.setText(mEventBeens.get(position).getEndTime() + "截止"+" 时长"+
-                        mEventBeens.get(position).getTime()+"小时");
+                _tvTimeAndStopTime.setText(mEventBeens.get(position).getEndTime() + "截止" + " 时长" +
+                        mEventBeens.get(position).getTime() + "小时");
 
-            }else if (kind == EventBean.PERSONAL_HABIT){
+            } else if (kind == PersonalEventBean.PERSONAL_HABIT) {
 
                 _tvTimeAndStopTime.setVisibility(View.VISIBLE);
                 _pbProgress.setVisibility(View.GONE);
                 _tvProgress.setVisibility(View.GONE);
 
                 int times = mEventBeens.get(position).getTimes();
-                if (times ==7){
+                if (times == 7) {
                     _mbProgress.setVisibility(View.GONE);
                     _tvTimeStop.setVisibility(View.VISIBLE);
-                    _tvTimeStop.setText(mEventBeens.get(position).getCompleteTimes()+"/"+times);
-                }else {
+                    _tvTimeStop.setText(mEventBeens.get(position).getCompleteTimes() + "/" + times);
+                } else {
                     _mbProgress.setVisibility(View.VISIBLE);
                     _tvTimeStop.setVisibility(View.GONE);
                     _mbProgress.setNumber(times);
                     _mbProgress.setCompleteNumber(mEventBeens.get(position).getCompleteTimes());
                 }
-                _tvTimeAndStopTime.setText("一周"+times+"次");
+                _tvTimeAndStopTime.setText("一周" + times + "次");
             }
             return view;
         }
@@ -144,52 +174,52 @@ public class PersonalCaledarFragment extends Fragment {
 
 
     private void addTestData1() {
-        EventBean eventBean = new EventBean();
-        eventBean.setKind(EventBean.PERSONAL_EVENT);
-        eventBean.setTheme("修电脑");
-        eventBean.setEndTime("8月10日");
-        eventBean.setComplete(false);
-        mEventBeens.add(eventBean);
+        PersonalEventBean personalEventBean = new PersonalEventBean();
+        personalEventBean.setKind(PersonalEventBean.PERSONAL_EVENT);
+        personalEventBean.setTheme("修电脑");
+        personalEventBean.setEndTime("8月10日");
+        personalEventBean.setComplete(false);
+        mEventBeens.add(personalEventBean);
     }
 
     private void addTestData2() {
-        EventBean eventBean = new EventBean();
-        eventBean.setKind(EventBean.PERSONAL_AFFAIR);
-        eventBean.setTheme("修电脑");
-        eventBean.setProgress(65);
-        eventBean.setEndTime("8月17日");
-        eventBean.setTime("8");
-        eventBean.setComplete(true);
-        mEventBeens.add(eventBean);
+        PersonalEventBean personalEventBean = new PersonalEventBean();
+        personalEventBean.setKind(PersonalEventBean.PERSONAL_AFFAIR);
+        personalEventBean.setTheme("修电脑");
+        personalEventBean.setProgress(65);
+        personalEventBean.setEndTime("8月17日");
+        personalEventBean.setTime("8");
+        personalEventBean.setComplete(true);
+        mEventBeens.add(personalEventBean);
     }
 
     private void addTestData3() {
-        EventBean eventBean = new EventBean();
-        eventBean.setKind(EventBean.PERSONAL_HABIT);
-        eventBean.setTheme("修电脑");
-        eventBean.setComplete(true);
-        eventBean.setTimes(6);
-        eventBean.setCompleteTimes(3);
-        mEventBeens.add(eventBean);
+        PersonalEventBean personalEventBean = new PersonalEventBean();
+        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
+        personalEventBean.setTheme("修电脑");
+        personalEventBean.setComplete(true);
+        personalEventBean.setTimes(6);
+        personalEventBean.setCompleteTimes(3);
+        mEventBeens.add(personalEventBean);
     }
 
     private void addTestData4() {
-        EventBean eventBean = new EventBean();
-        eventBean.setKind(EventBean.PERSONAL_HABIT);
-        eventBean.setTheme("晨跑");
-        eventBean.setComplete(false);
-        eventBean.setTimes(7);
-        eventBean.setCompleteTimes(2);
-        mEventBeens.add(eventBean);
+        PersonalEventBean personalEventBean = new PersonalEventBean();
+        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
+        personalEventBean.setTheme("晨跑");
+        personalEventBean.setComplete(false);
+        personalEventBean.setTimes(7);
+        personalEventBean.setCompleteTimes(2);
+        mEventBeens.add(personalEventBean);
     }
 
     private void addTestData5() {
-        EventBean eventBean = new EventBean();
-        eventBean.setKind(EventBean.PERSONAL_HABIT);
-        eventBean.setTheme("唱歌");
-        eventBean.setComplete(false);
-        eventBean.setTimes(3);
-        eventBean.setCompleteTimes(1);
-        mEventBeens.add(eventBean);
+        PersonalEventBean personalEventBean = new PersonalEventBean();
+        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
+        personalEventBean.setTheme("唱歌");
+        personalEventBean.setComplete(false);
+        personalEventBean.setTimes(3);
+        personalEventBean.setCompleteTimes(1);
+        mEventBeens.add(personalEventBean);
     }
 }

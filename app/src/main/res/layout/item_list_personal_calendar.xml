@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -59,9 +60,9 @@
 
                         <com.mkch.youshi.view.MyProgress
                             android:id="@+id/mp_progress"
-                            android:layout_marginTop="5dp"
                             android:layout_width="70dp"
-                            android:layout_height="17dp" />
+                            android:layout_height="17dp"
+                            android:layout_marginTop="5dp" />
 
                         <TextView
                             android:id="@+id/tv_time_stop"
@@ -95,12 +96,12 @@
             </LinearLayout>
 
             <TextView
-                android:layout_marginRight="10dp"
                 style="@style/common_text_gray_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:paddingLeft="8dp"
                 android:text="今天" />
 

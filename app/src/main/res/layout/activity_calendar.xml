@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/tv_weekday_month"
+                android:id="@+id/iv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:drawablePadding="5dp"
@@ -37,7 +37,7 @@
                 android:layout_weight="1" />
 
             <ImageView
-                android:id="@+id/iv_weekday_search"
+                android:id="@+id/iv_search"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -45,7 +45,7 @@
                 android:src="@drawable/nav_search" />
 
             <ImageView
-                android:id="@+id/iv_weekday_add"
+                android:id="@+id/iv_add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"

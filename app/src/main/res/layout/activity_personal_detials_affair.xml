@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mkch.youshi.activity.PersonalDetialsAffairActivity">
+
+    <include
+        layout="@layout/add_event_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="主题" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="买蛋糕" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="标签" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="工作" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="地点" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="宜兴" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="日期" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="2016年8月17日至8月14日" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="周" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="周一,周二,周三" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="时间段选择" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="09:00~10:00 10:00~11:00" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="时长" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="1小时" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="报送" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="哈尼" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/common_detial_black"
+                    android:text="提前提醒" />
+
+                <TextView
+                    style="@style/detial_gray"
+                    android:text="无" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/map" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

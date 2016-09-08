@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
@@ -25,16 +26,28 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private RelativeLayout mRlHabitWeek;
     private RelativeLayout mRlHabitChooseTime;
     private RelativeLayout mRlHabitAllTime;
+    private TextView mTvCancel;
+    private TextView mTvComplete;
+    private TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_habit);
         initView();
+        initData();
         setListener();
     }
 
+    private void initData() {
+        mTvTitle.setText("添加个人习惯");
+    }
+
     private void initView() {
+        mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
@@ -91,6 +104,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mRemindBefore.setOnClickListener(this);
         //备注
         mRemark.setOnClickListener(this);
+        mTvCancel.setOnClickListener(this);
+        mTvComplete.setOnClickListener(this);
     }
 
     @Override
@@ -125,6 +140,13 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             case R.id.rl_submission://报送
                 startActivity(new Intent(AddPersonalHabitActivity.this,
                         ChooseSomeoneActivity.class));
+                break;
+            case R.id.tv_add_event_complete://完成
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        CalendarActivity.class));
+                break;
+            case R.id.tv_add_event_cancel://取消
+                finish();
                 break;
             case R.id.rl_remind_before://提前提醒
                 startActivity(new Intent(AddPersonalHabitActivity.this,

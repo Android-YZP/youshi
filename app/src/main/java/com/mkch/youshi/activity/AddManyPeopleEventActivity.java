@@ -40,6 +40,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
 
     private TextView mTvCancel;
     private TextView mTvComplete;
+    private TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +61,13 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         mCurrentMinute = t.minute;
         mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
         mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
-
+        mTvTitle.setText("添加多人日程");
     }
 
     private void initView() {
         mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
         mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
 
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
@@ -133,6 +135,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         mManyPeopleUploading.setOnClickListener(this);
 
         mTvComplete.setOnClickListener(this);
+        mTvCancel.setOnClickListener(this);
     }
 
     @Override
@@ -181,6 +184,9 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             case R.id.tv_add_event_complete://完成
                 startActivity(new Intent(AddManyPeopleEventActivity.
                         this, CalendarActivity.class));
+                break;
+            case R.id.tv_add_event_cancel://取消
+                finish();
                 break;
             default:
                 break;

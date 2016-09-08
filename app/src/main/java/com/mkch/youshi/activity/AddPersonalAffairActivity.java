@@ -27,6 +27,9 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private RelativeLayout mRemindBefore;
     private LinearLayout mRemark;
     private TextView mTwoDate;
+    private TextView mTvCancel;
+    private TextView mTvComplete;
+    private TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +37,17 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_affair);
         initView();
+        initData();
         setListener();
     }
 
+
     private void initView() {
+        mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+
+
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
@@ -53,7 +63,13 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mRemark = (LinearLayout) findViewById(R.id.ll_remark);
     }
 
+    private void initData() {
+        mTvTitle.setText("添加个人事务");
+    }
+
     private void setListener() {
+
+
         //标签
         mRgLabel.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -97,6 +113,9 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
 
         //备注
         mRemark.setOnClickListener(this);
+
+        mTvCancel.setOnClickListener(this);
+        mTvComplete.setOnClickListener(this);
     }
 
     @Override
@@ -108,7 +127,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 break;
 
             case R.id.rl_affair_date://日期
-               DialogFactory.showTwoDayOptionDialog(this,mTwoDate);
+                DialogFactory.showTwoDayOptionDialog(this, mTwoDate);
                 break;
             case R.id.rl_affair_week://周
                 startActivity(new Intent(AddPersonalAffairActivity.this,
@@ -132,6 +151,13 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             case R.id.rl_remind_before://提前提醒
                 startActivity(new Intent(AddPersonalAffairActivity.
                         this, ChooseRemindBeforeActivity.class));
+                break;
+            case R.id.tv_add_event_cancel://取消
+                finish();
+                break;
+            case R.id.tv_add_event_complete://完成
+                startActivity(new Intent(AddPersonalAffairActivity.
+                        this, CalendarActivity.class));
                 break;
             default:
                 break;

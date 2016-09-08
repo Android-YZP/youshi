@@ -16,9 +16,9 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity" />
@@ -45,11 +45,11 @@
         <activity android:name=".activity.AddPersonalHabitActivity" />
         <activity android:name=".activity.ReviseNameActivity" />
         <activity android:name=".activity.SearchEventActivity" />
-        <activity android:name=".activity.ReviseYoushiNumberActivity"/>
-        <activity android:name=".activity.ReviseSignatureActivity"/>
-        <activity android:name=".activity.FilePreviewActivity"/>
-        <activity android:name=".activity.FilePreviewPicActivity"/>
-        <activity android:name=".activity.LocalFileActivity"/>
+        <activity android:name=".activity.ReviseYoushiNumberActivity" />
+        <activity android:name=".activity.ReviseSignatureActivity" />
+        <activity android:name=".activity.FilePreviewActivity" />
+        <activity android:name=".activity.FilePreviewPicActivity" />
+        <activity android:name=".activity.LocalFileActivity" />
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />
@@ -59,9 +59,13 @@
         <activity android:name=".activity.ChooseRemindBeforeActivity" />
         <activity android:name=".activity.CalendarActivity" />
         <activity android:name=".activity.ChooseTimeActivity" />
-        <activity android:name=".activity.ChooseWeekActivity"></activity>
-        <activity android:name=".activity.GroupDetailActivity"/>
-        <activity android:name=".activity.MultiChatActivity"/>
+        <activity android:name=".activity.ChooseWeekActivity" />
+        <activity android:name=".activity.GroupDetailActivity" />
+        <activity android:name=".activity.MultiChatActivity" />
+        <activity android:name=".activity.ManyPeopleEventDetial" />
+        <activity android:name=".activity.PersonalDetialEventActivity" />
+        <activity android:name=".activity.PersonalDetialsAffairActivity" />
+        <activity android:name=".activity.PersonalDetialHabitActivity"></activity>
     </application>
 
 </manifest>
