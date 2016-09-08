@@ -27,7 +27,7 @@
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
         <activity android:name=".activity.UserForgotCodeActivity" />
-        <activity android:name=".activity.GroupChatActivity" />
+
         <activity android:name=".activity.AddFriendsActivity" />
         <activity android:name=".activity.NewFriendActivity" />
         <activity android:name=".activity.PhoneContactsActivity" />
@@ -49,6 +49,7 @@
         <activity android:name=".activity.ReviseSignatureActivity"/>
         <activity android:name=".activity.FilePreviewActivity"/>
         <activity android:name=".activity.FilePreviewPicActivity"/>
+        <activity android:name=".activity.LocalFileActivity"/>
         <activity android:name=".activity.DropBoxFileActivity"/>
         <activity android:name=".activity.ScheduleFileActivity"/>
         <activity android:name=".activity.ScheduleDetailActivity"/>
@@ -61,13 +62,17 @@
         <activity android:name=".activity.ChooseRemindBeforeActivity" />
         <activity android:name=".activity.CalendarActivity" />
         <activity android:name=".activity.ChooseTimeActivity" />
-        <activity android:name=".activity.ChooseWeekActivity"></activity>
+        <activity android:name=".activity.ChooseWeekActivity" />
+        <activity android:name=".activity.ManyPeopleEventDetial" />
+        <activity android:name=".activity.PersonalDetialEventActivity" />
+        <activity android:name=".activity.PersonalDetialsAffairActivity" />
+        <activity android:name=".activity.PersonalDetialHabitActivity"></activity>
 
         <!--消息-->
         <activity android:name=".activity.GroupDetailActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
         <activity android:name=".activity.ChatActivity"/>
-
+        <activity android:name=".activity.GroupChatActivity" />
     </application>
 
 </manifest>

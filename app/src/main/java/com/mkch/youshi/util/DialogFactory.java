@@ -56,7 +56,7 @@ public class DialogFactory {
     private static NumberPicker mNpStartMinute;
     private static NumberPicker mNpEndHour;
     private static NumberPicker mNpEndMinute;
-
+    public static Dialog mChooseTimeDialog;
     public static void showDateDialog(Context context, final TextView textView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
@@ -124,8 +124,9 @@ public class DialogFactory {
         dialog.show();
     }
 
+
     //选择开始结束时间的对话框;
-    public static Dialog mChooseTimeDialog;
+
 
     public static void showOptionDialog(Context context, final TextView textView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料

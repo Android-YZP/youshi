@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="20dp"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line_1"
+        android:layout_width="4dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#00f"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line_2"
+        android:layout_width="4dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#00f"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/circle3"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line_3"
+        android:layout_width="4dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#00f"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/circle4"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line_4"
+        android:layout_width="4dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#00f"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/circle5"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line_5"
+        android:layout_width="4dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="#00f"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/circle6"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/shape_circle2_bg"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+    <!--android:descendantFocusability=”blocksDescendants”-->
+    <!--解决listView不能点击的灵异事件-->
+    <!--十分钟之前-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_complete"
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp" />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_lv_many_people_theme"
+                        style="@style/textStyleBlack28"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:text="买生日蛋糕" />
+
+                    <TextView
+                        android:id="@+id/tv_lv_many_people_sponsor"
+                        style="@style/textStyleBlack28"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:text="(发起者：我)" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/tv_lv_many_people_time_stop"
+                        style="@style/common_text_gray_24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="8月10号截止" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <!--不同情况下的控件叠加-->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btn_lv_many_people_accept"
+                            android:layout_width="55dp"
+                            android:layout_height="25dp"
+                            android:background="@drawable/btn_accept"
+                            android:text="接受"
+                            android:textColor="@color/user_login_selector_btn_color"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btn_lv_many_people_refuse"
+                            android:layout_width="55dp"
+                            android:layout_height="25dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/btn_refuse"
+                            android:text="拒绝"
+                            android:textColor="@color/text_refuse"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_lv_many_people_accept"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="10dp"
+                        android:text="已接受"
+                        android:textColor="@color/user_login_selector_btn_color"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_lv_many_people_refuse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+
+                        android:layout_marginRight="10dp"
+                        android:text="已拒绝"
+                        android:textColor="@color/text_refuse"
+                        android:textSize="12sp" />
+                </FrameLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_lv_many_people_creation_time"
+                    style="@style/common_text_gray_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="2016年8月5日" />
+            </LinearLayout>
+
+            <View
+                style="@style/commonLineStyle"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
