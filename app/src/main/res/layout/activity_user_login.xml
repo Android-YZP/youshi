@@ -46,6 +46,34 @@
             android:textColorHint="@color/main_tabbar_border_color"
             android:textSize="@dimen/common_et_text_font_size" />
 
+        <LinearLayout
+            android:id="@+id/layout_user_login_code"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+            android:layout_marginTop="@dimen/user_login_password_margin_top"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_user_login_code"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+                android:layout_weight="1"
+                android:hint="请输入验证码"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:padding="@dimen/user_login_edit_padding"
+                android:singleLine="true"
+                android:textColorHint="@color/main_tabbar_border_color"
+                android:textSize="@dimen/common_et_text_font_size" />
+
+            <ImageView
+                android:id="@+id/iv_user_login_code"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_user_login_commit"
             android:layout_width="match_parent"
