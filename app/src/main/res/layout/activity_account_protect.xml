@@ -49,7 +49,7 @@
         android:paddingLeft="@dimen/account_protect_remark_padding_left_or_right"
         android:paddingRight="@dimen/account_protect_remark_padding_left_or_right"
         android:paddingTop="@dimen/account_protect_remark_padding_top_or_bottom"
-        android:text="开启以后，在不常用设备上登录时，需要输入密码以及短信验证码"
+        android:text="开启以后，在不常用设备上登录时，需要输入短信验证码"
         android:textColor="@color/common_et_text_font_color"
         android:textSize="@dimen/friend_information_text_remark_size" />
 

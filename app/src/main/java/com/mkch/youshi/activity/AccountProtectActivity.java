@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -50,6 +51,14 @@ public class AccountProtectActivity extends Activity {
             @Override
             public void onClick(View view) {
                 AccountProtectActivity.this.finish();
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(AccountProtectActivity.this).setTitle("请输入").setView(
+                        new EditText(AccountProtectActivity.this)).setPositiveButton("确定", null)
+                        .setNegativeButton("取消", null).show();
             }
         });
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

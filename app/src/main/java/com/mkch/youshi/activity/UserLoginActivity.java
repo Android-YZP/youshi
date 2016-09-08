@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,9 @@ public class UserLoginActivity extends Activity {
 
     private EditText mEtAccount;//用户名
     private EditText mEtPassword;//密码
+    private LinearLayout mLayoutCode;
+    private EditText mEtCode;//验证码
+    private ImageView mIvCode;//验证码图片
     private Button mBtnLogin;//登录按钮
     private TextView mTvGoRegister;//去注册
     private TextView mTvGoForgot;//去忘记密码
@@ -60,9 +65,13 @@ public class UserLoginActivity extends Activity {
     private void initView() {
         mEtAccount = (EditText) findViewById(R.id.et_user_login_account);
         mEtPassword = (EditText) findViewById(R.id.et_user_login_password);
+        mLayoutCode = (LinearLayout) findViewById(R.id.layout_user_login_code);
+        mEtCode = (EditText) findViewById(R.id.et_user_login_code);
+        mIvCode = (ImageView) findViewById(R.id.iv_user_login_code);
         mBtnLogin = (Button) findViewById(R.id.btn_user_login_commit);
         mTvGoRegister = (TextView) findViewById(R.id.tv_user_login_reg);
         mTvGoForgot = (TextView) findViewById(R.id.tv_user_login_forget);
+        mLayoutCode.setVisibility(View.GONE);
     }
 
     private void setListener() {
@@ -125,7 +134,7 @@ public class UserLoginActivity extends Activity {
      */
     public void goMain() {
         //保存用户信息，并关闭该界面
-//        CommonUtil.saveUserInfo(mUser, this);
+        CommonUtil.saveUserInfo(mUser, this);
         Toast.makeText(UserLoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
         UserLoginActivity.this.finish();
         Intent _intent = new Intent(this, MainActivity.class);

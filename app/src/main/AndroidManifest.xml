@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -62,6 +62,7 @@
         <activity android:name=".activity.RevisePasswordActivity"/>
         <activity android:name=".activity.RevisePasswordCodeActivity"/>
         <activity android:name=".activity.AccountProtectActivity"/>
+        <activity android:name=".activity.NewMessageNoticeActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />

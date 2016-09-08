@@ -48,6 +48,7 @@ public class SettingActivity extends Activity {
             }
         });
         mLayoutAccount.setOnClickListener(new SettingOnClickListener());
+        mLayoutMessage.setOnClickListener(new SettingOnClickListener());
         mTvQuit.setOnClickListener(new SettingOnClickListener());
     }
 
@@ -66,7 +67,7 @@ public class SettingActivity extends Activity {
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_new_message:
-                    _intent = new Intent(SettingActivity.this, ReviseYoushiNumberActivity.class);
+                    _intent = new Intent(SettingActivity.this, NewMessageNoticeActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_privacy:

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.mkch.youshi.R;
 import com.mkch.youshi.fragment.ManyPeopleCaledarFragment;
 import com.mkch.youshi.fragment.PersonalCaledarFragment;
@@ -28,6 +27,8 @@ public class CalendarActivity extends BaseActivity {
     private ImageView mIvSearch;
     private ImageView mIvAdd;
     private PopupWindow popupWindow;
+    private Fragment personalCaledarFragment;
+    private Fragment manyPeopleCaledarFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +72,13 @@ public class CalendarActivity extends BaseActivity {
     }
 
     private void initData() {
+        personalCaledarFragment = new PersonalCaledarFragment();
+        manyPeopleCaledarFragment = new ManyPeopleCaledarFragment();
         mViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
         mPagerTab.setViewPager(mViewPager);
         //保证第一个条目是被选中状态
         mViewPager.setCurrentItem(1);
         mViewPager.setCurrentItem(0);
-
     }
 
     /**
@@ -147,13 +149,12 @@ public class CalendarActivity extends BaseActivity {
             return mTabNames[position];
         }
 
-
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new PersonalCaledarFragment();
+                return personalCaledarFragment;
             } else if (position == 1) {
-                return new ManyPeopleCaledarFragment();
+                return manyPeopleCaledarFragment;
             }
             return null;
         }
