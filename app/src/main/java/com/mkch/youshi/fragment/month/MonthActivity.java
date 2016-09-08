@@ -1,9 +1,7 @@
 package com.mkch.youshi.fragment.month;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,29 +9,21 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
-import com.mkch.youshi.activity.TestMsgActivity;
-
 import org.xutils.common.util.LogUtil;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
