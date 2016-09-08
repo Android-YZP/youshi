@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--登录时查看UUID-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".config.MyApplication"
@@ -22,7 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity" />
-        <activity android:name=".activity.UserLoginActivity" />
+        <activity android:name=".activity.UserLoginActivity" >
+
+        </activity>
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
