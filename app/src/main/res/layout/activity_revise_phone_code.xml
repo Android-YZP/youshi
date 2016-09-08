@@ -19,7 +19,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_user_reg_intro"
+            android:id="@+id/tv_revise_phone_code_intro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/user_reg_code_intro_text_margin_top_or_bottom"
@@ -31,7 +31,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/et_user_reg_code"
+        android:id="@+id/et_revise_phone_code"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:background="@drawable/bg_border_common_et"
@@ -43,7 +43,7 @@
         android:textSize="@dimen/common_et_text_font_size" />
 
     <Button
-        android:id="@+id/btn_user_reg_getcode_code_commit"
+        android:id="@+id/btn_revise_phone_code_commit"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_btn_getcode_height"
         android:layout_marginLeft="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
@@ -57,7 +57,7 @@
         android:textSize="@dimen/user_login_visit_by_easy_font_size" />
 
     <TextView
-        android:id="@+id/tv_user_reg_code_getcode_again"
+        android:id="@+id/tv_revise_phone_code_getcode_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

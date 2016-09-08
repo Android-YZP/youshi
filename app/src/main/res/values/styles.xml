@@ -33,6 +33,7 @@
         <item name="android:height">31dp</item>
         <item name="android:width">51dp</item>
     </style>
+
     <!--新建个人日程TextView-->
     <style name="TextViewStyle">
         <item name="android:layout_width">wrap_content</item>
@@ -113,7 +114,6 @@
         <item name="android:textSize">@dimen/common_et_text_font_size</item>
         <item name="android:textColor">@color/common_et_text_font_color</item>
         <item name="android:textColorHint">@color/common_content_text_font_color</item>
-        <item name="android:textCursorDrawable">@null</item>
         <item name="android:drawableLeft">@drawable/icon_search</item>
         <item name="android:paddingLeft">@dimen/common_et_padding_left</item>
         <item name="android:drawablePadding">@dimen/common_et_drawable_padding</item>

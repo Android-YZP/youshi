@@ -122,7 +122,9 @@
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView style="@style/commonArrowStyle" />
+        <ImageView
+            android:id="@+id/iv_user_information_youshi_number"
+            style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View

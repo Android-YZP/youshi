@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/layout_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:text="账号"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
+
+    <View style="@style/commonLineStyle" />
+
+    <LinearLayout
+        android:id="@+id/layout_account_youshi_number"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="优时账号"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <TextView
+            android:id="@+id/tv_account_youshi_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="未设置"
+            android:textColor="@color/friend_information_name_color"
+            android:textSize="@dimen/friend_information_text_remark_size" />
+
+        <ImageView
+            android:id="@+id/iv_account_youshi_number"
+            style="@style/commonArrowStyle" />
+    </LinearLayout>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
+
+    <LinearLayout
+        android:id="@+id/layout_account_phone"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="手机号"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <TextView
+            android:id="@+id/tv_account_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="138****7890"
+            android:textColor="@color/friend_information_name_color"
+            android:textSize="@dimen/friend_information_text_remark_size" />
+
+        <ImageView style="@style/commonArrowStyle" />
+    </LinearLayout>
+
+    <View style="@style/commonLineStyle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:text="安全"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
+
+    <View style="@style/commonLineStyle" />
+
+    <LinearLayout
+        android:id="@+id/layout_account_password"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="密码"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <ImageView style="@style/commonArrowStyle" />
+    </LinearLayout>
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
+
+    <LinearLayout
+        android:id="@+id/layout_account_protect"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="账号保护"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <TextView
+            android:id="@+id/tv_account_protect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="未保护"
+            android:textColor="@color/friend_information_name_color"
+            android:textSize="@dimen/friend_information_text_remark_size" />
+
+        <ImageView style="@style/commonArrowStyle" />
+    </LinearLayout>
+
+    <View style="@style/commonLineStyle" />
+</LinearLayout>

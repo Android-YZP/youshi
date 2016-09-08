@@ -174,4 +174,10 @@
 
     <!-- setting -->
     <dimen name="setting_text_quit_margin_top">20dp</dimen>
+
+    <!-- account protect -->
+    <dimen name="account_protect_remark_padding_left_or_right">15dp</dimen>
+    <dimen name="account_protect_remark_padding_top_or_bottom">10dp</dimen>
+    <dimen name="account_protect_common_equipment_padding_bottom">5dp</dimen>
+    <dimen name="common_equipment_text_type_size">10sp</dimen>
 </resources>
