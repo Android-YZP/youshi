@@ -49,7 +49,6 @@
         <activity android:name=".activity.ReviseSignatureActivity"/>
         <activity android:name=".activity.FilePreviewActivity"/>
         <activity android:name=".activity.FilePreviewPicActivity"/>
-        <activity android:name=".activity.LocalFileActivity"/>
         <activity android:name=".activity.DropBoxFileActivity"/>
         <activity android:name=".activity.ScheduleFileActivity"/>
         <activity android:name=".activity.ScheduleDetailActivity"/>
@@ -59,6 +58,7 @@
         <activity android:name=".activity.RevisePasswordActivity"/>
         <activity android:name=".activity.RevisePasswordCodeActivity"/>
         <activity android:name=".activity.AccountProtectActivity"/>
+        <activity android:name=".activity.NewMessageNoticeActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />
