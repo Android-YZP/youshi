@@ -24,6 +24,8 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -45,6 +47,7 @@ public class UserLoginActivity extends Activity {
 
     private static ProgressDialog mProgressDialog = null;//登录加载
     private User mUser;//用户信息
+    private String mPicUrl;//图片验证码地址
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,10 +94,24 @@ public class UserLoginActivity extends Activity {
                     //登录成功
                     ((UserLoginActivity) mActivity.get()).goMain();
                     break;
+                case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR:
+                    //图片验证码错误
+                    ((UserLoginActivity) mActivity.get()).imgVerifyError();
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    /**
+     * 图片验证码错误-提示并重刷图片验证码
+     */
+    private void imgVerifyError() {
+        this.showTip("图片验证码错误");
+        //把ImageView重新刷新图片验证码
+
+
     }
 
     private MyHandler handler = new MyHandler(this);
@@ -147,6 +164,7 @@ public class UserLoginActivity extends Activity {
                     _intent = new Intent(UserLoginActivity.this, UserForgotCodeActivity.class);
                     startActivity(_intent);
                     break;
+
                 default:
                     break;
             }
@@ -179,15 +197,42 @@ public class UserLoginActivity extends Activity {
                     if (result != null) {
                         Log.d("userLogin", "----onSuccess:" + result);
                         //若result返回信息中登录成功，解析json数据并存于本地，再使用handler通知UI更新界面并进行下一步逻辑
-                        HttpResultBean httpResultBean = gson.fromJson(result, HttpResultBean.class);
-                        if (httpResultBean.getSuccess()){
-                            //填充本地用户信息
+                        try {
+                            JSONObject _json_result = new JSONObject(result);
+                            Boolean _success = (Boolean) _json_result.get("Success");
+                            if (_success){
+                                //填充本地用户信息
+                                String _Datas = _json_result.getString("Datas");
+                                mUser = gson.fromJson(_Datas,User.class);
+                                if (mUser!=null){
+                                    Log.d("jlj","-------mUser = "+mUser.toString());
+                                }
 
-                            //提醒登录成功
-                            handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
-                        }else{
-                            CommonUtil.sendErrorMessage(httpResultBean.getMessage(), handler);
+                                //提醒登录成功
+                                handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
+
+                            }else{
+                                String _Message = _json_result.getString("Message");
+                                String _ErrorCode = _json_result.getString("ErrorCode");
+                                if (_ErrorCode!=null&&_ErrorCode.equals("1004")){
+                                    String _Datas = _json_result.getString("Datas");
+
+                                    JSONObject _Datas_jsonobj = new JSONObject(_Datas);
+                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE+_Datas_jsonobj.getString("PicCodePath");
+                                    Log.d("jlj","-------------------图片验证码错误--------------"+mPicUrl);
+                                    handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR);
+                                }else{
+                                    CommonUtil.sendErrorMessage(_Message, handler);
+                                }
+
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+
+
 
                     }
 
@@ -195,6 +240,7 @@ public class UserLoginActivity extends Activity {
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
+                    Log.d("jlj","-------onError = "+ex.getMessage());
                     //使用handler通知UI提示用户错误信息
                     if (ex instanceof ConnectException) {
                         CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);

@@ -8,13 +8,13 @@ public class HttpResultBean {
     private Boolean NeedVerifyCode;
     private String Message;
     private String ErrorCode;
-    private String Datas;
+    private User Datas;
     private int Total;
 
     public HttpResultBean() {
     }
 
-    public HttpResultBean(Boolean success, Boolean needVerifyCode, String message, String errorCode, String datas, int total) {
+    public HttpResultBean(Boolean success, Boolean needVerifyCode, String message, String errorCode, User datas, int total) {
         Success = success;
         NeedVerifyCode = needVerifyCode;
         Message = message;
@@ -55,14 +55,6 @@ public class HttpResultBean {
         ErrorCode = errorCode;
     }
 
-    public String getDatas() {
-        return Datas;
-    }
-
-    public void setDatas(String datas) {
-        Datas = datas;
-    }
-
     public int getTotal() {
         return Total;
     }
@@ -71,15 +63,11 @@ public class HttpResultBean {
         Total = total;
     }
 
-    @Override
-    public String toString() {
-        return "HttpResultBean{" +
-                "Success=" + Success +
-                ", NeedVerifyCode=" + NeedVerifyCode +
-                ", Message='" + Message + '\'' +
-                ", ErrorCode='" + ErrorCode + '\'' +
-                ", Datas='" + Datas + '\'' +
-                ", Total=" + Total +
-                '}';
+    public User getDatas() {
+        return Datas;
+    }
+
+    public void setDatas(User datas) {
+        Datas = datas;
     }
 }

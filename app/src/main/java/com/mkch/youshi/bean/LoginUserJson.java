@@ -1,6 +1,7 @@
 package com.mkch.youshi.bean;
 
 /**
+ * 登录请求json
  * Created by SunnyJiang on 2016/9/7.
  */
 public class LoginUserJson {
