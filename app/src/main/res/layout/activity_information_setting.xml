@@ -74,11 +74,8 @@
             android:checked="false" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:background="@drawable/bg_cut_line" />
+    <View style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:layout_width="match_parent"

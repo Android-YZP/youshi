@@ -48,6 +48,7 @@ public class SettingActivity extends Activity {
             }
         });
         mLayoutAccount.setOnClickListener(new SettingOnClickListener());
+        mTvQuit.setOnClickListener(new SettingOnClickListener());
     }
 
     /**
@@ -61,7 +62,7 @@ public class SettingActivity extends Activity {
             Intent _intent = null;
             switch (view.getId()) {
                 case R.id.layout_setting_account_and_safety:
-                    _intent = new Intent(SettingActivity.this, ReviseNameActivity.class);
+                    _intent = new Intent(SettingActivity.this, AccountAndSafetyActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_new_message:

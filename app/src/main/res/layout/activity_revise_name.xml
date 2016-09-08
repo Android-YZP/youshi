@@ -10,24 +10,18 @@
         android:layout_height="@dimen/common_topbar_height"
         layout="@layout/layout_common_topbar"/>
 
-    <View
-        style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
-
     <EditText
         android:id="@+id/et_revise_name"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:hint="请输入新的昵称"
-        android:textCursorDrawable="@null"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/common_et_text_font_size"
         android:maxLength="20"
         android:background="@drawable/bg_border_common_et"/>
-
-    <View style="@style/commonLineStyle" />
 
     <Button
         android:id="@+id/btn_revise_name_confirm"

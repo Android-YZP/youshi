@@ -10,24 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
 
-    <View
-        style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top" />
-
     <EditText
         android:id="@+id/et_revise_youshi_number"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
         android:background="@drawable/bg_border_common_et"
         android:hint="请设置您的优时号"
         android:maxLength="20"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/common_et_text_font_size" />
-
-    <View style="@style/commonLineStyle" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +30,7 @@
         android:layout_marginTop="@dimen/friend_member_search_input_drawable_padding"
         android:text="注意：优时号只能设置一次，设置之后无法修改"
         android:textColor="@color/user_reg_phone_et_text_font_color"
-        android:textSize="@dimen/user_reg_phone_text_read_protocal_text_font_size" />
+        android:textSize="@dimen/friend_information_text_remark_size" />
 
     <Button
         android:id="@+id/btn_revise_youshi_number_confirm"

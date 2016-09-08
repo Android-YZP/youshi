@@ -57,7 +57,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View style="@style/commonLineStyle" />
@@ -84,7 +83,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View
@@ -104,7 +102,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View
@@ -124,7 +121,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View
@@ -144,7 +140,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View
@@ -164,7 +159,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View style="@style/commonLineStyle" />
@@ -190,7 +184,6 @@
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
         android:textColor="@color/new_friend_name_color"
         android:textColorHint="@color/user_login_username_or_password_color"
-        android:textCursorDrawable="@null"
         android:textSize="@dimen/friend_information_text_more_size" />
 
     <View style="@style/commonLineStyle" />

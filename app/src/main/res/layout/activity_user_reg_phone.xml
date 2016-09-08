@@ -34,7 +34,7 @@
         android:gravity="center"
         android:text="获取验证码"
         android:textColor="@color/common_white_color"
-        android:textSize="@dimen/user_login_commit_text_font_size" />
+        android:textSize="@dimen/user_login_visit_by_easy_font_size" />
 
     <LinearLayout
         android:layout_width="match_parent"

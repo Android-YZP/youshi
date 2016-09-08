@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginTop="@dimen/user_reg_phone_et_phone_margin_top"
         android:orientation="horizontal">
 

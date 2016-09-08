@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--登录时查看UUID-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".config.MyApplication"
@@ -22,7 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.TestMsgActivity" />
-        <activity android:name=".activity.UserLoginActivity" />
+        <activity android:name=".activity.UserLoginActivity" >
+
+        </activity>
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
@@ -53,6 +57,12 @@
         <activity android:name=".activity.DropBoxFileActivity"/>
         <activity android:name=".activity.ScheduleFileActivity"/>
         <activity android:name=".activity.ScheduleDetailActivity"/>
+        <activity android:name=".activity.AccountAndSafetyActivity"/>
+        <activity android:name=".activity.RevisePhoneActivity"/>
+        <activity android:name=".activity.RevisePhoneCodeActivity"/>
+        <activity android:name=".activity.RevisePasswordActivity"/>
+        <activity android:name=".activity.RevisePasswordCodeActivity"/>
+        <activity android:name=".activity.AccountProtectActivity"/>
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />
