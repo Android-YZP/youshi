@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">优时</string>
+
+    <string-array name="tab_names">
+        <item>个人日程</item>
+        <item>多人日程</item>
+    </string-array>
 </resources>

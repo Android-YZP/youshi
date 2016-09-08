@@ -128,6 +128,7 @@
     <dimen name="friend_information_address_padding_left">16dp</dimen>
     <dimen name="friend_information_label_padding_left">44dp</dimen>
     <dimen name="friend_information_send_margin_left_or_right">10dp</dimen>
+    <dimen name="friend_information_btn_margin_bottom">20dp</dimen>
 
     <!-- information setting -->
     <dimen name="information_setting_checkbox_margin_right">20dp</dimen>
@@ -170,4 +171,13 @@
     <dimen name="file_preview_text_preview_size">14sp</dimen>
     <dimen name="file_preview_layout_bottom_height">49dp</dimen>
     <dimen name="file_preview_open_margin_top">10dp</dimen>
+
+    <!-- setting -->
+    <dimen name="setting_text_quit_margin_top">20dp</dimen>
+
+    <!-- account protect -->
+    <dimen name="account_protect_remark_padding_left_or_right">15dp</dimen>
+    <dimen name="account_protect_remark_padding_top_or_bottom">10dp</dimen>
+    <dimen name="account_protect_common_equipment_padding_bottom">5dp</dimen>
+    <dimen name="common_equipment_text_type_size">10sp</dimen>
 </resources>

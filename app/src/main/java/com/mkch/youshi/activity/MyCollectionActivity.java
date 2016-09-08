@@ -36,6 +36,7 @@ public class MyCollectionActivity extends BaseActivity {
     private int fragSize = 5;
     //设置预加载界面数量
     private int CACHE_PAGES = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

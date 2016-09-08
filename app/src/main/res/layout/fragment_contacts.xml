@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,17 +18,21 @@
             android:text="联系人"
             android:textColor="@color/common_topbar_text_font_color"
             android:textSize="@dimen/common_topbar_text_font_size"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/iv_contacts_topbar_add_friend"
             android:layout_width="@dimen/contacts_image_add_friends_width_or_height"
             android:layout_height="@dimen/contacts_image_add_friends_width_or_height"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
-            android:background="@drawable/topbar_addfriend"/>
+            android:background="@drawable/topbar_addfriend" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,9 +42,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/message_search_part_height"
+            android:background="@color/message_search_part_bg_color"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:background="@color/message_search_part_bg_color"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -55,8 +59,7 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <View
-                style="@style/commonLineStyle"/>
+            <View style="@style/commonLineStyle" />
 
             <LinearLayout
                 android:id="@+id/layout_contacts_new_friend"
@@ -72,29 +75,29 @@
                 <ImageView
                     android:layout_width="@dimen/new_friend_content_head_width_or_height"
                     android:layout_height="@dimen/new_friend_content_head_width_or_height"
-                    android:contentDescription="@null"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@null"
                     android:scaleType="fitXY"
-                    android:src="@drawable/newfriend"/>
+                    android:src="@drawable/newfriend" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:text="新的朋友"
                     android:textColor="@color/new_friend_name_color"
-                    android:textSize="@dimen/friend_information_text_more_size"/>
+                    android:textSize="@dimen/friend_information_text_more_size" />
 
                 <TextView
                     android:id="@+id/tv_contacts_new_friend_number"
-                    android:text="8"
+                    style="@style/commonMsgNumsStyle"
                     android:layout_gravity="center_vertical"
-                    style="@style/commonMsgNumsStyle"/>
+                    android:text="8" />
             </LinearLayout>
         </LinearLayout>
 
@@ -106,50 +109,49 @@
 
             <View
                 style="@style/commonLineStyle"
-                android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
+                android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
-        <LinearLayout
-            android:id="@+id/layout_contacts_group_chat"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/youshi_contact_height"
-            android:background="@android:color/white"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
-            android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
-            android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
-            android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+            <LinearLayout
+                android:id="@+id/layout_contacts_group_chat"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/youshi_contact_height"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+                android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+                android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+                android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
-            <ImageView
-                android:layout_width="@dimen/new_friend_content_head_width_or_height"
-                android:layout_height="@dimen/new_friend_content_head_width_or_height"
-                android:contentDescription="@null"
-                android:layout_gravity="center_vertical"
-                android:scaleType="fitXY"
-                android:src="@drawable/groupchat"/>
+                <ImageView
+                    android:layout_width="@dimen/new_friend_content_head_width_or_height"
+                    android:layout_height="@dimen/new_friend_content_head_width_or_height"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@null"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/groupchat" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="群聊"
-                android:textColor="@color/new_friend_name_color"
-                android:textSize="@dimen/friend_information_text_more_size"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="群聊"
+                    android:textColor="@color/new_friend_name_color"
+                    android:textSize="@dimen/friend_information_text_more_size" />
 
-            <TextView
-                android:id="@+id/tv_contacts_group_chat_number"
-                android:text="24"
-                android:layout_gravity="center_vertical"
-                style="@style/commonMsgNumsStyle"/>
+                <TextView
+                    android:id="@+id/tv_contacts_group_chat_number"
+                    style="@style/commonMsgNumsStyle"
+                    android:layout_gravity="center_vertical"
+                    android:text="24" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-        <View
-            style="@style/commonLineStyle"/>
+        <View style="@style/commonLineStyle" />
 
         <LinearLayout
             android:id="@+id/layout_contacts_test"
@@ -165,10 +167,10 @@
             <ImageView
                 android:layout_width="@dimen/new_friend_content_head_width_or_height"
                 android:layout_height="@dimen/new_friend_content_head_width_or_height"
-                android:contentDescription="@null"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/maillist"/>
+                android:src="@drawable/maillist" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -176,11 +178,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/new_friend_content_name_margin_left"
                 android:ellipsize="end"
-                android:text="张三"
                 android:gravity="center_vertical"
                 android:singleLine="true"
+                android:text="张三"
                 android:textColor="@color/new_friend_name_color"
-                android:textSize="@dimen/friend_information_text_more_size"/>
+                android:textSize="@dimen/friend_information_text_more_size" />
         </LinearLayout>
 
         <FrameLayout
@@ -196,7 +198,7 @@
                 android:dividerHeight="1px"
                 android:fadingEdge="none"
                 android:listSelector="@android:color/transparent"
-                android:scrollbars="none"/>
+                android:scrollbars="none" />
 
             <TextView
                 android:id="@+id/tv_contacts_dialog"
@@ -207,13 +209,15 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="45sp"
-                android:visibility="gone"/>
-
-            <com.mkch.youshi.view.SideBar
-                android:id="@+id/sidebar_contacts"
-                android:layout_width="20dp"
-                android:layout_height="fill_parent"
-                android:layout_gravity="right"/>
+                android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>
+
+    <com.mkch.youshi.view.SideBar
+        android:id="@+id/sidebar_contacts"
+        android:layout_width="20dp"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="@dimen/message_search_part_height"
+        android:layout_alignParentRight="true" />
+    </RelativeLayout>
 </LinearLayout>

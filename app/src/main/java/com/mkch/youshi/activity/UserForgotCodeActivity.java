@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,44 +13,45 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserForgotCodeActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	private Button mBtnCommitCode;
-	
-	//手机号和验证码
-	private String mPhone;
-	private String mSmsCode;
-	
-	//手机介绍信息
-	private TextView mTvPhoneInfo;
-	//再次获取验证码
-	private TextView mTvGetSmsAgain;
-	
-	//验证码
-	private EditText mEtSmsCode;
-	private EditText mEtPassword;
-	private EditText mEtPassAgain;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private Button mBtnCommitCode;
+
+    //手机号和验证码
+    private String mPhone;
+    private String mSmsCode;
+
+    //手机介绍信息
+    private TextView mTvPhoneInfo;
+    //再次获取验证码
+    private TextView mTvGetSmsAgain;
+
+    //验证码
+    private EditText mEtSmsCode;
+    private EditText mEtPassword;
+    private EditText mEtPassAgain;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
-	
-	private static ProgressDialog mProgressDialog = null;
-	
-	//定义倒计时handler
-	private static Handler getcodeHandler;
-	private int num;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_forgot_code);
-//		initView();
-//		initData();
-//		setListener();
-	}
 
-//	private void initView() {
-//		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);
-//		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+    private static ProgressDialog mProgressDialog = null;
+
+    //定义倒计时handler
+    private static Handler getcodeHandler;
+    private int num;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_forgot_code);
+		initView();
+		initData();
+		setListener();
+    }
+
+	private void initView() {
+		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);
+		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
 //		mBtnCommitCode = (Button)findViewById(R.id.btn_user_forgot_commit);
 //
 //		//手机号介绍信息
@@ -59,10 +61,10 @@ public class UserForgotCodeActivity extends Activity {
 //		//新密码和确认密码
 //		mEtPassword = (EditText)findViewById(R.id.et_user_forgot_password);
 //		mEtPassAgain = (EditText)findViewById(R.id.et_user_forgot_password_again);
-//	}
+	}
 //
-//	private void initData() {
-//		mTvTitle.setText("密码重置");
+	private void initData() {
+		mTvTitle.setText("找回密码");
 //		//初始化phone字符串和显示说明信息
 //		Bundle _bundle = getIntent().getExtras();
 //		if(_bundle!=null){
@@ -71,7 +73,7 @@ public class UserForgotCodeActivity extends Activity {
 //		}
 //		//60s后重新获取验证码
 //		canGetSmsCodeAgain();
-//	}
+	}
 //
 //	/**
 //	 * 是否可以再次发送验证码
@@ -119,14 +121,15 @@ public class UserForgotCodeActivity extends Activity {
 //		}).start();
 //	}
 //
-//	private void setListener() {
-//		mIvBack.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				UserForgotCodeActivity.this.finish();
-//			}
-//		});
+	private void setListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                UserForgotCodeActivity.this.finish();
+            }
+        });
+    }
 //		mTvGetSmsAgain.setOnClickListener(new OnClickListener() {
 //
 //			@Override

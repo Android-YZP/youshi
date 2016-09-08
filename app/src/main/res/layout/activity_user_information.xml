@@ -2,17 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_head"
@@ -28,33 +28,28 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="头像"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <ImageView
             android:id="@+id/iv_user_center_head"
             android:layout_width="@dimen/user_center_head_width_or_height"
             android:layout_height="@dimen/user_center_head_width_or_height"
-            android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/maillist"/>
+            android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:src="@drawable/maillist" />
 
-        <ImageView
-            style="@style/commonArrowStyle" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_name"
@@ -70,40 +65,30 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="昵称"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
             android:id="@+id/tv_user_information_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:text="昵称"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="昵称"
             android:textColor="@color/friend_information_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView
-            android:layout_width="@dimen/user_center_arrow_width_or_height"
-            android:layout_height="@dimen/user_center_arrow_width_or_height"
-            android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
-            android:scaleType="fitXY"
-            android:src="@drawable/list_arrow"/>
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_youshi_number"
@@ -119,35 +104,32 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="优时号"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
             android:id="@+id/tv_user_information_youshi_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:text="未设置"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="未设置"
             android:textColor="@color/friend_information_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
 
         <ImageView
+            android:id="@+id/iv_user_information_youshi_number"
             style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_code"
@@ -163,34 +145,29 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="二维码"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <ImageView
             android:layout_width="@dimen/add_friend_enter_width_or_height"
             android:layout_height="@dimen/add_friend_enter_width_or_height"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:contentDescription="@null"
-            android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
-            android:src="@drawable/me_code"/>
+            android:src="@drawable/me_code" />
 
-        <ImageView
-            style="@style/commonArrowStyle" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_sex"
@@ -206,35 +183,28 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="性别"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
             android:id="@+id/tv_user_information_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:text="男"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:text="男"
             android:textColor="@color/friend_information_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView
-            style="@style/commonArrowStyle" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_address"
@@ -250,35 +220,30 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="地区"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
             android:id="@+id/tv_user_information_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
-            android:text="江苏无锡"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="江苏无锡"
             android:textColor="@color/friend_information_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView
-            style="@style/commonArrowStyle" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
     <LinearLayout
         android:id="@+id/layout_user_information_signature"
@@ -294,32 +259,27 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:ellipsize="end"
+            android:layout_weight="1"
             android:text="个性签名"
-            android:gravity="center_vertical"
-            android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
             android:id="@+id/tv_user_information_signature"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="我是个性签名"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:paddingLeft="@dimen/friend_information_address_padding_left"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/friend_information_address_padding_left"
+            android:singleLine="true"
+            android:text="我是个性签名"
             android:textColor="@color/friend_information_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
 
-        <ImageView
-            style="@style/commonArrowStyle" />
+        <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 </LinearLayout>

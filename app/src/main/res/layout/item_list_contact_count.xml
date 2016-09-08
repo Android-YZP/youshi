@@ -9,5 +9,4 @@
     android:paddingBottom="@dimen/contact_count_padding_top_or_bottom"
     android:paddingTop="@dimen/contact_count_padding_top_or_bottom"
     android:textSize="@dimen/contact_count_size"
-    tools:text="10位联系人">
-</TextView>
+    tools:text="10位联系人"></TextView>

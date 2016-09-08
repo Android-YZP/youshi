@@ -16,17 +16,16 @@ import android.widget.ListView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.FilePreviewActivity;
 import com.mkch.youshi.activity.FilePreviewPicActivity;
-import com.mkch.youshi.activity.PhoneContactsActivity;
-import com.mkch.youshi.activity.UserInformationActivity;
-import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
-import com.mkch.youshi.adapter.FileListAdapter;
+import com.mkch.youshi.adapter.DropBoxListAdapter;
+import com.mkch.youshi.adapter.MyCollectionListAdapter;
 
 public class MyCollectionFragment extends Fragment {
 
     private SwipeRefreshLayout mSRLayout;
     private ListView mListView;
-    //保存选择的性别
+    //长按后选择的操作列表
     private String[] operation_list = {"下载", "转发", "删除"};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class MyCollectionFragment extends Fragment {
     }
 
     private void initData() {
-        ListAdapter mAdapter = new FileListAdapter(getActivity());
+        ListAdapter mAdapter = new MyCollectionListAdapter(getActivity());
         mListView.setAdapter(mAdapter);
     }
 
@@ -63,13 +62,13 @@ public class MyCollectionFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent _intent = null;
-                switch (position){
+                switch (position) {
                     case 0:
-                        _intent = new Intent(getActivity(),FilePreviewActivity.class);
+                        _intent = new Intent(getActivity(), FilePreviewActivity.class);
                         startActivity(_intent);
                         break;
                     case 3:
-                        _intent = new Intent(getActivity(),FilePreviewPicActivity.class);
+                        _intent = new Intent(getActivity(), FilePreviewPicActivity.class);
                         startActivity(_intent);
                         break;
                 }

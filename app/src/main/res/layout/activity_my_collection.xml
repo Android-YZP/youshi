@@ -2,30 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <com.mkch.youshi.view.FileTabBarLayout
         android:id="@+id/custom_my_collection_tabbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height">
-    </com.mkch.youshi.view.FileTabBarLayout>
+        android:layout_height="@dimen/common_topbar_height"></com.mkch.youshi.view.FileTabBarLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager_my_collection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v4.view.ViewPager>
+        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
 </LinearLayout>

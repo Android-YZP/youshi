@@ -2,131 +2,124 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/common_bg_color">
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/layout_common_topbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"
-        layout="@layout/layout_common_topbar"/>
+        android:layout_height="@dimen/common_topbar_height" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <TextView
         android:id="@+id/tv_information_setting_setting"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:text="设置备注信息"
+        android:background="@color/common_white_color"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:text="设置备注信息"
         android:textColor="@color/new_friend_name_color"
-        android:textSize="@dimen/friend_information_text_more_size"
-        android:background="@color/common_white_color"/>
+        android:textSize="@dimen/friend_information_text_more_size" />
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <TextView
         android:id="@+id/tv_information_setting_recommend"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:text="把他推荐给朋友"
+        android:background="@color/common_white_color"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:text="把他推荐给朋友"
         android:textColor="@color/new_friend_name_color"
-        android:textSize="@dimen/friend_information_text_more_size"
-        android:background="@color/common_white_color"/>
+        android:textSize="@dimen/friend_information_text_more_size" />
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top"/>
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:orientation="horizontal"
-        android:background="@color/common_white_color">
+        android:background="@color/common_white_color"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="不让他看我的表盘"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
+            android:text="不让他看我的表盘"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
             android:id="@+id/cb_information_setting_look_me"
+            style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
-            android:checked="false"
-            style="@style/MyCheckBox"/>
+            android:checked="false" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+    <View style="@style/commonLineStyle"
+        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
-        android:orientation="horizontal"
-        android:background="@color/common_white_color">
+        android:background="@color/common_white_color"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="不看他的表盘"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
+            android:text="不看他的表盘"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size"/>
+            android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
             android:id="@+id/cb_information_setting_look_him"
+            style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
-            android:checked="false"
-            style="@style/MyCheckBox"/>
+            android:checked="false" />
     </LinearLayout>
 
-    <View
-        style="@style/commonLineStyle"/>
+    <View style="@style/commonLineStyle" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-    </LinearLayout>
+        android:layout_weight="1"></LinearLayout>
 
     <Button
         android:id="@+id/btn_information_setting_delete_friend"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+        android:layout_marginBottom="@dimen/information_setting_delete_margin_bottom"
         android:layout_marginLeft="@dimen/friend_information_send_margin_left_or_right"
         android:layout_marginRight="@dimen/friend_information_send_margin_left_or_right"
-        android:layout_marginBottom="@dimen/information_setting_delete_margin_bottom"
-        android:text="删除"
-        android:textSize="@dimen/friend_information_text_more_size"
-        android:textColor="@color/common_white_color"
+        android:background="@drawable/selector_btn_delete_friend"
         android:gravity="center"
-        android:background="@drawable/selector_btn_delete_friend"/>
+        android:text="删除"
+        android:textColor="@color/common_white_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
 </LinearLayout>

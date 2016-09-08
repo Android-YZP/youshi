@@ -38,12 +38,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <View
@@ -353,6 +353,7 @@
                 android:id="@+id/btn_friend_information_send_event"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/user_login_username_or_password_or_commit_height"
+                android:layout_marginBottom="@dimen/friend_information_btn_margin_bottom"
                 android:layout_marginLeft="@dimen/friend_information_send_margin_left_or_right"
                 android:layout_marginRight="@dimen/friend_information_send_margin_left_or_right"
                 android:layout_marginTop="@dimen/friend_information_margin_top"

@@ -13,13 +13,13 @@
         android:paddingBottom="@dimen/contact_list_catalog_padding_top_or_bottom"
         android:paddingLeft="@dimen/contact_list_catalog_padding_left"
         android:paddingTop="@dimen/contact_list_catalog_padding_top_or_bottom"
-        android:textColor="@color/contact_list_catalog_text_color"/>
+        android:textColor="@color/contact_list_catalog_text_color" />
 
     <TextView
         android:id="@+id/tv_contact_line"
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:background="@drawable/bg_cut_line"/>
+        android:background="@drawable/bg_cut_line" />
 
     <LinearLayout
         android:id="@+id/layout_contact_content"
@@ -36,10 +36,10 @@
             android:id="@+id/iv_contact_head"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
-            android:contentDescription="@null"
             android:layout_gravity="center_vertical"
+            android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/default_head_rect"/>
+            android:src="@drawable/default_head_rect" />
 
         <TextView
             android:id="@+id/tv_contact_name"
@@ -51,6 +51,6 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_remark_size"/>
+            android:textSize="@dimen/friend_information_text_remark_size" />
     </LinearLayout>
 </LinearLayout>

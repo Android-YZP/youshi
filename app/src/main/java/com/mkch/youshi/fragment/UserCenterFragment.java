@@ -19,7 +19,8 @@ import com.mkch.youshi.activity.UserInformationActivity;
  */
 public class UserCenterFragment extends Fragment {
 
-    private LinearLayout mInformation,mFile,mCollection,mSetting;
+    private LinearLayout mInformation, mFile, mCollection, mSetting;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,7 @@ public class UserCenterFragment extends Fragment {
 
     /**
      * 查找所有view
+     *
      * @param view
      */
     private void findView(View view) {
@@ -72,13 +74,13 @@ public class UserCenterFragment extends Fragment {
 
     /**
      * 自定义点击监听类
-     * @author JLJ
      *
+     * @author JLJ
      */
-    private class MyUserCenterOnClickListener implements View.OnClickListener{
+    private class MyUserCenterOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (getActivity()!=null) {
+            if (getActivity() != null) {
                 Intent _intent = null;
                 switch (v.getId()) {
                     case R.id.layout_user_center_information:

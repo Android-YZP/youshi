@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_drop_box_file_back"
+            style="@style/commonTopbarBackStyle"
+            android:src="@drawable/nav_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="优盘文件"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_drop_box_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
+            android:text="上传"
+            android:textColor="@color/common_white_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+    </RelativeLayout>
+
+
+    <com.mkch.youshi.view.FileTabBarLayout
+        android:id="@+id/custom_dropbox_file_tabbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"></com.mkch.youshi.view.FileTabBarLayout>
+
+    <View style="@style/commonLineStyle" />
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager_dropbox_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v4.view.ViewPager>
+</LinearLayout>

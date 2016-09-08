@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
@@ -25,16 +26,28 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private RelativeLayout mRlHabitWeek;
     private RelativeLayout mRlHabitChooseTime;
     private RelativeLayout mRlHabitAllTime;
+    private TextView mTvCancel;
+    private TextView mTvComplete;
+    private TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_habit);
         initView();
+        initData();
         setListener();
     }
 
+    private void initData() {
+        mTvTitle.setText("添加个人习惯");
+    }
+
     private void initView() {
+        mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
@@ -91,6 +104,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mRemindBefore.setOnClickListener(this);
         //备注
         mRemark.setOnClickListener(this);
+        mTvCancel.setOnClickListener(this);
+        mTvComplete.setOnClickListener(this);
     }
 
     @Override
@@ -98,36 +113,44 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         switch (v.getId()) {
             //前半部分
             case R.id.rl_choose_address://选择地址
-                Toast.makeText(AddPersonalHabitActivity.this, "1",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        ChooseAddressActivity.class));
                 break;
 
             //中间部分的点击事件
             case R.id.rl_habit_circle://周期
-                Toast.makeText(AddPersonalHabitActivity.this, "1",
+                Toast.makeText(AddPersonalHabitActivity.this, "动态计算出来的",
                         Toast.LENGTH_SHORT).show();
                 break;
             case R.id.rl_habit_week://周
-                Toast.makeText(AddPersonalHabitActivity.this, "2",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        ChooseWeekActivity.class));
                 break;
             case R.id.rl_habit_choose_time://选择时间
-                Toast.makeText(AddPersonalHabitActivity.this, "3",
-                        Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        ChooseTimeActivity.class));
                 break;
             case R.id.rl_habit_all_time://总时间
-                Toast.makeText(AddPersonalHabitActivity.this, "4",
+                Toast.makeText(AddPersonalHabitActivity.this, "计算出来的",
                         Toast.LENGTH_SHORT).show();
                 break;
 
             //后半部分的点击事件
             case R.id.rl_submission://报送
-                Toast.makeText(AddPersonalHabitActivity.this, "1",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        ChooseSomeoneActivity.class));
+                break;
+            case R.id.tv_add_event_complete://完成
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        CalendarActivity.class));
+                break;
+            case R.id.tv_add_event_cancel://取消
+                finish();
                 break;
             case R.id.rl_remind_before://提前提醒
-                Toast.makeText(AddPersonalHabitActivity.this, "2",
-                        Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AddPersonalHabitActivity.this,
+                        ChooseRemindBeforeActivity.class));
                 break;
             default:
                 break;

@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/iv_common_topbar_back"
-        android:src="@drawable/nav_back"
-        style="@style/commonTopbarBackStyle"/>
+        style="@style/commonTopbarBackStyle"
+        android:src="@drawable/nav_back" />
 
     <TextView
         android:id="@+id/tv_common_topbar_title"
@@ -17,5 +17,5 @@
         android:text="标题"
         android:textColor="@color/common_topbar_text_font_color"
         android:textSize="@dimen/common_topbar_text_font_size"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 </RelativeLayout>

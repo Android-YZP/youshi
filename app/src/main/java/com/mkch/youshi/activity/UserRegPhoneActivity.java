@@ -3,6 +3,7 @@ package com.mkch.youshi.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -12,33 +13,34 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 
 public class UserRegPhoneActivity extends Activity {
-	private ImageView mIvBack;
-	private TextView mTvTitle;
-	private Button mBtnCommitPhone;
-	//手机号
-	private EditText mEtPhone;
-	//是否选中checkbox
-	private CheckBox mCbIsRead;
-	private TextView mTvIsRead;
-	private TextView mTvProtocal;
-	
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private Button mBtnCommitPhone;
+    //手机号
+    private EditText mEtPhone;
+    //是否选中checkbox
+    private CheckBox mCbIsRead;
+    private TextView mTvIsRead;
+    private TextView mTvProtocal;
+
 //	//业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
 //	private String mPhone;
-	
-	private static ProgressDialog mProgressDialog = null;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_user_reg_phone);
-//		initView();
-//		initData();
-//		setListener();
-	}
 
-//	private void initView() {
-//		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);
-//		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+    private static ProgressDialog mProgressDialog = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_reg_phone);
+        initView();
+        initData();
+        setListener();
+    }
+
+    private void initView() {
+        mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
+        mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
 //		mBtnCommitPhone = (Button)findViewById(R.id.btn_user_reg_getcode_phone_commit);
 //
 //		mEtPhone = (EditText)findViewById(R.id.et_user_reg_phone);
@@ -46,24 +48,23 @@ public class UserRegPhoneActivity extends Activity {
 //
 //		mTvIsRead = (TextView)findViewById(R.id.tv_user_reg_phone_isread);
 //		mTvProtocal = (TextView)findViewById(R.id.tv_user_reg_phone_read_protocal);
-//	}
-//
-//	private void initData() {
-//		mTvTitle.setText("注册");
-//	}
-//
-//	private void setListener() {
-//		mIvBack.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				UserRegPhoneActivity.this.finish();
-//			}
-//		});
+    }
+
+    private void initData() {
+        mTvTitle.setText("注册");
+    }
+
+    private void setListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserRegPhoneActivity.this.finish();
+            }
+        });
 //		mBtnCommitPhone.setOnClickListener(new UserRegPhoneOnClickListener());
 //		mTvIsRead.setOnClickListener(new UserRegPhoneOnClickListener());
 //		mTvProtocal.setOnClickListener(new UserRegPhoneOnClickListener());
-//	}
+    }
 //
 //
 //	private static class MyHandler extends Handler{
