@@ -36,6 +36,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private int mCurrentMinute;
     private TextView mTvCancel;
     private TextView mTvComplete;
+    private TextView mTvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mCurrentMinute = t.minute;
         mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
         mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
-
+        mTvTitle.setText("添加个人事件");
 
     }
 
@@ -64,6 +65,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private void initView() {
         mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
         mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
 
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
@@ -111,7 +113,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 isAllDay = isChecked;
                 mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
                 mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
-
             }
         });
         mStartTime.setOnClickListener(this);
@@ -119,6 +120,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mSubmission.setOnClickListener(this);
         mRemindBefore.setOnClickListener(this);
         mTvComplete.setOnClickListener(this);
+        mTvCancel.setOnClickListener(this);
     }
 
     @Override
@@ -153,9 +155,12 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, ChooseRemindBeforeActivity.class));
                 break;
-            case R.id.tv_add__event_complete://取消
+            case R.id.tv_add_event_complete://完成
                 startActivity(new Intent(AddPersonalEventActivity.
                         this, CalendarActivity.class));
+                break;
+            case R.id.tv_add_event_cancel://取消
+                finish();
                 break;
             default:
                 break;
