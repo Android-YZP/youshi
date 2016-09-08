@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddManyPeopleEventActivity;
 import com.mkch.youshi.activity.AddPersonalActivity;
@@ -89,6 +90,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
      */
     private LinearLayout mLine1;
     private LinearLayout mHsvLine2;
+    private String mMonthChooseDate;
 
     public TodayFragment() {
     }
@@ -120,14 +122,13 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     @Override
     public void onResume() {
         super.onResume();
-        Intent intent = getActivity().getIntent();
-        String _MonthChooseDate = intent.getStringExtra("Date");
-        Log.d("YZP.............", _MonthChooseDate + "YZP");
-        if (_MonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
+        mMonthChooseDate = ((MainActivity)getActivity()).getmMonthChooseDate();
+        if (mMonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
             initData();
             updateUI(); //刷新界面
         }
     }
+
 
     //初始化日历视图
     private void initCalView() {
@@ -148,9 +149,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     private void initData() {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
-        Intent intent = getActivity().getIntent();
-        String _MonthChooseDate = intent.getStringExtra("Date");
-        Log.d("YZP3", _MonthChooseDate + "-----------------");
+        Log.d("YZP3", mMonthChooseDate + "-----------------");
+        String _MonthChooseDate = mMonthChooseDate;
         if (_MonthChooseDate == null) {
             _MonthChooseDate = sdf.format(date);
         }
@@ -194,8 +194,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         mTvWeekDayMonth.setText(year_c + "/" + month_c);
 
         //圆盘控件和直线时间轴的父控件
-        mLine1 = (LinearLayout)view.findViewById(R.id.line_circle);
-        mHsvLine2 = (LinearLayout)view.findViewById(R.id.line_line_time);
+        mLine1 = (LinearLayout) view.findViewById(R.id.line_circle);
+        mHsvLine2 = (LinearLayout) view.findViewById(R.id.line_line_time);
     }
 
     //设置事件的监听
@@ -232,6 +232,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
 
     /**
      * 显示事件的添加框
+     *
      * @param view
      */
     private void showPopupWindow(View view) {
@@ -545,19 +546,19 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
      * 初始化圆盘和直线时间轴
      */
     private void initCircleAndLineTime() {
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             try {
                 //圆盘控件
                 //数据集合
                 List<ArcBean> _arc_beans = new ArrayList<>();
-                ArcBean _bean1 = new ArcBean("13:30","14:00",1,3,1);
-                ArcBean _bean2 = new ArcBean("15:00","16:00",2,4,1);
-                ArcBean _bean3 = new ArcBean("17:00","18:00",3,5,1);
-                ArcBean _bean4 = new ArcBean("17:30","20:00",4,6,2);
-                ArcBean _bean8 = new ArcBean("17:50","20:00",1,7,3);
-                ArcBean _bean5 = new ArcBean("21:00","22:00",5,8,1);
-                ArcBean _bean6 = new ArcBean("0:00","01:00",6,1,1);
-                ArcBean _bean7 = new ArcBean("11:00","13:00",4,2,1);
+                ArcBean _bean1 = new ArcBean("13:30", "14:00", 1, 3, 1);
+                ArcBean _bean2 = new ArcBean("15:00", "16:00", 2, 4, 1);
+                ArcBean _bean3 = new ArcBean("17:00", "18:00", 3, 5, 1);
+                ArcBean _bean4 = new ArcBean("17:30", "20:00", 4, 6, 2);
+                ArcBean _bean8 = new ArcBean("17:50", "20:00", 1, 7, 3);
+                ArcBean _bean5 = new ArcBean("21:00", "22:00", 5, 8, 1);
+                ArcBean _bean6 = new ArcBean("0:00", "01:00", 6, 1, 1);
+                ArcBean _bean7 = new ArcBean("11:00", "13:00", 4, 2, 1);
 
                 _arc_beans.add(_bean1);
                 _arc_beans.add(_bean2);
@@ -569,13 +570,13 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 _arc_beans.add(_bean8);
 
                 //自定义圆盘
-                DayCircleView _day_circle_view = new DayCircleView(getActivity(),_arc_beans);
+                DayCircleView _day_circle_view = new DayCircleView(getActivity(), _arc_beans);
 //            _day_circle_view.setLayoutParams(new LinearLayout.LayoutParams(1000,1000));
                 mLine1.addView(_day_circle_view);
 
 
                 //自定义直线时间轴控件
-                DayLineView _day_line_view = new DayLineView(getActivity(),_arc_beans);
+                DayLineView _day_line_view = new DayLineView(getActivity(), _arc_beans);
                 _day_line_view.setLayoutParams(new LinearLayout.LayoutParams(1480, ViewGroup.LayoutParams.MATCH_PARENT));
                 mHsvLine2.addView(_day_line_view);
             } catch (Exception e) {

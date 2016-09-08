@@ -1,10 +1,12 @@
 package com.mkch.youshi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mkch.youshi.activity.BaseActivity;
@@ -30,6 +32,7 @@ public class MainActivity extends BaseActivity {
     private Fragment mMessageFragment;
     private Fragment mContactsFragment;
     private Fragment mUserCenterFragment;
+    private String mMonthChooseDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,4 +161,14 @@ public class MainActivity extends BaseActivity {
         super.onBackPressed();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mMonthChooseDate = intent.getStringExtra("Date");
+        Log.d("YZP", "-----------Main="+ mMonthChooseDate + "YZP");
+    }
+
+    public String getmMonthChooseDate() {
+        return mMonthChooseDate;
+    }
 }
