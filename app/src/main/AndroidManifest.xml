@@ -27,14 +27,11 @@
 
 
         <!--我的-->
-        <activity android:name=".activity.UserLoginActivity" >
-
-        </activity>
+        <activity android:name=".activity.UserLoginActivity" />
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
         <activity android:name=".activity.UserForgotCodeActivity" />
-
         <activity android:name=".activity.AddFriendsActivity" />
         <activity android:name=".activity.NewFriendActivity" />
         <activity android:name=".activity.PhoneContactsActivity" />
