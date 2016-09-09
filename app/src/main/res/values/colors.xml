@@ -52,14 +52,13 @@
 
     <!-- setting -->
     <color name="setting_text_quit_color">#fe204a</color>
+
     <!--tabpager-->
     <color name="tab_text_color_selected">#ff0b6ed3</color> <!-- 选中文字颜色 -->
     <color name="tab_text_color_normal">#ff737373</color> <!-- 未选中文字颜色 -->
 
     <color name="bg_tab_pressed">#00000000</color><!-- 蓝色 -->
     <color name="bg_tab_normal">#00000000</color>
-
-
     <!--章俊end-->
 
 
