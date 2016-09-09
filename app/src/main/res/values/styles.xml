@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--姚中平start-->
     <style name="weekName">
         <item name="android:layout_width">0.0dip</item>
         <item name="android:layout_height">wrap_content</item>
@@ -17,23 +18,6 @@
         <item name="android:textColor">#313131</item>
         <item name="android:textSize">12sp</item>
     </style>
-
-    <!-- 自定义checkbox主题 -->
-    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/selector_common_checkbox</item>
-        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
-        </item>
-        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
-        </item>
-    </style>
-
-    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/selector_common_checkbox_allow</item>
-        <item name="android:maxHeight">10.0dp</item>
-        <item name="android:height">31dp</item>
-        <item name="android:width">51dp</item>
-    </style>
-
     <!--新建个人日程TextView-->
     <style name="TextViewStyle">
         <item name="android:layout_width">wrap_content</item>
@@ -44,8 +28,6 @@
         <item name="android:textColor">@color/personal_event_text_color</item>
         <item name="android:textSize">@dimen/person_event_text_font_size</item>
     </style>
-
-
     <!--白色24号字体-->
     <style name="textStyleWhite24">
         <item name="android:gravity">center</item>
@@ -70,6 +52,7 @@
         <item name="android:textColor">@color/text_gray</item>
         <item name="android:textSize">20sp</item>
     </style>
+
     <!--事件编辑界面右边样式-->
     <style name="lastOfAffairList" parent="textStyleGray24">
         <item name="android:layout_width">wrap_content</item>
@@ -89,20 +72,33 @@
         <item name="android:layout_height">1px</item>
         <item name="android:background">@color/week_day_line</item>
     </style>
-
+    <!--事件界面-对话框上面的分隔线-->
     <style name="lineOfDialog">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">5px</item>
         <item name="android:background">@color/common_topbar_bg_color</item>
     </style>
 
-    <color name="personal_event_text_color">#313131</color>
-    <color name="text_white">#ffffff</color>
-    <color name="text_black">#313131</color>
-    <color name="text_gray">#959595</color>
-    <color name="common_line_input_bg_color">#d6d6d8</color>
-    <dimen name="person_event_text_font_size">14sp</dimen>
+    <!--对话框的动画样式-->
+    <style name="dialog_style" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="@android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
 
+    <style name="remind_checkbox_style" parent="lastOfAffairList">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/remind_before_common_checkbox_allow</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <!--姚中平end-->
+
+
+
+
+
+    <!--蒋龙健start-->
     <!--消息列表-自定义搜索框风格-->
     <style name="commonEditTextStyle">
         <item name="android:layout_width">match_parent</item>
@@ -161,18 +157,6 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#959595</item>
     </style>
-    <!--对话框的动画样式-->
-    <style name="dialog_style" parent="android:Animation">
-        <item name="@android:windowEnterAnimation">@anim/dialog_enter</item>
-        <item name="@android:windowExitAnimation">@anim/dialog_exit</item>
-    </style>
-
-    <style name="remind_checkbox_style" parent="lastOfAffairList">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/remind_before_common_checkbox_allow</item>
-        <item name="android:button">@null</item>
-    </style>
 
     <!--聊天消息名字-浅黑色24px字体-->
     <style name="common_text_username_24">
@@ -198,6 +182,13 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <!--蒋龙健end-->
+
+
+
+
+
+    <!--章俊start-->
     <!--所有的进入箭头style-->
     <style name="commonArrowStyle">
         <item name="android:layout_width">@dimen/user_center_arrow_width_or_height</item>
@@ -222,4 +213,24 @@
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_weight">1</item>
     </style>
+
+    <!-- 自定义checkbox主题 -->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_common_checkbox</item>
+        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
+        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
+    </style>
+
+    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_common_checkbox_allow</item>
+        <item name="android:maxHeight">10.0dp</item>
+        <item name="android:height">31dp</item>
+        <item name="android:width">51dp</item>
+    </style>
+
+    <!--章俊end-->
+
+
 </resources>
