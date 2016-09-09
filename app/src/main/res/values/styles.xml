@@ -102,9 +102,6 @@
     <!--姚中平end-->
 
 
-
-
-
     <!--蒋龙健start-->
     <!--消息列表-自定义搜索框风格-->
     <style name="commonEditTextStyle">
@@ -193,9 +190,6 @@
     <!--蒋龙健end-->
 
 
-
-
-
     <!--章俊start-->
     <!--所有的进入箭头style-->
     <style name="commonArrowStyle">
@@ -233,24 +227,19 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <!--zhangjun-->
     <!-- 自定义checkbox主题 -->
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_common_checkbox</item>
-        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
-        </item>
-        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
-        </item>
+        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
+        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
     </style>
 
+    <!-- 自定义checkbox主题 -->
     <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_common_checkbox_allow</item>
         <item name="android:maxHeight">10.0dp</item>
         <item name="android:height">31dp</item>
         <item name="android:width">51dp</item>
     </style>
-
     <!--章俊end-->
-
-
 </resources>

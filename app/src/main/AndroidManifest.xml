@@ -16,47 +16,45 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <!--联系人-->
-
-
-        <!--我的-->
-        <activity android:name=".activity.UserLoginActivity" />
-        <activity android:name=".activity.UserRegPhoneActivity" />
-        <activity android:name=".activity.UserRegCodeActivity" />
-        <activity android:name=".activity.UserRegUserNameActivity" />
-        <activity android:name=".activity.UserForgotCodeActivity" />
         <activity android:name=".activity.AddFriendsActivity" />
         <activity android:name=".activity.NewFriendActivity" />
         <activity android:name=".activity.PhoneContactsActivity" />
         <activity android:name=".activity.FriendInformationActivity" />
         <activity android:name=".activity.InformationSettingActivity" />
         <activity android:name=".activity.RemarkInformationActivity" />
+        <!--我的-->
+        <activity android:name=".activity.UserLoginActivity" />
+        <activity android:name=".activity.UserRegPhoneActivity" />
+        <activity android:name=".activity.UserRegCodeActivity" />
+        <activity android:name=".activity.UserRegUserNameActivity" />
+        <activity android:name=".activity.UserForgotCodeActivity" />
         <activity android:name=".activity.UserInformationActivity" />
         <activity android:name=".activity.MyFileActivity" />
         <activity android:name=".activity.MyCollectionActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.ReviseNameActivity" />
-        <activity android:name=".activity.ReviseYoushiNumberActivity"/>
-        <activity android:name=".activity.ReviseSignatureActivity"/>
-        <activity android:name=".activity.FilePreviewActivity"/>
-        <activity android:name=".activity.FilePreviewPicActivity"/>
-        <activity android:name=".activity.DropBoxFileActivity"/>
-        <activity android:name=".activity.ScheduleFileActivity"/>
-        <activity android:name=".activity.ScheduleDetailActivity"/>
-        <activity android:name=".activity.AccountAndSafetyActivity"/>
-        <activity android:name=".activity.RevisePhoneActivity"/>
-        <activity android:name=".activity.RevisePhoneCodeActivity"/>
-        <activity android:name=".activity.RevisePasswordActivity"/>
-        <activity android:name=".activity.RevisePasswordCodeActivity"/>
-        <activity android:name=".activity.AccountProtectActivity"/>
-        <activity android:name=".activity.NewMessageNoticeActivity"/>
+        <activity android:name=".activity.ReviseYoushiNumberActivity" />
+        <activity android:name=".activity.ReviseSignatureActivity" />
+        <activity android:name=".activity.FilePreviewActivity" />
+        <activity android:name=".activity.FilePreviewPicActivity" />
+        <activity android:name=".activity.DropBoxFileActivity" />
+        <activity android:name=".activity.ScheduleFileActivity" />
+        <activity android:name=".activity.ScheduleDetailActivity" />
+        <activity android:name=".activity.AccountAndSafetyActivity" />
+        <activity android:name=".activity.RevisePhoneActivity" />
+        <activity android:name=".activity.RevisePhoneCodeActivity" />
+        <activity android:name=".activity.RevisePasswordActivity" />
+        <activity android:name=".activity.RevisePasswordCodeActivity" />
+        <activity android:name=".activity.AccountProtectActivity" />
+        <activity android:name=".activity.NewMessageNoticeActivity" />
 
         <!--今日-->
         <activity
@@ -71,7 +69,7 @@
         <activity android:name=".activity.ManyPeopleEventDetial" />
         <activity android:name=".activity.PersonalDetialEventActivity" />
         <activity android:name=".activity.PersonalDetialsAffairActivity" />
-        <activity android:name=".activity.PersonalDetialHabitActivity"/>
+        <activity android:name=".activity.PersonalDetialHabitActivity" />
         <activity android:name=".activity.AddPersonalActivity" />
         <activity android:name=".activity.AddManyPeopleEventActivity" />
         <activity android:name=".activity.AddPersonalAffairActivity" />
@@ -80,11 +78,10 @@
         <activity android:name=".activity.SearchEventActivity" />
 
         <!--消息-->
-        <activity android:name=".activity.GroupDetailActivity"/>
-        <activity android:name=".activity.MultiChatActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
+        <activity android:name=".activity.GroupDetailActivity" />
+        <activity android:name=".activity.MultiChatActivity" />
+        <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.GroupChatActivity" />
-
 
 
     </application>
