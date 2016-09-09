@@ -7,7 +7,7 @@ import org.xutils.db.annotation.Table;
  * Created by Smith on 2016/9/9.
  */
 @Table(name="schtime")
-public class schtime {
+public class Schtime {
     /**
      * 主键自增长ID
      */

@@ -7,7 +7,7 @@ import org.xutils.db.annotation.Table;
  * Created by Smith on 2016/9/9.
  */
 @Table(name="schedule")
-public class schedule {
+public class Schedule {
     /**
      * 主键自增长ID
      */
@@ -66,7 +66,7 @@ public class schedule {
 
     @Override
     public String toString() {
-        return "schedule{" +
+        return "Schedule{" +
                 "id=" + id +
                 ", serverid=" + serverid +
                 ", type=" + type +

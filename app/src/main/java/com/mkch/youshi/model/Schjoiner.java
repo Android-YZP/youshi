@@ -7,7 +7,7 @@ import org.xutils.db.annotation.Table;
  * Created by Smith on 2016/9/9.
  */
 @Table(name="schjoiner")
-public class schjoiner {
+public class Schjoiner {
     /**
      * 主键自增长ID
      */
@@ -41,7 +41,7 @@ public class schjoiner {
 
     @Override
     public String toString() {
-        return "schjoiner{" +
+        return "Schjoiner{" +
                 "id=" + id +
                 ", sid=" + sid +
                 ", joiner_id=" + joiner_id +
