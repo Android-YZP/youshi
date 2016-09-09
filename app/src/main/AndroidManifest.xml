@@ -78,11 +78,15 @@
         <activity android:name=".activity.PersonalDetialsAffairActivity" />
         <activity android:name=".activity.PersonalDetialHabitActivity"></activity>
 
+        <!--今日-->
         <!--消息-->
         <activity android:name=".activity.GroupDetailActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
         <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.GroupChatActivity" />
+
+        <!--联系人-->
+        <!--我的-->
     </application>
 
 </manifest>
