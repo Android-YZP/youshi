@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mkch.youshi">
-
+    <!--xutils3网络图片和缓存-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--登录时查看UUID-->
@@ -19,11 +19,14 @@
             android:screenOrientation="portrait" android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TestMsgActivity" />
+
+        <!--联系人-->
+
+
+        <!--我的-->
         <activity android:name=".activity.UserLoginActivity" >
 
         </activity>
@@ -63,10 +66,11 @@
         <activity android:name=".activity.RevisePasswordCodeActivity"/>
         <activity android:name=".activity.AccountProtectActivity"/>
         <activity android:name=".activity.NewMessageNoticeActivity"/>
+
+        <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.TestNetActivity" />
         <activity android:name=".activity.ChooseAddressActivity" />
         <activity android:name=".activity.ChooseSomeoneActivity" />
         <activity android:name=".activity.ChooseRemindBeforeActivity" />
@@ -76,17 +80,18 @@
         <activity android:name=".activity.ManyPeopleEventDetial" />
         <activity android:name=".activity.PersonalDetialEventActivity" />
         <activity android:name=".activity.PersonalDetialsAffairActivity" />
-        <activity android:name=".activity.PersonalDetialHabitActivity"></activity>
+        <activity android:name=".activity.PersonalDetialHabitActivity"/>
 
-        <!--今日-->
+
+
         <!--消息-->
         <activity android:name=".activity.GroupDetailActivity"/>
         <activity android:name=".activity.MultiChatActivity"/>
         <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.GroupChatActivity" />
 
-        <!--联系人-->
-        <!--我的-->
+
+
     </application>
 
 </manifest>
