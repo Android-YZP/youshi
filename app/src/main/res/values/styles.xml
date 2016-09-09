@@ -98,12 +98,6 @@
     <color name="common_line_input_bg_color">#d6d6d8</color>
     <dimen name="person_event_text_font_size">14sp</dimen>
 
-    <style name="remind_checkbox_style" parent="lastOfAffairList">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/remind_before_common_checkbox_allow</item>
-        <item name="android:button">@null</item>
-    </style>
 
     <!--姚中平end-->
 
