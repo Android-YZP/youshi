@@ -71,7 +71,7 @@ public class UserLoginActivity extends Activity {
         mBtnLogin = (Button) findViewById(R.id.btn_user_login_commit);
         mTvGoRegister = (TextView) findViewById(R.id.tv_user_login_reg);
         mTvGoForgot = (TextView) findViewById(R.id.tv_user_login_forget);
-        mLayoutCode.setVisibility(View.GONE);
+//        mLayoutCode.setVisibility(View.GONE);
     }
 
     private void setListener() {
@@ -107,6 +107,10 @@ public class UserLoginActivity extends Activity {
                     //图片验证码错误
                     ((UserLoginActivity) mActivity.get()).imgVerifyError();
                     break;
+                case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW:
+                    //图片验证码出现
+                    ((UserLoginActivity) mActivity.get()).showImgVerfy();
+                    break;
                 default:
                     break;
             }
@@ -119,8 +123,23 @@ public class UserLoginActivity extends Activity {
     private void imgVerifyError() {
         this.showTip("图片验证码错误");
         //把ImageView重新刷新图片验证码
+        changeImgVerfy();//更新图片验证码
 
+    }
 
+    /**
+     * 更新图片验证码
+     */
+    private void changeImgVerfy() {
+        x.image().bind(mIvCode,mPicUrl);
+    }
+
+    /**
+     * 出现图片验证码
+     */
+    private void showImgVerfy() {
+        Toast.makeText(UserLoginActivity.this, "密码错误，请重新输入", Toast.LENGTH_SHORT).show();
+        x.image().bind(mIvCode,mPicUrl);
     }
 
     private MyHandler handler = new MyHandler(this);
@@ -150,6 +169,7 @@ public class UserLoginActivity extends Activity {
                 case R.id.btn_user_login_commit:
                     String account = mEtAccount.getText().toString();
                     String password = mEtPassword.getText().toString();
+                    String code = mEtCode.getText().toString();
 
                     if (account == null || account.equals("")) {
                         Toast.makeText(UserLoginActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
@@ -163,7 +183,7 @@ public class UserLoginActivity extends Activity {
                     //弹出加载进度条
                     mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在登录中...", true, true);
                     //发起网络登录
-                    userLoginFromNet(account, password);
+                    userLoginFromNet(account, password,code);
                     break;
                 case R.id.tv_user_login_reg:
                     _intent = new Intent(UserLoginActivity.this, UserRegPhoneActivity.class);
@@ -185,7 +205,7 @@ public class UserLoginActivity extends Activity {
          * @param account  账号
          * @param password 密码
          */
-        private void userLoginFromNet(final String account, final String password) {
+        private void userLoginFromNet(final String account, final String password, final String code) {
             //使用xutils3访问网络并获取返回值
             RequestParams requestParams = new RequestParams(CommonConstants.LOGIN);
             //包装请求参数
@@ -193,6 +213,7 @@ public class UserLoginActivity extends Activity {
             user.setMobileNumber(account);
             user.setPassword(password);
             user.setClientType("Android");
+            user.setImageVerifyCode(code);
             user.setOsUuid(CommonUtil.getMyUUID(UserLoginActivity.this));
             LoginUserJson _login_user = new LoginUserJson(user);
             final Gson gson = new Gson();
@@ -230,6 +251,13 @@ public class UserLoginActivity extends Activity {
                                     mPicUrl = CommonConstants.NOW_ADDRESS_PRE+_Datas_jsonobj.getString("PicCodePath");
                                     Log.d("jlj","-------------------图片验证码错误--------------"+mPicUrl);
                                     handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR);
+                                }else if (_ErrorCode!=null&&_ErrorCode.equals("1006")){
+                                    String _Datas = _json_result.getString("Datas");
+
+                                    JSONObject _Datas_jsonobj = new JSONObject(_Datas);
+                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE+_Datas_jsonobj.getString("PicCodePath");
+                                    Log.d("jlj","-------------------图片验证码出现--------------"+mPicUrl);
+                                    handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW);
                                 }else{
                                     CommonUtil.sendErrorMessage(_Message, handler);
                                 }

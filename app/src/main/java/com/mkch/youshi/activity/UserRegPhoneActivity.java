@@ -41,13 +41,11 @@ public class UserRegPhoneActivity extends Activity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-//		mBtnCommitPhone = (Button)findViewById(R.id.btn_user_reg_getcode_phone_commit);
-//
-//		mEtPhone = (EditText)findViewById(R.id.et_user_reg_phone);
-//		mCbIsRead = (CheckBox)findViewById(R.id.cb_user_reg_phone_ischecked);
-//
-//		mTvIsRead = (TextView)findViewById(R.id.tv_user_reg_phone_isread);
-//		mTvProtocal = (TextView)findViewById(R.id.tv_user_reg_phone_read_protocal);
+        mEtPhone = (EditText) findViewById(R.id.et_user_reg_phone);
+        mBtnCommitPhone = (Button) findViewById(R.id.btn_user_reg_getcode_phone_commit);
+        mCbIsRead = (CheckBox) findViewById(R.id.cb_user_reg_phone_ischecked);
+        mTvIsRead = (TextView) findViewById(R.id.tv_user_reg_phone_isread);
+        mTvProtocal = (TextView) findViewById(R.id.tv_user_reg_phone_read_protocal);
     }
 
     private void initData() {
