@@ -91,14 +91,6 @@
         <item name="android:button">@null</item>
     </style>
 
-    <color name="personal_event_text_color">#313131</color>
-    <color name="text_white">#ffffff</color>
-    <color name="text_black">#313131</color>
-    <color name="text_gray">#959595</color>
-    <color name="common_line_input_bg_color">#d6d6d8</color>
-    <dimen name="person_event_text_font_size">14sp</dimen>
-
-
     <!--姚中平end-->
 
 
@@ -136,6 +128,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1px</item>
         <item name="android:background">@color/common_line_input_bg_color</item>
+
 
     </style>
 
