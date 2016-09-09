@@ -52,7 +52,6 @@
         <item name="android:textColor">@color/text_gray</item>
         <item name="android:textSize">20sp</item>
     </style>
-
     <!--事件编辑界面右边样式-->
     <style name="lastOfAffairList" parent="textStyleGray24">
         <item name="android:layout_width">wrap_content</item>
@@ -91,6 +90,14 @@
         <item name="android:background">@drawable/remind_before_common_checkbox_allow</item>
         <item name="android:button">@null</item>
     </style>
+
+    <color name="personal_event_text_color">#313131</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_black">#313131</color>
+    <color name="text_gray">#959595</color>
+    <color name="common_line_input_bg_color">#d6d6d8</color>
+    <dimen name="person_event_text_font_size">14sp</dimen>
+
 
     <!--姚中平end-->
 
@@ -158,6 +165,7 @@
         <item name="android:textColor">#959595</item>
     </style>
 
+
     <!--聊天消息名字-浅黑色24px字体-->
     <style name="common_text_username_24">
         <item name="android:textSize">12sp</item>
@@ -214,6 +222,18 @@
         <item name="android:layout_weight">1</item>
     </style>
 
+    <!-- 自定义progressDialog主题 -->
+    <style name="progress_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!--zhangjun-->
     <!-- 自定义checkbox主题 -->
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_common_checkbox</item>

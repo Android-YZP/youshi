@@ -1,8 +1,9 @@
 package com.mkch.youshi.bean;
+
 /**
  * 已登录用户信息
- * @author JLJ
  *
+ * @author JLJ
  */
 public class User {
     private String MobileNumber;//手机号
@@ -26,7 +27,7 @@ public class User {
     private Boolean AddmeVerify;//是否接受好友验证
     private Boolean ViewMySchedule;//是否允许查看表盘
     private Boolean RealVerify;//是否实名认证
-
+    private String TokenID;//令牌
 
     public User(String mobileNumber, String appVersion, String clientType, String clientVersion, String deviceInfo, String firm, String imageVerifyCode, String osType, String osUuid, String password) {
         MobileNumber = mobileNumber;
@@ -202,6 +203,14 @@ public class User {
 
     public void setRealVerify(Boolean realVerify) {
         RealVerify = realVerify;
+    }
+
+    public String getTokenID() {
+        return TokenID;
+    }
+
+    public void setTokenID(String tokenID) {
+        TokenID = tokenID;
     }
 
     @Override

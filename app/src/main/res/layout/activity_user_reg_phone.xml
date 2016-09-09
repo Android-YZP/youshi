@@ -18,10 +18,39 @@
         android:background="@drawable/bg_border_common_et"
         android:hint="请输入手机号"
         android:inputType="phone"
+        android:textColorHint="@color/main_tabbar_border_color"
         android:maxLength="11"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:textColor="@color/common_et_text_font_color"
         android:textSize="@dimen/common_et_text_font_size" />
+
+    <LinearLayout
+        android:id="@+id/layout_user_reg_phone_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/user_reg_phone_et_phone_margin_top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_user_reg_phone_code"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/user_reg_phone_et_height"
+            android:layout_weight="1"
+            android:hint="请输入验证码"
+            android:background="@drawable/bg_border_common_et"
+            android:inputType="number"
+            android:maxLength="6"
+            android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
+            android:singleLine="true"
+            android:textColorHint="@color/main_tabbar_border_color"
+            android:textSize="@dimen/common_et_text_font_size" />
+
+        <ImageView
+            android:id="@+id/iv_user_reg_phone_code"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_user_reg_getcode_phone_commit"
