@@ -23,6 +23,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.AppVersion;
+import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 
 import java.util.UUID;
@@ -64,6 +65,24 @@ public class CommonUtil {
             Gson gson = new Gson();
             User user = gson.fromJson(jsonUser, User.class);
             return user;
+        }
+
+    }
+
+    /**
+     * 获取未登录用户的信息，包括是否首次安装、上次安装版本数量、生成短信验证码的tokenID令牌
+     * @param mContext
+     * @return
+     */
+    public static UnLoginedUser getUnLoginedUser(Context mContext){
+        SharedPreferences _SP = mContext.getSharedPreferences("UnLoginedUser", mContext.MODE_PRIVATE);
+        if(_SP==null){
+            return null;
+        }else{
+            String jsonSearchHistory = _SP.getString("unLoginedUser", "");
+            Gson gson = new Gson();
+            UnLoginedUser unLoginedUser = gson.fromJson(jsonSearchHistory, UnLoginedUser.class);
+            return unLoginedUser;
         }
 
     }
