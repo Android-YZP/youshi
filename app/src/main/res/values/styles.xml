@@ -98,11 +98,23 @@
     <color name="common_line_input_bg_color">#d6d6d8</color>
     <dimen name="person_event_text_font_size">14sp</dimen>
 
+    <style name="common_detial_black" parent="common_text_black_28">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
+    <style name="detial_gray" parent="textStyleGray24">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 
     <!--姚中平end-->
-
-
-
 
 
     <!--蒋龙健start-->
@@ -193,9 +205,6 @@
     <!--蒋龙健end-->
 
 
-
-
-
     <!--章俊start-->
     <!--所有的进入箭头style-->
     <style name="commonArrowStyle">
@@ -206,21 +215,6 @@
         <item name="android:src">@drawable/list_arrow</item>
     </style>
 
-    <style name="common_detial_black" parent="common_text_black_28">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-    </style>
-
-    <style name="detial_gray" parent="textStyleGray24">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">left</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_weight">1</item>
-    </style>
 
     <!-- 自定义progressDialog主题 -->
     <style name="progress_dialog" parent="@android:style/Theme.Dialog">
