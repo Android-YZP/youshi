@@ -9,8 +9,11 @@ public class CommonConstants {
     public static final int FLAG_GET_REG_USER_LOGIN_SUCCESS = 1;
     public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR = 2;
 	public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW = 3;
-
-    /**
+	public static final int FLAG_COVER_TOKEN_ID_SUCCESS = 4;
+	public static final int FLAG_GET_USER_JOIN_IMG_VERIFY_SHOW = 5;
+	public static final int FLAG_GET_USER_SEND_VERIFICATION_CODE = 6;
+	public static final int FLAG_GET_REG_MOBILEMGS_VALIDATE_CAN_GET_AGAIN_SUCCESS = 7;
+	/**
      * yaozhongping
      * 从100开始
      */
@@ -46,8 +49,16 @@ public class CommonConstants {
 	public static final String LOGIN = NOW_ADDRESS + "Login";
     //注册
 	public static final String JOIN = NOW_ADDRESS + "Join";
-
-
+	//获取TokenID
+	public static final String GetTokenID = NOW_ADDRESS + "GetTokenID";
+	//是否需要图片验证码
+	public static final String CheckMessagePickCodeExist = NOW_ADDRESS + "CheckMessagePickCodeExist";
+	//是否需要图片验证码
+	public static final String MobileNumberIsExist = NOW_ADDRESS + "MobileNumberIsExist";
+	//发送短信验证码
+	public static final String SetVerificationCode  = NOW_ADDRESS + "SetVerificationCode";
+	//核对短信验证码
+	public static final String MessageCodeIsValid   = NOW_ADDRESS + "MessageCodeIsValid";
     //zhangjun-----------------------------------------------end
 
 

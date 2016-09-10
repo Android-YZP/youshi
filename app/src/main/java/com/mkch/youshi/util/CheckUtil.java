@@ -24,4 +24,25 @@ public class CheckUtil {
         }
         return flag;
     }
+
+    /**
+     * password正则表达式
+     */
+    public static final Pattern PASSWORD_PATTERN = Pattern
+            .compile("^[\\@A-Za-z0-9\\!\\#\\$\\%\\^\\&\\*\\.\\~]+$");
+    /**
+     * 判断手机号格式是否错误
+     * @param password
+     * @return
+     */
+    public static boolean checkPassword(String password) {
+        boolean flag = false;
+        try {
+            Matcher m = PASSWORD_PATTERN.matcher(password);
+            flag = m.matches();
+        } catch (Exception e) {
+            flag = false;
+        }
+        return flag;
+    }
 }

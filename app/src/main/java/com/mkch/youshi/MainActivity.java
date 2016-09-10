@@ -10,10 +10,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mkch.youshi.activity.BaseActivity;
+import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.fragment.ContactsFragment;
 import com.mkch.youshi.fragment.MessageFragment;
 import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
+import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
 

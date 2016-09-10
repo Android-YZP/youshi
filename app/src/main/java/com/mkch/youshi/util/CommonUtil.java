@@ -34,10 +34,11 @@ import java.util.UUID;
 public class CommonUtil {
     /**
      * 保存用户信息
+     *
      * @param user
      * @param mContext
      */
-    public static void saveUserInfo(User user, Context mContext){
+    public static void saveUserInfo(User user, Context mContext) {
         //构建对象
         Gson gson = new Gson();
         String gsonUser = gson.toJson(user);
@@ -52,15 +53,55 @@ public class CommonUtil {
     }
 
     /**
-     * 获取登录用户的信息
+     * 保存未登录时的用户信息，包括是否首次安装、上次安装版本数量、生成短信验证码的tokenID令牌
+     *
+     * @param unLoginedUser
+     * @param mContext
+     */
+    public static void saveUnLoginedUser(UnLoginedUser unLoginedUser, Context mContext) {
+        //构建对象
+        Gson gson = new Gson();
+        String gsonSearchHistory = gson.toJson(unLoginedUser);
+        //获取指定Key的SharedPreferences对象
+        SharedPreferences _SP = mContext.getSharedPreferences("UnLoginedUser", mContext.MODE_PRIVATE);
+        //获取编辑
+        SharedPreferences.Editor _Editor = _SP.edit();
+        //按照指定Key放入数据
+        _Editor.putString("unLoginedUser", gsonSearchHistory);
+        //提交保存数据
+        _Editor.commit();
+    }
+
+
+    /**
+     * 获取未登录用户的信息，包括是否首次安装、上次安装版本数量、生成短信验证码的tokenID令牌
+     *
      * @param mContext
      * @return
      */
-    public static User getUserInfo(Context mContext){
-        SharedPreferences _SP = mContext.getSharedPreferences("UserInfo", mContext.MODE_PRIVATE);
-        if(_SP==null){
+    public static UnLoginedUser getUnLoginedUser(Context mContext) {
+        SharedPreferences _SP = mContext.getSharedPreferences("UnLoginedUser", mContext.MODE_PRIVATE);
+        if (_SP == null) {
             return null;
-        }else{
+        } else {
+            String jsonSearchHistory = _SP.getString("unLoginedUser", "");
+            Gson gson = new Gson();
+            UnLoginedUser unLoginedUser = gson.fromJson(jsonSearchHistory, UnLoginedUser.class);
+            return unLoginedUser;
+        }
+    }
+
+    /**
+     * 获取登录用户的信息
+     *
+     * @param mContext
+     * @return
+     */
+    public static User getUserInfo(Context mContext) {
+        SharedPreferences _SP = mContext.getSharedPreferences("UserInfo", mContext.MODE_PRIVATE);
+        if (_SP == null) {
+            return null;
+        } else {
             String jsonUser = _SP.getString("user", "");
             Gson gson = new Gson();
             User user = gson.fromJson(jsonUser, User.class);
@@ -70,30 +111,13 @@ public class CommonUtil {
     }
 
     /**
-     * 获取未登录用户的信息，包括是否首次安装、上次安装版本数量、生成短信验证码的tokenID令牌
-     * @param mContext
-     * @return
-     */
-    public static UnLoginedUser getUnLoginedUser(Context mContext){
-        SharedPreferences _SP = mContext.getSharedPreferences("UnLoginedUser", mContext.MODE_PRIVATE);
-        if(_SP==null){
-            return null;
-        }else{
-            String jsonSearchHistory = _SP.getString("unLoginedUser", "");
-            Gson gson = new Gson();
-            UnLoginedUser unLoginedUser = gson.fromJson(jsonSearchHistory, UnLoginedUser.class);
-            return unLoginedUser;
-        }
-
-    }
-
-    /**
      * 清除用户信息
+     *
      * @param mContext
      */
-    public static void clearUserInfo(Context mContext){
+    public static void clearUserInfo(Context mContext) {
         SharedPreferences _SP = mContext.getSharedPreferences("UserInfo", mContext.MODE_PRIVATE);
-        if(_SP!=null){
+        if (_SP != null) {
             SharedPreferences.Editor _Editor = _SP.edit();
             _Editor.clear();
             _Editor.commit();
@@ -132,8 +156,8 @@ public class CommonUtil {
     /**
      * 手动隐藏输入法
      */
-    public static void hideInput(Context context,EditText mEtCommonText) {
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void hideInput(Context context, EditText mEtCommonText) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(mEtCommonText.getWindowToken(), 0);
         }
@@ -141,23 +165,25 @@ public class CommonUtil {
 
     /**
      * 获取UUID
+     *
      * @param context
      * @return
      */
-    public static String getMyUUID(Context context){
-        final TelephonyManager tm = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+    public static String getMyUUID(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         final String tmDevice, tmSerial, tmPhone, androidId;
         tmDevice = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(),android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         String uniqueId = deviceUuid.toString();
-        Log.d("debug","uuid="+uniqueId);
+        Log.d("debug", "uuid=" + uniqueId);
         return uniqueId;
     }
 
     /**
      * 设置listview的高度，以适应布局
+     *
      * @param listView
      */
     public static void setListViewHeight(ListView listView) {
@@ -181,9 +207,10 @@ public class CommonUtil {
 
     /**
      * 发送错误信息到消息队列
+     *
      * @param errorMsg
      */
-    public static void sendErrorMessage(String errorMsg,Handler handler){
+    public static void sendErrorMessage(String errorMsg, Handler handler) {
         Message msg = new Message();
         Bundle data = new Bundle();
         data.putSerializable("ErrorMsg", errorMsg);
@@ -193,15 +220,16 @@ public class CommonUtil {
 
     /**
      * 获取app版本
+     *
      * @param context
      * @return
      */
-    public static AppVersion getAppVersion(Context context){
+    public static AppVersion getAppVersion(Context context) {
         AppVersion version = null;
 
         PackageManager pm = context.getPackageManager();
         PackageInfo info = null;
-        if(pm != null){
+        if (pm != null) {
             try {
                 info = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
             } catch (Exception e) {
@@ -209,7 +237,7 @@ public class CommonUtil {
             }
         }
 
-        if(info != null){
+        if (info != null) {
             version = new AppVersion();
             version.setVersionCode(info.versionCode);
             version.setVersionName(info.versionName);
@@ -228,8 +256,8 @@ public class CommonUtil {
         //<span><span class="comment">指定当前的Activity为快捷方式启动的对象: 如 com.android.music.</span>MusicBrowserActivity<span> </span></span>
         //<span><span class="comment">注意: ComponentName的第二个参数必须加上点号(.)，否则快捷方式无法启动相应程序</span></span>
         ComponentName comp = new ComponentName(context.getPackageName(), "."
-                + ((Activity)context).getLocalClassName());
-        addShortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT,new Intent(Intent.ACTION_MAIN).setComponent(comp));
+                + ((Activity) context).getLocalClassName());
+        addShortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(Intent.ACTION_MAIN).setComponent(comp));
         //设置快捷方式的图标
         Intent.ShortcutIconResource icon = Intent.ShortcutIconResource.fromContext(context,
                 R.mipmap.ic_launcher);

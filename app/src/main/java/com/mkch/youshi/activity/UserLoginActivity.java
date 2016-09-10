@@ -131,7 +131,7 @@ public class UserLoginActivity extends Activity {
      * 更新图片验证码
      */
     private void changeImgVerfy() {
-        x.image().bind(mIvCode,mPicUrl);
+        x.image().bind(mIvCode, mPicUrl);
     }
 
     /**
@@ -139,7 +139,7 @@ public class UserLoginActivity extends Activity {
      */
     private void showImgVerfy() {
         Toast.makeText(UserLoginActivity.this, "密码错误，请重新输入", Toast.LENGTH_SHORT).show();
-        x.image().bind(mIvCode,mPicUrl);
+        x.image().bind(mIvCode, mPicUrl);
     }
 
     private MyHandler handler = new MyHandler(this);
@@ -170,7 +170,6 @@ public class UserLoginActivity extends Activity {
                     String account = mEtAccount.getText().toString();
                     String password = mEtPassword.getText().toString();
                     String code = mEtCode.getText().toString();
-
                     if (account == null || account.equals("")) {
                         Toast.makeText(UserLoginActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
                         return;
@@ -179,11 +178,10 @@ public class UserLoginActivity extends Activity {
                         Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     //弹出加载进度条
                     mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在登录中...", true, true);
                     //发起网络登录
-                    userLoginFromNet(account, password,code);
+                    userLoginFromNet(account, password, code);
                     break;
                 case R.id.tv_user_login_reg:
                     _intent = new Intent(UserLoginActivity.this, UserRegPhoneActivity.class);
@@ -193,7 +191,6 @@ public class UserLoginActivity extends Activity {
                     _intent = new Intent(UserLoginActivity.this, UserForgotCodeActivity.class);
                     startActivity(_intent);
                     break;
-
                 default:
                     break;
             }
@@ -230,54 +227,43 @@ public class UserLoginActivity extends Activity {
                         try {
                             JSONObject _json_result = new JSONObject(result);
                             Boolean _success = (Boolean) _json_result.get("Success");
-                            if (_success){
+                            if (_success) {
                                 //填充本地用户信息
                                 String _Datas = _json_result.getString("Datas");
-                                mUser = gson.fromJson(_Datas,User.class);
-                                if (mUser!=null){
-                                    Log.d("jlj","-------mUser = "+mUser.toString());
+                                mUser = gson.fromJson(_Datas, User.class);
+                                if (mUser != null) {
+                                    Log.d("jlj", "-------mUser = " + mUser.toString());
                                 }
-
                                 //提醒登录成功
                                 handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
-
-                            }else{
+                            } else {
                                 String _Message = _json_result.getString("Message");
                                 String _ErrorCode = _json_result.getString("ErrorCode");
-                                if (_ErrorCode!=null&&_ErrorCode.equals("1004")){
+                                if (_ErrorCode != null && _ErrorCode.equals("1004")) {
                                     String _Datas = _json_result.getString("Datas");
-
                                     JSONObject _Datas_jsonobj = new JSONObject(_Datas);
-                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE+_Datas_jsonobj.getString("PicCodePath");
-                                    Log.d("jlj","-------------------图片验证码错误--------------"+mPicUrl);
+                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE + _Datas_jsonobj.getString("PicCodePath");
+                                    Log.d("jlj", "-------------------图片验证码错误--------------" + mPicUrl);
                                     handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR);
-                                }else if (_ErrorCode!=null&&_ErrorCode.equals("1006")){
+                                } else if (_ErrorCode != null && _ErrorCode.equals("1006")) {
                                     String _Datas = _json_result.getString("Datas");
-
                                     JSONObject _Datas_jsonobj = new JSONObject(_Datas);
-                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE+_Datas_jsonobj.getString("PicCodePath");
-                                    Log.d("jlj","-------------------图片验证码出现--------------"+mPicUrl);
+                                    mPicUrl = CommonConstants.NOW_ADDRESS_PRE + _Datas_jsonobj.getString("PicCodePath");
+                                    Log.d("jlj", "-------------------图片验证码出现--------------" + mPicUrl);
                                     handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW);
-                                }else{
+                                } else {
                                     CommonUtil.sendErrorMessage(_Message, handler);
                                 }
-
-
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-
-
                     }
-
                 }
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.d("jlj","-------onError = "+ex.getMessage());
+                    Log.d("jlj", "-------onError = " + ex.getMessage());
                     //使用handler通知UI提示用户错误信息
                     if (ex instanceof ConnectException) {
                         CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
@@ -288,7 +274,6 @@ public class UserLoginActivity extends Activity {
                     } else {
                         CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
                     }
-
                 }
 
                 @Override
@@ -300,10 +285,8 @@ public class UserLoginActivity extends Activity {
                 public void onFinished() {
                     Log.d("userLogin", "----onFinished");
                     //使用handler通知UI取消进度加载对话框
-
                 }
             });
         }
-
     }
 }

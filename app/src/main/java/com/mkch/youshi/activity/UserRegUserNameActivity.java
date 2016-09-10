@@ -2,20 +2,37 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.JoinUserJson;
+import com.mkch.youshi.bean.LoginUserJson;
+import com.mkch.youshi.bean.User;
+import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.util.CheckUtil;
+import com.mkch.youshi.util.CommonUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 public class UserRegUserNameActivity extends Activity {
     private ImageView mIvBack;
     private TextView mTvTitle;
 
-    //用户名、密码和确认密码
-    private EditText mEtUsername;
+    //密码和确认密码
     private EditText mEtPassword;
     private EditText mEtPassAgain;
     private Button mBtnRegister;
@@ -33,113 +50,119 @@ public class UserRegUserNameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_reg_username);
-//		initView();
-//		initData();
-//		setListener();
+		initView();
+		initData();
+		setListener();
     }
 
-//	private void initView() {
-//		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);
-//		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
-//		//用户名、密码和确认密码
-//		mEtUsername = (EditText)findViewById(R.id.et_user_reg_username);
-//		mEtPassword = (EditText)findViewById(R.id.et_user_reg_password);
-//		mEtPassAgain = (EditText)findViewById(R.id.et_user_reg_password_again);
-//
-//		mBtnRegister = (Button)findViewById(R.id.btn_user_reg_register_commit);
-//	}
-//
-//	private void initData() {
-//		mTvTitle.setText("注册");
-//		//初始化手机号和验证码
-//		Bundle _bundle = getIntent().getExtras();
-//		if(_bundle!=null){
-//			mPhone = _bundle.getString("_phone");
-//			mCode = _bundle.getString("_code");
-//		}
-//	}
-//
-//	private void setListener() {
-//		mIvBack.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				UserRegUserNameActivity.this.finish();
-//			}
-//		});
-//		//注册
-//		mBtnRegister.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				String username = mEtUsername.getText().toString();
-//				String password = mEtPassword.getText().toString();
-//				String passagain = mEtPassAgain.getText().toString();
-//				if(username==null||username.equals("")){
-//					Toast.makeText(UserRegUserNameActivity.this, "您未填写用户名", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(password==null||password.equals("")){
-//					Toast.makeText(UserRegUserNameActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(passagain==null||passagain.equals("")){
-//					Toast.makeText(UserRegUserNameActivity.this, "您未填写确认密码", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(!password.equals(passagain)){
-//					Toast.makeText(UserRegUserNameActivity.this, "两次密码输入不一致", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				//检查用户名和密码、确认密码的输入规则是否输入有误
-//				if(username.length()<3||username.length()>15||!CheckUtil.checkUsername(username)){
-//					Toast.makeText(UserRegUserNameActivity.this, "用户名格式是3到15位的中英文数字组成", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				if(passagain.length()<6||passagain.length()>15||!CheckUtil.checkPassword(password)){
-//					Toast.makeText(UserRegUserNameActivity.this, "密码格式是6到15位的字母数字组成", Toast.LENGTH_SHORT).show();
-//					return;
-//				}
-//				mPassword = password;//全局变量
-//				userRegisterFromNet(username,password);//用户注册
-//			}
-//
-//			private void userRegisterFromNet(final String username,final String password) {
-//				new Thread(new Runnable() {
-//					@Override
-//					public void run() {
-//						try {
-//							String result = mUserBusiness.getUserRegister(mPhone,mCode,username,password);
-//							Log.d(CommonConstants.LOGCAT_TAG_NAME + "_result_user_reg_userName_getUserRegister", result);
-//							JSONObject jsonObj = new JSONObject(result);
-//							boolean Success = jsonObj.getBoolean("success");
-//							if(Success){
-//								//获取成功
-//								handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_REGISTER_SUCCESS);
-//							}else{
-//								//获取错误代码，并查询出错误文字
-//								String errorMsg = jsonObj.getString("errorMsg");
-//								CommonUtil.sendErrorMessage(errorMsg,handler);
-//							}
-//						} catch (ConnectTimeoutException e) {
-//							e.printStackTrace();
-//							CommonUtil.sendErrorMessage(CommonConstants.MSG_REQUEST_TIMEOUT,handler);
-//						}catch (SocketTimeoutException e) {
-//							e.printStackTrace();
-//							CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_RESPONSE_TIMEOUT,handler);
-//						}
-//						catch (ServiceException e) {
-//							e.printStackTrace();
-//							CommonUtil.sendErrorMessage(e.getMessage(),handler);
-//						} catch (Exception e) {
-//							//what = 0;sendmsg 0;
-//							CommonUtil.sendErrorMessage("注册-验证验证码："+CommonConstants.MSG_GET_ERROR,handler);
-//						}
-//					}
-//				}).start();
-//			}
-//		});
-//	}
+	private void initView() {
+		mIvBack = (ImageView)findViewById(R.id.iv_common_topbar_back);
+		mTvTitle = (TextView)findViewById(R.id.tv_common_topbar_title);
+		//密码和确认密码
+		mEtPassword = (EditText)findViewById(R.id.et_user_reg_password);
+		mEtPassAgain = (EditText)findViewById(R.id.et_user_reg_password_again);
+
+		mBtnRegister = (Button)findViewById(R.id.btn_user_reg_register_commit);
+	}
+
+	private void initData() {
+		mTvTitle.setText("注册");
+		//初始化手机号和验证码
+		Bundle _bundle = getIntent().getExtras();
+		if(_bundle!=null){
+			mPhone = _bundle.getString("_phone");
+			mCode = _bundle.getString("_code");
+		}
+	}
+
+	private void setListener() {
+		mIvBack.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				UserRegUserNameActivity.this.finish();
+			}
+		});
+		//注册
+		mBtnRegister.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String password = mEtPassword.getText().toString();
+				String passagain = mEtPassAgain.getText().toString();
+				if(password==null||password.equals("")){
+					Toast.makeText(UserRegUserNameActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(passagain==null||passagain.equals("")){
+					Toast.makeText(UserRegUserNameActivity.this, "您未填写确认密码", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(!password.equals(passagain)){
+					Toast.makeText(UserRegUserNameActivity.this, "两次密码输入不一致", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				//检查密码、确认密码的输入规则是否输入有误
+				if(passagain.length()<6||passagain.length()>15||!CheckUtil.checkPassword(password)){
+					Toast.makeText(UserRegUserNameActivity.this, "密码格式是6到15位的字母数字组成", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				mPassword = password;//全局变量
+				userRegisterFromNet(mPhone,password,mCode);//用户注册
+			}
+
+			private void userRegisterFromNet(final String mPhone,final String password, final String code) {
+				//使用xutils3访问网络并获取返回值
+				RequestParams requestParams = new RequestParams(CommonConstants.JOIN);
+				//包装请求参数
+				User user = new User();
+				user.setMobileNumber(mPhone);
+				user.setPassword(password);
+				user.setClientType("Android");
+				user.setVerifyCode(code);
+				user.setClientVersion("V1.2");
+				user.setOsUuid(CommonUtil.getMyUUID(UserRegUserNameActivity.this));
+				JoinUserJson _reg_user = new JoinUserJson(user);
+				final Gson gson = new Gson();
+				String _user_json = gson.toJson(_reg_user);
+				Log.d("zzzzzzzzzzzzzzz", "_user_json is ----------------" + _user_json);
+				requestParams.addBodyParameter("", _user_json);//用户名
+				requestParams.addHeader("sVerifyCode", "3D8829FE");//头信息
+				x.http().post(requestParams, new Callback.CommonCallback<String>() {
+					@Override
+					public void onSuccess(String result) {
+						if (result != null) {
+							Log.d("zzzzzzzzzzzzzz", "----onSuccess:" + result);
+							try {
+								JSONObject _json_result = new JSONObject(result);
+								Boolean _success = (Boolean) _json_result.get("Success");
+								if (_success) {
+									Toast.makeText(UserRegUserNameActivity.this, "注册成功", Toast.LENGTH_LONG).show();
+									UserRegUserNameActivity.this.finish();
+								}else{
+									Toast.makeText(UserRegUserNameActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
+									return;
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					@Override
+					public void onError(Throwable ex, boolean isOnCallback) {
+					}
+
+					@Override
+					public void onCancelled(CancelledException cex) {
+					}
+
+					@Override
+					public void onFinished() {
+					}
+				});
+			}
+		});
+	}
 //
 //	private static class MyHandler extends Handler{
 //		private final WeakReference<Activity> mActivity;

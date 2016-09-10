@@ -55,7 +55,6 @@
         <activity android:name=".activity.RevisePasswordCodeActivity" />
         <activity android:name=".activity.AccountProtectActivity" />
         <activity android:name=".activity.NewMessageNoticeActivity" />
-
         <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"

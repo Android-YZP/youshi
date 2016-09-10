@@ -13,6 +13,16 @@ public class User {
     private String DeviceInfo;//设备信息
     private String Firm;//手机型号
     private String ImageVerifyCode;//图像验证码
+    private String VerifyCode;//短信验证码
+
+    public String getVerifyCode() {
+        return VerifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        VerifyCode = verifyCode;
+    }
+
     private String OsType;//客户端操作系统
     private String OsUuid;//uuid
     private String Password;//密码
