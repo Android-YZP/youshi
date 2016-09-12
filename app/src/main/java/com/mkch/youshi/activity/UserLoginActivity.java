@@ -117,8 +117,12 @@ public class UserLoginActivity extends Activity {
                     //图片验证码错误
                     ((UserLoginActivity) mActivity.get()).imgVerifyError();
                     break;
+                case CommonConstants.FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR:
+                    //手机号或密码错误,提示并刷新验证码
+                    ((UserLoginActivity) mActivity.get()).accountError();
+                    break;
                 case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE:
-                    //切换图片验证码
+                    //手动切换图片验证码
                     ((UserLoginActivity) mActivity.get()).changeImgVerfy();
                     break;
                 default:
@@ -134,7 +138,7 @@ public class UserLoginActivity extends Activity {
      */
     private void showImgVerfy() {
         mLayoutCode.setVisibility(View.VISIBLE);
-        Toast.makeText(UserLoginActivity.this, "手机号或密码错误，请输入验证码", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UserLoginActivity.this, "请输入验证码", Toast.LENGTH_SHORT).show();
         x.image().bind(mIvCode, mPicUrl);
     }
 
@@ -148,7 +152,16 @@ public class UserLoginActivity extends Activity {
     }
 
     /**
-     * 更新图片验证码
+     * 手机号或密码错误-提示并重刷图片验证码
+     */
+    private void accountError() {
+        this.showTip("手机号或密码错误");
+        //把ImageView重新刷新图片验证码
+        changePicCodeFromNet();//更新图片验证码
+    }
+
+    /**
+     * 手动切换图片验证码
      */
     private void changeImgVerfy() {
         x.image().bind(mIvCode, mPicUrl);
@@ -160,8 +173,7 @@ public class UserLoginActivity extends Activity {
     private void sendLoginFromNet() {
         String account = mEtAccount.getText().toString();
         String password = mEtPassword.getText().toString();
-        String code = mEtCode.getText().toString();
-        userLoginFromNet(account,password,code);
+        userLoginFromNet(account, password, "");
     }
 
     private void showTip(String str) {
@@ -172,8 +184,6 @@ public class UserLoginActivity extends Activity {
      * 保存用户信息，提示登录成功，销毁本界面，进入主界面
      */
     public void goMain() {
-        //保存用户信息，并关闭该界面
-        CommonUtil.saveUserInfo(mUser, this);
         Toast.makeText(UserLoginActivity.this, "登录成功", Toast.LENGTH_LONG).show();
         UserLoginActivity.this.finish();
         Intent _intent = new Intent(this, MainActivity.class);
@@ -202,7 +212,7 @@ public class UserLoginActivity extends Activity {
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW);
-                        }else{
+                        } else {
                             handler.sendEmptyMessage(CommonConstants.FLAG_NO_GET_PICCODE);
                         }
                     } catch (JSONException e) {
@@ -239,6 +249,8 @@ public class UserLoginActivity extends Activity {
                 case R.id.btn_user_login_commit:
                     String account = mEtAccount.getText().toString();
                     String password = mEtPassword.getText().toString();
+                    String code = mEtCode.getText().toString();
+                    int isVisibel = mLayoutCode.getVisibility();
                     if (account == null || account.equals("")) {
                         Toast.makeText(UserLoginActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
                         return;
@@ -248,10 +260,22 @@ public class UserLoginActivity extends Activity {
                         return;
                     }
                     if (!CheckUtil.checkMobile(account)) {
-                        Toast.makeText(UserLoginActivity.this, "手机号格式输入有误", Toast.LENGTH_LONG).show();
+                        Toast.makeText(UserLoginActivity.this, "手机号格式输入有误", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    checkIsNeedValidImgFromNet();
+                    if (isVisibel == View.VISIBLE && mEtCode.equals("")) {
+                        Toast.makeText(UserLoginActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (isVisibel == View.VISIBLE && mEtCode == null) {
+                        Toast.makeText(UserLoginActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (isVisibel == View.GONE) {
+                        checkIsNeedValidImgFromNet();
+                    } else {
+                        userLoginFromNet(account, password, code);
+                    }
                     break;
                 case R.id.tv_user_login_reg:
                     _intent = new Intent(UserLoginActivity.this, UserRegPhoneActivity.class);
@@ -288,24 +312,24 @@ public class UserLoginActivity extends Activity {
         LoginUserJson _login_user = new LoginUserJson(user);
         final Gson gson = new Gson();
         String _user_json = gson.toJson(_login_user);
-        Log.d("jlj", "_user_json is ----------------" + _user_json);
         requestParams.addBodyParameter("", _user_json);//用户名
         requestParams.addHeader("sVerifyCode", "3D8829FE");//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
-                    Log.d("userLogin", "----onSuccess:" + result);
                     //若result返回信息中登录成功，解析json数据并存于本地，再使用handler通知UI更新界面并进行下一步逻辑
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
+                            JSONObject datas = _json_result.getJSONObject("Datas");
                             //填充本地用户信息
-                            String _Datas = _json_result.getString("Datas");
-                            mUser = gson.fromJson(_Datas, User.class);
-                            if (mUser != null) {
-                                Log.d("jlj", "-------mUser = " + mUser.toString());
+                            if (datas != null) {
+                                User user = new User();
+                                user.setMobileNumber(datas.getString("MobileNumber"));
+                                user.setNickName(datas.getString("NickName"));
+                                CommonUtil.saveUserInfo(user, UserLoginActivity.this);
                             }
                             //提醒登录成功
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
@@ -313,11 +337,11 @@ public class UserLoginActivity extends Activity {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1004")) {
-                                String _Datas = _json_result.getString("Datas");
-                                JSONObject _Datas_jsonobj = new JSONObject(_Datas);
-                                mPicUrl = CommonConstants.NOW_ADDRESS_PRE + _Datas_jsonobj.getString("PicCodePath");
-                                Log.d("jlj", "-------------------图片验证码错误--------------" + mPicUrl);
+                                JSONObject datas = _json_result.getJSONObject("Datas");
+                                mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                                 handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1007")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR);
                             } else {
                                 CommonUtil.sendErrorMessage(_Message, handler);
                             }
@@ -362,7 +386,7 @@ public class UserLoginActivity extends Activity {
     private void changePicCodeFromNet() {
         String phone = mEtAccount.getText().toString();
         //使用xutils3访问网络并获取返回值
-        RequestParams requestParams = new RequestParams(CommonConstants.ReloadLoginPicCode );
+        RequestParams requestParams = new RequestParams(CommonConstants.ReloadLoginPicCode);
         //包装请求参数
         String _req_json = "{\"sMobileNumber\":\"" + phone + "\"}";
         requestParams.addBodyParameter("", _req_json);//用户名

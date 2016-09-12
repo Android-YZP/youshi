@@ -15,6 +15,7 @@ public class CommonConstants {
 	public static final int FLAG_GET_REG_MOBILEMGS_VALIDATE_CAN_GET_AGAIN_SUCCESS = 7;
 	public static final int FLAG_NO_GET_PICCODE = 8;
 	public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE = 9;
+	public static final int FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR = 10;
 	/**
      * yaozhongping
      * 从100开始
