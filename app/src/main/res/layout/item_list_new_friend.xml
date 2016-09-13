@@ -61,6 +61,19 @@
             android:background="@drawable/selector_btn_user_login"
             android:text="接受"
             android:textColor="@color/common_white_color"
-            android:textSize="@dimen/friend_information_text_more_size" />
+            android:textSize="@dimen/friend_information_text_more_size"
+            android:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/tv_new_friend_added"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="已添加"
+            android:textColor="@color/friend_information_name_color"
+            android:textSize="@dimen/friend_information_text_more_size"
+            android:visibility="gone"
+            />
     </LinearLayout>
 </LinearLayout>

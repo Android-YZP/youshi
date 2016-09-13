@@ -113,7 +113,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
      * 获取联系人列表
      */
     private void showListVerfy() {
-        mAdapter = new PhoneContactAdapter(mListView, mContacts);
+        mAdapter = new PhoneContactAdapter(mListView, mContacts,this);
         mListView.setAdapter(mAdapter);
     }
 
@@ -164,6 +164,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
             mPhones.add("\"" + str + "\"");
         }
         String _req_json = "{\"mobilelist\":" + mPhones.toString() + "}";
+        _req_json = _req_json.replace(" ","");//将有空格的地方进行替换
         requestParams.addBodyParameter("", _req_json);//用户名
         Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addHeader("sVerifyCode", code);//头信息

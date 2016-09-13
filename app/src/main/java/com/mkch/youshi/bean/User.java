@@ -7,6 +7,7 @@ package com.mkch.youshi.bean;
  */
 public class User {
     private String MobileNumber;//手机号
+    private String OpenFireUserName;//openfire用户名
     private String AppVersion;//客户端版本
     private String ClientType;//客户端类型
     private String ClientVersion;//客户端版本
@@ -230,6 +231,14 @@ public class User {
 
     public void setLoginCode(String loginCode) {
         LoginCode = loginCode;
+    }
+
+    public String getOpenFireUserName() {
+        return OpenFireUserName;
+    }
+
+    public void setOpenFireUserName(String openFireUserName) {
+        OpenFireUserName = openFireUserName;
     }
 
     @Override
