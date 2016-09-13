@@ -14,6 +14,7 @@ public class User {
     private String Firm;//手机型号
     private String ImageVerifyCode;//图像验证码
     private String VerifyCode;//短信验证码
+    private String LoginCode;
 
     public String getVerifyCode() {
         return VerifyCode;
@@ -221,6 +222,14 @@ public class User {
 
     public void setTokenID(String tokenID) {
         TokenID = tokenID;
+    }
+
+    public String getLoginCode() {
+        return LoginCode;
+    }
+
+    public void setLoginCode(String loginCode) {
+        LoginCode = loginCode;
     }
 
     @Override

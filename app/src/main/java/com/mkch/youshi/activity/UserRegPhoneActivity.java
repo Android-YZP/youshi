@@ -16,10 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.UnLoginedUser;
-import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CheckUtil;
 
@@ -45,8 +42,6 @@ public class UserRegPhoneActivity extends Activity {
     private CheckBox mCbIsRead;
     private TextView mTvIsRead;
     private TextView mTvProtocal;
-    //未登录的user的信息
-    private UnLoginedUser mUnLoginedUser;
     private String mPhone, mCode;
     private boolean ischecked;
     private String tokenID;
@@ -134,6 +129,14 @@ public class UserRegPhoneActivity extends Activity {
     private MyHandler handler = new MyHandler(this);
 
     /**
+     * 出现图片验证码
+     */
+    private void showImgVerfy() {
+        mLayoutCode.setVisibility(View.VISIBLE);
+        x.image().bind(mIvCode, mPicUrl);
+    }
+
+    /**
      * 覆盖tokenID
      *
      * @throws Exception
@@ -196,10 +199,8 @@ public class UserRegPhoneActivity extends Activity {
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             //如果需要短信图片验证码，输入框显示并加载验证码图片
-                            mLayoutCode.setVisibility(View.VISIBLE);
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
-                            Log.d("userJoin", "-------------------图片验证码出现--------------" + mPicUrl);
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_USER_JOIN_IMG_VERIFY_SHOW);
                         }
                     } catch (JSONException e) {
@@ -220,14 +221,6 @@ public class UserRegPhoneActivity extends Activity {
             public void onFinished() {
             }
         });
-    }
-
-    /**
-     * 出现图片验证码
-     */
-    private void showImgVerfy() {
-        Toast.makeText(UserRegPhoneActivity.this, "", Toast.LENGTH_SHORT).show();
-        x.image().bind(mIvCode, mPicUrl);
     }
 
     private class UserRegPhoneOnClickListener implements View.OnClickListener {

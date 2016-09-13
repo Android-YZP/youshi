@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.HttpResultBean;
 import com.mkch.youshi.bean.LoginUserJson;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
@@ -329,6 +328,7 @@ public class UserLoginActivity extends Activity {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
                                 user.setNickName(datas.getString("NickName"));
+                                user.setLoginCode(datas.getString("LoginCode"));
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
                             }
                             //提醒登录成功

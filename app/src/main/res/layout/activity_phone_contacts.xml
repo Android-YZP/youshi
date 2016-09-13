@@ -5,10 +5,25 @@
     android:background="@color/common_bg_color"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_common_topbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height" />
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_phone_contacts__back"
+            style="@style/commonTopbarBackStyle"
+            android:src="@drawable/nav_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="手机通讯录"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/common_topbar_text_font_size"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,7 +68,13 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="45sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
+
+            <com.mkch.youshi.view.SideBar
+                android:id="@+id/sidebar_phone_contacts"
+                android:layout_width="20dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right" />
         </FrameLayout>
 
         <View style="@style/commonLineStyle" />
