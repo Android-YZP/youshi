@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -172,7 +173,7 @@ public class DialogFactory {
         mNpMinute.setValue(mCurrentMinute);
 
         mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(2016);
+        mNpYear.setMinValue(1999);
         mNpYear.setValue(mCurrentYear);
 
         mNpMonth.setMaxValue(12);
@@ -242,12 +243,17 @@ public class DialogFactory {
             }
         });
 
-        mChooseTimeDialog = new AlertDialog.Builder(context).
+        mChooseTimeDialog = new AlertDialog.Builder(context,R.style.style_dialog).
                 setView(_OptionView).
                 create();
         Window window = mChooseTimeDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
         window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
         mChooseTimeDialog.show();
     }
 
@@ -281,7 +287,7 @@ public class DialogFactory {
         setNumberPickerDividerColor(context, mNpDay);
 
         mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(2016);
+        mNpYear.setMinValue(1999);
         mNpYear.setValue(mCurrentYear);
 
         mNpMonth.setMaxValue(12);
@@ -522,7 +528,7 @@ public class DialogFactory {
         setNumberPickerDividerColor(context, mNpDay);
 
         mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(2016);
+        mNpYear.setMinValue(1999);
         mNpYear.setValue(mCurrentYear);
 
         mNpMonth.setMaxValue(12);

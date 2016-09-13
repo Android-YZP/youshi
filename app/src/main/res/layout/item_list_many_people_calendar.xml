@@ -6,7 +6,6 @@
     android:gravity="center_vertical"
     android:orientation="vertical">
     <!--android:descendantFocusability=”blocksDescendants”-->
-    <!--解决listView不能点击的灵异事件-->
     <!--十分钟之前-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +17,6 @@
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
-
-
 
         <RelativeLayout
             android:layout_width="match_parent"
