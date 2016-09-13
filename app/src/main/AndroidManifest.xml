@@ -22,10 +22,7 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <!--联系人-->
         <activity android:name=".activity.AddFriendsActivity" />
@@ -35,7 +32,13 @@
         <activity android:name=".activity.InformationSettingActivity" />
         <activity android:name=".activity.RemarkInformationActivity" />
         <!--我的-->
-        <activity android:name=".activity.UserLoginActivity" />
+        <activity android:name=".activity.UserLoginActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />

@@ -28,4 +28,6 @@ dependencies {
     compile 'org.kymjs.kjframe:kjframe:2.4.6.2'
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.google.code.gson:gson:2.7'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.8'
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.8'
 }

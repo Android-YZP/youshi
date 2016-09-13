@@ -1,6 +1,7 @@
 package com.mkch.youshi.adapter;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -42,7 +43,7 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
     }
 
     @Override
-    public void convert(AdapterHolder holder, ContactEntity item, boolean isScrolling, int position) {
+    public void convert(AdapterHolder holder, ContactEntity item, boolean isScrolling, final int position) {
 
         holder.setText(R.id.tv_phone_contacts_name, item.getName());
 //        ImageView headImg = holder.getView(R.id.iv_phone_contacts_head);
@@ -60,6 +61,19 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             btnAdd.setBackgroundColor(Color.WHITE);
             btnAdd.setText("已添加");
             btnAdd.setEnabled(false);
+        }else {
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    ContactEntity _contactEntiy = datas.get(position);
+                    if (_contactEntiy!=null){
+                        String _name = _contactEntiy.getName();
+                        String _jid = _contactEntiy.getOpenFireUsrName();
+                    }
+                    Log.d("jlj","btn---------------------onclick="+_contactEntiy.getName()+","+_contactEntiy.getOpenFireUsrName());
+                }
+            });
         }
         //如果是第0个
         if (position == 0) {

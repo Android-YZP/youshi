@@ -184,6 +184,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                     mContacts.remove(i);
                                 }else{
                                     String openFireUsrName = jobj.getString("OpenFireUserName");
+                                    Log.d("jlj","--------------------"+openFireUsrName);
                                     mContacts.get(i).setOpenFireUsrName(openFireUsrName);
                                     boolean isAdd = jobj.getBoolean("IsAdd");
                                     mContacts.get(i).setAdd(isAdd);

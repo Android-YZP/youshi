@@ -2,6 +2,7 @@ package com.mkch.youshi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,10 +20,21 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
 
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.xutils.view.annotation.ContentView;
 
+import java.util.Collection;
+
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements RosterListener {
 
     private IndexTabBarLayout mIndexTabBarLayout;//底部整个控件
 
@@ -36,6 +48,11 @@ public class MainActivity extends BaseActivity {
     private Fragment mUserCenterFragment;
     private String mMonthChooseDate;
 
+    /**
+     * XMPP
+     */
+    private XMPPTCPConnection connection;
+    private Roster mRoster;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +126,65 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+
+        //接收好友请求监听
+        mRoster = Roster.getInstanceFor(connection);
+        //监听好友请求添加========================================
+        connection.addAsyncStanzaListener(new StanzaListener() {
+            @Override
+            public void processPacket(Stanza packet) throws SmackException.NotConnectedException {
+                if (packet instanceof Presence){
+                    Presence _p = (Presence)packet;
+                    //获取请求者
+                    String _request_jid = _p.getFrom();
+                    if (_p.getType() == Presence.Type.subscribe){
+                        //如果我没有此JID的好友，才弹出对话框选择是否需要接受好友请求
+                        RosterEntry _entry = mRoster.getEntry(_request_jid);
+                        if (_entry==null){
+//                            Message _message = mHandler.obtainMessage(MSG_OPEN_REV_FRIEND_DIALOG, _request_jid);
+//                            mHandler.sendMessage(_message);
+
+                            Log.d("jlj","-------------好友请求，"+_request_jid);
+                        }
+
+
+                    }
+                }
+            }
+        }, new StanzaFilter() {
+            @Override
+            public boolean accept(Stanza stanza) {
+                //没有选择，全部接收
+                return true;
+            }
+        });
+
+
+        //监听是否需要更新好友列表========================================
+        mRoster.addRosterListener(this);
+
     }
 
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+        Log.d("JLJ","------------------entriesAdded");
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+        Log.d("JLJ","------------------entriesUpdated");
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+        Log.d("JLJ","------------------entriesDeleted");
+    }
+
+    @Override
+    public void presenceChanged(Presence presence) {
+        Log.d("JLJ","------------------presenceChanged");
+    }
 
 
     /**
