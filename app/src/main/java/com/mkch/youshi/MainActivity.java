@@ -17,6 +17,7 @@ import com.mkch.youshi.fragment.MessageFragment;
 import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.XmppHelper;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
 
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity implements RosterListener {
             }
         });
 
-
+        connection = XmppHelper.getConnection();
         //接收好友请求监听
         mRoster = Roster.getInstanceFor(connection);
         //监听好友请求添加========================================
