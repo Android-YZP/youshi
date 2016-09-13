@@ -11,7 +11,7 @@
         android:background="@color/common_topbar_bg_color">
 
         <ImageView
-            android:id="@+id/iv_search_result"
+            android:id="@+id/iv_search_result_back"
             style="@style/commonTopbarBackStyle"
             android:src="@drawable/nav_back" />
 
@@ -19,6 +19,7 @@
             android:id="@+id/et_search_result"
             android:layout_marginLeft="50dp"
             style="@style/commonEditTextStyle"
+
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>

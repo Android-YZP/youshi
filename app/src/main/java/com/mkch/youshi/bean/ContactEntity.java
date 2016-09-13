@@ -11,7 +11,6 @@ public class ContactEntity implements Comparable<ContactEntity> {
     //联系人号码
     private String number;
     private int id;
-    private boolean reg;
     private boolean add;
     private String pinyin;
     private char firstChar;
@@ -57,14 +56,6 @@ public class ContactEntity implements Comparable<ContactEntity> {
 
     public char getFirstChar() {
         return firstChar;
-    }
-
-    public boolean isReg() {
-        return reg;
-    }
-
-    public void setReg(boolean reg) {
-        this.reg = reg;
     }
 
     public boolean isAdd() {
