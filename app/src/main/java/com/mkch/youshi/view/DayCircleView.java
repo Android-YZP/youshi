@@ -101,7 +101,7 @@ public class DayCircleView extends View {
         mPaint2.setStrokeWidth(mCircleRadius/60);//设置线宽
         mPaint2.setTextAlign(Paint.Align.CENTER);
         mPaint2.setTextSize(TEXT_STROKE_WIDTH);
-        Log.d("jlj","AM--------------------"+(height / 2 - mCircleRadius-TEXT_STROKE_WIDTH-2*STROKE_WIDTH-10));
+//        Log.d("jlj","AM--------------------"+(height / 2 - mCircleRadius-TEXT_STROKE_WIDTH-2*STROKE_WIDTH-10));
         canvas.drawText("AM", width / 2,height / 2 - mCircleRadius-TEXT_STROKE_WIDTH-2*STROKE_WIDTH-5-TEXT_STROKE_WIDTH, mPaint2);
         canvas.drawText("PM", width / 2,height / 2 - mCircleRadius-TEXT_STROKE_WIDTH, mPaint2);
 

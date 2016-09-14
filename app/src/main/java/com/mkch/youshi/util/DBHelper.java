@@ -6,6 +6,8 @@ import org.xutils.DbManager;
 import org.xutils.db.table.TableEntity;
 import org.xutils.x;
 
+import java.io.File;
+
 /**
  * Created by SunnyJiang on 2016/9/13.
  */
@@ -19,7 +21,7 @@ public class DBHelper {
             Log.d("jlj","----------------dbManager new ");
             DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
 //            .setAllowTransaction(true)
-//            .setDbDir(new File("/mnt/sdcard/"))
+                .setDbDir(new File("/mnt/sdcard/"))
                 .setDbName("yoshi.db")
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -30,10 +32,10 @@ public class DBHelper {
                 .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
                     @Override
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-
+                        Log.d("jlj","onUpgrade<<"+"oldVersion = "+oldVersion+",newVersion ="+newVersion);
                     }
                 })
-    //            .setDbVersion(1)
+                .setDbVersion(2)
                 .setTableCreateListener(new DbManager.TableCreateListener() {
                     @Override
                     public void onTableCreated(DbManager db, TableEntity<?> table) {
