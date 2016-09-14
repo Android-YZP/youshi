@@ -17,10 +17,30 @@
 
         <EditText
             android:id="@+id/et_search_result"
-            android:layout_marginLeft="50dp"
             style="@style/commonEditTextStyle"
-
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"/>
+            android:layout_marginLeft="50dp" />
     </RelativeLayout>
+
+    <com.andview.refreshview.XRefreshView xmlns:xrefreshview="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/custom_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        xrefreshview:isHeightMatchParent="true"
+        xrefreshview:isWidthMatchParent="true">
+
+        <ListView
+            android:id="@+id/list_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@drawable/list_item_divider"
+            android:dividerHeight="1px"
+            android:fadingEdge="none"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none" />
+    </com.andview.refreshview.XRefreshView>
 </LinearLayout>

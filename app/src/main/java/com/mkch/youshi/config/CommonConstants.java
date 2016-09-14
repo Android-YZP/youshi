@@ -17,6 +17,7 @@ public class CommonConstants {
 	public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE = 9;
 	public static final int FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR = 10;
 	public static final int FLAG_GET_PHONE_CONTACT_SHOW = 11;
+	public static final int FLAG_GET_SEARCH_RESULT_SHOW = 12;
 	/**
      * yaozhongping
      * 从100开始
@@ -69,7 +70,9 @@ public class CommonConstants {
 	//核对短信验证码
 	public static final String MessageCodeIsValid   = NOW_ADDRESS + "MessageCodeIsValid";
 	//获取通讯录信息
-	public static final String GetContactsInfo    = NOW_ADDRESS + "GetContactsInfo ";
+	public static final String GetContactsInfo    = NOW_ADDRESS + "GetContactsInfo";
+	//通过忧时账号\手机号查询用户
+	public static final String SearchUser     = NOW_ADDRESS + "SearchUser";
     //zhangjun-----------------------------------------------end
 
 

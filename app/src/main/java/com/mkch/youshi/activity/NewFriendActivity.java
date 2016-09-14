@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.InputType;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -44,6 +46,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     private ImageView mIvBack;
     private TextView mTvTitle;
+    private EditText mEtSearch;
     private LinearLayout mLayoutAddPhone;
     private ListView mListView;
 
@@ -126,6 +129,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
+        mEtSearch = (EditText) findViewById(R.id.et_new_friend_search);
         mLayoutAddPhone = (LinearLayout) findViewById(R.id.layout_new_friend_add_phone);
         mListView = (ListView) findViewById(R.id.list_new_friend);
     }
@@ -153,6 +157,8 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
             updateUIfromReceiver(_request_jid);
 
         }
+        //搜索框不弹出软键盘
+        mEtSearch.setInputType(InputType.TYPE_NULL);
 
         //注册广播
         mFriendsReceiver = new FriendsReceiver(mHandler);
@@ -170,6 +176,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
             }
         });
         mLayoutAddPhone.setOnClickListener(new NewFriendOnClickListener());
+        mEtSearch.setOnClickListener(new NewFriendOnClickListener());
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -293,6 +300,11 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 //                    } catch (DbException e) {
 //                        e.printStackTrace();
 //                    }
+                    break;
+                case R.id.et_new_friend_search:
+                    _intent = new Intent(NewFriendActivity.this, SearchResultActivity.class);
+                    startActivity(_intent);
+//
                     break;
                 default:
                     break;
