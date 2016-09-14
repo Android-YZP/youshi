@@ -134,16 +134,16 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             //中间部分的点击事件
             case R.id.rl_start_time://开始时间
                 if (isAllDay) {
-                    DialogFactory.showAllDayOptionDialog(this, mTvStartTime);
+                    DialogFactory.showAllDayOptionDialog(this, mTvStartTime,mTvEndTime);
                 } else {
-                    DialogFactory.showOptionDialog(this, mTvStartTime);
+                    DialogFactory.showOptionDialog(this, mTvStartTime,mTvEndTime);
                 }
                 break;
             case R.id.rl_end_time://结束时间
                 if (isAllDay) {
-                    DialogFactory.showAllDayOptionDialog(this, mTvEndTime);
+                    DialogFactory.showAllDayOptionDialog(this, mTvEndTime,mTvStartTime);
                 } else {
-                    DialogFactory.showOptionDialog(this, mTvEndTime);
+                    DialogFactory.showOptionDialog(this, mTvEndTime,mTvStartTime);
                 }
                 break;
             //后半部分的点击事件

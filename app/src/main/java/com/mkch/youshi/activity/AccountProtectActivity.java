@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 import com.mkch.youshi.adapter.CommonEquipmentListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountProtectActivity extends Activity {
 
@@ -44,6 +48,13 @@ public class AccountProtectActivity extends Activity {
         mTvTitle.setText("账号保护");
         ListAdapter mAdapter = new CommonEquipmentListAdapter(AccountProtectActivity.this);
         mListView.setAdapter(mAdapter);
+
+
+//        //保持TextView在GridView的最后一个
+//        GridView gridView = new GridView(this);
+//        TextView textView = new TextView(this);
+//        ArrayList<String> list = new ArrayList();
+//        gridView.addView(textView,list.size());
     }
 
     private void setListener() {
