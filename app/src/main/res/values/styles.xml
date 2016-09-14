@@ -127,6 +127,8 @@
         <item name="android:layout_marginLeft">@dimen/message_et_search_margin_left_or_right</item>
         <item name="android:layout_marginRight">@dimen/message_et_search_margin_left_or_right</item>
         <item name="android:hint">搜索</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionSearch</item>
         <item name="android:background">@color/common_white_color</item>
         <item name="android:textSize">@dimen/common_et_text_font_size</item>
         <item name="android:textColor">@color/common_et_text_font_color</item>
@@ -234,8 +236,10 @@
     <!-- 自定义checkbox主题 -->
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_common_checkbox</item>
-        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
-        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height</item>
+        <item name="android:width">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
+        <item name="android:height">@dimen/user_reg_phone_checkbox_read_protocal_width_or_height
+        </item>
     </style>
 
     <!-- 自定义checkbox主题 -->

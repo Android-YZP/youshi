@@ -14,7 +14,7 @@ public class ContactEntity implements Comparable<ContactEntity> {
     private boolean add;
     private String pinyin;
     private char firstChar;
-    private String openFireUsrName;
+    private String openFireUserName;
 
     public String getPinyin() {
         return pinyin;
@@ -66,12 +66,12 @@ public class ContactEntity implements Comparable<ContactEntity> {
         this.add = add;
     }
 
-    public String getOpenFireUsrName() {
-        return openFireUsrName;
+    public String getOpenFireUserName() {
+        return openFireUserName;
     }
 
-    public void setOpenFireUsrName(String openFireUsrName) {
-        this.openFireUsrName = openFireUsrName;
+    public void setOpenFireUserName(String openFireUsrName) {
+        this.openFireUserName = openFireUsrName;
     }
 
     @Override

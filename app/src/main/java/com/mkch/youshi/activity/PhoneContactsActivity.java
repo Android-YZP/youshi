@@ -180,13 +180,13 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                             JSONArray datas = _json_result.getJSONArray("Datas");
                             for (int i = 0; i < datas.length(); i++) {
                                 JSONObject jobj = datas.getJSONObject(i);
-                                String openFireUsrName = jobj.getString("OpenFireUserName");
-                                mContacts.get(i).setOpenFireUsrName(openFireUsrName);
+                                String openFireUserName = jobj.getString("OpenFireUserName");
+                                mContacts.get(i).setOpenFireUserName(openFireUserName);
                                 boolean isAdd = jobj.getBoolean("IsAdd");
                                 mContacts.get(i).setAdd(isAdd);
                             }
                             for (int i = 0; i < mContacts.size(); i++) {
-                                if(mContacts.get(i).getOpenFireUsrName().equals("null")){
+                                if(mContacts.get(i).getOpenFireUserName().equals("null")){
                                     mContacts.remove(i);
                                     i--;
                                 }
