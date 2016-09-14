@@ -21,6 +21,7 @@ build/
 *.iml
 /.idea/workspace.xml
 /.idea/libraries
+vcs.xml
 .DS_Store
 /captures
 

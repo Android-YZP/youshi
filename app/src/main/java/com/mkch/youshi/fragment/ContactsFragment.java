@@ -98,12 +98,12 @@ public class ContactsFragment extends Fragment implements SideBar
         mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
         mListView = (ListView) view.findViewById(R.id.list_contacts);
 
-        // 给listView设置adapter
-        mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
-        mListView.addFooterView(mFooterView);
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);
         mSearchInput.addTextChangedListener(this);
+        // 给listView设置adapter
+        mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
+        mListView.addFooterView(mFooterView);
         getFriendListFromNet();
     }
 
