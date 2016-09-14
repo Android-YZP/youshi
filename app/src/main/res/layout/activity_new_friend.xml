@@ -51,7 +51,9 @@
             style="@style/commonLineStyle"
             android:layout_marginBottom="@dimen/new_friend_add_phone_margin_bottom" />
 
-        <View style="@style/commonLineStyle" />
+        <View
+            android:id="@+id/line1_new_friend"
+            style="@style/commonLineStyle" />
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -69,6 +71,8 @@
                 android:scrollbars="none" />
         </FrameLayout>
 
-        <View style="@style/commonLineStyle" />
+        <View
+            android:id="@+id/line2_new_friend"
+            style="@style/commonLineStyle" />
     </LinearLayout>
 </LinearLayout>

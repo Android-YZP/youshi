@@ -21,8 +21,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <!--联系人-->
         <activity android:name=".activity.AddFriendsActivity" />
         <activity android:name=".activity.NewFriendActivity" />
@@ -36,9 +35,9 @@
         <!--我的-->
         <activity android:name=".activity.UserLoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.UserRegPhoneActivity" />
@@ -65,38 +64,38 @@
         <activity android:name=".activity.AccountProtectActivity" />
         <activity android:name=".activity.NewMessageNoticeActivity" />
         <activity android:name=".activity.DisturbTimeActivity" />
+        <activity android:name=".activity.PrivacyActivity" />
         <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ChooseAddressActivity"/>
-        <activity android:name=".activity.ChooseSomeoneActivity"/>
-        <activity android:name=".activity.ChooseRemindBeforeActivity"/>
-        <activity android:name=".activity.CalendarActivity"/>
-        <activity android:name=".activity.ChooseTimeActivity"/>
-        <activity android:name=".activity.ChooseWeekActivity"/>
-        <activity android:name=".activity.ManyPeopleEventDetial"/>
-        <activity android:name=".activity.PersonalDetialEventActivity"/>
-        <activity android:name=".activity.PersonalDetialsAffairActivity"/>
-        <activity android:name=".activity.PersonalDetialHabitActivity"/>
-        <activity android:name=".activity.AddPersonalActivity"/>
-        <activity android:name=".activity.AddManyPeopleEventActivity"/>
-        <activity android:name=".activity.AddPersonalAffairActivity"/>
-        <activity android:name=".activity.AddPersonalEventActivity"/>
-        <activity android:name=".activity.AddPersonalHabitActivity"/>
-        <activity android:name=".activity.SearchEventActivity"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ChooseAddressActivity" />
+        <activity android:name=".activity.ChooseSomeoneActivity" />
+        <activity android:name=".activity.ChooseRemindBeforeActivity" />
+        <activity android:name=".activity.CalendarActivity" />
+        <activity android:name=".activity.ChooseTimeActivity" />
+        <activity android:name=".activity.ChooseWeekActivity" />
+        <activity android:name=".activity.ManyPeopleEventDetial" />
+        <activity android:name=".activity.PersonalDetialEventActivity" />
+        <activity android:name=".activity.PersonalDetialsAffairActivity" />
+        <activity android:name=".activity.PersonalDetialHabitActivity" />
+        <activity android:name=".activity.AddPersonalActivity" />
+        <activity android:name=".activity.AddManyPeopleEventActivity" />
+        <activity android:name=".activity.AddPersonalAffairActivity" />
+        <activity android:name=".activity.AddPersonalEventActivity" />
+        <activity android:name=".activity.AddPersonalHabitActivity" />
+        <activity android:name=".activity.SearchEventActivity" />
 
         <!-- 消息 -->
-        <activity android:name=".activity.GroupDetailActivity"/>
-        <activity android:name=".activity.MultiChatActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".activity.GroupChatActivity"/>
+        <activity android:name=".activity.GroupDetailActivity" />
+        <activity android:name=".activity.MultiChatActivity" />
+        <activity android:name=".activity.ChatActivity" />
+        <activity android:name=".activity.GroupChatActivity" />
 
         <service
             android:name=".service.XmppService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
     </application>
 
 </manifest>

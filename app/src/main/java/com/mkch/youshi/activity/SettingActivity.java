@@ -13,8 +13,8 @@ import com.mkch.youshi.R;
 public class SettingActivity extends Activity {
 
     private ImageView mIvBack;
-    private TextView mTvTitle,mTvQuit;
-    private LinearLayout mLayoutAccount,mLayoutMessage,mLayoutPrivacy,mLayoutUniversality,mLayoutAbout;
+    private TextView mTvTitle, mTvQuit;
+    private LinearLayout mLayoutAccount, mLayoutMessage, mLayoutPrivacy, mLayoutUniversality, mLayoutAbout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class SettingActivity extends Activity {
         });
         mLayoutAccount.setOnClickListener(new SettingOnClickListener());
         mLayoutMessage.setOnClickListener(new SettingOnClickListener());
+        mLayoutPrivacy.setOnClickListener(new SettingOnClickListener());
         mTvQuit.setOnClickListener(new SettingOnClickListener());
     }
 
@@ -71,7 +72,7 @@ public class SettingActivity extends Activity {
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_privacy:
-                    _intent = new Intent(SettingActivity.this, ReviseSignatureActivity.class);
+                    _intent = new Intent(SettingActivity.this, PrivacyActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_universality:

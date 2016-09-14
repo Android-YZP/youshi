@@ -15,40 +15,30 @@
         android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
-        android:id="@+id/layout_new_message_notice_disturb"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:background="@color/common_white_color"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
-        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
-        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
-        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:text="消息免打扰"
+            android:paddingLeft="@dimen/friend_information_setting_padding_left"
+            android:text="允许好友查看日程表盘"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
-        <ImageView style="@style/commonArrowStyle" />
+        <CheckBox
+            android:id="@+id/cb_privacy_look"
+            style="@style/MyCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
+            android:checked="true" />
     </LinearLayout>
-
-    <View style="@style/commonLineStyle" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/account_protect_remark_padding_top_or_bottom"
-        android:paddingLeft="@dimen/account_protect_remark_padding_left_or_right"
-        android:paddingRight="@dimen/account_protect_remark_padding_left_or_right"
-        android:paddingTop="@dimen/account_protect_remark_padding_top_or_bottom"
-        android:text="设置系统功能消息提示音和振动的时段。"
-        android:textColor="@color/common_et_text_font_color"
-        android:textSize="@dimen/friend_information_text_remark_size" />
 
     <View
         style="@style/commonLineStyle"
@@ -66,12 +56,12 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
-            android:text="声音"
+            android:text="加我好友时需要身份验证"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
-            android:id="@+id/cb_new_message_notice_voice"
+            android:id="@+id/cb_privacy_validate"
             style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,12 +86,12 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
-            android:text="振动"
+            android:text="向我推荐通讯录好友"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
-            android:id="@+id/cb_new_message_notice_vibration"
+            android:id="@+id/cb_privacy_recommend"
             style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

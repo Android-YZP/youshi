@@ -2,14 +2,15 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -102,6 +103,11 @@ public class SearchResultActivity extends Activity {
      * 获取联系人列表
      */
     private void showListVerfy() {
+        //隐藏软键盘
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(mEtSearch.getWindowToken(), 0);
+        }
         SearchResultListAdapter mAdapter = new SearchResultListAdapter();
         mListView.setAdapter(mAdapter);
     }
@@ -210,7 +216,6 @@ public class SearchResultActivity extends Activity {
         String search = mEtSearch.getText().toString();
         String code = CommonUtil.getUserInfo(SearchResultActivity.this).getLoginCode();
         String _req_json = "{\"Key\":\"" + search + "\",\"PageSize\":\"" + 10 + "\",\"PageIndex\":\"" + 0 + "\"}";
-        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addBodyParameter("", _req_json);//用户名
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
@@ -218,14 +223,13 @@ public class SearchResultActivity extends Activity {
             public void onSuccess(String result) {
                 if (result != null) {
                     try {
-                        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + result);
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             //加载查询结果
                             JSONArray datas = _json_result.getJSONArray("Datas");
-                            Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + datas.toString());
                             for (int i = 0; i < datas.length(); i++) {
+                                searchResult.clear();
                                 SearchResult item = new SearchResult();
                                 JSONObject jobj = datas.getJSONObject(i);
                                 String phone = jobj.getString("MobileNumber");

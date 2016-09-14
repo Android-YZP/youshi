@@ -42,7 +42,9 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
-        <View style="@style/commonLineStyle" />
+        <View
+            android:id="@+id/line_phone_contacts"
+            style="@style/commonLineStyle" />
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -68,7 +70,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="45sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.mkch.youshi.view.SideBar
                 android:id="@+id/sidebar_phone_contacts"

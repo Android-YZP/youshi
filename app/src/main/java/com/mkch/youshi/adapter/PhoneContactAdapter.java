@@ -82,7 +82,7 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
                     ContactEntity _contactEntiy = datas.get(position);
                     if (_contactEntiy!=null){
                         final String _name = _contactEntiy.getName();
-                        String _OpenFireUsrName = _contactEntiy.getOpenFireUsrName();
+                        String _OpenFireUsrName = _contactEntiy.getOpenFireUserName();
                         Log.d("jlj","btn---------------------onclick="+_name+","+_OpenFireUsrName);
                         //获取用户名和_OpenFireUsrName；并发起添加功能
                         final String _jid = XmppStringUtils.completeJidFrom(_OpenFireUsrName, connection.getServiceName());//转jid
