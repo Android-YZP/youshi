@@ -233,7 +233,16 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             //更改此好友的已添加状态
-                            mFriends.get(position).setStatus(1);
+                            Friend _friend = mFriends.get(position);
+                            _friend.setStatus(1);
+                            Log.d("jlj","----------------_friend-toString = "+_friend.toString());
+                            //并更新数据库
+                            try {
+                                dbManager.saveOrUpdate(_friend);
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
+
                             //提醒添加成功
                             mHandler.sendEmptyMessage(CommonConstants.FLAG_ALLOW_FRIEND_SUCCESS);
                         } else {
