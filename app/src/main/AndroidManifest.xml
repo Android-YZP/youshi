@@ -23,6 +23,7 @@
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
+
         </activity>
         <!-- 联系人 -->
         <activity android:name=".activity.AddFriendsActivity"/>
@@ -95,6 +96,8 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <service android:name=".service.FriendService"/>
     </application>
 
 </manifest>

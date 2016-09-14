@@ -25,7 +25,9 @@ public class XmppHelper {
             builder.setDebuggerEnabled(true);
             builder.setSendPresence(true);
             //SASL
+//            SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
             SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+//            SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
 
             builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         }

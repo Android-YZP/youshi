@@ -27,6 +27,7 @@ public class CommonConstants {
      * jianglongjian
      * 从200开始
      */
+    public static final int FLAG_ALLOW_FRIEND_SUCCESS = 200;
 
 
 	public static final String MSG_CONNECT_ERROR = "连接出错，请检查您的网络";
@@ -81,6 +82,9 @@ public class CommonConstants {
     //jianglongjian-----------------------------------------------start
     //根据openfireusername查询用户详细信息
     public static final String GetInfoByOpenFireName = NOW_ADDRESS + "GetInfoByOpenFireName";
+    //同意好友添加 sVerifyCode-登录认证码
+    public static final String AllowFriend = NOW_ADDRESS + "AllowFriend";
+
 
     //jianglongjian-----------------------------------------------end
 }
