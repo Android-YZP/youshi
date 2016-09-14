@@ -47,14 +47,14 @@ public class DayLineView extends View{
         width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
 
-        Log.d("jlj","DayLineView-onMeasure------------------------------------"+width+","+height);
+//        Log.d("jlj","DayLineView-onMeasure------------------------------------"+width+","+height);
         setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d("jlj","DayLineView-onDraw------------------------------------");
+//        Log.d("jlj","DayLineView-onDraw------------------------------------");
         setPaintStyle(getResources().getColor(R.color.clock_kedu),3);
         //小时的高度
         float _hour_height = HOUR_TEXT_SIZE;

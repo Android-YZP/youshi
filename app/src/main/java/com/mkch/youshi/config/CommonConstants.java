@@ -82,7 +82,8 @@ public class CommonConstants {
 
 
     //jianglongjian-----------------------------------------------start
-
+    //根据openfireusername查询用户详细信息
+    public static final String GetInfoByOpenFireName = NOW_ADDRESS + "GetInfoByOpenFireName";
 
     //jianglongjian-----------------------------------------------end
 }

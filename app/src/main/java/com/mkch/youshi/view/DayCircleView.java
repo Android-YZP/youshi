@@ -61,7 +61,7 @@ public class DayCircleView extends View {
         mCircleRadius = width/4;
         STROKE_WIDTH = width/30;//=20
         TEXT_STROKE_WIDTH = width/40;//15
-        Log.d("jlj","------------------------------------"+width+","+height+",radius="+mCircleRadius);
+//        Log.d("jlj","------------------------------------"+width+","+height+",radius="+mCircleRadius);
         setMeasuredDimension(width, height);
     }
 
@@ -265,7 +265,7 @@ public class DayCircleView extends View {
 //        float _seepAngle = 360*((_minute/60)/12);//通过分钟计算多出来的角度
         float _seepAngle =_minute/2;
         float _start_angle = mHourAngle.get(_hour)+_seepAngle;//时刻对应的角度+多出来的角度=开始角度
-        Log.d("jlj","_start_angle----------------="+_start_angle);
+//        Log.d("jlj","_start_angle----------------="+_start_angle);
         return _start_angle;
     }
 
@@ -275,7 +275,7 @@ public class DayCircleView extends View {
         if (event.getAction()==MotionEvent.ACTION_DOWN){
             float _x = event.getX();
             float _y = event.getY();
-            Log.d("jlj","onTouchEvent---------------ACTION_DOWN="+_x+","+_y);
+//            Log.d("jlj","onTouchEvent---------------ACTION_DOWN="+_x+","+_y);
         }
         return super.onTouchEvent(event);
     }
