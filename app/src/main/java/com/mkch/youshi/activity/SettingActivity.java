@@ -50,6 +50,7 @@ public class SettingActivity extends Activity {
         mLayoutAccount.setOnClickListener(new SettingOnClickListener());
         mLayoutMessage.setOnClickListener(new SettingOnClickListener());
         mLayoutPrivacy.setOnClickListener(new SettingOnClickListener());
+        mLayoutUniversality.setOnClickListener(new SettingOnClickListener());
         mTvQuit.setOnClickListener(new SettingOnClickListener());
     }
 
@@ -76,7 +77,7 @@ public class SettingActivity extends Activity {
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_universality:
-                    _intent = new Intent(SettingActivity.this, ReviseSignatureActivity.class);
+                    _intent = new Intent(SettingActivity.this, UniversalityActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_setting_about:

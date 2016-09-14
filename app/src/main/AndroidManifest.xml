@@ -65,6 +65,7 @@
         <activity android:name=".activity.NewMessageNoticeActivity" />
         <activity android:name=".activity.DisturbTimeActivity" />
         <activity android:name=".activity.PrivacyActivity" />
+        <activity android:name=".activity.UniversalityActivity" />
         <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"

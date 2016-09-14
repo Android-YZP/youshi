@@ -1,28 +1,55 @@
 package com.mkch.youshi.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.andview.refreshview.utils.LogUtils;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddFriendsActivity;
 import com.mkch.youshi.activity.FriendInformationActivity;
 import com.mkch.youshi.activity.GroupChatActivity;
-import com.mkch.youshi.activity.MyCollectionActivity;
-import com.mkch.youshi.activity.MyFileActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
-import com.mkch.youshi.activity.SettingActivity;
-import com.mkch.youshi.activity.UserInformationActivity;
+import com.mkch.youshi.adapter.ContactAdapter;
+import com.mkch.youshi.bean.Contact;
+import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.view.SideBar;
 
-public class ContactsFragment extends Fragment {
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.kymjs.kjframe.ui.BindView;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.util.ArrayList;
+
+public class ContactsFragment extends Fragment implements SideBar
+        .OnTouchingLetterChangedListener, TextWatcher {
 
     private ImageView mIvAddFriend;
     private LinearLayout mLayoutNewFriend, mLayoutGroupChat, mLayoutTest;
+    private static ProgressDialog mProgressDialog = null;
+    @BindView(id = R.id.list_contacts)
+    private ListView mListView;
+    private TextView mFooterView;
+    private ArrayList<Contact> datas = new ArrayList<>();
+    private ContactAdapter mAdapter;
+    private SideBar mSideBar;
+    private TextView mDialog;
+    private EditText mSearchInput;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +67,7 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        getFriendListFromNet();
         setListener();
     }
 
@@ -63,6 +91,16 @@ public class ContactsFragment extends Fragment {
         mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
         mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
         mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
+        mSideBar = (SideBar) view.findViewById(R.id.sidebar_contacts);
+        mDialog = (TextView) view.findViewById(R.id.tv_contacts_dialog);
+        mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
+
+        mSideBar.setTextView(mDialog);
+        mSideBar.setOnTouchingLetterChangedListener(this);
+        mSearchInput.addTextChangedListener(this);
+        // 给listView设置adapter
+        mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
+        mListView.addFooterView(mFooterView);
     }
 
     /**
@@ -107,5 +145,83 @@ public class ContactsFragment extends Fragment {
                 }
             }
         }
+    }
+
+    /**
+     * 获取好友列表
+     */
+    private void getFriendListFromNet() {
+        //弹出加载进度条
+        mProgressDialog = ProgressDialog.show(getActivity(), "请稍等", "正在获取中...", true, true);
+        //使用xutils3访问网络并获取返回值
+        RequestParams requestParams = new RequestParams(CommonConstants.GetFriendList);
+        //包装请求参数
+        String code = CommonUtil.getUserInfo(getActivity()).getLoginCode();
+        requestParams.addHeader("sVerifyCode", code);//头信息
+        x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                if (result != null) {
+                    try {
+                        LogUtils.i("zzzzzzzzzzzzzzzaaaaaaaaazzzzzzz" + result);
+                        JSONObject _json_result = new JSONObject(result);
+                        Boolean _success = (Boolean) _json_result.get("Success");
+                        if (_success) {
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+    @Override
+    public void onTouchingLetterChanged(String s) {
+        int position = 0;
+        // 该字母首次出现的位置
+        if (mAdapter != null) {
+            position = mAdapter.getPositionForSection(s.charAt(0));
+        }
+        if (position != -1) {
+            mListView.setSelection(position);
+        } else if (s.contains("#")) {
+            mListView.setSelection(0);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        ArrayList<Contact> temp = new ArrayList<>(datas);
+        for (Contact data : datas) {
+            if (data.getName().contains(s) || data.getPinyin().contains(s)) {
+            } else {
+                temp.remove(data);
+            }
+        }
+        if (mAdapter != null) {
+            mAdapter.refresh(temp);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
     }
 }
