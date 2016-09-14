@@ -56,10 +56,9 @@ public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer
         //如果是第0个那么一定显示#号
         if (position == 0) {
             tvLetter.setVisibility(View.VISIBLE);
-            tvLetter.setText("#");
+            tvLetter.setText("" + item.getFirstChar());
             tvLine.setVisibility(View.VISIBLE);
         } else {
-
             //如果和上一个item的首字母不同，则认为是新分类的开始
             Contact prevData = datas.get(position - 1);
             if (item.getFirstChar() != prevData.getFirstChar()) {

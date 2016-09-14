@@ -3,6 +3,8 @@ package com.mkch.youshi.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.andview.refreshview.utils.LogUtils;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddFriendsActivity;
 import com.mkch.youshi.activity.FriendInformationActivity;
@@ -25,8 +26,10 @@ import com.mkch.youshi.adapter.ContactAdapter;
 import com.mkch.youshi.bean.Contact;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.kymjs.kjframe.ui.BindView;
@@ -67,7 +70,6 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        getFriendListFromNet();
         setListener();
     }
 
@@ -94,13 +96,15 @@ public class ContactsFragment extends Fragment implements SideBar
         mSideBar = (SideBar) view.findViewById(R.id.sidebar_contacts);
         mDialog = (TextView) view.findViewById(R.id.tv_contacts_dialog);
         mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
+        mListView = (ListView) view.findViewById(R.id.list_contacts);
 
-        mSideBar.setTextView(mDialog);
-        mSideBar.setOnTouchingLetterChangedListener(this);
-        mSearchInput.addTextChangedListener(this);
         // 给listView设置adapter
         mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
         mListView.addFooterView(mFooterView);
+        mSideBar.setTextView(mDialog);
+        mSideBar.setOnTouchingLetterChangedListener(this);
+        mSearchInput.addTextChangedListener(this);
+        getFriendListFromNet();
     }
 
     /**
@@ -112,6 +116,35 @@ public class ContactsFragment extends Fragment implements SideBar
         mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
         mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
     }
+
+    private class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
+            int flag = msg.what;
+            switch (flag) {
+                case CommonConstants.FLAG_GET_FRIEND_LIST_SHOW:
+                    //加载好友列表
+                    showListVerfy();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 获取联系人列表
+     */
+    private void showListVerfy() {
+        mFooterView.setText(datas.size() + "位联系人");
+        mAdapter = new ContactAdapter(mListView, datas);
+        mListView.setAdapter(mAdapter);
+    }
+
+    private MyHandler myHandler = new MyHandler();
 
     /**
      * 自定义点击监听类
@@ -151,8 +184,6 @@ public class ContactsFragment extends Fragment implements SideBar
      * 获取好友列表
      */
     private void getFriendListFromNet() {
-        //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(getActivity(), "请稍等", "正在获取中...", true, true);
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.GetFriendList);
         //包装请求参数
@@ -163,10 +194,19 @@ public class ContactsFragment extends Fragment implements SideBar
             public void onSuccess(String result) {
                 if (result != null) {
                     try {
-                        LogUtils.i("zzzzzzzzzzzzzzzaaaaaaaaazzzzzzz" + result);
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
+                            JSONArray mDatas = _json_result.getJSONArray("Datas");
+                            for (int i = 0; i < mDatas.length(); i++) {
+                                Contact data = new Contact();
+                                JSONObject jobj = mDatas.getJSONObject(i);
+                                String name = jobj.getString("UserName");
+                                data.setName(name);
+                                data.setPinyin(HanziToPinyin.getPinYin(name));
+                                datas.add(data);
+                            }
+                            myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
