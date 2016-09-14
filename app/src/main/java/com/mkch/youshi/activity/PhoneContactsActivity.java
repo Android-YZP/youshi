@@ -113,7 +113,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
      * 获取联系人列表
      */
     private void showListVerfy() {
-        mAdapter = new PhoneContactAdapter(mListView, mContacts);
+        mAdapter = new PhoneContactAdapter(mListView, mContacts,this);
         mListView.setAdapter(mAdapter);
     }
 
@@ -164,7 +164,9 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
             mPhones.add("\"" + str + "\"");
         }
         String _req_json = "{\"mobilelist\":" + mPhones.toString() + "}";
+        _req_json = _req_json.replace(" ","");//将有空格的地方进行替换
         requestParams.addBodyParameter("", _req_json);//用户名
+        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -179,17 +181,18 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                             JSONArray datas = _json_result.getJSONArray("Datas");
                             for (int i = 0; i < datas.length(); i++) {
                                 JSONObject jobj = datas.getJSONObject(i);
-                                boolean isReg = jobj.getBoolean("IsRegister");
-                                if (!isReg){
-                                    mContacts.remove(i);
-                                }else{
-                                    String openFireUsrName = jobj.getString("OpenFireUserName");
-                                    mContacts.get(i).setOpenFireUsrName(openFireUsrName);
-                                    boolean isAdd = jobj.getBoolean("IsAdd");
-                                    mContacts.get(i).setAdd(isAdd);
-                                }
-                                myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW);
+                                String openFireUserName = jobj.getString("OpenFireUserName");
+                                mContacts.get(i).setOpenFireUserName(openFireUserName);
+                                boolean isAdd = jobj.getBoolean("IsAdd");
+                                mContacts.get(i).setAdd(isAdd);
                             }
+                            for (int i = 0; i < mContacts.size(); i++) {
+                                if(mContacts.get(i).getOpenFireUserName().equals("null")){
+                                    mContacts.remove(i);
+                                    i--;
+                                }
+                            }
+                            myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

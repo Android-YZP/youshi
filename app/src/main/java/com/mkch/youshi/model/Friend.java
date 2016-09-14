@@ -12,17 +12,17 @@ public class Friend {
     @Column(name = "id",isId = true,autoGen = true)
     private int id;
     /**
-     * 优时好友ID
+     * 优时好友ID（OpenFireUserName）
      */
     @Column(name = "friendid")
-    private int friendid;
+    private String friendid;
     /**
      * 头像地址
      */
     @Column(name = "head_pic")
     private String head_pic;
     /**
-     * 昵称
+     * 昵称（若无昵称，则为OpenFireUserName）
      */
     @Column(name = "nickname")
     private String nickname;
@@ -42,15 +42,15 @@ public class Friend {
     @Column(name = "status")
     private int status;
     /**
-     * 所属用户（关联）
+     * 所属用户ID（OpenFireUserName）
      */
     @Column(name = "userid")
-    private int userid;
+    private String userid;
 
     public Friend() {
     }
 
-    public Friend(int friendid, String head_pic, String nickname, String remark, String phone, int status, int userid) {
+    public Friend(String friendid, String head_pic, String nickname, String remark, String phone, int status, String userid) {
         this.friendid = friendid;
         this.head_pic = head_pic;
         this.nickname = nickname;
@@ -68,11 +68,11 @@ public class Friend {
         this.id = id;
     }
 
-    public int getFriendid() {
+    public String getFriendid() {
         return friendid;
     }
 
-    public void setFriendid(int friendid) {
+    public void setFriendid(String friendid) {
         this.friendid = friendid;
     }
 
@@ -116,11 +116,11 @@ public class Friend {
         this.status = status;
     }
 
-    public int getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 
@@ -128,13 +128,13 @@ public class Friend {
     public String toString() {
         return "Friend{" +
                 "id=" + id +
-                ", friendid=" + friendid +
+                ", friendid='" + friendid + '\'' +
                 ", head_pic='" + head_pic + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", remark='" + remark + '\'' +
                 ", phone='" + phone + '\'' +
                 ", status=" + status +
-                ", userid=" + userid +
+                ", userid='" + userid + '\'' +
                 '}';
     }
 }

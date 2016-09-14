@@ -6,26 +6,26 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/index_today_item"
+        android:id="@+id/index_open_item"
         layout="@layout/layout_disturb_time_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="44dp" />
 
     <View
         style="@style/commonLineStyle"/>
 
     <include
-        android:id="@+id/index_today_item"
+        android:id="@+id/index_night_item"
         layout="@layout/layout_disturb_time_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="44dp"/>
 
     <View
         style="@style/commonLineStyle"/>
 
     <include
-        android:id="@+id/index_today_item"
+        android:id="@+id/index_close_item"
         layout="@layout/layout_disturb_time_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="44dp" />
 </LinearLayout>

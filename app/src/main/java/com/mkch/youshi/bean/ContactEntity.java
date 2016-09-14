@@ -11,11 +11,10 @@ public class ContactEntity implements Comparable<ContactEntity> {
     //联系人号码
     private String number;
     private int id;
-    private boolean reg;
     private boolean add;
     private String pinyin;
     private char firstChar;
-    private String openFireUsrName;
+    private String openFireUserName;
 
     public String getPinyin() {
         return pinyin;
@@ -59,14 +58,6 @@ public class ContactEntity implements Comparable<ContactEntity> {
         return firstChar;
     }
 
-    public boolean isReg() {
-        return reg;
-    }
-
-    public void setReg(boolean reg) {
-        this.reg = reg;
-    }
-
     public boolean isAdd() {
         return add;
     }
@@ -75,12 +66,12 @@ public class ContactEntity implements Comparable<ContactEntity> {
         this.add = add;
     }
 
-    public String getOpenFireUsrName() {
-        return openFireUsrName;
+    public String getOpenFireUserName() {
+        return openFireUserName;
     }
 
-    public void setOpenFireUsrName(String openFireUsrName) {
-        this.openFireUsrName = openFireUsrName;
+    public void setOpenFireUserName(String openFireUsrName) {
+        this.openFireUserName = openFireUsrName;
     }
 
     @Override

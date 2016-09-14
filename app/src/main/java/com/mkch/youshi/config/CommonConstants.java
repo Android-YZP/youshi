@@ -17,6 +17,7 @@ public class CommonConstants {
 	public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE = 9;
 	public static final int FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR = 10;
 	public static final int FLAG_GET_PHONE_CONTACT_SHOW = 11;
+	public static final int FLAG_GET_SEARCH_RESULT_SHOW = 12;
 	/**
      * yaozhongping
      * 从100开始
@@ -27,6 +28,7 @@ public class CommonConstants {
      * jianglongjian
      * 从200开始
      */
+    public static final int FLAG_ALLOW_FRIEND_SUCCESS = 200;
 
 
 	public static final String MSG_CONNECT_ERROR = "连接出错，请检查您的网络";
@@ -68,7 +70,9 @@ public class CommonConstants {
 	//核对短信验证码
 	public static final String MessageCodeIsValid   = NOW_ADDRESS + "MessageCodeIsValid";
 	//获取通讯录信息
-	public static final String GetContactsInfo    = NOW_ADDRESS + "GetContactsInfo ";
+	public static final String GetContactsInfo    = NOW_ADDRESS + "GetContactsInfo";
+	//通过忧时账号\手机号查询用户
+	public static final String SearchUser     = NOW_ADDRESS + "SearchUser";
     //zhangjun-----------------------------------------------end
 
 
@@ -79,6 +83,10 @@ public class CommonConstants {
 
 
     //jianglongjian-----------------------------------------------start
+    //根据openfireusername查询用户详细信息
+    public static final String GetInfoByOpenFireName = NOW_ADDRESS + "GetInfoByOpenFireName";
+    //同意好友添加 sVerifyCode-登录认证码
+    public static final String AllowFriend = NOW_ADDRESS + "AllowFriend";
 
 
     //jianglongjian-----------------------------------------------end

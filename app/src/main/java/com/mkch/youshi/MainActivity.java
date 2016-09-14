@@ -10,12 +10,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mkch.youshi.activity.BaseActivity;
-import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.fragment.ContactsFragment;
 import com.mkch.youshi.fragment.MessageFragment;
 import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
-import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.service.FriendService;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
 
@@ -36,6 +35,7 @@ public class MainActivity extends BaseActivity {
     private Fragment mUserCenterFragment;
     private String mMonthChooseDate;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +43,6 @@ public class MainActivity extends BaseActivity {
         initView();
         initData();
         setListener();
-    }
-
-    private void initData() {
-        mTodayFragment = new TodayFragment();
-        mMessageFragment = new MessageFragment();
-        mContactsFragment = new ContactsFragment();
-        mUserCenterFragment = new UserCenterFragment();
     }
 
     /**
@@ -86,6 +79,13 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private void initData() {
+        mTodayFragment = new TodayFragment();
+        mMessageFragment = new MessageFragment();
+        mContactsFragment = new ContactsFragment();
+        mUserCenterFragment = new UserCenterFragment();
+    }
+
     /**
      * 设置点击切换界面监听
      */
@@ -109,8 +109,20 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        initServiceListener();//启动初始化需要监听的service
+
+
     }
 
+    /**
+     * 启动初始化需要监听的service
+     */
+    private void initServiceListener() {
+        //启动监听好友请求添加和好友状态
+        Intent _intent = new Intent(MainActivity.this, FriendService.class);
+        startService(_intent);
+
+    }
 
 
     /**

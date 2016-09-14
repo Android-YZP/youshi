@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/layout_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <com.mkch.youshi.view.DisturbTimeTabBarLayout
+        android:id="@+id/myDisturbTimeTabBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"></com.mkch.youshi.view.DisturbTimeTabBarLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="开启以后，如果收到信息，手机不会振动与发出提示音。如果设置为“只在夜间开启”，则只在22:00到8:00间生效"
+        android:textColor="@color/user_reg_phone_et_text_font_color"
+        android:textSize="@dimen/friend_information_text_remark_size" />
+</LinearLayout>

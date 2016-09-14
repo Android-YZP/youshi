@@ -56,7 +56,7 @@ public class NewMessageNoticeActivity extends Activity {
             Intent _intent = null;
             switch (view.getId()) {
                 case R.id.layout_new_message_notice_disturb:
-                    _intent = new Intent(NewMessageNoticeActivity.this, ReviseYoushiNumberActivity.class);
+                    _intent = new Intent(NewMessageNoticeActivity.this, DisturbTimeActivity.class);
                     startActivity(_intent);
                     break;
                 default:
