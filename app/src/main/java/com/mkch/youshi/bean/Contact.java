@@ -7,6 +7,7 @@ package com.mkch.youshi.bean;
  */
 public class Contact implements Comparable<Contact> {
     private String name;
+    private String openFireName;
     private int id;
     private String url;
     private String pinyin;
@@ -52,6 +53,14 @@ public class Contact implements Comparable<Contact> {
 
     public char getFirstChar() {
         return firstChar;
+    }
+
+    public String getOpenFireName() {
+        return openFireName;
+    }
+
+    public void setOpenFireName(String openFireName) {
+        this.openFireName = openFireName;
     }
 
     @Override

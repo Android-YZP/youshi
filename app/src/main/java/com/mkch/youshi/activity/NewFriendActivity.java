@@ -189,7 +189,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 //            }
 //        });
         registerForContextMenu(mListView);
-        Log.d("jlj","-------------------------registerForContextMenu");
     }
 
     /**
@@ -207,14 +206,11 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Log.d("jlj","-------------------------onContextItemSelected");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.del:
-                Log.d("jlj","-------------------------del:id is "+info.id+",position is "+info.position);
                 //删除数据库中该条信息，并重新刷新UI
                 Friend _friend = mFriends.get(info.position);
-                Log.d("jlj","-------------------------del:friend is "+_friend.toString());
                 try {
                     dbManager.delete(_friend);
                 } catch (DbException e) {

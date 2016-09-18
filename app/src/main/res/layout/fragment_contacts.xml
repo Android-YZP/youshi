@@ -143,11 +143,11 @@
                     android:textColor="@color/new_friend_name_color"
                     android:textSize="@dimen/friend_information_text_more_size" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/tv_contacts_group_chat_number"
                     style="@style/commonMsgNumsStyle"
                     android:layout_gravity="center_vertical"
-                    android:text="24" />
+                    android:text="24" />-->
             </LinearLayout>
         </LinearLayout>
 
