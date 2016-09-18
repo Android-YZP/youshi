@@ -26,10 +26,11 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private RelativeLayout mSubmission;
     private RelativeLayout mRemindBefore;
     private LinearLayout mRemark;
-    private TextView mTwoDate;
+    private TextView mTwoStartDate;
     private TextView mTvCancel;
     private TextView mTvComplete;
     private TextView mTvTitle;
+    private TextView mTwoEndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,8 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
 
         mAffairDate = (RelativeLayout) findViewById(R.id.rl_affair_date);
-        mTwoDate = (TextView) findViewById(R.id.tv_two_date);
+        mTwoStartDate = (TextView) findViewById(R.id.tv_two_start_date);
+        mTwoEndDate = (TextView) findViewById(R.id.tv_two_end_date);
         mAffairWeek = (RelativeLayout) findViewById(R.id.rl_affair_week);
         mAffairChooseTime = (RelativeLayout) findViewById(R.id.rl_affair_choose_time);
         mAffairAllTime = (RelativeLayout) findViewById(R.id.rl_affair_all_time);
@@ -127,7 +129,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 break;
 
             case R.id.rl_affair_date://日期
-                DialogFactory.showTwoDayOptionDialog(this, mTwoDate);
+                DialogFactory.showTwoDayOptionDialog(this, mTwoStartDate,mTwoEndDate);
                 break;
             case R.id.rl_affair_week://周
                 startActivity(new Intent(AddPersonalAffairActivity.this,
