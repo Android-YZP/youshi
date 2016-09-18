@@ -13,7 +13,7 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.MultiChatActivity;
 import com.mkch.youshi.adapter.MessageBoxListAdapter;
-import com.mkch.youshi.bean.MessageBox;
+import com.mkch.youshi.model.MessageBox;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.MessageBox;
+import com.mkch.youshi.model.MessageBox;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ViewInject;
@@ -68,7 +68,7 @@ public class MessageBoxListAdapter extends BaseAdapter {
         _msgBoxViewHolder.tvTitle.setText(_msg_box.getTitle());//标题
         _msgBoxViewHolder.tvNums.setText(_msg_box.getNums()+"");//消息数
         _msgBoxViewHolder.tvInfo.setText(_msg_box.getInfo());//消息简语
-        _msgBoxViewHolder.tvTime.setText(_msg_box.getDatetime());//时间
+        _msgBoxViewHolder.tvTime.setText(_msg_box.getLasttime());//时间
         return convertView;
     }
 
