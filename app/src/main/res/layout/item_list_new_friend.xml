@@ -63,6 +63,7 @@
             android:textColor="@color/common_white_color"
             android:textSize="@dimen/friend_information_text_more_size"
             android:visibility="visible"
+            android:focusable="false"
             />
 
         <TextView

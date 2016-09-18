@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -178,19 +180,56 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         mLayoutAddPhone.setOnClickListener(new NewFriendOnClickListener());
         mEtSearch.setOnClickListener(new NewFriendOnClickListener());
 
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //长按某一条好友请求可以删除该好友消息
-
-                return false;
-            }
-        });
+//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                //长按某一条好友请求可以删除该好友消息
+//
+//                return false;
+//            }
+//        });
+        registerForContextMenu(mListView);
+        Log.d("jlj","-------------------------registerForContextMenu");
     }
 
+    /**
+     * 设置上下文长按Item时的菜单
+     * @param menu
+     * @param v
+     * @param menuInfo
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d("jlj","-------------------------onContextItemSelected");
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()){
+            case R.id.del:
+                Log.d("jlj","-------------------------del:id is "+info.id+",position is "+info.position);
+                //删除数据库中该条信息，并重新刷新UI
+                Friend _friend = mFriends.get(info.position);
+                Log.d("jlj","-------------------------del:friend is "+_friend.toString());
+                try {
+                    dbManager.delete(_friend);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                    Log.d("jlj","------------------"+e.getMessage());
+                    return true;
+                }
+                mFriends.remove(info.position);
+                mAdapter.notifyDataSetChanged();
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
     }
 
     /**

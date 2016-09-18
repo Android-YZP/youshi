@@ -57,6 +57,15 @@ public class UserLoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //便于测试去掉登录
+        User _user = CommonUtil.getUserInfo(this);
+        if (_user!=null){
+            Intent _intent = new Intent(this,MainActivity.class);
+            startActivity(_intent);
+            this.finish();
+            return;
+        }
+
         setContentView(R.layout.activity_user_login);
         initView();
         setListener();
