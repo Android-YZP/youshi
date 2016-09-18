@@ -56,6 +56,9 @@ public class UserLoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+//        startActivity(new Intent(UserLoginActivity.this,MainActivity.class));//测试
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
         initView();
@@ -308,6 +311,7 @@ public class UserLoginActivity extends Activity {
         user.setClientType("Android");
         user.setImageVerifyCode(code);
         user.setOsUuid(CommonUtil.getMyUUID(UserLoginActivity.this));
+
         LoginUserJson _login_user = new LoginUserJson(user);
         final Gson gson = new Gson();
         String _user_json = gson.toJson(_login_user);

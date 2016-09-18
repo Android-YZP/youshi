@@ -63,6 +63,46 @@ public class Schedule {
      */
     @Column(name = "remark")
     private String remark;
+    /**
+     * 是否是全天
+     */
+    @Column(name = "is_one_day")
+    private boolean is_one_day;
+    /**
+     * 开始时间
+     */
+    @Column(name = "begin_time")
+    private String begin_time;
+    /**
+     * 结束时间
+     */
+    @Column(name = "end_time")
+    private String end_time;
+    /**
+     * 总时间
+     */
+    @Column(name = "total_time")
+    private String total_time;
+    /**
+     * 一周几次
+     */
+    @Column(name = "times_of_week")
+    private int times_of_week;
+    /**
+     * 周集合
+     */
+    @Column(name = "which_week")
+    private String which_week;
+    /**
+     * 单次时长
+     */
+    @Column(name = "single_duration")
+    private String single_duration;
+    /**
+     * 用户ID
+     */
+    @Column(name = "userid")
+    private String userid;
 
     @Override
     public String toString() {
@@ -79,6 +119,13 @@ public class Schedule {
                 ", syc_status=" + syc_status +
                 ", remark='" + remark + '\'' +
                 ", is_one_day=" + is_one_day +
+                ", begin_time='" + begin_time + '\'' +
+                ", end_time='" + end_time + '\'' +
+                ", total_time='" + total_time + '\'' +
+                ", times_of_week=" + times_of_week +
+                ", which_week='" + which_week + '\'' +
+                ", single_duration='" + single_duration + '\'' +
+                ", userid='" + userid + '\'' +
                 '}';
     }
 
@@ -178,8 +225,61 @@ public class Schedule {
         this.is_one_day = is_one_day;
     }
 
-    @Column(name = "is_one_day")
-    private boolean is_one_day;
+    public String getBegin_time() {
+        return begin_time;
+    }
+
+    public void setBegin_time(String begin_time) {
+        this.begin_time = begin_time;
+    }
+
+    public String getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(String end_time) {
+        this.end_time = end_time;
+    }
+
+    public String getTotal_time() {
+        return total_time;
+    }
+
+    public void setTotal_time(String total_time) {
+        this.total_time = total_time;
+    }
+
+    public int getTimes_of_week() {
+        return times_of_week;
+    }
+
+    public void setTimes_of_week(int times_of_week) {
+        this.times_of_week = times_of_week;
+    }
+
+    public String getWhich_week() {
+        return which_week;
+    }
+
+    public void setWhich_week(String which_week) {
+        this.which_week = which_week;
+    }
+
+    public String getSingle_duration() {
+        return single_duration;
+    }
+
+    public void setSingle_duration(String single_duration) {
+        this.single_duration = single_duration;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 
 
 }
