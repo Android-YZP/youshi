@@ -75,6 +75,8 @@ public class CommonConstants {
     public static final String GetContactsInfo = NOW_ADDRESS + "GetContactsInfo";
     //通过忧时账号\手机号查询用户
     public static final String SearchUser = NOW_ADDRESS + "SearchUser";
+    //获取好友列表
+    public static final String GetFriendList = NOW_ADDRESS + "GetFriendList ";
     //zhangjun-----------------------------------------------end
 
 
