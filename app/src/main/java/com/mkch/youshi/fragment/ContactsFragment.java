@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,17 +193,27 @@ public class ContactsFragment extends Fragment implements SideBar
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                Log.d("jlj","------------------result="+result);
                 if (result != null) {
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             JSONArray mDatas = _json_result.getJSONArray("Datas");
+                            Log.d("jlj","------------------mDatas="+mDatas.toString());
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Contact data = new Contact();
                                 JSONObject jobj = mDatas.getJSONObject(i);
                                 String name = jobj.getString("UserName");
-                                data.setName(name);
+                                //若登录名为空，则显示OpenFireUserName
+                                String OpenFireUserName = jobj.getString("OpenFireUserName");
+                                Log.d("jlj","--------------Username="+name+",OpenFireUserName="+OpenFireUserName);
+                                if (name!=null&&!name.equals("")&&!name.equals("null")){
+                                    data.setName(name);
+
+                                }else{
+                                    data.setName(OpenFireUserName);
+                                }
                                 data.setPinyin(HanziToPinyin.getPinYin(name));
                                 datas.add(data);
                             }
