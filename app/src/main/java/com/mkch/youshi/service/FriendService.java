@@ -341,16 +341,24 @@ public class FriendService extends Service implements RosterListener {
     private void notifyInfo(String content) {
         Notification.Builder _builder = new Notification.Builder(this);
 
+        //intent
         Intent _intent = new Intent(this, NewFriendActivity.class);
         _intent.putExtra("_request_jid",content);
 
-        Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.mipmap.ic_launcher))).getBitmap();
+        //头像
+        Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.maillist))).getBitmap();
+        //pendingIntent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //昵称
+
+        //builder设置一些参数
         _builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker("a notification")
                 .setLargeIcon(_bitmap)
-                .setContentTitle("有一个好友请求")
-                .setContentText(content)
-                .setContentIntent(PendingIntent.getActivity(this,0,_intent,PendingIntent.FLAG_UPDATE_CURRENT));
+                .setContentTitle("好友请求")
+                .setContentText(content+"请求添加您为好友")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+                .setFullScreenIntent(pendingIntent,true);
 
         mNotification = _builder.build();
         //通知
