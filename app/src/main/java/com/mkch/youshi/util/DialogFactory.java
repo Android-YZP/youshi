@@ -15,15 +15,20 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.TimeBucketInfo;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -35,15 +40,18 @@ public class DialogFactory {
     private static int mMonth;
     private static int mDay;
     private static int mHour;
-    private static int mStartHour;
-    private static int mEndHour;
+    private static int mEndYear;
+    private static int mEndMonth;
+    private static int mEndDay;
+    private static String mEndMinute;
+    private static String mEndHour;
+    private static String mStartHour;
     private static int mMinute;
-    private static int mStartMinute;
-    private static int mEndMinute;
+    private static String mStartMinute;
 
-    private static NumberPicker mNpYear;
-    private static NumberPicker mNpMonth;
-    private static NumberPicker mNpDay;
+    private static NumberPicker mNpTwoOptionStartYear;
+    private static NumberPicker mNpTwoOptionStartMonth;
+    private static NumberPicker mNpTwoOptionStartDay;
     private static NumberPicker mNpHour;
     private static NumberPicker mNpMinute;
     private static TextView mTvChooseComplete;
@@ -58,6 +66,12 @@ public class DialogFactory {
     private static NumberPicker mNpEndHour;
     private static NumberPicker mNpEndMinute;
     public static Dialog mChooseTimeDialog;
+    private static NumberPicker mNpTwoOptionEndYear;
+    private static NumberPicker mNpTwoOptionEndMonth;
+    private static NumberPicker mNpTwoOptionEndDay;
+    private static LinearLayout mLLTwoOptionStartRootView;
+    private static LinearLayout mLLTwoOptionEndRootView;
+
     public static void showDateDialog(Context context, final TextView textView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
@@ -126,18 +140,20 @@ public class DialogFactory {
     }
 
 
-    //选择开始结束时间的对话框;
-
-
-    public static void showOptionDialog(Context context, final TextView textView) {
+    /**
+     * 选择开始结束时间的对话框;
+     * OptionTextView 需要进行设置的对象;
+     * CompareTextView 进行设置的对象
+     */
+    public static void showOptionDialog(final Context context, final TextView OptionTextView, final TextView CompareTextView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         int mCurrentYear = t.year;
         int mCurrentMonth = t.month + 1;
         int mCurrentDay = t.monthDay;
         int mCurrentHour = t.hour;
-        //选择框是
-        if (textView.getId() == R.id.tv_end_time) {
+        //判断点击的设置对象是开始时间还是结束时间,如果是结束时间,默认时间为当前时间加一小时
+        if (OptionTextView.getId() == R.id.tv_end_time) {
             mCurrentHour = t.hour + 1;
         }
         int mCurrentMinute = t.minute;
@@ -151,17 +167,17 @@ public class DialogFactory {
         // 取得自定义View
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View _OptionView = layoutInflater.inflate(R.layout.layout_choose_time, null);
-        mNpYear = (NumberPicker) _OptionView.findViewById(R.id.np_year);
-        mNpMonth = (NumberPicker) _OptionView.findViewById(R.id.np_month);
-        mNpDay = (NumberPicker) _OptionView.findViewById(R.id.np_day);
+        mNpTwoOptionStartYear = (NumberPicker) _OptionView.findViewById(R.id.np_year);
+        mNpTwoOptionStartMonth = (NumberPicker) _OptionView.findViewById(R.id.np_month);
+        mNpTwoOptionStartDay = (NumberPicker) _OptionView.findViewById(R.id.np_day);
         mNpHour = (NumberPicker) _OptionView.findViewById(R.id.np_hour);
         mNpMinute = (NumberPicker) _OptionView.findViewById(R.id.np_min);
         mTvChooseComplete = (TextView) _OptionView.findViewById(R.id.tv_dialog_choose_complete);
         mTvTimeShow = (TextView) _OptionView.findViewById(R.id.tv_dialog_time_show);
 
-        setNumberPickerDividerColor(context, mNpYear);//改变分割线的颜色
-        setNumberPickerDividerColor(context, mNpMonth);
-        setNumberPickerDividerColor(context, mNpDay);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartYear);//改变分割线的颜色
+        setNumberPickerDividerColor(context, mNpTwoOptionStartMonth);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartDay);
         setNumberPickerDividerColor(context, mNpHour);
         setNumberPickerDividerColor(context, mNpMinute);
         mNpHour.setMaxValue(23);
@@ -172,54 +188,96 @@ public class DialogFactory {
         mNpMinute.setMinValue(0);
         mNpMinute.setValue(mCurrentMinute);
 
-        mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(1999);
-        mNpYear.setValue(mCurrentYear);
+        mNpTwoOptionStartYear.setMaxValue(2036);
+        mNpTwoOptionStartYear.setMinValue(1999);
+        mNpTwoOptionStartYear.setValue(mCurrentYear);
 
-        mNpMonth.setMaxValue(12);
-        mNpMonth.setMinValue(1);
-        mNpMonth.setValue(mCurrentMonth);
+        mNpTwoOptionStartMonth.setMaxValue(12);
+        mNpTwoOptionStartMonth.setMinValue(1);
+        mNpTwoOptionStartMonth.setValue(mCurrentMonth);
 
-        mNpDay.setMinValue(1);
-        mNpDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
-        mNpDay.setValue(mCurrentDay);
-
+        mNpTwoOptionStartDay.setMinValue(1);
+        mNpTwoOptionStartDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
+        mNpTwoOptionStartDay.setValue(mCurrentDay);
+        /**
+         * 传入OptionTextView操作时间的对象，传入CompareTextView结束时间的对象
+         * 选择开始（结束）时间，点击完成时判断结束时间是否大于开始时间1小时，
+         * 是：直接保存数据，显示数据
+         * 否：土司提示，将结束时间设置为开始时间的后一小时
+         */
 
         mTvTimeShow.setText(getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mHour, mMinute, false)); //初始化头标题时间
-
-
         //完成点击事件
         mTvChooseComplete.setOnClickListener(new View.OnClickListener() {
+
+            private Date parseOptionTime;
+            private Date parseCompareTime;
+
             @Override
             public void onClick(View v) {
                 mChooseTimeDialog.dismiss();
-                textView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, false));
+
+                //获取到比较时间的年月日时分
+                SimpleDateFormat _s_d_f = new SimpleDateFormat("yyyy年M月d日E HH:mm");
+                try {
+                    parseCompareTime = _s_d_f.parse(CompareTextView.getText().toString());
+                    parseOptionTime = _s_d_f.parse(getWeek(mYear, mMonth, mDay, mHour, mMinute, false));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Calendar c = Calendar.getInstance();
+                c.setTime(parseCompareTime);
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                int Hours = parseCompareTime.getHours();
+                int Minutes = parseCompareTime.getMinutes();
+
+                //操作时间和比较时间的判断
+                //1.判断操作时间是开始时间
+                // 点击的开始时间,parseOptionTime<parseCompareTime;
+                if (OptionTextView.getId() == R.id.tv_start_time) {
+                    int i = parseOptionTime.compareTo(parseCompareTime);
+                    if (i == -1) {
+                        OptionTextView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, false));
+                    } else {
+                        OptionTextView.setText(getWeek(year, month, day, Hours - 1, Minutes, false));
+                        Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (OptionTextView.getId() == R.id.tv_end_time) {   // 点击的开始时间,parseOptionTime>parseCompareTime;
+                    int i = parseOptionTime.compareTo(parseCompareTime);
+                    if (i == 1) {
+                        OptionTextView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, false));
+                    } else {
+                        OptionTextView.setText(getWeek(year, month, day, Hours + 1, Minutes, false));
+                        Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         //选择事件监听
         //年
-        mNpYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mYear = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 mTvTimeShow.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, false)); //更新头标题时间
             }
         });
         //月
-        mNpMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mMonth = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 mTvTimeShow.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, false)); //更新头标题时间
-
             }
         });
         //日
-        mNpDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mDay = newVal;
@@ -243,7 +301,7 @@ public class DialogFactory {
             }
         });
 
-        mChooseTimeDialog = new AlertDialog.Builder(context,R.style.style_dialog).
+        mChooseTimeDialog = new AlertDialog.Builder(context, R.style.style_dialog).
                 setView(_OptionView).
                 create();
         Window window = mChooseTimeDialog.getWindow();
@@ -260,7 +318,7 @@ public class DialogFactory {
     /**
      * 全天的时间选择对话框
      */
-    public static void showAllDayOptionDialog(Context context, final TextView textView) {
+    public static void showAllDayOptionDialog(final Context context, final TextView OptionTextView, final TextView CompareTextView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         int mCurrentYear = t.year;
@@ -276,60 +334,105 @@ public class DialogFactory {
         // 取得自定义View
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View _OptionView = layoutInflater.inflate(R.layout.layout_allday_choose_time, null);
-        mNpYear = (NumberPicker) _OptionView.findViewById(R.id.np_year);
-        mNpMonth = (NumberPicker) _OptionView.findViewById(R.id.np_month);
-        mNpDay = (NumberPicker) _OptionView.findViewById(R.id.np_day);
+        mNpTwoOptionStartYear = (NumberPicker) _OptionView.findViewById(R.id.np_year);
+        mNpTwoOptionStartMonth = (NumberPicker) _OptionView.findViewById(R.id.np_month);
+        mNpTwoOptionStartDay = (NumberPicker) _OptionView.findViewById(R.id.np_day);
         mTvChooseComplete = (TextView) _OptionView.findViewById(R.id.tv_dialog_choose_complete);
         mTvTimeShow = (TextView) _OptionView.findViewById(R.id.tv_dialog_time_show);
 
-        setNumberPickerDividerColor(context, mNpYear);//改变分割线的颜色
-        setNumberPickerDividerColor(context, mNpMonth);
-        setNumberPickerDividerColor(context, mNpDay);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartYear);//改变分割线的颜色
+        setNumberPickerDividerColor(context, mNpTwoOptionStartMonth);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartDay);
 
-        mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(1999);
-        mNpYear.setValue(mCurrentYear);
+        mNpTwoOptionStartYear.setMaxValue(2036);
+        mNpTwoOptionStartYear.setMinValue(1999);
+        mNpTwoOptionStartYear.setValue(mCurrentYear);
 
-        mNpMonth.setMaxValue(12);
-        mNpMonth.setMinValue(1);
-        mNpMonth.setValue(mCurrentMonth);
+        mNpTwoOptionStartMonth.setMaxValue(12);
+        mNpTwoOptionStartMonth.setMinValue(1);
+        mNpTwoOptionStartMonth.setValue(mCurrentMonth);
 
-        mNpDay.setMinValue(1);
-        mNpDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
-        mNpDay.setValue(mCurrentDay);
+        mNpTwoOptionStartDay.setMinValue(1);
+        mNpTwoOptionStartDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
+        mNpTwoOptionStartDay.setValue(mCurrentDay);
         mTvTimeShow.setText(getWeek(mCurrentYear, mCurrentMonth, mHour, mMinute, mCurrentDay, true)); //初始化头标题时间
+        /**
+         * 传入开始时间，结束时间，是点击开始还是结束的标志
+         * 选择开始（结束）时间，点击完成时判断结束时间是否大于开始时间1天，
+         * 是：直接保存数据，显示数据
+         * 否：土司提示，将结束时间设置为开始时间的后一天
+         */
+
+
         //完成点击事件
         mTvChooseComplete.setOnClickListener(new View.OnClickListener() {
+            private Date parseOptionTime;
+            private Date parseCompareTime;
+
             @Override
             public void onClick(View v) {
                 mChooseTimeDialog.dismiss();
-                textView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true));
+
+                //获取到比较时间的年月日时分
+                SimpleDateFormat _s_d_f = new SimpleDateFormat("yyyy年M月d日E");
+                try {
+                    parseCompareTime = _s_d_f.parse(CompareTextView.getText().toString());
+                    parseOptionTime = _s_d_f.parse(getWeek(mYear, mMonth, mDay, mHour, mMinute, false));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Calendar c = Calendar.getInstance();
+                c.setTime(parseCompareTime);
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                //操作时间和比较时间的判断
+                //1.判断操作时间是开始时间
+                // 点击的开始时间,parseOptionTime<parseCompareTime;
+                if (OptionTextView.getId() == R.id.tv_start_time) {
+                    int i = parseOptionTime.compareTo(parseCompareTime);
+                    if (i == -1) {
+                        OptionTextView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true));
+                    } else {
+                        OptionTextView.setText(getWeek(year, month, day - 1, mHour, mMinute, true));
+                        Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (OptionTextView.getId() == R.id.tv_end_time) {   // 点击的开始时间,parseOptionTime>parseCompareTime;
+                    int i = parseOptionTime.compareTo(parseCompareTime);
+                    if (i == 1) {
+                        OptionTextView.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true));
+                    } else {
+                        OptionTextView.setText(getWeek(year, month, day + 1, mHour, mMinute, true));
+                        Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         //选择事件监听
         //年
-        mNpYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mYear = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 mTvTimeShow.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true)); //更新头标题时间
             }
         });
         //月
-        mNpMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mMonth = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 mTvTimeShow.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true)); //更新头标题时间
 
             }
         });
         //日
-        mNpDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mDay = newVal;
@@ -338,12 +441,17 @@ public class DialogFactory {
         });
 
 
-        mChooseTimeDialog = new AlertDialog.Builder(context).
+        mChooseTimeDialog = new AlertDialog.Builder(context, R.style.style_dialog).
                 setView(_OptionView).
                 create();
         Window window = mChooseTimeDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
         window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
         mChooseTimeDialog.show();
     }
 
@@ -351,7 +459,7 @@ public class DialogFactory {
     /**
      * 时间段选择对话框
      */
-    public static void showTimeBucketOptionDialog(final Context context,  final ArrayList<TimeBucketInfo> bucketInfos, final BaseAdapter adapter) {
+    public static void showTimeBucketOptionDialog(final Context context, final ArrayList<TimeBucketInfo> bucketInfos, final BaseAdapter adapter) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         int mCurrentYear = t.year;
@@ -366,11 +474,29 @@ public class DialogFactory {
 //        mHour = mCurrentHour;
 //        mMinute = mCurrentMinute;
         //初始化开始时间和结束时间
-        mStartHour = mCurrentHour;
-        mEndHour = mCurrentHour + 1;
+        if (mCurrentHour < 10) {
+            mStartHour = "0" + mCurrentHour;
+        } else {
+            mStartHour = mCurrentHour + "";
+        }
 
-        mStartMinute = mCurrentMinute;
-        mEndMinute = mCurrentMinute;
+        if (mCurrentHour + 1 < 10) {
+            mEndHour = "0" + mCurrentHour;
+        } else {
+            mEndHour = mCurrentHour + 1 + "";
+        }
+
+        if (mCurrentMinute < 10) {
+            mStartMinute = "0" + mCurrentMinute;
+        } else {
+            mStartMinute = mCurrentMinute + "";
+        }
+
+        if (mCurrentMinute < 10) {
+            mEndMinute = "0" + mCurrentMinute;
+        } else {
+            mEndMinute = mCurrentMinute + "";
+        }
 
 
         // 取得自定义View
@@ -388,7 +514,6 @@ public class DialogFactory {
         mBtnEndTime = (Button) _OptionView.findViewById(R.id.btn_dialog_end_time);
 
         //初始化点击事件
-        mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
         final TimeBucketInfo _bucketInfo = new TimeBucketInfo();
         _bucketInfo.setStartTime(mCurrentHour + ":" + mCurrentMinute);
         _bucketInfo.setEndTime((mCurrentHour + 1) + ":" + mCurrentMinute);
@@ -415,7 +540,17 @@ public class DialogFactory {
         mNpEndMinute.setValue(mCurrentMinute);
 
 
-        mTvTimeShow.setText(getWeek(mCurrentYear, mCurrentMonth, mHour, mMinute, mCurrentDay, true)); //初始化头标题时间
+        mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
+
+
+        /**
+         * 时间段是否可以重复
+         * 不可以重复:  将已经选择的时间段的集合传入
+         * 遍历集合所有值,满足:  (选择的最小值大于某时间段最小值,小于最大值
+         * ||选择的最大值大于某时间段最小值,小于最大值)  表示有重复时间段
+         * 可以重复:不需要判断直接添加值并输出
+         */
+
         //完成点击事件
         mTvChooseComplete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -432,16 +567,23 @@ public class DialogFactory {
         mNpStartHour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mStartHour = newVal;
+                if (newVal < 10) {
+                    mStartHour = "0" + newVal;
+                } else {
+                    mStartHour = newVal + "";
+                }
                 mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
-
             }
         });
         //开始分钟
         mNpStartMinute.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mStartMinute = newVal;
+                if (newVal < 10) {
+                    mStartMinute = "0" + newVal;
+                } else {
+                    mStartMinute = newVal + "";
+                }
                 mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
 
             }
@@ -450,7 +592,11 @@ public class DialogFactory {
         mNpEndHour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mEndHour = newVal;
+                if (newVal < 10) {
+                    mEndHour = "0" + newVal;
+                } else {
+                    mEndHour = newVal + "";
+                }
                 mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
 
             }
@@ -459,7 +605,11 @@ public class DialogFactory {
         mNpEndMinute.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                mEndMinute = newVal;
+                if (newVal < 10) {
+                    mEndMinute = "0" + newVal;
+                } else {
+                    mEndMinute = newVal + "";
+                }
                 mTvTimeShow.setText(mStartHour + ":" + mStartMinute + "至" + mEndHour + ":" + mEndMinute);//更新头标题时间
 
             }
@@ -471,13 +621,18 @@ public class DialogFactory {
         Window window = mChooseTimeDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
         window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
         mChooseTimeDialog.show();
     }
 
     /**
      * 一起选择开始时间和结束时间
      */
-    public static void showTwoDayOptionDialog(final Context context, final TextView textView) {
+    public static void showTwoDayOptionDialog(final Context context, final TextView StartTextView, final TextView EndTextView) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         int mCurrentYear = t.year;
@@ -486,112 +641,176 @@ public class DialogFactory {
         int mCurrentHour = t.hour;
         int mCurrentMinute = t.minute;
         mYear = mCurrentYear;//初始化全局变量
+        mEndYear = mCurrentYear;
+        mEndMonth = mCurrentMonth;
         mMonth = mCurrentMonth;
         mDay = mCurrentDay;
+        mEndDay = mCurrentDay + 1;
         mHour = mCurrentHour;
         mMinute = mCurrentMinute;
 
         // 取得自定义View
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View _OptionView = layoutInflater.inflate(R.layout.layout_twoday_choose_time, null);
-        mNpYear = (NumberPicker) _OptionView.findViewById(R.id.np_year);
-        mNpMonth = (NumberPicker) _OptionView.findViewById(R.id.np_month);
-        mNpDay = (NumberPicker) _OptionView.findViewById(R.id.np_day);
+        mLLTwoOptionStartRootView = (LinearLayout) _OptionView.findViewById(R.id.ll_root_start_view);
+        mLLTwoOptionEndRootView = (LinearLayout) _OptionView.findViewById(R.id.ll_root_end_view);
+        //开始时间
+        mNpTwoOptionStartYear = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_start_year);
+        mNpTwoOptionStartMonth = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_start_month);
+        mNpTwoOptionStartDay = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_start_day);
+
+        //结束时间
+        mNpTwoOptionEndYear = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_end_year);
+        mNpTwoOptionEndMonth = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_end_month);
+        mNpTwoOptionEndDay = (NumberPicker) _OptionView.findViewById(R.id.np_towOption_end_day);
+
         mTvChooseComplete = (TextView) _OptionView.findViewById(R.id.tv_dialog_choose_complete);
         mTvTimeShow = (TextView) _OptionView.findViewById(R.id.tv_dialog_time_show);
 
         mBtnStartTime = (Button) _OptionView.findViewById(R.id.btn_dialog_start_time);
         mBtnEndTime = (Button) _OptionView.findViewById(R.id.btn_dialog_end_time);
 
+        /**
+         *  点击开始显示开始的时间选择器.
+         *  点击结束显示结束的时间选择器.
+         *   值被传出的时候,判断时间的大小.
+         *   结束时间小于等于开始时间,自动调整结束时间为开始时间的后一天.给出土司提示
+         */
+
+
         //初始化点击事件
-        isStartTime = true;//初始化数据
         mTvTimeShow.setText(getWeek(mYear, mMonth, mDay, mHour, mMinute, true));//更新头标题时间
+
         mBtnStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//点击开始按钮
                 mBtnStartTime.setBackgroundColor(context.getResources().getColor(R.color.btn_back));
                 mBtnEndTime.setBackgroundColor(context.getResources().getColor(R.color.text_white));
-                isStartTime = true;
+                mLLTwoOptionStartRootView.setVisibility(View.VISIBLE);
+                mLLTwoOptionEndRootView.setVisibility(View.INVISIBLE);
+
+                String _date = getWeek(mYear, mMonth, mDay, mHour, mMinute, true);
+                mTvTimeShow.setText(_date);
+
             }
         });
+
         mBtnEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//点击结束按钮
                 mBtnEndTime.setBackgroundColor(context.getResources().getColor(R.color.btn_back));
                 mBtnStartTime.setBackgroundColor(context.getResources().getColor(R.color.text_white));
-                isStartTime = false;
+                mLLTwoOptionStartRootView.setVisibility(View.INVISIBLE);
+                mLLTwoOptionEndRootView.setVisibility(View.VISIBLE);
+
+                String _date = getWeek(mEndYear, mEndMonth, mEndDay, mHour, mMinute, true);
+                mTvTimeShow.setText(_date);//更新头标题时间
             }
         });
 
-        setNumberPickerDividerColor(context, mNpYear);//改变分割线的颜色
-        setNumberPickerDividerColor(context, mNpMonth);
-        setNumberPickerDividerColor(context, mNpDay);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartYear);//改变分割线的颜色
+        setNumberPickerDividerColor(context, mNpTwoOptionStartMonth);
+        setNumberPickerDividerColor(context, mNpTwoOptionStartDay);
 
-        mNpYear.setMaxValue(2036);
-        mNpYear.setMinValue(1999);
-        mNpYear.setValue(mCurrentYear);
+        mNpTwoOptionStartYear.setMaxValue(2036);
+        mNpTwoOptionStartYear.setMinValue(1999);
+        mNpTwoOptionStartYear.setValue(mCurrentYear);
 
-        mNpMonth.setMaxValue(12);
-        mNpMonth.setMinValue(1);
-        mNpMonth.setValue(mCurrentMonth);
+        mNpTwoOptionStartMonth.setMaxValue(12);
+        mNpTwoOptionStartMonth.setMinValue(1);
+        mNpTwoOptionStartMonth.setValue(mCurrentMonth);
 
-        mNpDay.setMinValue(1);
-        mNpDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
-        mNpDay.setValue(mCurrentDay);
-        mTvTimeShow.setText(getWeek(mCurrentYear, mCurrentMonth, mHour, mMinute, mCurrentDay, true)); //初始化头标题时间
+        mNpTwoOptionStartDay.setMinValue(1);
+        mNpTwoOptionStartDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
+        mNpTwoOptionStartDay.setValue(mCurrentDay);
+        //结束时间
+        mNpTwoOptionEndYear.setMaxValue(2036);
+        mNpTwoOptionEndYear.setMinValue(1999);
+        mNpTwoOptionEndYear.setValue(mEndYear);
+
+        mNpTwoOptionEndMonth.setMaxValue(12);
+        mNpTwoOptionEndMonth.setMinValue(1);
+        mNpTwoOptionEndMonth.setValue(mEndMonth);
+
+        mNpTwoOptionEndDay.setMinValue(1);
+        mNpTwoOptionEndDay.setMaxValue(getDays(mCurrentYear, mCurrentMonth));
+        mNpTwoOptionEndDay.setValue(mEndDay);
+
+
         //完成点击事件
         mTvChooseComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mChooseTimeDialog.dismiss();
-                textView.setText(mStartTime + " 至 " + mEndTime);
+                StartTextView.setText(mYear + "年" + mMonth + "月" + mDay + "日" );
+                EndTextView.setText(mEndYear + "年" + mEndMonth + "月" + mEndDay + "日");
             }
         });
         //选择事件监听
         //年
-        mNpYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mYear = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 String _date = getWeek(mYear, mMonth, mDay, mHour, mMinute, true);
                 mTvTimeShow.setText(_date);
-                if (isStartTime) {
-                    mStartTime = _date;
-                } else {
-                    mEndTime = _date;
-                }
+
             }
         });
         //月
-        mNpMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mMonth = newVal;
                 int maxMonth = getDays(mYear, mMonth);
-                mNpDay.setMaxValue(maxMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
                 String _date = getWeek(mYear, mMonth, mDay, mHour, mMinute, true);
                 mTvTimeShow.setText(_date);//更新头标题时间
-                if (isStartTime) {
-                    mStartTime = _date;
-                } else {
-                    mEndTime = _date;
-                }
             }
         });
         //日
-        mNpDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        mNpTwoOptionStartDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 mDay = newVal;
                 String _date = getWeek(mYear, mMonth, mDay, mHour, mMinute, true);
                 mTvTimeShow.setText(_date); //更新头标题时间
-                if (isStartTime) {
-                    mStartTime = _date;
-                } else {
-                    mEndTime = _date;
-                }
+            }
+        });
+
+
+        //结束年
+        mNpTwoOptionEndYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mEndYear = newVal;
+                int maxMonth = getDays(mEndYear, mEndMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
+                String _date = getWeek(mEndYear, mEndMonth, mEndDay, mHour, mMinute, true);
+                mTvTimeShow.setText(_date);
+
+            }
+        });
+        //结束月
+        mNpTwoOptionEndMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mEndMonth = newVal;
+                int maxMonth = getDays(mEndYear, mEndMonth);
+                mNpTwoOptionStartDay.setMaxValue(maxMonth);
+                String _date = getWeek(mEndYear, mEndMonth, mEndDay, mHour, mMinute, true);
+                mTvTimeShow.setText(_date);//更新头标题时间
+            }
+        });
+        //结束日
+        mNpTwoOptionEndDay.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                mEndDay = newVal;
+                String _date = getWeek(mEndYear, mEndMonth, mEndDay, mHour, mMinute, true);
+                mTvTimeShow.setText(_date); //更新头标题时间
             }
         });
 
@@ -602,6 +821,11 @@ public class DialogFactory {
         Window window = mChooseTimeDialog.getWindow();
         window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
         window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
         mChooseTimeDialog.show();
     }
 
@@ -636,6 +860,15 @@ public class DialogFactory {
         return calendar.getActualMaximum(Calendar.DATE);//获取指定年份中指定月份有几天
     }
 
+    /**
+     * @param year       年
+     * @param month      月
+     * @param dayOfMonth 日
+     * @param hour       时
+     * @param minute     分
+     * @param isAllDay   是否是全天
+     * @return
+     */
     public static String getWeek(int year, int month, int dayOfMonth, int hour, int minute, Boolean isAllDay) {
         int c = year / 100;
         int d = dayOfMonth;

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/text_white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -46,35 +47,72 @@
         android:textColor="@color/common_topbar_bg_color"
         android:textSize="20sp" />
 
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <!--开始时间-->
+        <LinearLayout
+            android:id="@+id/ll_root_start_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <NumberPicker
-            android:id="@+id/np_year"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"></NumberPicker>
+            <NumberPicker
+                android:id="@+id/np_towOption_start_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
 
-        <NumberPicker
-            android:id="@+id/np_month"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp">
+            <NumberPicker
+                android:id="@+id/np_towOption_start_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp">
 
-        </NumberPicker>
+            </NumberPicker>
 
-        <NumberPicker
-            android:id="@+id/np_day"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp">
+            <NumberPicker
+                android:id="@+id/np_towOption_start_day"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp">
 
-        </NumberPicker>
+            </NumberPicker>
 
-    </LinearLayout>
+        </LinearLayout>
+        <!--结束时间-->
+        <LinearLayout
+            android:id="@+id/ll_root_end_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center_horizontal"
+            android:visibility="invisible"
+            android:orientation="horizontal">
+
+            <NumberPicker
+                android:id="@+id/np_towOption_end_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <NumberPicker
+                android:id="@+id/np_towOption_end_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp">
+
+            </NumberPicker>
+
+            <NumberPicker
+                android:id="@+id/np_towOption_end_day"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp">
+
+            </NumberPicker>
+
+        </LinearLayout>
+    </FrameLayout>
+
 
     <View
         style="@style/lineOfAffairList"

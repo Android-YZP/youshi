@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View
-        style="@style/lineOfAffairList"/>
+    <View style="@style/lineOfAffairList" />
     <!--日期-->
     <RelativeLayout
         android:id="@+id/rl_affair_date"
@@ -16,10 +15,36 @@
             style="@style/firstOfAffairList"
             android:text="日期" />
 
-        <TextView
-            android:id="@+id/tv_two_date"
-            style="@style/lastOfAffairList"
-            android:text="2016年8月7日至8月14日" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+
+            <TextView
+                android:id="@+id/tv_two_start_date"
+                style="@style/textStyleGray24"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="2016年8月7日" />
+
+            <TextView
+                style="@style/textStyleGray24"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="至" />
+
+            <TextView
+                android:id="@+id/tv_two_end_date"
+                style="@style/textStyleGray24"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:text="2016年8月14日" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
     <View
@@ -56,10 +81,11 @@
 
         <TextView
             style="@style/lastOfAffairList"
-            android:drawableRight="@drawable/list_arrow"
             android:drawablePadding="7dp"
+            android:drawableRight="@drawable/list_arrow"
             android:text="已选择" />
     </RelativeLayout>
+
     <View
         style="@style/lineOfAffairList"
         android:layout_marginLeft="15dp" />
