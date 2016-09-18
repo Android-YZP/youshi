@@ -96,6 +96,8 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
                                 RosterHelper _roster_helper = RosterHelper.getInstance(connection);
 //                                String _nickname = XmppStringUtils.parseLocalpart(_jid);
                                 _roster_helper.addEntry(_jid,_name,"Friends");
+                                //立马删除好友
+                                _roster_helper.removeEntry(_jid);
 
                             }
                         });

@@ -142,7 +142,9 @@ public class FriendService extends Service implements RosterListener {
                     Presence _p = (Presence)packet;
                     //获取请求者
                     String _request_jid = _p.getFrom();
+                    String _to_jid = _p.getTo();
                     if (_p.getType() == Presence.Type.subscribe){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=subscribe");
                         //如果我没有此JID的好友，才弹出对话框选择是否需要接受好友请求
                         RosterEntry _entry = mRoster.getEntry(_request_jid);
                         if (_entry==null){
@@ -158,6 +160,18 @@ public class FriendService extends Service implements RosterListener {
                         }
 
 
+                    }else if (_p.getType() == Presence.Type.subscribed){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=subscribed");
+                    }else if (_p.getType() == Presence.Type.unsubscribe){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=unsubscribe");
+                    }else if (_p.getType() == Presence.Type.unsubscribed){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=unsubscribed");
+                    }else if (_p.getType() == Presence.Type.available){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=上线");
+                    }else if (_p.getType() == Presence.Type.unavailable){
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=下线");
+                    }else{
+                        Log.d("jlj","-------------------from:"+_request_jid+",to:"+_to_jid+"=其他");
                     }
                 }
             }
