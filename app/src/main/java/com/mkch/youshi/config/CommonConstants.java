@@ -18,7 +18,7 @@ public class CommonConstants {
     public static final int FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR = 10;
     public static final int FLAG_GET_PHONE_CONTACT_SHOW = 11;
     public static final int FLAG_GET_SEARCH_RESULT_SHOW = 12;
-
+    public static final int FLAG_GET_FRIEND_LIST_SHOW = 13;
     /**
      * yaozhongping
      * 从100开始
