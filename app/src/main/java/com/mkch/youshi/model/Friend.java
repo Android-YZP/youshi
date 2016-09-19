@@ -42,6 +42,11 @@ public class Friend {
     @Column(name = "status")
     private int status;
     /**
+     * 是否在新朋友显示，默认为0
+     */
+    @Column(name = "showinnewfriend")
+    private int showinnewfriend;
+    /**
      * 所属用户ID（OpenFireUserName）
      */
     @Column(name = "userid")
@@ -124,6 +129,14 @@ public class Friend {
         this.userid = userid;
     }
 
+    public int getShowinnewfriend() {
+        return showinnewfriend;
+    }
+
+    public void setShowinnewfriend(int showinnewfriend) {
+        this.showinnewfriend = showinnewfriend;
+    }
+
     @Override
     public String toString() {
         return "Friend{" +
@@ -134,6 +147,7 @@ public class Friend {
                 ", remark='" + remark + '\'' +
                 ", phone='" + phone + '\'' +
                 ", status=" + status +
+                ", showinnewfriend=" + showinnewfriend +
                 ", userid='" + userid + '\'' +
                 '}';
     }
