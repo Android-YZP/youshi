@@ -8,5 +8,5 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/contact_count_padding_top_or_bottom"
     android:paddingTop="@dimen/contact_count_padding_top_or_bottom"
-    android:textSize="@dimen/contact_count_size"
+    android:textSize="@dimen/friend_information_text_more_size"
     tools:text="10位联系人"></TextView>

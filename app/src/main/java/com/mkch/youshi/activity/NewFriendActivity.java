@@ -72,7 +72,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(NewFriendActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-
                     break;
                 case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
                     String _request_jid = (String) msg.obj;

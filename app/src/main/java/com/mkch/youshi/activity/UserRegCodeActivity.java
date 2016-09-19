@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.util.CommonUtil;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
@@ -25,6 +27,8 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 public class UserRegCodeActivity extends Activity {
     private ImageView mIvBack;
@@ -219,6 +223,16 @@ public class UserRegCodeActivity extends Activity {
 
                     @Override
                     public void onError(Throwable ex, boolean isOnCallback) {
+                        //使用handler通知UI提示用户错误信息
+                        if (ex instanceof ConnectException) {
+                            CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                        } else if (ex instanceof ConnectTimeoutException) {
+                            CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                        } else if (ex instanceof SocketTimeoutException) {
+                            CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                        } else {
+                            CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                        }
                     }
 
                     @Override
