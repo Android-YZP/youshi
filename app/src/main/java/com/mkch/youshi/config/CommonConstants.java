@@ -19,6 +19,8 @@ public class CommonConstants {
     public static final int FLAG_GET_PHONE_CONTACT_SHOW = 11;
     public static final int FLAG_GET_SEARCH_RESULT_SHOW = 12;
     public static final int FLAG_GET_FRIEND_LIST_SHOW = 13;
+    public static final int FLAG_UPLOAD_HEADPIC_SUCCESS = 14;
+    public static final int FLAG_CHANGE_NICKNAME_SUCCESS = 15;
     /**
      * yaozhongping
      * 从100开始
@@ -77,7 +79,13 @@ public class CommonConstants {
     //通过忧时账号\手机号查询用户
     public static final String SearchUser = NOW_ADDRESS + "SearchUser";
     //获取好友列表
-    public static final String GetFriendList = NOW_ADDRESS + "GetFriendList ";
+    public static final String GetFriendList = NOW_ADDRESS + "GetFriendList";
+    //上传头像
+    public static final String UploadHeadPicAndroid = NOW_ADDRESS + "UploadHeadPicAndroid";
+    //修改昵称
+    public static final String ChangeNickName = NOW_ADDRESS + "ChangeNickName";
+    //修改优时账号
+    public static final String ChangeYoShiUserName = NOW_ADDRESS + "ChangeYoShiUserName";
     //zhangjun-----------------------------------------------end
 
 
@@ -96,7 +104,6 @@ public class CommonConstants {
     public static final String AllowFriend = NOW_ADDRESS + "AllowFriend";
     //删除好友 sVerifyCode-登录认证码
     public static final String DeleteFriend = NOW_ADDRESS + "DeleteFriend";
-
 
 
     //jianglongjian-----------------------------------------------end

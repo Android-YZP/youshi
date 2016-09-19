@@ -35,4 +35,5 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'org.igniterealtime.smack:smack-tcp:4.1.8'
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.8'
+    compile files('libs/android-smart-image-view-1.0.0.jar')
 }

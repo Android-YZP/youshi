@@ -178,7 +178,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
         String _req_json = "{\"mobilelist\":" + mPhones.toString() + "}";
         _req_json = _req_json.replace(" ", "");//将有空格的地方进行替换
         requestParams.addBodyParameter("", _req_json);//用户名
-        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
