@@ -214,7 +214,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 0 && requestCode == 0) {
+        if (resultCode == 0 && requestCode == 0 && data != null) {
             mRemindTime = data.getIntExtra("RemindTime", 0);
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
