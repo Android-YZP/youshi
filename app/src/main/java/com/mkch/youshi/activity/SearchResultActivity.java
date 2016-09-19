@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,10 +27,14 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.SearchResult;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.RosterHelper;
+import com.mkch.youshi.util.XmppHelper;
 
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jxmpp.util.XmppStringUtils;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -45,6 +51,7 @@ public class SearchResultActivity extends Activity {
     private XRefreshView refreshView;
     public static long lastRefreshTime;
     private static ProgressDialog mProgressDialog = null;
+    private SearchResultListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +115,7 @@ public class SearchResultActivity extends Activity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(mEtSearch.getWindowToken(), 0);
         }
-        SearchResultListAdapter mAdapter = new SearchResultListAdapter();
+        mAdapter = new SearchResultListAdapter();
         mListView.setAdapter(mAdapter);
     }
 
@@ -235,8 +242,14 @@ public class SearchResultActivity extends Activity {
                                 String phone = jobj.getString("MobileNumber");
                                 item.setMobileNumber(phone);
                                 String openFireUserName = jobj.getString("OpenFireUserName");
+                                String nickName = jobj.getString("NickName");
                                 item.setOpenFireUserName(openFireUserName);
-                                item.setName("小明" + i);
+                                //若昵称没有，直接显示openfirename
+                                if (nickName!=null&&!nickName.equals("")&&!nickName.equals("null")){
+                                    item.setName(nickName);
+                                }else{
+                                    item.setName(openFireUserName);
+                                }
                                 searchResult.add(item);
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_SEARCH_RESULT_SHOW);
@@ -262,6 +275,14 @@ public class SearchResultActivity extends Activity {
     }
 
     public class SearchResultListAdapter extends BaseAdapter {
+
+        private XMPPTCPConnection connection; //connection
+
+        public SearchResultListAdapter() {
+            //获取连接
+            connection = XmppHelper.getConnection();
+        }
+
         @Override
         public int getCount() {
             return searchResult.size() != 0 ? searchResult.size() : 0;
@@ -278,14 +299,31 @@ public class SearchResultActivity extends Activity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            final SearchResult _search_result= searchResult.get(position);
+
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(R.layout.item_list_search_result, null);
             }
             ImageView ivSearchHeadItem = (ImageView) convertView.findViewById(R.id.iv_search_result_head);
             ivSearchHeadItem.setImageResource(R.drawable.maillist);
             TextView tvSearchNameItem = (TextView) convertView.findViewById(R.id.tv_search_result_name);
-            tvSearchNameItem.setText(searchResult.get(position).getName());
+            tvSearchNameItem.setText(_search_result.getName());
+
+            Button btnSearchAdd = (Button) convertView.findViewById(R.id.btn_search_result_add);
+            btnSearchAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //发送请求添加好友
+                    RosterHelper _roster_helper = RosterHelper.getInstance(connection);
+                    String _jid = XmppStringUtils.completeJidFrom(_search_result.getOpenFireUserName(),connection.getServiceName());
+                    Log.d("jlj","-----------------onClick:"+_jid);
+                    _roster_helper.addEntry(_jid,_search_result.getName(),"Friends");
+                    //立马删除好友
+                    _roster_helper.removeEntry(_jid);
+                }
+            });
             return convertView;
         }
     }

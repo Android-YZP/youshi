@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.ChatBean;
-import com.mkch.youshi.bean.MessageBox;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;

@@ -179,17 +179,8 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         });
         mLayoutAddPhone.setOnClickListener(new NewFriendOnClickListener());
         mEtSearch.setOnClickListener(new NewFriendOnClickListener());
-
-//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                //长按某一条好友请求可以删除该好友消息
-//
-//                return false;
-//            }
-//        });
+        //给listView注册contextMenu
         registerForContextMenu(mListView);
-        Log.d("jlj","-------------------------registerForContextMenu");
     }
 
     /**
@@ -207,14 +198,11 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        Log.d("jlj","-------------------------onContextItemSelected");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.del:
-                Log.d("jlj","-------------------------del:id is "+info.id+",position is "+info.position);
                 //删除数据库中该条信息，并重新刷新UI
                 Friend _friend = mFriends.get(info.position);
-                Log.d("jlj","-------------------------del:friend is "+_friend.toString());
                 try {
                     dbManager.delete(_friend);
                 } catch (DbException e) {
@@ -343,16 +331,10 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                 case R.id.layout_new_friend_add_phone:
                     _intent = new Intent(NewFriendActivity.this, PhoneContactsActivity.class);
                     startActivity(_intent);
-//                    try {
-//                        dbManager.delete(Friend.class);//测试用
-//                    } catch (DbException e) {
-//                        e.printStackTrace();
-//                    }
                     break;
                 case R.id.et_new_friend_search:
                     _intent = new Intent(NewFriendActivity.this, SearchResultActivity.class);
                     startActivity(_intent);
-//
                     break;
                 default:
                     break;
