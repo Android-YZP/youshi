@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.NetScheduleModel;
 import com.mkch.youshi.bean.TimeBucketInfo;
 
 import java.lang.reflect.Field;
@@ -459,7 +460,7 @@ public class DialogFactory {
     /**
      * 时间段选择对话框
      */
-    public static void showTimeBucketOptionDialog(final Context context, final ArrayList<TimeBucketInfo> bucketInfos, final BaseAdapter adapter) {
+    public static void showTimeBucketOptionDialog(final Context context, final ArrayList<NetScheduleModel.ViewModelBean.TimeSpanListBean> TimeSpanListBeans, final BaseAdapter adapter) {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         int mCurrentYear = t.year;
@@ -514,9 +515,10 @@ public class DialogFactory {
         mBtnEndTime = (Button) _OptionView.findViewById(R.id.btn_dialog_end_time);
 
         //初始化点击事件
-        final TimeBucketInfo _bucketInfo = new TimeBucketInfo();
-        _bucketInfo.setStartTime(mCurrentHour + ":" + mCurrentMinute);
-        _bucketInfo.setEndTime((mCurrentHour + 1) + ":" + mCurrentMinute);
+        final NetScheduleModel.ViewModelBean.TimeSpanListBean timeSpanListBean = new NetScheduleModel.ViewModelBean.TimeSpanListBean();
+
+        timeSpanListBean.setStartTime(mCurrentHour + ":" + mCurrentMinute);
+        timeSpanListBean.setEndTime((mCurrentHour + 1) + ":" + mCurrentMinute);
 
         setNumberPickerDividerColor(context, mNpStartHour);//改变分割线的颜色
         setNumberPickerDividerColor(context, mNpStartMinute);
@@ -553,13 +555,31 @@ public class DialogFactory {
 
         //完成点击事件
         mTvChooseComplete.setOnClickListener(new View.OnClickListener() {
+
+            private Date parseEndTime;
+            private Date parseSrtartTime;
+
             @Override
             public void onClick(View v) {
                 mChooseTimeDialog.dismiss();
-                _bucketInfo.setStartTime(mStartHour + ":" + mStartMinute);
-                _bucketInfo.setEndTime(mEndHour + ":" + mEndMinute);
-                bucketInfos.add(_bucketInfo);//添加一个时间段的对象到集合中
-                adapter.notifyDataSetChanged();//刷新Adapter
+                //解析字符串判断时间大小
+                SimpleDateFormat _s_d_f = new SimpleDateFormat("HH:mm");
+                try {
+                    parseSrtartTime = _s_d_f.parse(mStartHour + ":" + mStartMinute);
+                    parseEndTime = _s_d_f.parse(mEndHour + ":" + mEndMinute);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                int i = parseSrtartTime.compareTo(parseEndTime);
+                if (i == -1) {
+                    timeSpanListBean.setStartTime(mStartHour + ":" + mStartMinute);
+                    timeSpanListBean.setEndTime(mEndHour + ":" + mEndMinute);
+                    TimeSpanListBeans.add(timeSpanListBean);//添加一个时间段的对象到集合中
+                    adapter.notifyDataSetChanged();//刷新Adapter
+                }else {
+                    Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         //选择事件监听
@@ -742,7 +762,7 @@ public class DialogFactory {
             @Override
             public void onClick(View v) {
                 mChooseTimeDialog.dismiss();
-                StartTextView.setText(mYear + "年" + mMonth + "月" + mDay + "日" );
+                StartTextView.setText(mYear + "年" + mMonth + "月" + mDay + "日");
                 EndTextView.setText(mEndYear + "年" + mEndMonth + "月" + mEndDay + "日");
             }
         });

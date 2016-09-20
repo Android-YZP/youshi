@@ -3,6 +3,7 @@ package com.mkch.youshi.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -12,13 +13,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.NetScheduleModel;
+
+import java.util.List;
 
 public class AddPersonalHabitActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText mEtTheme;
     private RelativeLayout mChooseAddress;
     private RadioGroup mRgLabel;
-
+    private int mLable;
     private RelativeLayout mSubmission;
     private RelativeLayout mRemindBefore;
     private LinearLayout mRemark;
@@ -29,6 +35,12 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private TextView mTvCancel;
     private TextView mTvComplete;
     private TextView mTvTitle;
+    private String mWeek;
+    private int mRemindTime;
+    private EditText mTvPersonalEventDescription;
+    private TextView mTvRemindBefore;
+    private TextView mTvHabitWeek;
+    private TextView mTvHabitCircle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +65,9 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
 
         mRlHabitCircle = (RelativeLayout) findViewById(R.id.rl_habit_circle);
+        mTvHabitCircle = (TextView) findViewById(R.id.tv_habit_circle);
         mRlHabitWeek = (RelativeLayout) findViewById(R.id.rl_habit_week);
+        mTvHabitWeek = (TextView) findViewById(R.id.tv_habit_week);
         mRlHabitChooseTime = (RelativeLayout) findViewById(R.id.rl_habit_choose_time);
         mRlHabitAllTime = (RelativeLayout) findViewById(R.id.rl_habit_all_time);
 
@@ -61,6 +75,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mSubmission = (RelativeLayout) findViewById(R.id.rl_submission);
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mRemark = (LinearLayout) findViewById(R.id.ll_remark);
+        mTvPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
+        mTvRemindBefore = (TextView) findViewById(R.id.tv_remind_before);
     }
 
     private void setListener() {
@@ -123,8 +139,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                         Toast.LENGTH_SHORT).show();
                 break;
             case R.id.rl_habit_week://周
-                startActivity(new Intent(AddPersonalHabitActivity.this,
-                        ChooseWeekActivity.class));
+                startActivityForResult(new Intent(AddPersonalHabitActivity.this,
+                        ChooseWeekActivity.class),1);
                 break;
             case R.id.rl_habit_choose_time://选择时间
 
@@ -149,12 +165,107 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 finish();
                 break;
             case R.id.rl_remind_before://提前提醒
-                startActivity(new Intent(AddPersonalHabitActivity.this,
-                        ChooseRemindBeforeActivity.class));
+                startActivityForResult(new Intent(AddPersonalHabitActivity.this,
+                        ChooseRemindBeforeActivity.class),0);
                 break;
             default:
                 break;
         }
+    }
+    /**
+     * 生成个人事务的json数据
+     *
+     * @return
+     */
+    private String createPersonJson() {
+        NetScheduleModel netScheduleModel = new NetScheduleModel();
+        NetScheduleModel.ViewModelBean viewModelBean = new NetScheduleModel.ViewModelBean();
+        viewModelBean.setScheduleType(1);//事件类型
+        viewModelBean.setSubject(mEtTheme.getText().toString());//主题
+        viewModelBean.setPlace("宜兴");//地址
+        viewModelBean.setLabel(mLable);//标签
+        viewModelBean.setLatitude("21.323231");//维度
+        viewModelBean.setLongitude("1.2901921");//精度
+//        viewModelBean.setStartTime(mTwoStartDate.getText().toString());//开始时间
+//        viewModelBean.setStopTime(mTwoEndDate.getText().toString());//结束时间
+        viewModelBean.setWeeks(replaceWeek(mWeek));//结束时间
+//        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
+        viewModelBean.setRemindType(mRemindTime);//提前提醒
+        viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述,备注
+        netScheduleModel.setViewModel(viewModelBean);
+        Gson gson = new Gson();
+        String textJson = gson.toJson(netScheduleModel);
+        return textJson;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0 && requestCode == 0 && data != null) {
+            mRemindTime = data.getIntExtra("RemindTime", 0);
+            if (mRemindTime != 0)
+                mTvRemindBefore.setText(mRemindTime + "分钟前") ;
+        }
+        if (resultCode == 1 && requestCode == 1 && data != null) {
+            mWeek = data.getStringExtra("Week");
+            String _week = replaceWeek();//将1234567换成周一,周二,周三
+            mTvHabitWeek.setText(_week);
+            mTvHabitCircle.setText("每周"+mWeek.length()+"次");
+        }
+
+        if (resultCode == 2 && requestCode == 2 && data != null) {//选择时间段
+            String _timeSpanListBeanListString = data.getStringExtra("TimeSpanListBeanList");
+//            //一天的总时长
+//            mOneDayTotalTimeString = data.getStringExtra("TotalTime");
+//            mTotalTimeHour = data.getIntExtra("TotalTimeHour", 0);
+//            mTotalTimeMints = data.getIntExtra("TotalTimeMints", 0);
+//            Gson gson = new Gson();
+//            mTimeSpanListBeans = gson.fromJson(_timeSpanListBeanListString,
+//                    new TypeToken<List<NetScheduleModel.ViewModelBean.TimeSpanListBean>>() {
+//                    }.getType());
+//
+//            if (mTimeSpanListBeans.size() > 0) {
+//                mAffairTimeISChoose.setText("已选择");
+//            } else {
+//                mAffairTimeISChoose.setText("未选择");
+//            }
+//
+//            //计算有效时间天数
+//            mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(), mTwoEndDate.getText().toString());
+//            int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
+//            int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
+//            Log.d("YZP_______", _totalHour + _totalMin + "PPP");
+//            mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
+        }
+    }
+
+    /**
+     * 将123456换成周一周二周三
+     *
+     * @return
+     */
+    private String replaceWeek() {
+        String _week1 = mWeek.replace("1", "周一 ");
+        String _week2 = _week1.replace("2", "周二 ");
+        String _week3 = _week2.replace("3", "周三 ");
+        String _week4 = _week3.replace("4", "周四 ");
+        String _week5 = _week4.replace("5", "周五 ");
+        String _week6 = _week5.replace("6", "周六 ");
+        return _week6.replace("7", "周日");
+    }
+
+    /**
+     * 将123456换成周1.2.3.
+     *
+     * @return
+     */
+    private String replaceWeek(String week) {
+        String _week1 = week.replace("1", "1,");
+        String _week2 = _week1.replace("2", "2,");
+        String _week3 = _week2.replace("3", "3,");
+        String _week4 = _week3.replace("4", "4,");
+        String _week5 = _week4.replace("5", "5,");
+        String _week6 = _week5.replace("6", "6,");
+        return _week6.replace("7", "7,");
     }
 }
 

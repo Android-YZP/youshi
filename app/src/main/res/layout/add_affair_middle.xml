@@ -62,8 +62,9 @@
             android:text="周" />
 
         <TextView
+            android:id="@+id/tv_Add_Affair_week"
             style="@style/lastOfAffairList"
-            android:text="周一 周二 周三" />
+            android:text="周一周二周三周四周五周六周日" />
     </RelativeLayout>
 
     <View
@@ -80,10 +81,11 @@
             android:text="时间段选择" />
 
         <TextView
+            android:id="@+id/tv_add_affair_is_choose"
             style="@style/lastOfAffairList"
             android:drawablePadding="7dp"
             android:drawableRight="@drawable/list_arrow"
-            android:text="已选择" />
+            android:text="未选择" />
     </RelativeLayout>
 
     <View
@@ -100,6 +102,7 @@
             android:text="总时长" />
 
         <TextView
+            android:id="@+id/tv_add_affair_all_time"
             style="@style/lastOfAffairList"
             android:text="1小时" />
     </RelativeLayout>

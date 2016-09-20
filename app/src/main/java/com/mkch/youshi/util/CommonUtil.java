@@ -28,6 +28,11 @@ import com.mkch.youshi.bean.AppVersion;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +40,7 @@ import java.util.UUID;
  * Created by SunnyJiang on 2016/9/1.
  */
 public class CommonUtil {
+
     /**
      * 保存用户信息
      *
@@ -275,8 +281,7 @@ public class CommonUtil {
      * 判断某个界面是否在前台
      *
      * @param context
-     * @param className
-     *            某个界面名称
+     * @param className 某个界面名称
      */
     public static boolean isForeground(Context context, String className) {
         if (context == null || TextUtils.isEmpty(className)) {
@@ -294,4 +299,75 @@ public class CommonUtil {
 
         return false;
     }
+
+    /**
+     * 计算出二个日期之间日期集合
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static List<Date> dateSplit(Date startDate, Date endDate) {
+        Long spi = endDate.getTime() - startDate.getTime();
+        Long step = spi / (24 * 60 * 60 * 1000);// 相隔天数
+
+        List<Date> dateList = new ArrayList<Date>();
+        dateList.add(endDate);
+        for (int i = 1; i <= step; i++) {
+            dateList.add(new Date(dateList.get(i - 1).getTime()
+                    - (24 * 60 * 60 * 1000)));// 比上一天减一
+        }
+        return dateList;
+    }
+
+    /**
+     * 给定一个日期判断是周几
+     *
+     * @param pTime
+     * @return
+     * @throws Exception
+     */
+    public static int dayForWeek(String pTime) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(format.parse(pTime));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int dayForWeek = 0;
+        if (c.get(Calendar.DAY_OF_WEEK) == 1) {
+            dayForWeek = 7;
+        } else {
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+        }
+        return dayForWeek;
+    }
+
+    /**
+     * 计算出总时间
+     * 输入时间String和次数
+     * @return
+     */
+    public static String TatloTimes(String Time, int Times) {
+        SimpleDateFormat _SDF = new SimpleDateFormat("HH小时mm分钟");
+        long hours = 0;
+        long mins = 0;
+        for (int i = 0; i < Times; i++) {
+            try {
+                Date _tiem = _SDF.parse(Time);
+                long temp = _tiem.getSeconds();
+                long hour = temp / 1000 / 3600;                //相加小时数
+                long temp2 = temp % (1000 * 3600);
+                long min = temp2 / 1000 / 60;                    //相加分钟数
+                hours = hours + hour;
+                mins = mins + min;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return hours + "小时" + mins + "分钟";
+
+    }
+
 }
