@@ -12,11 +12,13 @@
         android:layout_height="@dimen/common_topbar_height" />
     <!--星期日-->
     <LinearLayout
+        android:id="@+id/choose_week7"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week7"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -42,11 +44,13 @@
 
     <!--星期一-->
     <LinearLayout
+        android:id="@+id/choose_week1"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week1"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -72,11 +76,13 @@
 
     <!--星期二-->
     <LinearLayout
+        android:id="@+id/choose_week2"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week2"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -102,11 +108,13 @@
 
     <!--星期三-->
     <LinearLayout
+        android:id="@+id/choose_week3"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week3"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -132,11 +140,13 @@
 
     <!--星期四-->
     <LinearLayout
+        android:id="@+id/choose_week4"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week4"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -162,11 +172,13 @@
 
     <!--星期五-->
     <LinearLayout
+        android:id="@+id/choose_week5"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week5"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -192,11 +204,13 @@
 
     <!--星期六-->
     <LinearLayout
+        android:id="@+id/choose_week6"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week6"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
@@ -223,11 +237,13 @@
 
     <!--每天-->
     <LinearLayout
+        android:id="@+id/choose_week_everyday"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/cb_choose_week_everyday"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp" />
