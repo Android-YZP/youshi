@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.NumberKeyListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,7 +100,9 @@ public class ReviseYoushiNumberActivity extends Activity {
                     Toast.makeText(ReviseYoushiNumberActivity.this, "优时号必须以字母开头", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ChangeNickNameFromNet();
+                if (mUser.getYoushiNumber() == null) {
+                    ChangeNickNameFromNet();
+                }
             }
         });
     }
@@ -123,7 +126,7 @@ public class ReviseYoushiNumberActivity extends Activity {
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((ReviseYoushiNumberActivity) mActivity.get()).showTip(errorMsg);
                     break;
-                case CommonConstants.FLAG_CHANGE_NICKNAME_SUCCESS:
+                case CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS:
                     //修改成功
                     ((ReviseYoushiNumberActivity) mActivity.get()).updateUserInfo();
                     break;
@@ -147,7 +150,7 @@ public class ReviseYoushiNumberActivity extends Activity {
     }
 
     /**
-     * 修改用户昵称
+     * 修改优时账号
      */
     private void ChangeNickNameFromNet() {
         //弹出加载进度条
@@ -164,11 +167,12 @@ public class ReviseYoushiNumberActivity extends Activity {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
+                    Log.d("jlj", "---------------------result = " + result);
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
-                            handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_NICKNAME_SUCCESS);
+                            handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -7,19 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.MyCollectionActivity;
 import com.mkch.youshi.activity.MyFileActivity;
 import com.mkch.youshi.activity.SettingActivity;
 import com.mkch.youshi.activity.UserInformationActivity;
+import com.mkch.youshi.bean.User;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.view.CustomSmartImageView;
 
-/**
- * Created by SunnyJiang on 2016/8/18.
- */
 public class UserCenterFragment extends Fragment {
 
     private LinearLayout mInformation, mFile, mCollection, mSetting;
+    private User mUser;
+    private CustomSmartImageView mIvHead;
+    private TextView mTvName, mTvYoushiNumber;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class UserCenterFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mUser = CommonUtil.getUserInfo(getActivity());//初始化用户信息
+        initData();
     }
 
     @Override
@@ -56,10 +62,27 @@ public class UserCenterFragment extends Fragment {
      * @param view
      */
     private void findView(View view) {
+        mIvHead = (CustomSmartImageView) view.findViewById(R.id.iv_user_center_head);
+        mTvName = (TextView) view.findViewById(R.id.tv_user_center_name);
+        mTvYoushiNumber = (TextView) view.findViewById(R.id.tv_user_center_youshi_number);
         mInformation = (LinearLayout) view.findViewById(R.id.layout_user_center_information);
         mFile = (LinearLayout) view.findViewById(R.id.layout_user_center_my_file);
         mCollection = (LinearLayout) view.findViewById(R.id.layout_user_center_my_collection);
         mSetting = (LinearLayout) view.findViewById(R.id.layout_user_center_setting);
+    }
+
+    private void initData() {
+        mUser = CommonUtil.getUserInfo(getActivity());
+        //设置头像,昵称和优时号,本地没有就用默认
+        if (mUser != null) {
+            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
+            mTvName.setText(mUser.getNickName());
+            if (mUser.getYoushiNumber() == null || mUser.getYoushiNumber().equals("")) {
+                mTvYoushiNumber.setText("优时号: 无");
+            } else {
+                mTvYoushiNumber.setText("优时号: " + mUser.getYoushiNumber());
+            }
+        }
     }
 
     /**
@@ -74,8 +97,6 @@ public class UserCenterFragment extends Fragment {
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class MyUserCenterOnClickListener implements View.OnClickListener {
         @Override

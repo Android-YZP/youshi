@@ -30,7 +30,12 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.NetWorkUtil;
 import com.mkch.youshi.view.CustomSmartImageView;
 
+import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,6 +43,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -73,14 +80,14 @@ public class UserInformationActivity extends Activity {
             file.mkdir();
         }
         initView();
+        initData();
         setListener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mUser = CommonUtil.getUserInfo(UserInformationActivity.this);//初始化用户信息
-        initData();
+        initData2();
     }
 
     private void initView() {
@@ -99,46 +106,37 @@ public class UserInformationActivity extends Activity {
 
     private void initData() {
         mTvTitle.setText("个人信息");
-        mUser = CommonUtil.getUserInfo(this);
+        mUser = CommonUtil.getUserInfo(UserInformationActivity.this);
         //设置头像,本地没有就用默认头像
         if (mUser != null) {
-            Log.d("jlj", "---------------------result = " + mUser.getHeadPic());
-            if (mUser.getSexCache().equals("男")) {
+            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
+        }
+    }
+
+    /**
+     * 加载用户信息
+     */
+    private void initData2() {
+        mUser = CommonUtil.getUserInfo(UserInformationActivity.this);
+        if (mUser != null) {
+            mTvName.setText(mUser.getNickName());
+            if (mUser.getYoushiNumber() != null) {
+                mTvYoushiNumber.setText(mUser.getYoushiNumber());
+                mLayoutYoushiNumber.setEnabled(false);
+            } else {
+                mTvYoushiNumber.setText("");
+            }
+            if (mUser.getSexCache() == null) {
+                checkedItem = 0;
+            } else if (mUser.getSexCache().equals("男")) {
                 checkedItem = 0;
             } else {
                 checkedItem = 1;
             }
-            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
-            mTvName.setText(mUser.getNickName());
             mTvSex.setText(mUser.getSex());
-            if (mUser.getYoushiNumber() != null) {
-                mTvYoushiNumber.setText(mUser.getYoushiNumber());
-                mLayoutYoushiNumber.setEnabled(false);
-            }
         } else {
-            mIvHead.setImageResource(R.drawable.maillist);
+            mTvName.setText("");
         }
-//        if(mPscenterUser!=null){
-//            mLineUserInfo.setVisibility(View.GONE);
-//            mLineUserInfoLogined.setVisibility(View.VISIBLE);
-//            mIvHead.setImageUrl(mPscenterUser.getUserImg(), R.drawable.creative_no_img);
-//            mTvUserName.setText(mPscenterUser.getUsername());
-//            //开启副线程-获取用户详情
-//            getUserDetailFromNet(mPscenterUser.getId());
-//        }else{
-//            mLineUserInfo.setVisibility(View.VISIBLE);
-//            mLineUserInfoLogined.setVisibility(View.GONE);
-//            //清0数据
-//            mTvCreativeNum.setText("0");
-//            mTvDesignNum.setText("0");
-//            mTvFansNum.setText("0");
-//
-//            if(mPullToRefreshScrollView!=null&&mPullToRefreshScrollView.isRefreshing()){
-//                // Call onRefreshComplete when the list has been refreshed.
-//                mPullToRefreshScrollView.onRefreshComplete();
-//            }
-
-//        }
     }
 
     private void setListener() {
@@ -163,6 +161,7 @@ public class UserInformationActivity extends Activity {
                                 mUser.setSex(sex_list[which]);
                                 mUser.setSexCache(sex_list[which]);
                                 CommonUtil.saveUserInfo(mUser, UserInformationActivity.this);
+                                ChangeSexFromNet(sex_list[which]);
                                 dialog.dismiss();
                             }
                         }).show();
@@ -180,8 +179,6 @@ public class UserInformationActivity extends Activity {
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class UserInformationOnClickListener implements View.OnClickListener {
         @Override
@@ -204,6 +201,59 @@ public class UserInformationActivity extends Activity {
                     break;
             }
         }
+    }
+
+    /**
+     * 修改用户性别
+     */
+    private void ChangeSexFromNet(final String sex) {
+        //弹出加载进度条
+        mProgressDialog = ProgressDialog.show(UserInformationActivity.this, "请稍等", "正在修改中...", true, true);
+        //使用xutils3访问网络并获取返回值
+        RequestParams requestParams = new RequestParams(CommonConstants.ChangeSex);
+        //包装请求参数
+        String code = CommonUtil.getUserInfo(UserInformationActivity.this).getLoginCode();
+        String _req_json = "{\"Sex\":\"" + sex + "\"}";
+        requestParams.addBodyParameter("", _req_json);//用户名
+        requestParams.addHeader("sVerifyCode", code);//头信息
+        x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                if (result != null) {
+                    try {
+                        JSONObject _json_result = new JSONObject(result);
+                        Boolean _success = (Boolean) _json_result.get("Success");
+                        if (_success) {
+                            myHandler.sendEmptyMessage(CommonConstants.FLAG_UPLOAD_SUCCESS);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, myHandler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, myHandler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
     }
 
     // 使用系统当前日期加以调整作为照片的名称
@@ -376,9 +426,9 @@ public class UserInformationActivity extends Activity {
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((UserInformationActivity) mActivity.get()).showTip(errorMsg);
                     break;
-                case CommonConstants.FLAG_UPLOAD_HEADPIC_SUCCESS:
-//                    //上传头像成功
-//                    ((UserInformationActivity) mActivity.get()).sendPicSuccess();
+                case CommonConstants.FLAG_UPLOAD_SUCCESS:
+                    //修改成功
+                    ((UserInformationActivity) mActivity.get()).showSuccess();
                     break;
                 default:
                     break;
@@ -390,6 +440,11 @@ public class UserInformationActivity extends Activity {
 
     private void showTip(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void showSuccess() {
+        Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -408,7 +463,7 @@ public class UserInformationActivity extends Activity {
                     String _datas = _result.getString("Datas");
                     mUser.setHeadPic("http://192.168.3.8:1001" + _datas.toString());
                     CommonUtil.saveUserInfo(mUser, UserInformationActivity.this);
-                    myHandler.sendEmptyMessage(CommonConstants.FLAG_UPLOAD_HEADPIC_SUCCESS);
+                    myHandler.sendEmptyMessage(CommonConstants.FLAG_UPLOAD_SUCCESS);
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
