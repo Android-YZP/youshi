@@ -1,8 +1,12 @@
 package com.mkch.youshi.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,8 +19,12 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
 import com.mkch.youshi.bean.ChatBean;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -58,6 +66,9 @@ public class ChatActivity extends BaseActivity {
     @ViewInject(R.id.iv_chat_go_more_action)
     private ImageView mIvGoMoreAction;//更多操作
 
+    @ViewInject(R.id.btn_chat_send)
+    private Button mBtnChatSend;//更多操作
+
     @ViewInject(R.id.line_chat_more_action_block)
     private LinearLayout mLineMoreAction;//更多操作-面板弹出
 
@@ -91,12 +102,53 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        mEtChatInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d("jlj","----------------------afterTextChanged："+s.toString());
+                String _input_text = s.toString();
+                if (_input_text!=null&&!_input_text.equals("")){
+                    mIvGoMoreAction.setVisibility(View.GONE);
+                    mBtnChatSend.setVisibility(View.VISIBLE);
+                }else{
+                    mIvGoMoreAction.setVisibility(View.VISIBLE);
+                    mBtnChatSend.setVisibility(View.GONE);
+                }
+            }
+        });
 
     }
 
     private void initData() {
         //标题
         mTvTitle.setText("单聊");
+        //_openfirename获取聊天对象
+        Intent _intent = getIntent();
+        if (_intent!=null){
+            String _openfirename = _intent.getStringExtra("_openfirename");
+            DbManager dbManager = DBHelper.getDbManager();
+            try {
+                Friend mFriend = dbManager.selector(Friend.class)
+                        .where("friendid","=",_openfirename)
+                        .and("status","=","1")
+                        .findFirst();
+                Log.d("jlj","ChatActivity mFriend--------------------" + mFriend.toString());
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         //gridview网格视图-更多动作
         //数据源
         int[] _pic_reses = new int[]{R.drawable.chat_photo,

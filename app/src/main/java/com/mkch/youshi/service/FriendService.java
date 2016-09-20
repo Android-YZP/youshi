@@ -23,6 +23,7 @@ import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.receiver.FriendsReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.XmppConnectionListener;
 import com.mkch.youshi.util.XmppHelper;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -60,6 +61,7 @@ public class FriendService extends Service implements RosterListener {
     //通知
     private NotificationManager mNotification_manager;
     private Notification mNotification;
+    private XmppConnectionListener xmppConnectionListener;
 
     @Nullable
     @Override
@@ -85,6 +87,7 @@ public class FriendService extends Service implements RosterListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        connection.removeConnectionListener(xmppConnectionListener);
     }
 
     /**
@@ -93,32 +96,26 @@ public class FriendService extends Service implements RosterListener {
     private void mainxmpp() {
         //获取连接
         connection = XmppHelper.getConnection();
+
         //用户自动登录
         User _user = CommonUtil.getUserInfo(this);
         final String _login_user = _user.getOpenFireUserName();
         final String _login_pwd = _user.getPassword();
         Log.d("jlj","MainActivity----------------------mainxmpp="+_login_user+","+_login_pwd);
+
+        //添加断线重连监听
+        xmppConnectionListener = new XmppConnectionListener(_login_user,_login_pwd);
+        connection.addConnectionListener(xmppConnectionListener);
+
         //开启副线程-登录-设置状态
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if (!connection.isConnected()){
-                        connection.connect();
-                    }
-                    connection.login(_login_user, _login_pwd);
-                    Presence presence = new Presence(Presence.Type.available);
-                    presence.setStatus("我是在线状态");
-                    connection.sendStanza(presence);
-
-
-                }  catch (Exception e){
-                    e.printStackTrace();
-                    Log.d("jlj","--------------------------"+e.getMessage());
-                    connection.disconnect();
-                    return;
+                boolean _logined = XmppHelper.connectAndLogin(connection,_login_user,_login_pwd);
+                if (_logined){
+                    addAllXmppListener();//添加所有的监听器
                 }
-                addAllXmppListener();//添加所有的监听器
+
 
             }
         }).start();

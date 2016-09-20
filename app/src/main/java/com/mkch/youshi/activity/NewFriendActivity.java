@@ -199,14 +199,14 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.new_friend_context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()){
-            case R.id.del:
+            case R.id.new_friend_menu_del:
                 //更改数据库中该条信息，并重新刷新UI
                 Friend _friend = mFriends.get(info.position);
                 try {

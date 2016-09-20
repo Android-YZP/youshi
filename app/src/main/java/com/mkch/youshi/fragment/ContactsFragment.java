@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddFriendsActivity;
+import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.FriendInformationActivity;
 import com.mkch.youshi.activity.GroupChatActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
@@ -87,7 +88,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
+//        initData();//把该调用挪到了onResume-from JLJ
         setListener();
     }
 
@@ -96,6 +97,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onResume() {
         super.onResume();
+        initData();
     }
 
     @Override
@@ -125,7 +127,7 @@ public class ContactsFragment extends Fragment implements SideBar
         // 给listView设置adapter
         mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
         mListView.addFooterView(mFooterView);
-        getFriendListFromNet();
+//        getFriendListFromNet();//把该调用挪到initData-from JLJ
     }
 
     /**
@@ -136,7 +138,7 @@ public class ContactsFragment extends Fragment implements SideBar
         String _req_friend_num = "0";
         try {
             dbManager = DBHelper.getDbManager();
-            long count = dbManager.selector(Friend.class).where("status", "=", "2").count();
+            long count = dbManager.selector(Friend.class).where("status", "=", "2").and("showinnewfriend","=","1").count();
             _req_friend_num = String.valueOf(count);
         } catch (DbException e) {
             e.printStackTrace();
@@ -149,7 +151,8 @@ public class ContactsFragment extends Fragment implements SideBar
             mTvNewFriendNum.setText(_req_friend_num);
 
         }
-
+        //加载好友列表
+        getFriendListFromNet();
     }
 
     /**
@@ -183,12 +186,20 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        int _position = info.position;
+        Contact _Contact = datas.get(_position);
+        String _openfirename = _Contact.getOpenFireName();
         switch (item.getItemId()){
-            case R.id.del:
-                //请求网络接口，删除该好友，若删除成功，清除本地数据库该条好友信息，并刷新UI
-                Contact _Contact = datas.get(info.position);
-                String _openfirename = _Contact.getOpenFireName();
-                int _position = info.position;
+            case R.id.contact_menu_chat:
+                //进入单聊界面聊天
+                if (getActivity()!=null){
+                    Intent _intent = new Intent(getActivity(), ChatActivity.class);
+                    _intent.putExtra("_openfirename",_openfirename);
+                    startActivity(_intent);
+                }
+                return true;
+            case R.id.contact_menu_del:
                 //异步请求网络接口，删除该好友
                 deleteFriendFromNet(_openfirename,_position);
                 return true;
@@ -377,10 +388,14 @@ public class ContactsFragment extends Fragment implements SideBar
                         if (_success) {
                             JSONArray mDatas = _json_result.getJSONArray("Datas");
                             Log.d("jlj","------------------mDatas="+mDatas.toString());
+                            //再次获取网络端数据时清除datas的数据-from JLJ
+                            datas.clear();
+
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Contact data = new Contact();
                                 JSONObject jobj = mDatas.getJSONObject(i);
-                                String name = jobj.getString("UserName");
+//                                String name = jobj.getString("UserName");
+                                String name = jobj.getString("NickName");//from JLJ
                                 //若登录名为空，则显示OpenFireUserName
                                 String OpenFireUserName = jobj.getString("OpenFireUserName");
                                 Log.d("jlj","--------------Username="+name+",OpenFireUserName="+OpenFireUserName);

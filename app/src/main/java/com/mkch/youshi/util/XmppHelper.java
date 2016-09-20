@@ -1,7 +1,10 @@
 package com.mkch.youshi.util;
 
+import android.util.Log;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SASLAuthentication;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -11,6 +14,11 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 public class XmppHelper {
     private static XMPPTCPConnection connection;
     private static XMPPTCPConnectionConfiguration.Builder builder;
+
+    /**
+     * 获取连接对象
+     * @return
+     */
     public static XMPPTCPConnection getConnection(){
         if (builder==null){
             String server="192.168.3.9";
@@ -40,5 +48,25 @@ public class XmppHelper {
             connection = new XMPPTCPConnection(builder.build());
         }
         return connection;
+    }
+
+    public static boolean connectAndLogin(XMPPTCPConnection connection,String _login_user,String _login_pwd){
+        try{
+            if (!connection.isConnected()) {
+                connection.connect();
+            }
+            connection.login(_login_user, _login_pwd);
+            return true;
+        }catch (SmackException.AlreadyLoggedInException e){
+            Log.d("jlj","---------------------connectAndLogin logined");
+            e.printStackTrace();
+            return true;
+        }catch (Exception e){
+            Log.d("jlj","---------------------connectAndLogin error");
+            e.printStackTrace();
+            return false;
+        }
+
+
     }
 }

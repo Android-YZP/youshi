@@ -101,7 +101,7 @@
                     android:layout_width="@dimen/common_chat_img_width_or_height"
                     android:layout_height="@dimen/common_chat_img_width_or_height"
                     android:background="@drawable/chat_expression"
-                    android:layout_marginLeft="9dp"
+                    android:layout_marginLeft="6dp"
                     />
             </LinearLayout>
 
@@ -125,7 +125,20 @@
                 android:layout_height="@dimen/common_chat_img_width_or_height"
                 android:background="@drawable/chat_more_action"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                />
+
+            <Button
+                android:id="@+id/btn_chat_send"
+                android:layout_width="42dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
+                android:text="发送"
+                android:textColor="@color/common_white_color"
+                android:textSize="12sp"
+                android:background="@drawable/selector_btn_user_login"
+                android:visibility="gone"
                 />
         </LinearLayout>
 
