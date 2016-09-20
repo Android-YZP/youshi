@@ -436,10 +436,11 @@ public class FriendService extends Service implements RosterListener {
                             try {
                                 //查找该ChatBean所属的消息盒子
                                 String _sender = _chat_bean.getUsername();//openfirename
-
+                                String _openfirename = XmppStringUtils.parseLocalpart(_sender);
+                                Log.d("jlj","addChatListener-----------------------------------_openfirename is"+_openfirename);
                                 //获取该好友的一些信息
                                 Friend _friend = dbManager.selector(Friend.class)
-                                        .where("friendid","=",_sender)
+                                        .where("friendid","=",_openfirename)
                                         .and("status","=",1)
                                         .findFirst();
                                 if (_friend==null){
