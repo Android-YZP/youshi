@@ -1,7 +1,10 @@
 package com.mkch.youshi.model;
 
+import org.xutils.DbManager;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
+
+import java.util.List;
 
 /**
  * Created by SunnyJiang on 2016/8/31.
@@ -23,6 +26,30 @@ public class MessageBox {
     private String lasttime;//时间
     @Column(name = "istop")
     private int istop;//是否置顶
+    @Column(name = "type")
+    private int type;//消息盒子的类型：单聊1、群聊2
+    public static int MB_TYPE_CHAT = 1;
+    public static int MB_TYPE_MUL_CHAT = 2;
+    @Column(name = "jid")
+    private String jid;//所属JID，跟type有关，若是单聊，如：JID=openfirename@yoshi.maikejia.com
+
+    public List<ChatBean> getChatBeans(DbManager db) throws Exception{
+        return db.selector(ChatBean.class).where("msgboxid","=",this.id).findAll();
+    }
+
+    public MessageBox() {
+    }
+
+    public MessageBox(String boxLogo, String title, String info, int nums, String lasttime, int istop, int type, String jid) {
+        this.boxLogo = boxLogo;
+        this.title = title;
+        this.info = info;
+        this.nums = nums;
+        this.lasttime = lasttime;
+        this.istop = istop;
+        this.type = type;
+        this.jid = jid;
+    }
 
     public MessageBox(String boxLogo, String title, String info, int nums, String lasttime) {
         this.boxLogo = boxLogo;
@@ -88,6 +115,22 @@ public class MessageBox {
         this.istop = istop;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getJid() {
+        return jid;
+    }
+
+    public void setJid(String jid) {
+        this.jid = jid;
+    }
+
     @Override
     public String toString() {
         return "MessageBox{" +
@@ -98,6 +141,8 @@ public class MessageBox {
                 ", nums=" + nums +
                 ", lasttime='" + lasttime + '\'' +
                 ", istop=" + istop +
+                ", type=" + type +
+                ", jid='" + jid + '\'' +
                 '}';
     }
 }

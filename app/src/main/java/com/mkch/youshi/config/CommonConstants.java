@@ -32,6 +32,7 @@ public class CommonConstants {
      */
     public static final int FLAG_ALLOW_FRIEND_SUCCESS = 200;
     public static final int FLAG_DELETE_FRIEND_SUCCESS = 201;
+    public static final int SEND_MSG_SUCCESS = 202;
 
 
     public static final String MSG_CONNECT_ERROR = "连接出错，请检查您的网络";

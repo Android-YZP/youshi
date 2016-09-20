@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.xutils.DbManager;
 import org.xutils.db.table.TableEntity;
+import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
@@ -33,9 +34,19 @@ public class DBHelper {
                     @Override
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
                         Log.d("jlj","onUpgrade<<"+"oldVersion = "+oldVersion+",newVersion ="+newVersion);
+                        if (newVersion>oldVersion){
+                            try {
+                                db.dropDb();
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+
                     }
                 })
-                .setDbVersion(6)
+                .setDbVersion(8)
                 .setTableCreateListener(new DbManager.TableCreateListener() {
                     @Override
                     public void onTableCreated(DbManager db, TableEntity<?> table) {

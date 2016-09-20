@@ -53,6 +53,7 @@ import org.xutils.x;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContactsFragment extends Fragment implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
@@ -390,17 +391,30 @@ public class ContactsFragment extends Fragment implements SideBar
                             Log.d("jlj","------------------mDatas="+mDatas.toString());
                             //再次获取网络端数据时清除datas的数据-from JLJ
                             datas.clear();
-
+                            //清除数据库中所有friend列表状态为1的好友
+                            try {
+                            List<Friend> _yoshi_friends = dbManager.selector(Friend.class)
+                                    .where("status","=",1)
+                                    .findAll();
+                                dbManager.delete(_yoshi_friends);
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Contact data = new Contact();
                                 JSONObject jobj = mDatas.getJSONObject(i);
 //                                String name = jobj.getString("UserName");
-                                String name = jobj.getString("NickName");//from JLJ
+                                String HeadPic = jobj.getString("HeadPic");
+                                String Nickname = jobj.getString("NickName");
+                                String MobileNumber = jobj.getString("MobileNumber");
+                                String Remark = jobj.getString("Remark");
                                 //若登录名为空，则显示OpenFireUserName
                                 String OpenFireUserName = jobj.getString("OpenFireUserName");
-                                Log.d("jlj","--------------Username="+name+",OpenFireUserName="+OpenFireUserName);
-                                if (name!=null&&!name.equals("")&&!name.equals("null")){
-                                    data.setName(name);
+                                Log.d("jlj","--------------Username="+Nickname+",OpenFireUserName="+OpenFireUserName);
+                                if (Nickname!=null&&!Nickname.equals("")&&!Nickname.equals("null")){
+                                    data.setName(Nickname);
 
                                 }else{
                                     data.setName(OpenFireUserName);
@@ -408,6 +422,17 @@ public class ContactsFragment extends Fragment implements SideBar
                                 data.setOpenFireName(OpenFireUserName);
                                 data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 datas.add(data);
+                                //临时使用-存储所有的优时好友列表数据-from JLJ
+                                User _self_user = CommonUtil.getUserInfo(getActivity());
+                                int status = 1;//已添加好友
+                                String _self_userid = _self_user.getOpenFireUserName();
+                                //获取所有的优时好友列表
+                                Friend _friend = new Friend(OpenFireUserName,HeadPic,Nickname,Remark,MobileNumber,status,_self_userid);
+                                try {
+                                    dbManager.save(_friend);
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
                         }

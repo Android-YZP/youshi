@@ -7,28 +7,35 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
-import com.mkch.youshi.receiver.FriendsReceiver;
+import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.XmppConnectionListener;
 import com.mkch.youshi.util.XmppHelper;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
@@ -40,12 +47,16 @@ import org.json.JSONObject;
 import org.jxmpp.util.XmppStringUtils;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * Created by SunnyJiang on 2016/9/14.
@@ -56,12 +67,19 @@ public class FriendService extends Service implements RosterListener {
      * XMPP
      */
     private XMPPTCPConnection connection;
+    private XmppConnectionListener xmppConnectionListener;//连接监听
+
+    //好友
     private Roster mRoster;
 
     //通知
     private NotificationManager mNotification_manager;
     private Notification mNotification;
-    private XmppConnectionListener xmppConnectionListener;
+
+
+    //单聊
+    private ChatManager chatmanager;
+    private ChatManagerListener mChartManagerLisenter;
 
     @Nullable
     @Override
@@ -129,6 +147,16 @@ public class FriendService extends Service implements RosterListener {
      */
     private void addAllXmppListener() {
         Log.d("jlj","MainActivity----------------------addAllXmppListener");
+        addFriendListener();//添加好友请求监听
+        addChatListener();//添加单聊监听
+
+    }
+
+
+    /**
+     * 添加好友请求监听
+     */
+    private void addFriendListener() {
         //接收好友请求监听
         mRoster = Roster.getInstanceFor(connection);
         //监听好友请求添加========================================
@@ -303,7 +331,7 @@ public class FriendService extends Service implements RosterListener {
                 case FRIEND_ADD_REQUEST_SUCCESS:
                     String _request_jid = (String) msg.obj;
                     Log.d("jlj","FriendService-Handler-_request_jid-----------------------"+_request_jid);
-                    actionToNotify(_request_jid);//去通知界面采取相应的动作
+                    actionToNotifyNewFriendActivity(_request_jid);//去通知界面采取相应的动作
                     break;
                 default:
                     break;
@@ -315,10 +343,10 @@ public class FriendService extends Service implements RosterListener {
     };
 
     /**
-     * 去通知界面采取相应的动作
+     * 新增好友-去通知界面采取相应的动作
      * @param _request_jid
      */
-    private void actionToNotify(String _request_jid) {
+    private void actionToNotifyNewFriendActivity(String _request_jid) {
         //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
         boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.NewFriendActivity");
         if (isForeground){
@@ -382,4 +410,173 @@ public class FriendService extends Service implements RosterListener {
     public void presenceChanged(Presence presence) {
         Log.d("JLJ","------------------presenceChanged");
     }
+
+
+    /**
+     * 添加单聊监听
+     */
+    private void addChatListener() {
+        //初始化聊天管理器
+        chatmanager = ChatManager.getInstanceFor(connection);
+        //监听收到消息，更新UI
+        mChartManagerLisenter = new ChatManagerListener() {
+            @Override
+            public void chatCreated(Chat chat, boolean createdLocally) {
+                chat.addMessageListener(new ChatMessageListener() {
+                    @Override
+                    public void processMessage(Chat chat, org.jivesoftware.smack.packet.Message message) {
+                        String content=message.getBody();
+                        Log.d("jlj","addChatListener-----------------------------------接收消息processMessage content="+content);
+                        if (content!=null){
+                            //保存消息至数据库
+                            Gson _gson = new Gson();
+                            ChatBean _chat_bean = _gson.fromJson(content, ChatBean.class);
+                            DbManager dbManager = DBHelper.getDbManager();
+                            int chat_id = 0;
+                            try {
+                                //查找该ChatBean所属的消息盒子
+                                String _sender = _chat_bean.getUsername();//openfirename
+
+                                //获取该好友的一些信息
+                                Friend _friend = dbManager.selector(Friend.class)
+                                        .where("friendid","=",_sender)
+                                        .and("status","=",1)
+                                        .findFirst();
+                                if (_friend==null){
+                                    Log.d("jlj","addChatListener-----------------------------------friend is null");
+                                    return;
+                                }
+
+                                int _messagebox_id = 0;
+                                if (_sender!=null&&!_sender.equals("")){
+                                    String _jid = XmppStringUtils.completeJidFrom(_sender,connection.getServiceName());
+                                    Log.d("jlj","addChatListener-----------------------------------jid="+_jid);
+                                    //查找消息盒子中：该jid是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                                    MessageBox messageBox = dbManager.selector(MessageBox.class)
+                                            .where("jid", "=", _jid).findFirst();
+
+                                    if (messageBox==null){
+                                        messageBox = new MessageBox(_friend.getHead_pic(),_friend.getNickname(),_chat_bean.getContent(),1, TimesUtils.getNow(),1,MessageBox.MB_TYPE_CHAT,_jid);
+                                        dbManager.saveBindingId(messageBox);//新增消息盒子
+                                        _messagebox_id = messageBox.getId();
+                                    }else{
+                                        _messagebox_id = messageBox.getId();
+                                    }
+                                }
+
+                                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+
+                                dbManager.saveBindingId(_chat_bean);//新增消息
+
+                                chat_id = _chat_bean.getId();
+                                Log.d("jlj","addChatListener------------------------chat_id="+chat_id);
+                                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
+
+
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                    }
+                });
+
+
+            }
+
+
+        };
+        chatmanager.addChatListener(mChartManagerLisenter);
+
+    }
+
+    /**
+     * 单聊-去通知界面采取相应的动作
+     * @param _chat_bean
+     * @param chat_id
+     * @param _friend
+     */
+    private void actionToNotifyChatActivity(ChatBean _chat_bean, int chat_id, Friend _friend) {
+        //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
+        boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.ChatActivity");
+        if (isForeground){
+            Intent intent = new Intent();
+            intent.putExtra("chat_id",chat_id);
+            intent.setAction("yoshi.action.chatsbroadcast");
+            sendBroadcast(intent);
+        }else{
+            //通知
+            notifyInfoFromChat(_chat_bean,_friend);
+        }
+    }
+    /**
+     * 通知有消息
+     */
+    private void notifyInfoFromChat(ChatBean chatBean,Friend friend) {
+        Notification.Builder _builder = new Notification.Builder(this);
+
+        //intent
+        Intent _intent = new Intent(this, ChatActivity.class);
+        _intent.putExtra("_openfirename",friend.getFriendid());
+
+        //头像
+        final Bitmap[] bitmaps = new Bitmap[1];
+
+        String _head_pic_url = friend.getHead_pic();
+        if (_head_pic_url!=null&&!_head_pic_url.equals("")&&!_head_pic_url.equals("null")){
+            //正方形图片
+            ImageOptions _image_options = new ImageOptions.Builder()
+                    .setSquare(true)
+                    .build();
+            //加载网络头像
+            x.image().loadDrawable(friend.getHead_pic(), _image_options, new Callback.CommonCallback<Drawable>() {
+                @Override
+                public void onSuccess(Drawable result) {
+                    Log.d("jlj","-----------------------load head pic onSuccess");
+                    Bitmap _bitmap = ((BitmapDrawable)result).getBitmap();
+                    bitmaps[0] = _bitmap;
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        }else{
+            Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.maillist))).getBitmap();
+            bitmaps[0] = _bitmap;
+        }
+
+
+        //pendingIntent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //昵称
+
+        //builder设置一些参数
+        _builder.setSmallIcon(R.mipmap.ic_launcher)//app的logo
+                .setLargeIcon(bitmaps[0])//用户头像
+                .setContentTitle(friend.getNickname())//昵称
+                .setContentText(chatBean.getContent())//消息内容
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
+                .setFullScreenIntent(pendingIntent,true);
+
+        mNotification = _builder.build();
+        //通知
+        mNotification_manager.notify(0,mNotification);
+    }
+
+
 }

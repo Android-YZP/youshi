@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.ChatBean;
+import com.mkch.youshi.model.ChatBean;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;

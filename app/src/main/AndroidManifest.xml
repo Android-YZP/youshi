@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mkch.youshi">
-    <!--xutils3网络图片和缓存-->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--登录时查看UUID-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--读取手机联系人-->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+          package="com.mkch.youshi">
+
+    <!-- xutils3网络图片和缓存 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 登录时查看UUID -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 读取手机联系人 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <!-- 拨打电话权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!--检查Activity是否显示-->
-    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <!-- 检查Activity是否显示 -->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
 
     <application
         android:name=".config.MyApplication"
@@ -25,20 +26,22 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
-        <!--联系人-->
-        <activity android:name=".activity.AddFriendsActivity" />
-        <activity android:name=".activity.NewFriendActivity"
-                  android:screenOrientation="portrait"
-                  android:launchMode="singleTop"/>
-        <activity android:name=".activity.PhoneContactsActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".activity.FriendInformationActivity" />
-        <activity android:name=".activity.InformationSettingActivity" />
-        <activity android:name=".activity.RemarkInformationActivity" />
+        <!-- 联系人 -->
+        <activity android:name=".activity.AddFriendsActivity"/>
+        <activity
+            android:name=".activity.NewFriendActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.PhoneContactsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.FriendInformationActivity"/>
+        <activity android:name=".activity.InformationSettingActivity"/>
+        <activity android:name=".activity.RemarkInformationActivity"/>
         <activity
             android:name=".activity.SearchResultActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
-        <!--我的-->
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+        <!-- 我的 -->
         <activity android:name=".activity.UserLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -46,33 +49,33 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UserRegPhoneActivity" />
-        <activity android:name=".activity.UserRegCodeActivity" />
-        <activity android:name=".activity.UserRegUserNameActivity" />
-        <activity android:name=".activity.UserForgotCodeActivity" />
-        <activity android:name=".activity.UserInformationActivity" />
-        <activity android:name=".activity.MyFileActivity" />
-        <activity android:name=".activity.MyCollectionActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.ReviseNameActivity" />
-        <activity android:name=".activity.ReviseYoushiNumberActivity" />
-        <activity android:name=".activity.ReviseSignatureActivity" />
-        <activity android:name=".activity.FilePreviewActivity" />
-        <activity android:name=".activity.FilePreviewPicActivity" />
-        <activity android:name=".activity.DropBoxFileActivity" />
-        <activity android:name=".activity.ScheduleFileActivity" />
-        <activity android:name=".activity.ScheduleDetailActivity" />
-        <activity android:name=".activity.AccountAndSafetyActivity" />
-        <activity android:name=".activity.RevisePhoneActivity" />
-        <activity android:name=".activity.RevisePhoneCodeActivity" />
-        <activity android:name=".activity.RevisePasswordActivity" />
-        <activity android:name=".activity.RevisePasswordCodeActivity" />
-        <activity android:name=".activity.AccountProtectActivity" />
-        <activity android:name=".activity.NewMessageNoticeActivity" />
-        <activity android:name=".activity.DisturbTimeActivity" />
-        <activity android:name=".activity.PrivacyActivity" />
-        <activity android:name=".activity.UniversalityActivity" />
-        <!--今日-->
+        <activity android:name=".activity.UserRegPhoneActivity"/>
+        <activity android:name=".activity.UserRegCodeActivity"/>
+        <activity android:name=".activity.UserRegUserNameActivity"/>
+        <activity android:name=".activity.UserForgotCodeActivity"/>
+        <activity android:name=".activity.UserInformationActivity"/>
+        <activity android:name=".activity.MyFileActivity"/>
+        <activity android:name=".activity.MyCollectionActivity"/>
+        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.ReviseNameActivity"/>
+        <activity android:name=".activity.ReviseYoushiNumberActivity"/>
+        <activity android:name=".activity.ReviseSignatureActivity"/>
+        <activity android:name=".activity.FilePreviewActivity"/>
+        <activity android:name=".activity.FilePreviewPicActivity"/>
+        <activity android:name=".activity.DropBoxFileActivity"/>
+        <activity android:name=".activity.ScheduleFileActivity"/>
+        <activity android:name=".activity.ScheduleDetailActivity"/>
+        <activity android:name=".activity.AccountAndSafetyActivity"/>
+        <activity android:name=".activity.RevisePhoneActivity"/>
+        <activity android:name=".activity.RevisePhoneCodeActivity"/>
+        <activity android:name=".activity.RevisePasswordActivity"/>
+        <activity android:name=".activity.RevisePasswordCodeActivity"/>
+        <activity android:name=".activity.AccountProtectActivity"/>
+        <activity android:name=".activity.NewMessageNoticeActivity"/>
+        <activity android:name=".activity.DisturbTimeActivity"/>
+        <activity android:name=".activity.PrivacyActivity"/>
+        <activity android:name=".activity.UniversalityActivity"/>
+        <!-- 今日 -->
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait"/>
@@ -104,8 +107,13 @@
             android:enabled="true"
             android:exported="true">
         </service>
-
         <service android:name=".service.FriendService"/>
+
+        <receiver
+            android:name=".receiver.ChatReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
     </application>
 
 </manifest>
