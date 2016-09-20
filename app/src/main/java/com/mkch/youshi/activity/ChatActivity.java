@@ -171,6 +171,7 @@ public class ChatActivity extends BaseActivity {
     private void updateUIfromReceiver(ChatBean _chat_bean) {
         m_chart_list.add(_chat_bean);
         m_adapter.notifyDataSetChanged();
+        mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
     }
 
     @Override
@@ -404,12 +405,13 @@ public class ChatActivity extends BaseActivity {
                 @Override
                 public void run() {
                     try {
-
+                        String _full_user = connection.getUser();
+                        String _openfirename = XmppStringUtils.parseLocalpart(_full_user);
                         //localMessage
-                        ChatBean _local_message = new ChatBean(connection.getUser(),_msg,ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+                        ChatBean _local_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
 
                         //remoteMessage
-                        ChatBean _remote_message = new ChatBean(connection.getUser(),_msg,ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
+                        ChatBean _remote_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
 
                         Gson _gson = new Gson();
                         String _gson_str = _gson.toJson(_remote_message);

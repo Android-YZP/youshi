@@ -435,8 +435,8 @@ public class FriendService extends Service implements RosterListener {
                             int chat_id = 0;
                             try {
                                 //查找该ChatBean所属的消息盒子
-                                String _sender = _chat_bean.getUsername();//openfirename
-                                String _openfirename = XmppStringUtils.parseLocalpart(_sender);
+                                String _openfirename = _chat_bean.getUsername();//openfirename
+//                                String _openfirename = XmppStringUtils.parseLocalpart(_sender);
                                 Log.d("jlj","addChatListener-----------------------------------_openfirename is"+_openfirename);
                                 //获取该好友的一些信息
                                 Friend _friend = dbManager.selector(Friend.class)
@@ -449,8 +449,8 @@ public class FriendService extends Service implements RosterListener {
                                 }
 
                                 int _messagebox_id = 0;
-                                if (_sender!=null&&!_sender.equals("")){
-                                    String _jid = XmppStringUtils.completeJidFrom(_sender,connection.getServiceName());
+                                if (_openfirename!=null&&!_openfirename.equals("")){
+                                    String _jid = XmppStringUtils.completeJidFrom(_openfirename,connection.getServiceName());
                                     Log.d("jlj","addChatListener-----------------------------------jid="+_jid);
                                     //查找消息盒子中：该jid是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
                                     MessageBox messageBox = dbManager.selector(MessageBox.class)
