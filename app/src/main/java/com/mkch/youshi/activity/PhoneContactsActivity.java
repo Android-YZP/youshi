@@ -196,9 +196,11 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                 mContacts.get(i).setOpenFireUserName(openFireUserName);
                                 boolean isAdd = jobj.getBoolean("IsAdd");
                                 mContacts.get(i).setAdd(isAdd);
+                                boolean IsRegister = jobj.getBoolean("IsRegister");
+                                mContacts.get(i).setRegister(IsRegister);
                             }
                             for (int i = 0; i < mContacts.size(); i++) {
-                                if (mContacts.get(i).getOpenFireUserName().equals("null")) {
+                                if (!mContacts.get(i).isRegister()) {
                                     mContacts.remove(i);
                                     i--;
                                 }

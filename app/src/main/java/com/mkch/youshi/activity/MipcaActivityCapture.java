@@ -106,7 +106,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
     }
 
     /**
-     * ����ɨ����
+     * 处理扫描结果
      *
      * @param result
      * @param barcode
@@ -118,6 +118,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
         if (resultString.equals("")) {
             Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putString("result", resultString);

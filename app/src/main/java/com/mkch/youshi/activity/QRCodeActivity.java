@@ -15,12 +15,11 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.util.CommonUtil;
-import com.mkch.youshi.util.RosterHelper;
+import com.mkch.youshi.util.XmppHelper;
 import com.mkch.youshi.view.CustomSmartImageView;
 import com.mkch.youshi.view.Encoder;
 
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jxmpp.util.XmppStringUtils;
 
 public class QRCodeActivity extends Activity {
 
@@ -52,6 +51,8 @@ public class QRCodeActivity extends Activity {
     }
 
     private void initData() {
+        //获取连接
+        connection = XmppHelper.getConnection();
         mUser = CommonUtil.getUserInfo(this);
         if (mUser != null) {
             mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
@@ -98,9 +99,9 @@ public class QRCodeActivity extends Activity {
     private class QRCodeOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            Intent _intent = new Intent();
             switch (view.getId()) {
                 case R.id.tv_qr_code_scan:
+                    Intent _intent = new Intent();
                     _intent.setClass(QRCodeActivity.this, MipcaActivityCapture.class);
                     _intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(_intent, SCANNIN_GREQUEST_CODE);
@@ -130,12 +131,13 @@ public class QRCodeActivity extends Activity {
         switch (requestCode) {
             case SCANNIN_GREQUEST_CODE:
                 if(resultCode == RESULT_OK){
-                    Bundle bundle = data.getExtras();
-                    //发送请求添加好友
-                    final String _jid = XmppStringUtils.completeJidFrom(bundle.getString("result"), connection.getServiceName());//转jid
-                    RosterHelper _roster_helper = RosterHelper.getInstance(connection);
-                    String _nickname = XmppStringUtils.parseLocalpart(_jid);
-                    _roster_helper.addEntry(_jid,_nickname,"Friends");
+//                    Bundle bundle = data.getExtras();
+//                    Log.d("jlj","zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz---------------------onclick="+bundle.getString("result"));
+//                    //发送请求添加好友
+//                    final String _jid = XmppStringUtils.completeJidFrom(bundle.getString("result"), connection.getServiceName());//转jid
+//                    RosterHelper _roster_helper = RosterHelper.getInstance(connection);
+//                    String _nickname = XmppStringUtils.parseLocalpart(_jid);
+//                    _roster_helper.addEntry(_jid,_nickname,"Friends");
                 }
                 break;
         }

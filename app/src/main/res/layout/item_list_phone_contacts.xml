@@ -59,5 +59,15 @@
             android:text="添加"
             android:textColor="@color/common_white_color"
             android:textSize="@dimen/friend_information_text_more_size" />
+
+        <TextView
+            android:id="@+id/tv_phone_contacts_added"
+            android:layout_width="@dimen/new_friend_add_btn_width"
+            android:layout_height="@dimen/new_friend_add_btn_height"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="已添加"
+            android:textColor="@color/main_tabbar_item_text_font_color_sel"
+            android:textSize="@dimen/friend_information_text_more_size"  />
     </LinearLayout>
 </LinearLayout>
