@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mkch.youshi">
-
-    <!-- xutils3网络图片和缓存 -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- 登录时查看UUID -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 读取手机联系人 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    package="com.mkch.youshi">
+    <!--xutils3网络图片和缓存-->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--登录时查看UUID-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--读取手机联系人-->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- 拨打电话权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <!-- 检查Activity是否显示 -->
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!--检查Activity是否显示-->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!--调用照相机扫描二维码-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".config.MyApplication"
@@ -40,8 +46,8 @@
         <activity android:name=".activity.RemarkInformationActivity"/>
         <activity
             android:name=".activity.SearchResultActivity"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
-        <!-- 我的 -->
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <!--我的-->
         <activity android:name=".activity.UserLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -49,58 +55,64 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UserRegPhoneActivity"/>
-        <activity android:name=".activity.UserRegCodeActivity"/>
-        <activity android:name=".activity.UserRegUserNameActivity"/>
-        <activity android:name=".activity.UserForgotCodeActivity"/>
-        <activity android:name=".activity.UserInformationActivity"/>
-        <activity android:name=".activity.MyFileActivity"/>
-        <activity android:name=".activity.MyCollectionActivity"/>
-        <activity android:name=".activity.SettingActivity"/>
-        <activity android:name=".activity.ReviseNameActivity"/>
-        <activity android:name=".activity.ReviseYoushiNumberActivity"/>
-        <activity android:name=".activity.ReviseSignatureActivity"/>
-        <activity android:name=".activity.FilePreviewActivity"/>
-        <activity android:name=".activity.FilePreviewPicActivity"/>
-        <activity android:name=".activity.DropBoxFileActivity"/>
-        <activity android:name=".activity.ScheduleFileActivity"/>
-        <activity android:name=".activity.ScheduleDetailActivity"/>
-        <activity android:name=".activity.AccountAndSafetyActivity"/>
-        <activity android:name=".activity.RevisePhoneActivity"/>
-        <activity android:name=".activity.RevisePhoneCodeActivity"/>
-        <activity android:name=".activity.RevisePasswordActivity"/>
-        <activity android:name=".activity.RevisePasswordCodeActivity"/>
-        <activity android:name=".activity.AccountProtectActivity"/>
-        <activity android:name=".activity.NewMessageNoticeActivity"/>
-        <activity android:name=".activity.DisturbTimeActivity"/>
-        <activity android:name=".activity.PrivacyActivity"/>
-        <activity android:name=".activity.UniversalityActivity"/>
-        <!-- 今日 -->
+        <activity android:name=".activity.UserRegPhoneActivity" />
+        <activity android:name=".activity.UserRegCodeActivity" />
+        <activity android:name=".activity.UserRegUserNameActivity" />
+        <activity android:name=".activity.UserForgotCodeActivity" />
+        <activity android:name=".activity.UserInformationActivity" />
+        <activity android:name=".activity.MyFileActivity" />
+        <activity android:name=".activity.MyCollectionActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.ReviseNameActivity" />
+        <activity android:name=".activity.ReviseYoushiNumberActivity" />
+        <activity android:name=".activity.ReviseSignatureActivity" />
+        <activity android:name=".activity.FilePreviewActivity" />
+        <activity android:name=".activity.FilePreviewPicActivity" />
+        <activity android:name=".activity.DropBoxFileActivity" />
+        <activity android:name=".activity.ScheduleFileActivity" />
+        <activity android:name=".activity.ScheduleDetailActivity" />
+        <activity android:name=".activity.AccountAndSafetyActivity" />
+        <activity android:name=".activity.RevisePhoneActivity" />
+        <activity android:name=".activity.RevisePhoneCodeActivity" />
+        <activity android:name=".activity.RevisePasswordActivity" />
+        <activity android:name=".activity.RevisePasswordCodeActivity" />
+        <activity android:name=".activity.AccountProtectActivity" />
+        <activity android:name=".activity.NewMessageNoticeActivity" />
+        <activity android:name=".activity.DisturbTimeActivity" />
+        <activity android:name=".activity.PrivacyActivity" />
+        <activity android:name=".activity.UniversalityActivity" />
+        <activity android:name=".activity.QRCodeActivity" />
+        <activity
+            android:name=".activity.MipcaActivityCapture"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ChooseAddressActivity"/>
-        <activity android:name=".activity.ChooseSomeoneActivity"/>
-        <activity android:name=".activity.ChooseRemindBeforeActivity"/>
-        <activity android:name=".activity.CalendarActivity"/>
-        <activity android:name=".activity.ChooseTimeActivity"/>
-        <activity android:name=".activity.ChooseWeekActivity"/>
-        <activity android:name=".activity.ManyPeopleEventDetial"/>
-        <activity android:name=".activity.PersonalDetialEventActivity"/>
-        <activity android:name=".activity.PersonalDetialsAffairActivity"/>
-        <activity android:name=".activity.PersonalDetialHabitActivity"/>
-        <activity android:name=".activity.AddPersonalActivity"/>
-        <activity android:name=".activity.AddManyPeopleEventActivity"/>
-        <activity android:name=".activity.AddPersonalAffairActivity"/>
-        <activity android:name=".activity.AddPersonalEventActivity"/>
-        <activity android:name=".activity.AddPersonalHabitActivity"/>
-        <activity android:name=".activity.SearchEventActivity"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.ChooseAddressActivity" />
+        <activity android:name=".activity.ChooseSomeoneActivity" />
+        <activity android:name=".activity.ChooseRemindBeforeActivity" />
+        <activity android:name=".activity.CalendarActivity" />
+        <activity android:name=".activity.ChooseTimeActivity" />
+        <activity android:name=".activity.ChooseWeekActivity" />
+        <activity android:name=".activity.ManyPeopleEventDetial" />
+        <activity android:name=".activity.PersonalDetialEventActivity" />
+        <activity android:name=".activity.PersonalDetialsAffairActivity" />
+        <activity android:name=".activity.PersonalDetialHabitActivity" />
+        <activity android:name=".activity.AddPersonalActivity" />
+        <activity android:name=".activity.AddManyPeopleEventActivity" />
+        <activity android:name=".activity.AddPersonalAffairActivity" />
+        <activity android:name=".activity.AddPersonalEventActivity" />
+        <activity android:name=".activity.AddPersonalHabitActivity" />
+        <activity android:name=".activity.SearchEventActivity" />
 
         <!-- 消息 -->
-        <activity android:name=".activity.GroupDetailActivity"/>
-        <activity android:name=".activity.MultiChatActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".activity.GroupChatActivity"/>
+        <activity android:name=".activity.GroupDetailActivity" />
+        <activity android:name=".activity.MultiChatActivity" />
+        <activity android:name=".activity.ChatActivity" />
+        <activity android:name=".activity.GroupChatActivity" />
 
         <service
             android:name=".service.XmppService"

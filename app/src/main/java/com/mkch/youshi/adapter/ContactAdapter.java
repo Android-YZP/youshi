@@ -50,7 +50,7 @@ public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer
         TextView tvLetter = holder.getView(R.id.tv_list_contact_catalog);
         View tvLine = holder.getView(R.id.line_list_contact);
 
-        //如果是第0个那么一定显示#号
+        //如果是第0个
         if (position == 0) {
             tvLetter.setVisibility(View.VISIBLE);
             tvLetter.setText("" + item.getFirstChar());

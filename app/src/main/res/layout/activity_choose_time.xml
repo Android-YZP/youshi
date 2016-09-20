@@ -16,7 +16,7 @@
         style="@style/commonLineStyle"
         android:layout_marginTop="10dp" />
 
-    <ListView
+    <com.mkch.youshi.view.AddTimeListView
         android:id="@+id/lv_choose_time"
         android:divider="@null"
         android:layout_width="match_parent"

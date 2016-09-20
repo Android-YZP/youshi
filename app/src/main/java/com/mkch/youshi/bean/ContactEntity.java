@@ -12,6 +12,7 @@ public class ContactEntity implements Comparable<ContactEntity> {
     private String number;
     private int id;
     private boolean add;
+    private boolean IsRegister;
     private String pinyin;
     private char firstChar;
     private String openFireUserName;
@@ -64,6 +65,14 @@ public class ContactEntity implements Comparable<ContactEntity> {
 
     public void setAdd(boolean add) {
         this.add = add;
+    }
+
+    public boolean isRegister() {
+        return IsRegister;
+    }
+
+    public void setRegister(boolean register) {
+        IsRegister = register;
     }
 
     public String getOpenFireUserName() {

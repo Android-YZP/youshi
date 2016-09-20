@@ -3,6 +3,7 @@ package com.mkch.youshi.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,6 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.DialogFactory;
 import com.mkch.youshi.util.UIUtils;
-
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +39,9 @@ import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddPersonalEventActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,6 +72,10 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private MyHandler handler = new MyHandler(this);
     private TextView mTvPlace;
     private EditText mTvPersonalEventDescription;
+    private List<Schedule> allEvent;
+    private Schedule schedule;
+    private DbManager mDbManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         initView();
         initData();
         setListener();
-        saveDataOfDb();
+
     }
 
     private void initData() {
@@ -201,6 +203,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                         this, ChooseRemindBeforeActivity.class), 0);
                 break;
             case R.id.tv_add_event_complete://完成
+                saveDataOfDb();
                 saveDataOfNet();
                 break;
             case R.id.tv_add_event_cancel://取消
@@ -219,7 +222,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
-
     }
 
     /**
@@ -252,11 +254,12 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                         if (!_success) {//保存失败
                             String _message = (String) _json_result.get("Message");
                             CommonUtil.sendErrorMessage(_message, handler);
-                            handler.sendEmptyMessage(CommonConstants.FLAG_GET_ADD_PERSONER_EVENT_FAIL);
                         } else {//保存成功
-                            handler.sendEmptyMessage(CommonConstants.FLAG_GET_ADD_PERSONER_EVENT_SUCCESS);
+                            updateSycStatus();//更新同步状态
+                            JSONObject datas = (JSONObject) _json_result.get("Datas");
+                            int id = datas.getInt("Id");
+                            updateServerID(id);//更新唯一ID
                         }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -287,6 +290,11 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             public void onFinished() {
                 Log.d("userLogin", "----onFinished");
                 //使用handler通知UI取消进度加载对话框
+                startActivity(new Intent(AddPersonalEventActivity.this,
+                        CalendarActivity.class));
+                if (mProgressDialog != null)
+                    mProgressDialog.dismiss();
+                AddPersonalEventActivity.this.finish();
             }
         });
     }
@@ -310,7 +318,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         viewModelBean.setStopTime(mTvEndTime.getText().toString());//结束时间
 //        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
-        viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述
+        viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述,备注
         netScheduleModel.setViewModel(viewModelBean);
         Gson gson = new Gson();
         String textJson = gson.toJson(netScheduleModel);
@@ -319,22 +327,54 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
 
     /**
      * 将日程储存本地数据库
+     * 数据库和网络数据的储存
+     * 1.点击完成时(有网络上传网络更新同步状态的字段),没有网络直接保存数据库,(监听有网络就上传同步)
+     * 2.各种字段的储存
      */
     private void saveDataOfDb() {
         try {
             Log.d("yzp", "-----------saveDataOfDb");
-            DbManager mDbManager = DBHelper.getDbManager();
-            Schedule schedule = new Schedule();
-            schedule.setAddress("宜兴");
+            mDbManager = DBHelper.getDbManager();
+            schedule = new Schedule();
+            schedule.setAddress("hefei");
             schedule.setType(0);
-            schedule.setTitle("会议");
-            schedule.setLabel(0);
-            schedule.setAhead_warn(0);
+            schedule.setTitle(mEtTheme.getText().toString());
+            schedule.setLabel(mLable);
+            schedule.setLatitude("21.323231");
+            schedule.setLongitude("1.2901921");
+            schedule.setAhead_warn(mRemindTime);
             schedule.setSyc_status(0);
-            schedule.setRemark("这是一个简单的备注");
-            schedule.setIs_one_day(false);
-            schedule.setBegin_time("2016");
-            mDbManager.save(schedule);
+            schedule.setRemark(mTvPersonalEventDescription.getText().toString());
+            schedule.setIs_one_day(isAllDay);
+            schedule.setBegin_time(mTvStartTime.getText().toString());
+            schedule.setEnd_time(mTvEndTime.getText().toString());
+            mDbManager.saveOrUpdate(schedule);
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新数据库的同步状态
+     */
+    private void updateSycStatus() {
+        try {
+            schedule.setSyc_status(1);
+            mDbManager.saveOrUpdate(schedule);
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新从服务端返回的唯一标识ID:serverID
+     */
+    private void updateServerID(int dateid) {
+        try {
+            schedule.setServerid(dateid);
+            mDbManager.saveOrUpdate(schedule);
         } catch (DbException e) {
             Log.d("yzp", e.getMessage() + "-----------");
             e.printStackTrace();
@@ -365,14 +405,10 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     ((AddPersonalEventActivity) mActivity.get()).showTip(errorMsg);
                     break;
                 case CommonConstants.FLAG_GET_ADD_PERSONER_EVENT_SUCCESS:
-                    //登录成功
-                    startActivity(new Intent(((AddPersonalEventActivity) mActivity.get()),
-                            CalendarActivity.class));
+                    //保存个人事件成功
                     break;
                 case CommonConstants.FLAG_GET_ADD_PERSONER_EVENT_FAIL://保存失败后调用
-
                     break;
-
                 default:
                     break;
             }

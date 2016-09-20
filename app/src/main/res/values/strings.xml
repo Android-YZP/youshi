@@ -5,4 +5,6 @@
         <item>个人日程</item>
         <item>多人日程</item>
     </string-array>
+
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
 </resources>

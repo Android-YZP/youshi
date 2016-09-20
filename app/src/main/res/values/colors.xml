@@ -59,10 +59,12 @@
 
     <color name="bg_tab_pressed">#00000000</color><!-- 蓝色 -->
     <color name="bg_tab_normal">#00000000</color>
+
+    <!-- 扫描二维码画笔颜色 -->
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
     <!--章俊end-->
-
-
-
 
 
     <!--蒋龙健start-->
@@ -76,9 +78,6 @@
     <color name="cycicle_color_6">#92288f</color>
 
     <!--蒋龙健end-->
-
-
-
 
 
     <!--姚中平start-->

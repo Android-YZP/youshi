@@ -178,7 +178,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
         String _req_json = "{\"mobilelist\":" + mPhones.toString() + "}";
         _req_json = _req_json.replace(" ", "");//将有空格的地方进行替换
         requestParams.addBodyParameter("", _req_json);//用户名
-        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -197,9 +196,11 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                 mContacts.get(i).setOpenFireUserName(openFireUserName);
                                 boolean isAdd = jobj.getBoolean("IsAdd");
                                 mContacts.get(i).setAdd(isAdd);
+                                boolean IsRegister = jobj.getBoolean("IsRegister");
+                                mContacts.get(i).setRegister(IsRegister);
                             }
                             for (int i = 0; i < mContacts.size(); i++) {
-                                if (mContacts.get(i).getOpenFireUserName().equals("null")) {
+                                if (!mContacts.get(i).isRegister()) {
                                     mContacts.remove(i);
                                     i--;
                                 }

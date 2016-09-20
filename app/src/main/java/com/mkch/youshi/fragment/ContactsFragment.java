@@ -89,7 +89,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        initData();//把该调用挪到了onResume-from JLJ
+
         setListener();
     }
 
@@ -141,6 +141,8 @@ public class ContactsFragment extends Fragment implements SideBar
             dbManager = DBHelper.getDbManager();
             long count = dbManager.selector(Friend.class).where("status", "=", "2").and("showinnewfriend","=","1").count();
             _req_friend_num = String.valueOf(count);
+
+            long count_added = dbManager.selector(Friend.class).where("status", "=", "1").count();//已添加好友的数量
         } catch (DbException e) {
             e.printStackTrace();
         }

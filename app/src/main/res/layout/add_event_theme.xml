@@ -29,7 +29,7 @@
             android:background="@null"
             android:gravity="end|center"
             android:textCursorDrawable="@null"
-            android:hint="会议" />
+            android:hint="请输入主题" />
 
     </RelativeLayout>
 
@@ -60,6 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
+                android:checked="true"
                 android:button="@null"
                 android:drawablePadding="-10dp"
                 android:drawableTop="@drawable/person_selector"

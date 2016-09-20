@@ -31,9 +31,13 @@ public class User {
 
     private String NickName;//昵称
     private String HeadPic;//头像
+    private String youshiNumber;//优时账号
     private String RealName;//真实姓名
     private String Birthday;//生日
     private String Sex;//性别
+    private String SexCache;//性别缓存
+    private String Address;
+    private String Signature;//个性签名
     private String CertNo;//身份证
     private Boolean Protected;//是否账号保护
     private Boolean AddmeVerify;//是否接受好友验证
@@ -103,6 +107,14 @@ public class User {
 
     public void setFirm(String firm) {
         Firm = firm;
+    }
+
+    public String getYoushiNumber() {
+        return youshiNumber;
+    }
+
+    public void setYoushiNumber(String youshiNumber) {
+        this.youshiNumber = youshiNumber;
     }
 
     public String getImageVerifyCode() {
@@ -175,6 +187,30 @@ public class User {
 
     public void setSex(String sex) {
         Sex = sex;
+    }
+
+    public String getSexCache() {
+        return SexCache;
+    }
+
+    public void setSexCache(String sexCache) {
+        SexCache = sexCache;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getSignature() {
+        return Signature;
+    }
+
+    public void setSignature(String signature) {
+        Signature = signature;
     }
 
     public String getCertNo() {
