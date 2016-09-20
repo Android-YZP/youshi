@@ -20,7 +20,7 @@
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/common_et_text_font_size"
-        android:maxLength="20"
+        android:maxLength="10"
         android:background="@drawable/bg_border_common_et"/>
 
     <Button

@@ -2,7 +2,6 @@ package com.mkch.youshi.adapter;
 
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -17,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * 联系人列表适配器
- *
- * @author kymjs (http://www.kymjs.com/) on 9/16/15.
+ * 优时好友列表适配器
  */
 public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer {
 
@@ -43,17 +40,17 @@ public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer
     public void convert(AdapterHolder holder, Contact item, boolean isScrolling, int position) {
 
         holder.setText(R.id.tv_contact_name, item.getName());
-        ImageView headImg = holder.getView(R.id.iv_contact_head);
-        if (isScrolling) {
-            kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);
-        } else {
-            kjb.displayWithLoadBitmap(headImg, item.getUrl(), R.drawable.default_head_rect);
-        }
+//        ImageView headImg = holder.getView(R.id.iv_contact_head);
+//        if (isScrolling) {
+//            kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);
+//        } else {
+//            kjb.displayWithLoadBitmap(headImg, item.getUrl(), R.drawable.default_head_rect);
+//        }
 
-        TextView tvLetter = holder.getView(R.id.tv_contact_catalog);
-        TextView tvLine = holder.getView(R.id.tv_contact_line);
+        TextView tvLetter = holder.getView(R.id.tv_list_contact_catalog);
+        View tvLine = holder.getView(R.id.line_list_contact);
 
-        //如果是第0个那么一定显示#号
+        //如果是第0个
         if (position == 0) {
             tvLetter.setVisibility(View.VISIBLE);
             tvLetter.setText("" + item.getFirstChar());

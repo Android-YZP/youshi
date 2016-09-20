@@ -35,7 +35,7 @@ public class DBHelper {
                         Log.d("jlj","onUpgrade<<"+"oldVersion = "+oldVersion+",newVersion ="+newVersion);
                     }
                 })
-                .setDbVersion(3)
+                .setDbVersion(6)
                 .setTableCreateListener(new DbManager.TableCreateListener() {
                     @Override
                     public void onTableCreated(DbManager db, TableEntity<?> table) {

@@ -27,8 +27,6 @@ import java.util.Collections;
 
 /**
  * 联系人列表适配器
- *
- * @author kymjs (http://www.kymjs.com/) on 9/16/15.
  */
 public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements SectionIndexer {
 

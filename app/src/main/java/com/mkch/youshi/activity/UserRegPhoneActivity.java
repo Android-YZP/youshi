@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.mkch.youshi.R;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CheckUtil;
+import com.mkch.youshi.util.CommonUtil;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
@@ -27,6 +29,8 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 public class UserRegPhoneActivity extends Activity {
     private ImageView mIvBack;
@@ -94,7 +98,7 @@ public class UserRegPhoneActivity extends Activity {
             }
         });
         mBtnCommitPhone.setOnClickListener(new UserRegPhoneOnClickListener());
-		mTvIsRead.setOnClickListener(new UserRegPhoneOnClickListener());
+        mTvIsRead.setOnClickListener(new UserRegPhoneOnClickListener());
 //		mTvProtocal.setOnClickListener(new UserRegPhoneOnClickListener());
     }
 
@@ -112,6 +116,11 @@ public class UserRegPhoneActivity extends Activity {
             }
             int flag = msg.what;
             switch (flag) {
+                case 0:
+                    //出现错误
+                    String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
+                    ((UserRegPhoneActivity) mActivity.get()).showTip(errorMsg);
+                    break;
                 case CommonConstants.FLAG_COVER_TOKEN_ID_SUCCESS:
                     //覆盖TokenID成功
                     ((UserRegPhoneActivity) mActivity.get()).isShowPicCodeFromNet();
@@ -127,6 +136,10 @@ public class UserRegPhoneActivity extends Activity {
     }
 
     private MyHandler handler = new MyHandler(this);
+
+    private void showTip(String str) {
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
 
     /**
      * 出现图片验证码
@@ -168,6 +181,16 @@ public class UserRegPhoneActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override
@@ -211,6 +234,16 @@ public class UserRegPhoneActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override
@@ -295,8 +328,8 @@ public class UserRegPhoneActivity extends Activity {
                         if (_success) {
                             Toast.makeText(UserRegPhoneActivity.this, "手机号已注册", Toast.LENGTH_LONG).show();
                             return;
-                        }else{
-                            sendVerificationCodeFromNet(mPhone,tokenID,mCode);
+                        } else {
+                            sendVerificationCodeFromNet(mPhone, tokenID, mCode);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -306,6 +339,16 @@ public class UserRegPhoneActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override
@@ -323,12 +366,12 @@ public class UserRegPhoneActivity extends Activity {
      *
      * @param sPhone,mTokenID,mPicCode
      */
-    private void sendVerificationCodeFromNet(final String sPhone,String mTokenID,String mPicCode) {
+    private void sendVerificationCodeFromNet(final String sPhone, String mTokenID, String mPicCode) {
         //使用xutils3访问网络并获取返回值
-        RequestParams requestParams = new RequestParams(CommonConstants.SetVerificationCode );
+        RequestParams requestParams = new RequestParams(CommonConstants.SetVerificationCode);
         //包装请求参数
         String _req_json = "{\"sMobileNumber\":\"" + sPhone + "\",\"sTokenID\":\"" + mTokenID + "\",\"sPicCode\":\"" + mPicCode + "\"}";
-        Log.d("zzzzzzzzzzzzzz", "_user_json is ----------------" + _req_json );
+        Log.d("zzzzzzzzzzzzzz", "_user_json is ----------------" + _req_json);
         requestParams.addBodyParameter("", _req_json);//用户名
         requestParams.addHeader("sVerifyCode", "3D8829FE");//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
@@ -340,11 +383,11 @@ public class UserRegPhoneActivity extends Activity {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
-                            Intent _intent = new Intent(UserRegPhoneActivity.this,UserRegCodeActivity.class);
+                            Intent _intent = new Intent(UserRegPhoneActivity.this, UserRegCodeActivity.class);
                             _intent.putExtra("_phone", mPhone);
                             startActivity(_intent);
                             UserRegPhoneActivity.this.finish();
-                        }else{
+                        } else {
                             Toast.makeText(UserRegPhoneActivity.this, "手机号已注册", Toast.LENGTH_LONG).show();
                             return;
                         }
@@ -356,6 +399,16 @@ public class UserRegPhoneActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override

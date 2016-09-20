@@ -72,7 +72,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(NewFriendActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-
                     break;
                 case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
                     String _request_jid = (String) msg.obj;
@@ -106,7 +105,10 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
      */
     private void updateUIfromReceiver(final String _request_jid) {
         try {
-            mFriends = DBHelper.getDbManager().findAll(Friend.class);
+            mFriends = dbManager.selector(Friend.class)
+                    .where("status","in",new int[]{1,2})
+                    .and("showinnewfriend","=","1")
+                    .findAll();
             Log.d("jlj","mFriends size is --------------------"+mFriends.size());
             for (int i=0;i<mFriends.size();i++){
                 Log.d("jlj","mFriends["+i+"]="+mFriends.get(i).toString());
@@ -138,9 +140,13 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     private void initData() {
         mTvTitle.setText("新的朋友");
+        //查询数据库中待添加的好友列表
         dbManager = DBHelper.getDbManager();
         try {
-            mFriends = dbManager.findAll(Friend.class);
+            mFriends = dbManager.selector(Friend.class)
+                    .where("status","in",new int[]{1,2})
+                    .and("showinnewfriend","=","1")
+                    .findAll();;
             if (mFriends==null){
                 mFriends = new ArrayList<>();
             }
@@ -201,16 +207,17 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.del:
-                //删除数据库中该条信息，并重新刷新UI
+                //更改数据库中该条信息，并重新刷新UI
                 Friend _friend = mFriends.get(info.position);
                 try {
-                    dbManager.delete(_friend);
+                    _friend.setShowinnewfriend(0);
+                    dbManager.saveOrUpdate(_friend);
                 } catch (DbException e) {
                     e.printStackTrace();
                     Log.d("jlj","------------------"+e.getMessage());
                     return true;
                 }
-                mFriends.remove(info.position);
+                mFriends.remove(info.position);//从集合中去除该对象
                 mAdapter.notifyDataSetChanged();
 
                 return true;

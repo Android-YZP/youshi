@@ -28,13 +28,12 @@
         android:background="@color/common_white_color"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.mkch.youshi.view.CustomSmartImageView
             android:id="@+id/iv_user_center_head"
             android:layout_width="@dimen/user_center_head_width_or_height"
             android:layout_height="@dimen/user_center_head_width_or_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/friend_information_head_margin_left"
-            android:src="@drawable/maillist" />
+            android:layout_marginLeft="@dimen/friend_information_head_margin_left"></com.mkch.youshi.view.CustomSmartImageView>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -50,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="我是昵称"
                 android:textColor="@color/new_friend_name_color"
                 android:textSize="@dimen/friend_information_text_size" />
 
@@ -60,7 +58,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="优时号: 13812345678"
                 android:textColor="@color/friend_information_name_color"
                 android:textSize="@dimen/friend_information_text_remark_size" />
         </LinearLayout>

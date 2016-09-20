@@ -34,13 +34,12 @@
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
-        <ImageView
-            android:id="@+id/iv_user_center_head"
+        <com.mkch.youshi.view.CustomSmartImageView
+            android:id="@+id/iv_user_information_head"
             android:layout_width="@dimen/user_center_head_width_or_height"
             android:layout_height="@dimen/user_center_head_width_or_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/friend_information_head_margin_left"
-            android:src="@drawable/maillist" />
+            android:layout_marginRight="@dimen/friend_information_head_margin_left"></com.mkch.youshi.view.CustomSmartImageView>
 
         <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>

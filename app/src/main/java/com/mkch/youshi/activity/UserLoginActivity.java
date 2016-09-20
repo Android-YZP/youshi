@@ -62,8 +62,8 @@ public class UserLoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         //便于测试去掉登录
         User _user = CommonUtil.getUserInfo(this);
-        if (_user!=null){
-            Intent _intent = new Intent(this,MainActivity.class);
+        if (_user != null) {
+            Intent _intent = new Intent(this, MainActivity.class);
             startActivity(_intent);
             this.finish();
             return;
@@ -234,6 +234,16 @@ public class UserLoginActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override
@@ -329,7 +339,7 @@ public class UserLoginActivity extends Activity {
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d("jlj","---------------------result = "+result);
+                Log.d("jlj", "---------------------result = " + result);
                 if (result != null) {
                     //若result返回信息中登录成功，解析json数据并存于本地，再使用handler通知UI更新界面并进行下一步逻辑
                     try {
@@ -341,8 +351,19 @@ public class UserLoginActivity extends Activity {
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
-                                user.setNickName(datas.getString("NickName"));
+                                if (datas.getString("NickName") == null || datas.getString("NickName").equals("")) {
+                                    user.setNickName(datas.getString("MobileNumber"));
+                                } else {
+                                    user.setNickName(datas.getString("NickName"));
+                                }
+                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
                                 user.setLoginCode(datas.getString("LoginCode"));
+                                if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
+                                } else {
+                                    user.setYoushiNumber(datas.getString("UserName"));
+                                }
+                                user.setSex(datas.getString("Sex"));
+                                user.setSignature(datas.getString("Sign"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
@@ -427,6 +448,16 @@ public class UserLoginActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, handler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, handler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, handler);
+                }
             }
 
             @Override

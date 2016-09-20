@@ -6,20 +6,18 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_contact_catalog"
+        android:id="@+id/tv_list_contact_catalog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/contact_count_bg_color"
         android:paddingBottom="@dimen/contact_list_catalog_padding_top_or_bottom"
         android:paddingLeft="@dimen/contact_list_catalog_padding_left"
         android:paddingTop="@dimen/contact_list_catalog_padding_top_or_bottom"
-        android:textColor="@color/contact_list_catalog_text_color" />
+        android:textColor="#A4A4A4" />
 
-    <TextView
-        android:id="@+id/tv_contact_line"
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@drawable/bg_cut_line" />
+    <View
+        android:id="@+id/line_list_contact"
+        style="@style/commonLineStyle" />
 
     <LinearLayout
         android:id="@+id/layout_contact_content"

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.PhoneContactAdapter;
@@ -25,6 +26,7 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +37,8 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class PhoneContactsActivity extends KJActivity implements SideBar
@@ -97,6 +101,10 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
             }
             int flag = msg.what;
             switch (flag) {
+                case 0:
+                    String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
+                    ((PhoneContactsActivity) mActivity.get()).showTip(errorMsg);
+                    break;
                 case CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW:
                     //加载手机通讯录列表
                     ((PhoneContactsActivity) mActivity.get()).showListVerfy();
@@ -109,11 +117,15 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
     private MyHandler myHandler = new MyHandler(this);
 
+    private void showTip(String str) {
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * 获取联系人列表
      */
     private void showListVerfy() {
-        mAdapter = new PhoneContactAdapter(mListView, mContacts,this);
+        mAdapter = new PhoneContactAdapter(mListView, mContacts, this);
         mListView.setAdapter(mAdapter);
     }
 
@@ -164,9 +176,8 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
             mPhones.add("\"" + str + "\"");
         }
         String _req_json = "{\"mobilelist\":" + mPhones.toString() + "}";
-        _req_json = _req_json.replace(" ","");//将有空格的地方进行替换
+        _req_json = _req_json.replace(" ", "");//将有空格的地方进行替换
         requestParams.addBodyParameter("", _req_json);//用户名
-        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + _req_json);
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -187,7 +198,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                 mContacts.get(i).setAdd(isAdd);
                             }
                             for (int i = 0; i < mContacts.size(); i++) {
-                                if(mContacts.get(i).getOpenFireUserName().equals("null")){
+                                if (mContacts.get(i).getOpenFireUserName().equals("null")) {
                                     mContacts.remove(i);
                                     i--;
                                 }
@@ -202,6 +213,16 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, myHandler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, myHandler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
+                }
             }
 
             @Override

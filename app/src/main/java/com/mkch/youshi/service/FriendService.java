@@ -228,6 +228,7 @@ public class FriendService extends Service implements RosterListener {
                                         DbManager dbManager = DBHelper.getDbManager();
                                         Friend _friend = new Friend();
                                         _friend.setStatus(2);//待接收
+                                        _friend.setShowinnewfriend(1);//接受好友请求
                                         _friend.setHead_pic(_user.getHeadPic());//头像
                                         _friend.setNickname(_user.getNickName()==null?_user.getOpenFireUserName():_user.getNickName());//昵称
                                         _friend.setRemark(_user.getRealName());//备注

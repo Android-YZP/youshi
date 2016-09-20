@@ -87,7 +87,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
+
         setListener();
     }
 
@@ -96,6 +96,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onResume() {
         super.onResume();
+        initData();
     }
 
     @Override
@@ -138,6 +139,8 @@ public class ContactsFragment extends Fragment implements SideBar
             dbManager = DBHelper.getDbManager();
             long count = dbManager.selector(Friend.class).where("status", "=", "2").count();
             _req_friend_num = String.valueOf(count);
+
+            long count_added = dbManager.selector(Friend.class).where("status", "=", "1").count();//已添加好友的数量
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -391,7 +394,7 @@ public class ContactsFragment extends Fragment implements SideBar
                                     data.setName(OpenFireUserName);
                                 }
                                 data.setOpenFireName(OpenFireUserName);
-                                data.setPinyin(HanziToPinyin.getPinYin(name));
+                                data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 datas.add(data);
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
@@ -404,6 +407,16 @@ public class ContactsFragment extends Fragment implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, myHandler);
+                } else if (ex instanceof SocketTimeoutException) {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, myHandler);
+                } else {
+                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
+                }
             }
 
             @Override
