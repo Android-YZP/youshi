@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/tv_habit_circle"
             style="@style/lastOfAffairList"
-            android:text="一周三次" />
+            android:text="一周7次" />
     </RelativeLayout>
 
     <View
@@ -39,7 +39,7 @@
         <TextView
             android:id="@+id/tv_habit_week"
             style="@style/lastOfAffairList"
-            android:text="周一 周二 周三" />
+            android:text="周一周二周三周四周五周六周日" />
     </RelativeLayout>
 
     <View
@@ -60,7 +60,7 @@
             style="@style/lastOfAffairList"
             android:drawableRight="@drawable/list_arrow"
             android:drawablePadding="7dp"
-            android:text="已选择" />
+            android:text="未选择" />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />
