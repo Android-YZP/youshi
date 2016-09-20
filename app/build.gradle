@@ -29,6 +29,9 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.huxq17.xrefreshview:xrefreshview:3.5.2'
+    compile 'com.google.zxing:core:3.2.1'
+    compile 'com.google.zxing:android-core:3.2.1'
+    compile 'com.github.yoojia:zxing:0.7@aar'
     //依赖下面的库
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'

@@ -36,6 +36,8 @@ public class User {
     private String Birthday;//生日
     private String Sex;//性别
     private String SexCache;//性别缓存
+    private String Address;
+    private String Signature;//个性签名
     private String CertNo;//身份证
     private Boolean Protected;//是否账号保护
     private Boolean AddmeVerify;//是否接受好友验证
@@ -193,6 +195,22 @@ public class User {
 
     public void setSexCache(String sexCache) {
         SexCache = sexCache;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        Address = address;
+    }
+
+    public String getSignature() {
+        return Signature;
+    }
+
+    public void setSignature(String signature) {
+        Signature = signature;
     }
 
     public String getCertNo() {

@@ -21,7 +21,8 @@ public class CommonConstants {
     public static final int FLAG_GET_FRIEND_LIST_SHOW = 13;
     public static final int FLAG_UPLOAD_SUCCESS = 14;
     public static final int FLAG_CHANGE_NICKNAME_SUCCESS = 15;
-    public static final int FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS = 15;
+    public static final int FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS = 16;
+    public static final int FLAG_CHANGE_SIGN_SUCCESS = 17;
     /**
      * yaozhongping
      * 从100开始
@@ -89,6 +90,8 @@ public class CommonConstants {
     public static final String ChangeYoShiUserName = NOW_ADDRESS + "ChangeYoShiUserName";
     //修改性别
     public static final String ChangeSex = NOW_ADDRESS + "ChangeSex";
+    //修改个性签名
+    public static final String ChangeSign = NOW_ADDRESS + "ChangeSign";
     //zhangjun-----------------------------------------------end
 
 

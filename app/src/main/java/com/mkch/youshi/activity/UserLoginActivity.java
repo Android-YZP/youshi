@@ -356,13 +356,14 @@ public class UserLoginActivity extends Activity {
                                 } else {
                                     user.setNickName(datas.getString("NickName"));
                                 }
-                                user.setHeadPic(datas.getString("HeadPic"));
+                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
                                 } else {
                                     user.setYoushiNumber(datas.getString("UserName"));
                                 }
                                 user.setSex(datas.getString("Sex"));
+                                user.setSignature(datas.getString("Sign"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);

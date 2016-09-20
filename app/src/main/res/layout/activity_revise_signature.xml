@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/friend_information_margin_top"
         android:background="@drawable/bg_border_common_et"
         android:hint="请输入新的个性签名"
-        android:maxLength="20"
+        android:maxLength="100"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"

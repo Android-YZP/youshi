@@ -51,8 +51,8 @@ import java.util.Date;
 public class UserInformationActivity extends Activity {
 
     private ImageView mIvBack;
-    private TextView mTvTitle, mTvName, mTvYoushiNumber, mTvSex;
-    private LinearLayout mLayoutHead, mLayoutName, mLayoutYoushiNumber, mLayoutSex, mLayoutSignature;
+    private TextView mTvTitle, mTvName, mTvYoushiNumber, mTvSex, mTvSign;
+    private LinearLayout mLayoutHead, mLayoutName, mLayoutYoushiNumber, mLayoutCode, mLayoutSex, mLayoutSignature;
     private User mUser;
     private static ProgressDialog mProgressDialog = null;
     //头像选择相关变量
@@ -99,9 +99,11 @@ public class UserInformationActivity extends Activity {
         mTvName = (TextView) findViewById(R.id.tv_user_information_name);
         mLayoutYoushiNumber = (LinearLayout) findViewById(R.id.layout_user_information_youshi_number);
         mTvYoushiNumber = (TextView) findViewById(R.id.tv_user_information_youshi_number);
+        mLayoutCode = (LinearLayout) findViewById(R.id.layout_user_information_code);
         mLayoutSex = (LinearLayout) findViewById(R.id.layout_user_information_sex);
         mTvSex = (TextView) findViewById(R.id.tv_user_information_sex);
         mLayoutSignature = (LinearLayout) findViewById(R.id.layout_user_information_signature);
+        mTvSign = (TextView) findViewById(R.id.tv_user_information_signature);
     }
 
     private void initData() {
@@ -120,11 +122,11 @@ public class UserInformationActivity extends Activity {
         mUser = CommonUtil.getUserInfo(UserInformationActivity.this);
         if (mUser != null) {
             mTvName.setText(mUser.getNickName());
-            if (mUser.getYoushiNumber() != null) {
+            if (mUser.getYoushiNumber() == null || mUser.getYoushiNumber().equals("")) {
+                mTvYoushiNumber.setText("无");
+            } else {
                 mTvYoushiNumber.setText(mUser.getYoushiNumber());
                 mLayoutYoushiNumber.setEnabled(false);
-            } else {
-                mTvYoushiNumber.setText("");
             }
             if (mUser.getSexCache() == null) {
                 checkedItem = 0;
@@ -134,6 +136,11 @@ public class UserInformationActivity extends Activity {
                 checkedItem = 1;
             }
             mTvSex.setText(mUser.getSex());
+            if (mUser.getSignature() == null || mUser.getSignature().equals("")) {
+                mTvSign.setText("");
+            } else {
+                mTvSign.setText(mUser.getSignature());
+            }
         } else {
             mTvName.setText("");
         }
@@ -148,6 +155,7 @@ public class UserInformationActivity extends Activity {
         });
         mLayoutName.setOnClickListener(new UserInformationOnClickListener());
         mLayoutYoushiNumber.setOnClickListener(new UserInformationOnClickListener());
+        mLayoutCode.setOnClickListener(new UserInformationOnClickListener());
         //弹出对话框，用户选择性别后更新界面
         mLayoutSex.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +199,10 @@ public class UserInformationActivity extends Activity {
                     break;
                 case R.id.layout_user_information_youshi_number:
                     _intent = new Intent(UserInformationActivity.this, ReviseYoushiNumberActivity.class);
+                    startActivity(_intent);
+                    break;
+                case R.id.layout_user_information_code:
+                    _intent = new Intent(UserInformationActivity.this, QRCodeActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_user_information_signature:

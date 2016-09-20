@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_qr_code_back"
+            style="@style/commonTopbarBackStyle"
+            android:src="@drawable/nav_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="二维码"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_qr_code_scan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
+            android:text="扫描"
+            android:textColor="@color/common_white_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_name_height"
+        android:layout_marginTop="@dimen/friend_information_margin_top"
+        android:background="@color/common_white_color"
+        android:orientation="horizontal">
+
+        <com.mkch.youshi.view.CustomSmartImageView
+            android:id="@+id/iv_qr_code_head"
+            android:layout_width="@dimen/user_center_head_width_or_height"
+            android:layout_height="@dimen/user_center_head_width_or_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/friend_information_head_margin_left"></com.mkch.youshi.view.CustomSmartImageView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/user_center_name_margin_left"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_qr_code_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/new_friend_name_color"
+                android:textSize="@dimen/friend_information_text_size" />
+
+            <TextView
+                android:id="@+id/tv_qr_code_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/friend_information_name_color"
+                android:textSize="@dimen/friend_information_text_remark_size" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_qr_code"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="58dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="扫一扫上面的二维码图案，加我优时"
+        android:textColor="@color/user_reg_phone_et_text_font_color"
+        android:textSize="@dimen/friend_information_text_remark_size" />
+</LinearLayout>
