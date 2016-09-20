@@ -17,7 +17,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.NetScheduleModel;
+import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schtime;
+import com.mkch.youshi.util.DBHelper;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddPersonalHabitActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,6 +48,10 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private TextView mTvRemindBefore;
     private TextView mTvHabitWeek;
     private TextView mTvHabitCircle;
+    private DbManager mDbManager;
+    private Schedule schedule;
+    private ArrayList<NetScheduleModel.ViewModelBean.TimeSpanListBean> mTimeSpanListBeans;
+    private TextView mTvHabitChooseTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +80,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mRlHabitWeek = (RelativeLayout) findViewById(R.id.rl_habit_week);
         mTvHabitWeek = (TextView) findViewById(R.id.tv_habit_week);
         mRlHabitChooseTime = (RelativeLayout) findViewById(R.id.rl_habit_choose_time);
-        mRlHabitAllTime = (RelativeLayout) findViewById(R.id.rl_habit_all_time);
+        mTvHabitChooseTime = (TextView) findViewById(R.id.tv_habit_choose_time);
 
 
         mSubmission = (RelativeLayout) findViewById(R.id.rl_submission);
@@ -111,8 +122,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mRlHabitWeek.setOnClickListener(this);
         //选择时间
         mRlHabitChooseTime.setOnClickListener(this);
-        //总时长
-        mRlHabitAllTime.setOnClickListener(this);
+
 
         //报送
         mSubmission.setOnClickListener(this);
@@ -138,20 +148,16 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 Toast.makeText(AddPersonalHabitActivity.this, "动态计算出来的",
                         Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.rl_habit_week://周
                 startActivityForResult(new Intent(AddPersonalHabitActivity.this,
-                        ChooseWeekActivity.class),1);
+                        ChooseWeekActivity.class), 1);
                 break;
-            case R.id.rl_habit_choose_time://选择时间
 
+            case R.id.rl_habit_choose_time://选择时间
                 startActivity(new Intent(AddPersonalHabitActivity.this,
                         ChooseTimeActivity.class));
                 break;
-            case R.id.rl_habit_all_time://总时间
-                Toast.makeText(AddPersonalHabitActivity.this, "计算出来的",
-                        Toast.LENGTH_SHORT).show();
-                break;
-
             //后半部分的点击事件
             case R.id.rl_submission://报送
                 startActivity(new Intent(AddPersonalHabitActivity.this,
@@ -166,12 +172,13 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 break;
             case R.id.rl_remind_before://提前提醒
                 startActivityForResult(new Intent(AddPersonalHabitActivity.this,
-                        ChooseRemindBeforeActivity.class),0);
+                        ChooseRemindBeforeActivity.class), 0);
                 break;
             default:
                 break;
         }
     }
+
     /**
      * 生成个人事务的json数据
      *
@@ -186,6 +193,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         viewModelBean.setLabel(mLable);//标签
         viewModelBean.setLatitude("21.323231");//维度
         viewModelBean.setLongitude("1.2901921");//精度
+        viewModelBean.setTimeSpanList(mTimeSpanListBeans);//时间段集合
 //        viewModelBean.setStartTime(mTwoStartDate.getText().toString());//开始时间
 //        viewModelBean.setStopTime(mTwoEndDate.getText().toString());//结束时间
         viewModelBean.setWeeks(replaceWeek(mWeek));//结束时间
@@ -193,48 +201,78 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         viewModelBean.setRemindType(mRemindTime);//提前提醒
         viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述,备注
         netScheduleModel.setViewModel(viewModelBean);
+
         Gson gson = new Gson();
         String textJson = gson.toJson(netScheduleModel);
         return textJson;
     }
+
+    /**
+     * 将日程储存本地数据库
+     * 数据库和网络数据的储存
+     * 1.点击完成时(有网络上传网络更新同步状态的字段),没有网络直接保存数据库,(监听有网络就上传同步)
+     * 2.各种字段的储存
+     */
+    private void saveDataOfDb() {
+        try {
+            Log.d("yzp", "-----------saveDataOfDb");
+            mDbManager = DBHelper.getDbManager();
+            schedule = new Schedule();
+            schedule.setAddress("宜兴");
+            schedule.setType(2);//日程类型//个人习惯
+            schedule.setTitle(mEtTheme.getText().toString());//标题,主题
+            schedule.setLabel(mLable);//标签
+            schedule.setLatitude("21.323231");
+            schedule.setLongitude("1.2901921");
+            schedule.setAhead_warn(mRemindTime);//提前提醒
+            schedule.setSyc_status(0);//同步状态
+            schedule.setWhich_week(replaceWeek(mWeek));//周
+            //时间段//报送人
+            schedule.setRemark(mTvPersonalEventDescription.getText().toString());//备注
+            mDbManager.saveOrUpdate(schedule);
+            for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
+                Schtime schtime = new Schtime();
+                schtime.setBegin_time(mTimeSpanListBeans.get(i).getStartTime());
+                schtime.setEnd_time(mTimeSpanListBeans.get(i).getEndTime());
+                schtime.setSid(schedule.getId());
+                schtime.setStatus(0);
+                mDbManager.saveOrUpdate(schtime);
+            }
+
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 0 && requestCode == 0 && data != null) {
             mRemindTime = data.getIntExtra("RemindTime", 0);
             if (mRemindTime != 0)
-                mTvRemindBefore.setText(mRemindTime + "分钟前") ;
+                mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
         if (resultCode == 1 && requestCode == 1 && data != null) {
             mWeek = data.getStringExtra("Week");
             String _week = replaceWeek();//将1234567换成周一,周二,周三
             mTvHabitWeek.setText(_week);
-            mTvHabitCircle.setText("每周"+mWeek.length()+"次");
+            mTvHabitCircle.setText("每周" + mWeek.length() + "次");
         }
 
         if (resultCode == 2 && requestCode == 2 && data != null) {//选择时间段
             String _timeSpanListBeanListString = data.getStringExtra("TimeSpanListBeanList");
-//            //一天的总时长
-//            mOneDayTotalTimeString = data.getStringExtra("TotalTime");
-//            mTotalTimeHour = data.getIntExtra("TotalTimeHour", 0);
-//            mTotalTimeMints = data.getIntExtra("TotalTimeMints", 0);
-//            Gson gson = new Gson();
-//            mTimeSpanListBeans = gson.fromJson(_timeSpanListBeanListString,
-//                    new TypeToken<List<NetScheduleModel.ViewModelBean.TimeSpanListBean>>() {
-//                    }.getType());
-//
-//            if (mTimeSpanListBeans.size() > 0) {
-//                mAffairTimeISChoose.setText("已选择");
-//            } else {
-//                mAffairTimeISChoose.setText("未选择");
-//            }
-//
-//            //计算有效时间天数
-//            mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(), mTwoEndDate.getText().toString());
-//            int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
-//            int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
-//            Log.d("YZP_______", _totalHour + _totalMin + "PPP");
-//            mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
+            Gson gson = new Gson();
+            mTimeSpanListBeans = gson.fromJson(_timeSpanListBeanListString,
+                    new TypeToken<List<NetScheduleModel.ViewModelBean.TimeSpanListBean>>() {
+                    }.getType());
+
+            if (mTimeSpanListBeans.size() > 0) {
+                mTvHabitChooseTime.setText("已选择");
+            } else {
+                mTvHabitChooseTime.setText("未选择");
+            }
+
         }
     }
 

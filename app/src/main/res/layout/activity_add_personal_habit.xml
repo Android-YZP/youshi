@@ -33,7 +33,7 @@
     <include
         layout="@layout/add_habit_middle"
         android:layout_width="match_parent"
-        android:layout_height="178dp" />
+        android:layout_height="134dp" />
 
     <!--后半部分-->
     <View

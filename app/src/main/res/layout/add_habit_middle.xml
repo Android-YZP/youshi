@@ -56,27 +56,11 @@
             android:text="时间段选择" />
 
         <TextView
+            android:id="@+id/tv_habit_choose_time"
             style="@style/lastOfAffairList"
             android:drawableRight="@drawable/list_arrow"
             android:drawablePadding="7dp"
             android:text="已选择" />
-    </RelativeLayout>
-    <View
-        style="@style/lineOfAffairList"
-        android:layout_marginLeft="15dp" />
-    <!--时长-->
-    <RelativeLayout
-        android:id="@+id/rl_habit_all_time"
-        android:layout_width="match_parent"
-        android:layout_height="44dp">
-
-        <TextView
-            style="@style/firstOfAffairList"
-            android:text="时长" />
-
-        <TextView
-            style="@style/lastOfAffairList"
-            android:text="1小时" />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />
