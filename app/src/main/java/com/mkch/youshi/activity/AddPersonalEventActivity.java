@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
@@ -203,6 +204,16 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                         this, ChooseRemindBeforeActivity.class), 0);
                 break;
             case R.id.tv_add_event_complete://完成
+
+                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+                    showTip("请输入主题");
+                    return;
+                }
+                //备注不为空
+                if (TextUtils.isEmpty(mTvPersonalEventDescription.getText().toString())){
+                    showTip("请输入备注");
+                    return;
+                }
                 saveDataOfDb();
                 saveDataOfNet();
                 break;

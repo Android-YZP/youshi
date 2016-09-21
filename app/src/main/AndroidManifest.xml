@@ -30,29 +30,28 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <!-- 联系人 -->
-        <activity android:name=".activity.AddFriendsActivity"/>
+        <activity android:name=".activity.AddFriendsActivity" />
         <activity
             android:name=".activity.NewFriendActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PhoneContactsActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.FriendInformationActivity"/>
-        <activity android:name=".activity.InformationSettingActivity"/>
-        <activity android:name=".activity.RemarkInformationActivity"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.FriendInformationActivity" />
+        <activity android:name=".activity.InformationSettingActivity" />
+        <activity android:name=".activity.RemarkInformationActivity" />
         <activity
             android:name=".activity.SearchResultActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <!--我的-->
         <activity android:name=".activity.UserLoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.UserRegPhoneActivity" />
@@ -107,6 +106,7 @@
         <activity android:name=".activity.AddPersonalEventActivity" />
         <activity android:name=".activity.AddPersonalHabitActivity" />
         <activity android:name=".activity.SearchEventActivity" />
+        <activity android:name=".activity.ChooseFileActivity" />
 
         <!-- 消息 -->
         <activity android:name=".activity.GroupDetailActivity" />
@@ -117,15 +117,13 @@
         <service
             android:name=".service.XmppService"
             android:enabled="true"
-            android:exported="true">
-        </service>
-        <service android:name=".service.FriendService"/>
+            android:exported="true"></service>
+        <service android:name=".service.FriendService" />
 
         <receiver
             android:name=".receiver.ChatReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
     </application>
 
 </manifest>
