@@ -43,12 +43,12 @@
         android:background="@color/common_white_color"
         android:orientation="horizontal">
 
-        <com.mkch.youshi.view.CustomSmartImageView
+        <ImageView
             android:id="@+id/iv_qr_code_head"
             android:layout_width="@dimen/user_center_head_width_or_height"
             android:layout_height="@dimen/user_center_head_width_or_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/friend_information_head_margin_left"></com.mkch.youshi.view.CustomSmartImageView>
+            android:layout_marginLeft="@dimen/friend_information_head_margin_left" />
 
         <LinearLayout
             android:layout_width="0dp"

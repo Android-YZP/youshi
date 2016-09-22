@@ -16,16 +16,17 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.XmppHelper;
-import com.mkch.youshi.view.CustomSmartImageView;
 import com.mkch.youshi.view.Encoder;
 
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 public class QRCodeActivity extends Activity {
 
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private ImageView mIvBack, mIvCode;
-    private CustomSmartImageView mIvHead;
+    private ImageView mIvHead;
     private TextView mTvScan, mTvName, mTvAddress;
     private User mUser;
     private Encoder mEncoder;
@@ -44,7 +45,7 @@ public class QRCodeActivity extends Activity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_qr_code_back);
         mTvScan = (TextView) findViewById(R.id.tv_qr_code_scan);
-        mIvHead = (CustomSmartImageView) findViewById(R.id.iv_qr_code_head);
+        mIvHead = (ImageView) findViewById(R.id.iv_qr_code_head);
         mTvName = (TextView) findViewById(R.id.tv_qr_code_name);
         mTvAddress = (TextView) findViewById(R.id.tv_qr_code_address);
         mIvCode = (ImageView) findViewById(R.id.iv_qr_code);
@@ -54,8 +55,16 @@ public class QRCodeActivity extends Activity {
         //获取连接
         connection = XmppHelper.getConnection();
         mUser = CommonUtil.getUserInfo(this);
+        //圆形
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
         if (mUser != null) {
-            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
+            if (mUser.getHeadPic() != null && !mUser.getHeadPic().equals("") && !mUser.getHeadPic().equals("null")) {
+                x.image().bind(mIvHead, mUser.getHeadPic(), _image_options);
+            } else {
+                mIvHead.setImageResource(R.drawable.default_headpic);
+            }
             if (mUser.getNickName() == null || mUser.getNickName().equals("")) {
                 mTvName.setText(mUser.getMobileNumber());
             } else {

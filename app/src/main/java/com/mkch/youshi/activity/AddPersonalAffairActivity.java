@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,9 +45,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
-import org.xutils.common.util.KeyValue;
-import org.xutils.db.Selector;
-import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -81,7 +79,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private int mLable;
     private int mRemindTime;
     private TextView mTvRemindBefore;
-    private EditText mTvPersonalEventDescription;
+    private EditText mEtPersonalEventDescription;
     private MyHandler handler = new MyHandler(this);
     private String mWeek = "1234567";
     private TextView mTvAffairWeek;
@@ -162,7 +160,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mTvRemindBefore = (TextView) findViewById(R.id.tv_remind_before);
         mRemark = (LinearLayout) findViewById(R.id.ll_remark);
-        mTvPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
+        mEtPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
     }
 
     private void initData() {
@@ -259,6 +257,22 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 finish();
                 break;
             case R.id.tv_add_event_complete://完成
+
+                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+                    showTip("请输入主题");
+                    return;
+                }
+                //备注不为空
+                if (TextUtils.isEmpty(mEtPersonalEventDescription.getText().toString())) {
+                    showTip("请输入备注");
+                    return;
+                }
+                //时间段不为空
+                if (mTimeSpanListBeans == null) {
+                    showTip("请选择时间段");
+                    return;
+                }
+                saveDataOfDb();
                 saveDataOfNet();
                 break;
             default:
@@ -292,10 +306,10 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     Boolean _success = (Boolean) _json_result.get("Success");
                     Log.d("YZP", "---------------------_success = " + _success);
                     if (!_success) {//保存失败
-                            String _message = (String) _json_result.get("Message");
-                            CommonUtil.sendErrorMessage(_message, handler);
+                        String _message = (String) _json_result.get("Message");
+                        CommonUtil.sendErrorMessage(_message, handler);
                     } else {//保存成功
-                        saveDataOfDb();
+
                         JSONObject datas = (JSONObject) _json_result.get("Datas");
                         int id = datas.getInt("Id");
                         Log.d("YZP", "---------------------_success = " + id + "");
@@ -360,7 +374,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         viewModelBean.setTotalTime(mAffairTimeAllTime.getText().toString());//总时长
 //        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
-        viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述,备注
+        viewModelBean.setDescription(mEtPersonalEventDescription.getText().toString());//描述,备注
         netScheduleModel.setViewModel(viewModelBean);
         Gson gson = new Gson();
         String textJson = gson.toJson(netScheduleModel);
@@ -392,7 +406,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             schedule.setWhich_week(replaceWeek(mWeek));//周
             schedule.setTotal_time(mAffairTimeAllTime.getText().toString());//总时长
             //时间段//报送人
-            schedule.setRemark(mTvPersonalEventDescription.getText().toString());//备注
+            schedule.setRemark(mEtPersonalEventDescription.getText().toString());//备注
             mDbManager.saveOrUpdate(schedule);
             for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
                 Schtime schtime = new Schtime();

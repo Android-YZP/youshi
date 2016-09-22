@@ -28,13 +28,13 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.exception.ServiceException;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.NetWorkUtil;
-import com.mkch.youshi.view.CustomSmartImageView;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +58,7 @@ public class UserInformationActivity extends Activity {
     //头像选择相关变量
     private File mFile;
     private Uri imageUri;
-    private CustomSmartImageView mIvHead;
+    private ImageView mIvHead;
     private String mpicName = "touxiang.jpg";
     private String mPicPath = Environment.getExternalStorageDirectory().getPath() + "/";
     private File tempFile = new File(Environment.getExternalStorageDirectory(),
@@ -94,7 +94,7 @@ public class UserInformationActivity extends Activity {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
         mLayoutHead = (LinearLayout) findViewById(R.id.layout_user_information_head);
-        mIvHead = (CustomSmartImageView) findViewById(R.id.iv_user_information_head);
+        mIvHead = (ImageView) findViewById(R.id.iv_user_information_head);
         mLayoutName = (LinearLayout) findViewById(R.id.layout_user_information_name);
         mTvName = (TextView) findViewById(R.id.tv_user_information_name);
         mLayoutYoushiNumber = (LinearLayout) findViewById(R.id.layout_user_information_youshi_number);
@@ -112,8 +112,14 @@ public class UserInformationActivity extends Activity {
         mTvTitle.setText("个人信息");
         mUser = CommonUtil.getUserInfo(UserInformationActivity.this);
         //设置头像,本地没有就用默认头像
-        if (mUser != null) {
-            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
+        //圆形
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
+        if (mUser.getHeadPic()!=null&&!mUser.getHeadPic().equals("")&&!mUser.getHeadPic().equals("null")){
+            x.image().bind(mIvHead,mUser.getHeadPic(),_image_options);
+        }else{
+            mIvHead.setImageResource(R.drawable.default_headpic);
         }
     }
 
