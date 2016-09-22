@@ -58,6 +58,7 @@
             android:text="提前提醒" />
 
         <TextView
+            android:id="@+id/tv_many_people_remind_before"
             style="@style/lastOfAffairList"
             android:drawablePadding="8dp"
             android:drawableRight="@drawable/list_arrow"
@@ -106,6 +107,7 @@
             android:focusableInTouchMode="true" />
 
         <EditText
+            android:id="@+id/et_many_people_description"
             style="@style/textStyleGray24"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

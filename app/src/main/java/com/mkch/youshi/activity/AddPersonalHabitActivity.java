@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
@@ -25,6 +27,7 @@ import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -172,6 +176,21 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                         ChooseSomeoneActivity.class));
                 break;
             case R.id.tv_add_event_complete://完成
+                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+                    showTip("请输入主题");
+                    return;
+                }
+                //备注不为空
+                if (TextUtils.isEmpty(mTvPersonalEventDescription.getText().toString())) {
+                    showTip("请输入备注");
+                    return;
+                }
+                //时间段不为空
+                if (mTimeSpanListBeans == null) {
+                    showTip("请选择时间段");
+                    return;
+                }
+                saveDataOfDb();
                 saveDataOfNet();
                 break;
             case R.id.tv_add_event_cancel://取消
@@ -215,7 +234,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                         String _message = (String) _json_result.get("Message");
                         CommonUtil.sendErrorMessage(_message, handler);
                     } else {//保存成功
-                        saveDataOfDb();
+
                         JSONObject datas = (JSONObject) _json_result.get("Datas");
                         int id = datas.getInt("Id");
                         Log.d("YZP", "---------------------_success = " + id + "");

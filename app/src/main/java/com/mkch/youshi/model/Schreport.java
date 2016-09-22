@@ -23,7 +23,7 @@ public class Schreport {
      * 在friend表中可以查询相应信息
      */
     @Column(name = "friendid")
-    private int friendid;
+    private String friendid;
 
     @Override
     public String toString() {
@@ -50,11 +50,11 @@ public class Schreport {
         this.sid = sid;
     }
 
-    public int getFriendid() {
+    public String getFriendid() {
         return friendid;
     }
 
-    public void setFriendid(int friendid) {
+    public void setFriendid(String friendid) {
         this.friendid = friendid;
     }
 }
