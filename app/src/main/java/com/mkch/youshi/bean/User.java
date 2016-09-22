@@ -43,6 +43,10 @@ public class User {
     private Boolean AddmeVerify;//是否接受好友验证
     private Boolean ViewMySchedule;//是否允许查看表盘
     private Boolean Recommend;//是否推荐通讯录好友
+    private Boolean AutoFinish;//是否允许日程自动完成
+    private Boolean ConflictPromise;//是否允许日程时间冲突
+    private String ConflictNumber;//允许日程冲突的最大数量
+    private String AffairTime;//事务单次时长
     private Boolean RealVerify;//是否实名认证
     private String TokenID;//令牌
 
@@ -252,6 +256,38 @@ public class User {
 
     public void setRecommend(Boolean recommend) {
         Recommend = recommend;
+    }
+
+    public Boolean getAutoFinish() {
+        return AutoFinish;
+    }
+
+    public void setAutoFinish(Boolean autoFinish) {
+        AutoFinish = autoFinish;
+    }
+
+    public Boolean getConflictPromise() {
+        return ConflictPromise;
+    }
+
+    public void setConflictPromise(Boolean conflictPromise) {
+        ConflictPromise = conflictPromise;
+    }
+
+    public String getConflictNumber() {
+        return ConflictNumber;
+    }
+
+    public void setConflictNumber(String conflictNumber) {
+        ConflictNumber = conflictNumber;
+    }
+
+    public String getAffairTime() {
+        return AffairTime;
+    }
+
+    public void setAffairTime(String affairTime) {
+        AffairTime = affairTime;
     }
 
     public Boolean getRealVerify() {

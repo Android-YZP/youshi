@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,13 +18,15 @@ import com.mkch.youshi.activity.SettingActivity;
 import com.mkch.youshi.activity.UserInformationActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.util.CommonUtil;
-import com.mkch.youshi.view.CustomSmartImageView;
+
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 public class UserCenterFragment extends Fragment {
 
     private LinearLayout mInformation, mFile, mCollection, mSetting;
     private User mUser;
-    private CustomSmartImageView mIvHead;
+    private ImageView mIvHead;
     private TextView mTvName, mTvYoushiNumber;
 
     @Override
@@ -63,7 +66,7 @@ public class UserCenterFragment extends Fragment {
      * @param view
      */
     private void findView(View view) {
-        mIvHead = (CustomSmartImageView) view.findViewById(R.id.iv_user_center_head);
+        mIvHead = (ImageView) view.findViewById(R.id.iv_user_center_head);
         mTvName = (TextView) view.findViewById(R.id.tv_user_center_name);
         mTvYoushiNumber = (TextView) view.findViewById(R.id.tv_user_center_youshi_number);
         mInformation = (LinearLayout) view.findViewById(R.id.layout_user_center_information);
@@ -74,10 +77,19 @@ public class UserCenterFragment extends Fragment {
 
     private void initData() {
         mUser = CommonUtil.getUserInfo(getActivity());
+        //圆形
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
         Log.d("jlj", "---------------------zzzzzzzzzzzzzzzzzzzz = " + mUser.getHeadPic());
         //设置头像,昵称和优时号,本地没有就用默认
         if (mUser != null) {
-            mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
+            if (mUser.getHeadPic()!=null&&!mUser.getHeadPic().equals("")&&!mUser.getHeadPic().equals("null")){
+                x.image().bind(mIvHead,mUser.getHeadPic(),_image_options);
+            }else{
+                mIvHead.setImageResource(R.drawable.default_head_rect);
+            }
+
             if (mUser.getNickName() == null ||mUser.getNickName().equals("")) {
                 mTvName.setText(mUser.getMobileNumber());
             } else {
