@@ -31,7 +31,7 @@ public class CheckUtil {
     public static final Pattern PASSWORD_PATTERN = Pattern
             .compile("^[\\@A-Za-z0-9\\!\\#\\$\\%\\^\\&\\*\\.\\~]+$");
     /**
-     * 判断手机号格式是否错误
+     * 判断密码格式是否错误
      * @param password
      * @return
      */

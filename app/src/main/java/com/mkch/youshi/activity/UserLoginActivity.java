@@ -351,19 +351,17 @@ public class UserLoginActivity extends Activity {
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
-                                if (datas.getString("NickName") == null || datas.getString("NickName").equals("")) {
-                                    user.setNickName(datas.getString("MobileNumber"));
-                                } else {
-                                    user.setNickName(datas.getString("NickName"));
-                                }
-                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
+                                user.setNickName(datas.getString("NickName"));
+                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic"));
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
                                 } else {
                                     user.setYoushiNumber(datas.getString("UserName"));
                                 }
                                 user.setSex(datas.getString("Sex"));
+                                user.setAddress(datas.getString("Place"));
                                 user.setSignature(datas.getString("Sign"));
+                                user.setProtected(datas.getBoolean("Protected"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);

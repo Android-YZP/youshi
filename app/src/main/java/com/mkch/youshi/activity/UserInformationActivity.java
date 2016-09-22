@@ -51,8 +51,8 @@ import java.util.Date;
 public class UserInformationActivity extends Activity {
 
     private ImageView mIvBack;
-    private TextView mTvTitle, mTvName, mTvYoushiNumber, mTvSex, mTvSign;
-    private LinearLayout mLayoutHead, mLayoutName, mLayoutYoushiNumber, mLayoutCode, mLayoutSex, mLayoutSignature;
+    private TextView mTvTitle, mTvName, mTvYoushiNumber, mTvSex, mTvAddress, mTvSign;
+    private LinearLayout mLayoutHead, mLayoutName, mLayoutYoushiNumber, mLayoutCode, mLayoutSex, mLayoutAddress, mLayoutSignature;
     private User mUser;
     private static ProgressDialog mProgressDialog = null;
     //头像选择相关变量
@@ -102,6 +102,8 @@ public class UserInformationActivity extends Activity {
         mLayoutCode = (LinearLayout) findViewById(R.id.layout_user_information_code);
         mLayoutSex = (LinearLayout) findViewById(R.id.layout_user_information_sex);
         mTvSex = (TextView) findViewById(R.id.tv_user_information_sex);
+        mLayoutAddress = (LinearLayout) findViewById(R.id.layout_user_information_address);
+        mTvAddress = (TextView) findViewById(R.id.tv_user_information_address);
         mLayoutSignature = (LinearLayout) findViewById(R.id.layout_user_information_signature);
         mTvSign = (TextView) findViewById(R.id.tv_user_information_signature);
     }
@@ -123,7 +125,7 @@ public class UserInformationActivity extends Activity {
         if (mUser != null) {
             mTvName.setText(mUser.getNickName());
             if (mUser.getYoushiNumber() == null || mUser.getYoushiNumber().equals("")) {
-                mTvYoushiNumber.setText("无");
+                mTvYoushiNumber.setText("未设置");
             } else {
                 mTvYoushiNumber.setText(mUser.getYoushiNumber());
                 mLayoutYoushiNumber.setEnabled(false);
@@ -140,6 +142,11 @@ public class UserInformationActivity extends Activity {
                 mTvSign.setText("");
             } else {
                 mTvSign.setText(mUser.getSignature());
+            }
+            if (mUser.getAddress() == null || mUser.getAddress().equals("")) {
+                mTvAddress.setText("");
+            } else {
+                mTvAddress.setText(mUser.getAddress());
             }
         } else {
             mTvName.setText("");
@@ -175,6 +182,7 @@ public class UserInformationActivity extends Activity {
                         }).show();
             }
         });
+        mLayoutAddress.setOnClickListener(new UserInformationOnClickListener());
         mLayoutSignature.setOnClickListener(new UserInformationOnClickListener());
         //头像点击事件
         mLayoutHead.setOnClickListener(new View.OnClickListener() {
@@ -203,6 +211,10 @@ public class UserInformationActivity extends Activity {
                     break;
                 case R.id.layout_user_information_code:
                     _intent = new Intent(UserInformationActivity.this, QRCodeActivity.class);
+                    startActivity(_intent);
+                    break;
+                case R.id.layout_user_information_address:
+                    _intent = new Intent(UserInformationActivity.this, ReviseAddressActivity.class);
                     startActivity(_intent);
                     break;
                 case R.id.layout_user_information_signature:

@@ -50,7 +50,6 @@
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="未设置"
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
 
@@ -91,7 +90,6 @@
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="138****7890"
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
 
@@ -160,14 +158,13 @@
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <TextView
-            android:id="@+id/tv_account_protect"
+            android:id="@+id/tv_account_protected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="未保护"
             android:textColor="@color/friend_information_name_color"
             android:textSize="@dimen/friend_information_text_remark_size" />
 

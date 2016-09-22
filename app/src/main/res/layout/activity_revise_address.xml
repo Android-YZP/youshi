@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/layout_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:text="当前位置"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
+
+    <View style="@style/commonLineStyle" />
+
+    <TextView
+        android:id="@+id/tv_revise_address_position"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@color/common_white_color"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
+        android:text="江苏无锡"
+        android:textColor="@color/new_friend_name_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
+
+    <View style="@style/commonLineStyle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/friend_information_setting_padding_left"
+        android:text="输入位置"
+        android:textColor="@color/friend_information_name_color"
+        android:textSize="@dimen/friend_information_text_more_size" />
+
+    <EditText
+        android:id="@+id/et_revise_address"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/user_reg_phone_et_height"
+        android:background="@drawable/bg_border_common_et"
+        android:hint="请输入新的位置"
+        android:maxLength="10"
+        android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
+        android:textColor="@color/common_et_text_font_color"
+        android:textColorHint="@color/user_login_username_or_password_color"
+        android:textSize="@dimen/common_et_text_font_size" />
+
+    <Button
+        android:id="@+id/btn_revise_address_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/user_reg_phone_btn_getcode_height"
+        android:layout_marginLeft="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
+        android:layout_marginRight="@dimen/user_reg_phone_btn_getcode_margin_left_or_right"
+        android:layout_marginTop="@dimen/user_reg_phone_btn_getcode_margin_top"
+        android:background="@drawable/selector_btn_user_login"
+        android:gravity="center"
+        android:text="确定"
+        android:textColor="@color/common_white_color"
+        android:textSize="@dimen/common_et_text_font_size" />
+</LinearLayout>

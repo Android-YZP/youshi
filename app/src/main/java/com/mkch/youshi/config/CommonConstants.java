@@ -23,6 +23,15 @@ public class CommonConstants {
     public static final int FLAG_CHANGE_NICKNAME_SUCCESS = 15;
     public static final int FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS = 16;
     public static final int FLAG_CHANGE_SIGN_SUCCESS = 17;
+    public static final int FLAG_CHANGE_ADDRESS_SUCCESS = 18;
+    public static final int FLAG_CHANGE_PHONE_SUCCESS = 19;
+    public static final int FLAG_CHANGE_PASSWORD_SUCCESS = 20;
+    public static final int FLAG_CHANGE_PROTECTED_SUCCESS = 21;
+    public static final int FLAG_CHANGE_ERROR1 = 22;
+    public static final int FLAG_CHANGE_PASSWORD_ERROR2 = 23;
+    public static final int FLAG_CHANGE_ERROR3 = 24;
+    public static final int FLAG_CHANGE_VIEWMYSCHEDULE_SUCCESS = 25;
+    public static final int FLAG_CHANGE_ADDMEVERIFY_SUCCESS = 26;
     /**
      * yaozhongping
      * 从100开始
@@ -91,8 +100,20 @@ public class CommonConstants {
     public static final String ChangeYoShiUserName = NOW_ADDRESS + "ChangeYoShiUserName";
     //修改性别
     public static final String ChangeSex = NOW_ADDRESS + "ChangeSex";
+    //修改地区
+    public static final String ChangePlace = NOW_ADDRESS + "ChangePlace";
     //修改个性签名
     public static final String ChangeSign = NOW_ADDRESS + "ChangeSign";
+    //修改手机号
+    public static final String ChangeMobileNumber = NOW_ADDRESS + "ChangeMobileNumber";
+    //修改密码
+    public static final String ChangePassword = NOW_ADDRESS + "ChangePassword";
+    //修改账号保护开关
+    public static final String ChangeProtected = NOW_ADDRESS + "ChangeProtected";
+    //修改是否允许好友查看日程表盘开关
+    public static final String ChangeViewMySchedule = NOW_ADDRESS + "ChangeViewMySchedule";
+    //修改加用户好友时是否需要身份验证开关
+    public static final String ChangeAddmeVerify = NOW_ADDRESS + "ChangeAddmeVerify";
     //zhangjun-----------------------------------------------end
 
 

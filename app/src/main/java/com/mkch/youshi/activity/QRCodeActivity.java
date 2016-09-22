@@ -26,7 +26,7 @@ public class QRCodeActivity extends Activity {
     private final static int SCANNIN_GREQUEST_CODE = 1;
     private ImageView mIvBack, mIvCode;
     private CustomSmartImageView mIvHead;
-    private TextView mTvScan, mTvName,mTvAddress;
+    private TextView mTvScan, mTvName, mTvAddress;
     private User mUser;
     private Encoder mEncoder;
     private DecodeTask mDecodeTask;
@@ -56,7 +56,11 @@ public class QRCodeActivity extends Activity {
         mUser = CommonUtil.getUserInfo(this);
         if (mUser != null) {
             mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
-            mTvName.setText(mUser.getNickName());
+            if (mUser.getNickName() == null || mUser.getNickName().equals("")) {
+                mTvName.setText(mUser.getMobileNumber());
+            } else {
+                mTvName.setText(mUser.getNickName());
+            }
             if (mUser.getAddress() == null || mUser.getAddress().equals("")) {
                 mTvAddress.setText("");
             } else {
@@ -130,7 +134,7 @@ public class QRCodeActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case SCANNIN_GREQUEST_CODE:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
 //                    Bundle bundle = data.getExtras();
 //                    Log.d("jlj","zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz---------------------onclick="+bundle.getString("result"));
 //                    //发送请求添加好友
