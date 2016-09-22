@@ -11,6 +11,7 @@
         android:layout_height="@dimen/common_topbar_height" />
 
     <View
+        android:id="@+id/line_universality_1"
         style="@style/commonLineStyle"
         android:layout_marginTop="@dimen/friend_information_margin_top" />
 
@@ -49,7 +50,9 @@
         <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
 
-    <View style="@style/commonLineStyle" />
+    <View
+        android:id="@+id/line_universality_2"
+        style="@style/commonLineStyle" />
 
     <View
         style="@style/commonLineStyle"

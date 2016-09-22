@@ -4,17 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.User;
 
 public class NewMessageNoticeActivity extends Activity {
 
     private ImageView mIvBack;
     private TextView mTvTitle;
     private LinearLayout mLayoutDisturb;
+    private CheckBox mCBSound, mCBVibrate;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,8 @@ public class NewMessageNoticeActivity extends Activity {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
         mLayoutDisturb = (LinearLayout) findViewById(R.id.layout_new_message_notice_disturb);
+        mCBSound = (CheckBox) findViewById(R.id.cb_privacy_look);
+        mCBVibrate = (CheckBox) findViewById(R.id.cb_privacy_validate);
     }
 
     private void initData() {

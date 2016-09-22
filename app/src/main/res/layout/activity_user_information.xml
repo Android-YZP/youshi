@@ -34,12 +34,12 @@
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
-        <com.mkch.youshi.view.CustomSmartImageView
+        <ImageView
             android:id="@+id/iv_user_information_head"
             android:layout_width="@dimen/user_center_head_width_or_height"
             android:layout_height="@dimen/user_center_head_width_or_height"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/friend_information_head_margin_left"></com.mkch.youshi.view.CustomSmartImageView>
+            android:layout_marginRight="@dimen/friend_information_head_margin_left" />
 
         <ImageView style="@style/commonArrowStyle" />
     </LinearLayout>
@@ -268,10 +268,10 @@
             android:id="@+id/tv_user_information_signature"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
             android:gravity="right"
-            android:layout_gravity="center_vertical"
             android:paddingLeft="@dimen/friend_information_address_padding_left"
             android:singleLine="true"
             android:text="我是个性签名"
