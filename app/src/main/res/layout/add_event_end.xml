@@ -16,6 +16,7 @@
             android:text="报送" />
 
         <TextView
+            android:id="@+id/tv_submission"
             style="@style/lastOfAffairList"
             android:drawablePadding="8dp"
             android:drawableRight="@drawable/btn_add"

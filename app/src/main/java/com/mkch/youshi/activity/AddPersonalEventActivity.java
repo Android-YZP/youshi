@@ -3,7 +3,6 @@ package com.mkch.youshi.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -21,17 +20,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.LoginUserJson;
 import com.mkch.youshi.bean.NetScheduleModel;
 import com.mkch.youshi.bean.NetScheduleModel.ViewModelBean;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.DialogFactory;
+import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,9 +43,11 @@ import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddPersonalEventActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,8 +79,11 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private TextView mTvPlace;
     private EditText mTvPersonalEventDescription;
     private List<Schedule> allEvent;
+    private List<String> mFriends;
     private Schedule schedule;
     private DbManager mDbManager;
+    private TextView mTvSubmission;
+    private List<Friend> allChooseFriends;
 
 
     @Override
@@ -89,6 +97,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     }
 
     private void initData() {
+        allChooseFriends = new ArrayList<>();
         //初始化开始时间和结束时间
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
@@ -120,6 +129,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mTvEndTime = (TextView) findViewById(R.id.tv_end_time);
 
         mSubmission = (RelativeLayout) findViewById(R.id.rl_submission);
+        mTvSubmission = (TextView) findViewById(R.id.tv_submission);
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mTvRemindBefore = (TextView) findViewById(R.id.tv_remind_before);
         mTvPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
@@ -196,8 +206,13 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 break;
             //后半部分的点击事件
             case R.id.rl_submission://报送
-                startActivity(new Intent(AddPersonalEventActivity.
-                        this, ChooseSomeoneActivity.class));
+                if (mFriends != null && allChooseFriends != null) {
+                    mFriends.clear();
+                    allChooseFriends.clear();
+                }
+                startActivityForResult(new Intent(AddPersonalEventActivity.
+                        this, ChooseSomeoneActivity.class), 5);
+
                 break;
             case R.id.rl_remind_before://提前提醒
                 startActivityForResult(new Intent(AddPersonalEventActivity.
@@ -210,11 +225,12 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     return;
                 }
                 //备注不为空
-                if (TextUtils.isEmpty(mTvPersonalEventDescription.getText().toString())){
+                if (TextUtils.isEmpty(mTvPersonalEventDescription.getText().toString())) {
                     showTip("请输入备注");
                     return;
                 }
                 saveDataOfDb();
+                saveReporterToDb();
                 saveDataOfNet();
                 break;
             case R.id.tv_add_event_cancel://取消
@@ -232,6 +248,38 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             mRemindTime = data.getIntExtra("RemindTime", 0);
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
+        }
+
+        if (resultCode == 5 && requestCode == 5 && data != null) {
+            String chooseFriends = data.getStringExtra("ChooseFriends");
+            Gson gson = new Gson();
+            mFriends = gson.fromJson(chooseFriends,
+                    new TypeToken<List<String>>() {
+                    }.getType());
+            for (int i = 0; i < mFriends.size(); i++) {
+                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+                if (_user != null) {
+                    try {
+                        mDbManager = DBHelper.getDbManager();
+                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                                _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
+                        allChooseFriends.add(all.get(0));
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            mTvSubmission.setText("");
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                String nickname = allChooseFriends.get(i).getNickname();
+                if (!StringUtils.isEmpty(nickname)) {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+                } else {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+                }
+            }
+
+
         }
     }
 
@@ -327,6 +375,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         viewModelBean.setIsOneDay(isAllDay);//是否是全日
         viewModelBean.setStartTime(mTvStartTime.getText().toString());//开始时间
         viewModelBean.setStopTime(mTvEndTime.getText().toString());//结束时间
+        viewModelBean.setSendOpenFireNameList(mFriends);//添加报送人
 //        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
         viewModelBean.setDescription(mTvPersonalEventDescription.getText().toString());//描述,备注
@@ -360,6 +409,24 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             schedule.setBegin_time(mTvStartTime.getText().toString());
             schedule.setEnd_time(mTvEndTime.getText().toString());
             mDbManager.saveOrUpdate(schedule);
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 将报送人储存本地数据库
+     */
+    private void saveReporterToDb() {
+        try {
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                mDbManager = DBHelper.getDbManager();
+                Schreport schreport = new Schreport();
+                schreport.setFriendid(allChooseFriends.get(i).getFriendid());
+                schreport.setSid(schedule.getId());
+                mDbManager.saveOrUpdate(schreport);
+            }
         } catch (DbException e) {
             Log.d("yzp", e.getMessage() + "-----------");
             e.printStackTrace();
