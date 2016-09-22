@@ -87,7 +87,7 @@ public class UserCenterFragment extends Fragment {
             if (mUser.getHeadPic()!=null&&!mUser.getHeadPic().equals("")&&!mUser.getHeadPic().equals("null")){
                 x.image().bind(mIvHead,mUser.getHeadPic(),_image_options);
             }else{
-                mIvHead.setImageResource(R.drawable.default_head_rect);
+                mIvHead.setImageResource(R.drawable.default_headpic);
             }
 
             if (mUser.getNickName() == null ||mUser.getNickName().equals("")) {
