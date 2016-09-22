@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.util.CommonUtil;
 
 public class SettingActivity extends Activity {
 
@@ -85,6 +86,7 @@ public class SettingActivity extends Activity {
                     startActivity(_intent);
                     break;
                 case R.id.tv_setting_quit:
+                    CommonUtil.clearUserInfo(SettingActivity.this);
                     _intent = new Intent(SettingActivity.this, UserLoginActivity.class);
                     startActivity(_intent);
                     break;

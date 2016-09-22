@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_choose_file_back"
+            style="@style/commonTopbarBackStyle"
+            android:src="@drawable/nav_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="选择文件"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_choose_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
+            android:text="上传"
+            android:textColor="@color/common_white_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+    </RelativeLayout>
+
+
+    <com.mkch.youshi.view.FileTabBarLayout
+        android:id="@+id/custom_choose_file_tabbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <View style="@style/commonLineStyle" />
+
+    <View
+        style="@style/commonLineStyle"
+        android:layout_marginTop="@dimen/friend_information_margin_top" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager_choose_file"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/text_white"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/textStyleBlack28"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="已选择:" />
+
+        <Button
+            android:id="@+id/bt_choose_provider_number"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_btn_user_login"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginRight="15dp"
+            android:text="确定(0/5)"
+            android:textColor="@color/common_white_color" />
+    </RelativeLayout>
+</LinearLayout>
