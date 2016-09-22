@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+
 import com.mkch.youshi.config.MyApplication;
 
 /**
@@ -54,7 +56,7 @@ public class UIUtils {
         return getContext().getResources().getDimensionPixelSize(id);// 返回具体像素值
     }
 
-              ///////dip和px转换////////
+    ///////dip和px转换////////
     public static int dip2px(float dip) {
         float density = getContext().getResources().getDisplayMetrics().density;
         return (int) (dip * density + 0.5f);
@@ -82,6 +84,11 @@ public class UIUtils {
             return true;
         }
         return false;
+    }
+
+    public static void LogUtils(String log) {
+        // 获取当前线程id, 如果当前线程id和主线程id相同, 那么当前就是主线程
+        Log.d("androidYZP==========>", log + "YZP");
     }
 
     // 运行在主线程

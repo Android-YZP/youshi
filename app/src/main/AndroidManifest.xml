@@ -130,6 +130,7 @@
         <activity android:name=".activity.AddPersonalEventActivity" />
         <activity android:name=".activity.AddPersonalHabitActivity" />
         <activity android:name=".activity.SearchEventActivity" />
+        <activity android:name=".activity.ChooseFileActivity" />
 
         <!-- 消息 -->
         <activity android:name=".activity.GroupDetailActivity" />

@@ -7,15 +7,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.fragment.ChooseDocumentFileFragment;
+import com.mkch.youshi.fragment.ChooseOtherFileFragment;
+import com.mkch.youshi.fragment.ChoosePhotoFileFragment;
+import com.mkch.youshi.fragment.ChooseVideoFileFragment;
+import com.mkch.youshi.fragment.ChooseVoiceFileFragment;
+import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.FileTabBarLayout;
 
-public class DropBoxFileActivity extends BaseActivity {
-
+public class ChooseFileActivity extends BaseActivity {
+    /**
+     * 将这个界面的界面逻辑完成;
+     */
     private ImageView mIvBack;
     private FileTabBarLayout mDropBoxTabBarLayout;
     private ViewPager mViewPagerDropBox;
@@ -24,6 +33,9 @@ public class DropBoxFileActivity extends BaseActivity {
     private final static int FLAG_ITEM_2 = 2;
     private final static int FLAG_ITEM_3 = 3;
     private final static int FLAG_ITEM_4 = 4;
+
+
+    private int mChooseNumber;
     //下划线
     private View tabUnderLine;
     //当前页面
@@ -34,20 +46,48 @@ public class DropBoxFileActivity extends BaseActivity {
     private int fragSize = 5;
     //设置预加载界面数量
     private int CACHE_PAGES = 4;
+    private Button mBtChooseNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dropbox_file);
+        setContentView(R.layout.activity_choose_file);
         initView();
         initData();
         setListener();
     }
 
+    /**
+     * 更新按钮数据,
+     *
+     * @param isAdd 是添加还是减少
+     * @return 是否添加成功, 保证界面和数据的同一性
+     */
+    public boolean addChoosedNumber(boolean isAdd) {
+        if (isAdd) {
+            mChooseNumber++;
+        } else {
+            mChooseNumber--;
+        }
+
+        if (mChooseNumber <= 5) {
+            mBtChooseNumber.setText("确定" + mChooseNumber + "/5");
+            UIUtils.LogUtils(mChooseNumber + "1");
+            return true;
+        } else {
+            mChooseNumber = 5;
+            Toast.makeText(this, "最多可以选择5个文件奥..", Toast.LENGTH_SHORT).show();
+            UIUtils.LogUtils(mChooseNumber + "2");
+            return false;
+        }
+
+    }
+
     private void initView() {
-        mIvBack = (ImageView) findViewById(R.id.iv_drop_box_file_back);
-        mDropBoxTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_dropbox_file_tabbar);
-        mViewPagerDropBox = (ViewPager) findViewById(R.id.viewPager_dropbox_file);
+        mIvBack = (ImageView) findViewById(R.id.iv_choose_file_back);
+        mDropBoxTabBarLayout = (FileTabBarLayout) findViewById(R.id.custom_choose_file_tabbar);
+        mViewPagerDropBox = (ViewPager) findViewById(R.id.viewPager_choose_file);
+        mBtChooseNumber = (Button) findViewById(R.id.bt_choose_provider_number);
         mViewPagerDropBox.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         //初始化屏幕宽度
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -65,7 +105,7 @@ public class DropBoxFileActivity extends BaseActivity {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DropBoxFileActivity.this.finish();
+                ChooseFileActivity.this.finish();
             }
         });
         mDropBoxTabBarLayout.setOnItemClickListener(new FileTabBarLayout.IFileTabBarCallBackListener() {
@@ -138,13 +178,13 @@ public class DropBoxFileActivity extends BaseActivity {
                 case FLAG_ITEM_0:
                     return new ChooseDocumentFileFragment();
                 case FLAG_ITEM_1:
-                    return new ChooseDocumentFileFragment();
+                    return new ChoosePhotoFileFragment();
                 case FLAG_ITEM_2:
-                    return new ChooseDocumentFileFragment();
+                    return new ChooseVideoFileFragment();
                 case FLAG_ITEM_3:
-                    return new ChooseDocumentFileFragment();
+                    return new ChooseVoiceFileFragment();
                 case FLAG_ITEM_4:
-                    return new ChooseDocumentFileFragment();
+                    return new ChooseOtherFileFragment();
             }
             return null;
         }
