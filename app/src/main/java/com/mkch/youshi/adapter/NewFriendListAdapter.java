@@ -81,20 +81,20 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
         if (friend!=null){
             //        friendViewHolder.iv_new_friend_head.setImageResource(newFriendHead[position]);
             String _head_pic = friend.getHead_pic();
-            if (_head_pic!=null&&!_head_pic.equals("")){
+            if (_head_pic!=null&&!_head_pic.equals("")&&!_head_pic.equals("null")){
 //                ImageOptions _image_options = new ImageOptions.Builder()
 //                        .setCircular(true)
 //                        .build();
                 x.image().bind(friendViewHolder.iv_new_friend_head,_head_pic);
             }else{
-                friendViewHolder.iv_new_friend_head.setImageResource(R.drawable.maillist);
+                friendViewHolder.iv_new_friend_head.setImageResource(R.drawable.default_headpic);
             }
 
             String _nick_name = friend.getNickname();
             if (_nick_name!=null&&!_nick_name.equals("")){
                 friendViewHolder.tv_new_friend_name.setText(_nick_name);
             }else{
-                friendViewHolder.tv_new_friend_name.setText("未知");
+                friendViewHolder.tv_new_friend_name.setText(friend.getFriendid());
             }
 
             String _phone = friend.getPhone();

@@ -332,8 +332,9 @@ public class ChatActivity extends BaseActivity {
         if (m_chart_list==null){
             m_chart_list = new ArrayList<>();
         }
+
         //适配器
-        m_adapter = new ChartListAdapter(m_chart_list);
+        m_adapter = new ChartListAdapter(m_chart_list,mFriend,CommonUtil.getUserInfo(this),this);
         mRvList.setAdapter(m_adapter);
         mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
 
@@ -421,9 +422,9 @@ public class ChatActivity extends BaseActivity {
                         m_chart_list.add(_local_message);
                         if (mMessageBoxId==0){
                             //新增该消息盒子
-                            MessageBox _msg_box = new MessageBox(mFriend.getHead_pic(),mFriend.getNickname(),_local_message.getContent(),0,TimesUtils.getNow(),0,MessageBox.MB_TYPE_CHAT,m_jid);
-                            dbManager.saveBindingId(_msg_box);
-                            mMessageBoxId = _msg_box.getId();
+                            m_messageBox = new MessageBox(mFriend.getHead_pic(),mFriend.getNickname(),_local_message.getContent(),0,TimesUtils.getNow(),0,MessageBox.MB_TYPE_CHAT,m_jid);
+                            dbManager.saveBindingId(m_messageBox);
+                            mMessageBoxId = m_messageBox.getId();
                         }else{
                             //更新消息盒子
                             m_messageBox.setBoxLogo(mFriend.getHead_pic());

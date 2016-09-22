@@ -1,5 +1,7 @@
 package com.mkch.youshi.adapter;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.ChatBean;
+import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.TimesUtils;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -24,9 +30,37 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int CHART_TYPE_REV = 1;
     public static final int CHART_TYPE_SEND = 2;
     private List<ChatBean> mChatBeen;
+    private String mSendNickname;//发送者昵称
+    private String mFromNickname;//接受者昵称
+    private Friend mFriend;
+    private User mUser;
+    private Context mContext;
 
-    public ChartListAdapter(List<ChatBean> mChatBeen) {
+    public ChartListAdapter(List<ChatBean> mChatBeen, Friend mFriend, User mUser,Context mContext) {
         this.mChatBeen = mChatBeen;
+        this.mFriend = mFriend;
+        this.mUser = mUser;
+        this.mContext = mContext;
+
+        fullNicname();//填充两个昵称
+    }
+
+    /**
+     * 填充两个昵称
+     */
+    private void fullNicname() {
+        String _fromNickname = mFriend.getNickname();
+        String _senderNickname = mUser.getNickName();
+        if (_fromNickname!=null&&!_fromNickname.equals("")&&!_fromNickname.equals("null")){
+            this.mFromNickname = _fromNickname;
+        }else{
+            this.mFromNickname = mFriend.getFriendid();
+        }
+        if (_senderNickname!=null&&!_senderNickname.equals("")&&!_senderNickname.equals("null")){
+            this.mSendNickname = _senderNickname;
+        }else{
+            this.mSendNickname = mUser.getOpenFireUserName();
+        }
     }
 
     /**
@@ -67,6 +101,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ChatBean _char_bean = mChatBeen.get(position);
+        boolean closeEnough = false;
+        if (position!=0){
+            ChatBean _char_bean_before = mChatBeen.get(position-1);//前一个聊天信息
+            closeEnough = TimesUtils.isCloseEnough(_char_bean_before.getDate(), _char_bean.getDate());
+        }
 
         //logo  //暂时
         ImageOptions _image_options = new ImageOptions.Builder()
@@ -75,13 +114,48 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (_char_bean!=null){
             if (holder instanceof FromTxtViewHolder){
+                //左侧-接受的信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough){
+                    ((FromTxtViewHolder)holder).tv_item_from_time.setVisibility(View.GONE);
+                }else{
+                    ((FromTxtViewHolder)holder).tv_item_from_time.setVisibility(View.VISIBLE);
+                    ((FromTxtViewHolder)holder).tv_item_from_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((FromTxtViewHolder)holder).tv_item_from_nickname.setText(mFromNickname);
+                //显示内容
                 ((FromTxtViewHolder)holder).tv_item_from_txt.setText(_char_bean.getContent());
-                //暂时
-                x.image().bind(((FromTxtViewHolder)holder).iv_item_from_headpic,"http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg",_image_options);
+                String _headPic = mFriend.getHead_pic();//头像地址
+                if (_headPic!=null&&!_headPic.equals("")&&!_headPic.equals("null")) {
+                    x.image().bind(((FromTxtViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
+                }else{
+                    ((FromTxtViewHolder) holder).iv_item_from_headpic.setImageResource(R.drawable.default_headpic);
+
+                }
             }else if (holder instanceof SendTxtViewHolder){
+                //右侧-发送的信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough){
+                    ((SendTxtViewHolder)holder).tv_item_send_time.setVisibility(View.GONE);
+                }else{
+                    ((SendTxtViewHolder)holder).tv_item_send_time.setVisibility(View.VISIBLE);
+                    ((SendTxtViewHolder)holder).tv_item_send_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((SendTxtViewHolder)holder).tv_item_send_nickname.setText(mSendNickname);
+                //显示内容
                 ((SendTxtViewHolder)holder).tv_item_send_txt.setText(_char_bean.getContent());
-                //暂时
-                x.image().bind(((SendTxtViewHolder)holder).iv_item_send_headpic,"http://p6.qhimg.com/t0126e0bed7fa0741a1.jpg",_image_options);
+                //头像
+                String _headPic = mUser.getHeadPic();//头像地址
+                if (_headPic!=null&&!_headPic.equals("")&&!_headPic.equals("null")){
+                    x.image().bind(((SendTxtViewHolder)holder).iv_item_send_headpic,_headPic,_image_options);
+                }else{
+                    ((SendTxtViewHolder)holder).iv_item_send_headpic.setImageResource(R.drawable.default_headpic);
+                }
+
             }
         }
 
@@ -95,11 +169,15 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     class SendTxtViewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_item_send_txt;
+        private TextView tv_item_send_nickname;//发送者昵称
+        private TextView tv_item_send_time;//发送时间
+        private TextView tv_item_send_txt;//发送内容
         private ImageView iv_item_send_headpic;//暂时
 
         public SendTxtViewHolder(View itemView) {
             super(itemView);
+            tv_item_send_nickname = (TextView)itemView.findViewById(R.id.tv_right_user);
+            tv_item_send_time = (TextView)itemView.findViewById(R.id.tv_item_chat_list_right_time);
             tv_item_send_txt = (TextView) itemView.findViewById(R.id.tv_right_say_content);
             iv_item_send_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_right_headpic);
             //设置根布局的点击监听事件
@@ -124,11 +202,15 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class FromTxtViewHolder extends RecyclerView.ViewHolder{
-        private TextView tv_item_from_txt;
+        private TextView tv_item_from_nickname;//接受者昵称
+        private TextView tv_item_from_time;//接收时间
+        private TextView tv_item_from_txt;//发送内容
         private ImageView iv_item_from_headpic;//暂时
 
         public FromTxtViewHolder(View itemView) {
             super(itemView);
+            tv_item_from_nickname = (TextView) itemView.findViewById(R.id.tv_left_user);
+            tv_item_from_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_left_time);
             tv_item_from_txt = (TextView) itemView.findViewById(R.id.tv_left_say_content);
             iv_item_from_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_left_headpic);
             //设置根布局的点击监听事件

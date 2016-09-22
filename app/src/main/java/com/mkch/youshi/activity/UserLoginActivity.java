@@ -352,7 +352,10 @@ public class UserLoginActivity extends Activity {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
                                 user.setNickName(datas.getString("NickName"));
-                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic"));
+
+                                if (datas.getString("HeadPic")!=null&&!datas.getString("HeadPic").equals("")&&!datas.getString("HeadPic").equals("null")){
+                                    user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
+                                }
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
                                 } else {

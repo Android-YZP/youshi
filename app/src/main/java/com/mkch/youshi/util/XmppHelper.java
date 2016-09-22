@@ -5,6 +5,7 @@ import android.util.Log;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -56,6 +57,10 @@ public class XmppHelper {
                 connection.connect();
             }
             connection.login(_login_user, _login_pwd);
+            //发送在线状态
+            Presence presence = new Presence(Presence.Type.available);
+            presence.setStatus("我是在线状态");
+            connection.sendStanza(presence);
             return true;
         }catch (SmackException.AlreadyLoggedInException e){
             Log.d("jlj","---------------------connectAndLogin logined");

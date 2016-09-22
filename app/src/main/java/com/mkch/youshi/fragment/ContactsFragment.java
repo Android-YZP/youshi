@@ -216,7 +216,7 @@ public class ContactsFragment extends Fragment implements SideBar
      * 异步请求网络接口，删除该好友
      * @param openfirename
      */
-    private void deleteFriendFromNet(String openfirename, final int position) {
+    private void deleteFriendFromNet(final String openfirename, final int position) {
         if (getActivity()==null){
             return;
         }
@@ -242,6 +242,16 @@ public class ContactsFragment extends Fragment implements SideBar
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             //清除本地数据库该条好友信息，清除本地该条数据
+                            try {
+                                Friend first = dbManager.selector(Friend.class)
+                                        .where("friendid", "=", openfirename)
+                                        .and("status", "=", 1)
+                                        .findFirst();
+                                dbManager.delete(first);
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
+
                             datas.remove(position);
                             //提醒删除成功
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_DELETE_FRIEND_SUCCESS);
@@ -408,7 +418,11 @@ public class ContactsFragment extends Fragment implements SideBar
                                 Contact data = new Contact();
                                 JSONObject jobj = mDatas.getJSONObject(i);
 //                                String name = jobj.getString("UserName");
-                                String HeadPic = jobj.getString("HeadPic");
+                                String HeadPic = jobj.getString("HeadPic");//头像
+                                String _head_pic = null;
+                                if (HeadPic!=null&&!HeadPic.equals("")&&!HeadPic.equals("null")){
+                                    _head_pic = CommonConstants.NOW_ADDRESS_PRE+HeadPic;
+                                }
                                 String Nickname = jobj.getString("NickName");
                                 String MobileNumber = jobj.getString("MobileNumber");
                                 String Remark = jobj.getString("Remark");
@@ -429,7 +443,7 @@ public class ContactsFragment extends Fragment implements SideBar
                                 int status = 1;//已添加好友
                                 String _self_userid = _self_user.getOpenFireUserName();
                                 //获取所有的优时好友列表
-                                Friend _friend = new Friend(OpenFireUserName,HeadPic,Nickname,Remark,MobileNumber,status,_self_userid);
+                                Friend _friend = new Friend(OpenFireUserName,_head_pic,Nickname,Remark,MobileNumber,status,_self_userid);
                                 try {
                                     dbManager.save(_friend);
                                 } catch (DbException e) {
