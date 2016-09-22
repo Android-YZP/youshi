@@ -262,7 +262,7 @@ public class FriendService extends Service implements RosterListener {
                                         if (_user.getNickName()!=null&&!_user.getNickName().equals("")&&!_user.getNickName().equals("null")){
                                             _friend.setNickname(_user.getNickName());//昵称
                                         }
-                                        if (_user.getNickName()!=null&&!_user.getRealName().equals("")&&!_user.getRealName().equals("null")){
+                                        if (_user.getRealName()!=null&&!_user.getRealName().equals("")&&!_user.getRealName().equals("null")){
                                             _friend.setRemark(_user.getRealName());//备注
                                         }
                                         _friend.setPhone(_user.getMobileNumber());//手机号码
@@ -370,17 +370,17 @@ public class FriendService extends Service implements RosterListener {
 
     /**
      * 通知有好友请求
-     * @param content
+     * @param _request_jid
      */
-    private void notifyInfo(String content) {
+    private void notifyInfo(String _request_jid) {
         Notification.Builder _builder = new Notification.Builder(this);
 
         //intent
         Intent _intent = new Intent(this, NewFriendActivity.class);
-        _intent.putExtra("_request_jid",content);
+        _intent.putExtra("_request_jid",_request_jid);
 
         //头像
-        Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.maillist))).getBitmap();
+        Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.default_headpic))).getBitmap();
         //pendingIntent
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //昵称
@@ -389,10 +389,10 @@ public class FriendService extends Service implements RosterListener {
         _builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(_bitmap)
                 .setContentTitle("好友请求")
-                .setContentText(content+"请求添加您为好友")
+                .setContentText(_request_jid+",请求添加您为好友")
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setContentIntent(pendingIntent)
-                .setFullScreenIntent(pendingIntent,true);
+                .setContentIntent(pendingIntent);
+//                .setFullScreenIntent(pendingIntent,true);
 
         mNotification = _builder.build();
         //通知
@@ -561,7 +561,7 @@ public class FriendService extends Service implements RosterListener {
         if (_head_pic_url!=null&&!_head_pic_url.equals("")&&!_head_pic_url.equals("null")){
             //正方形图片
             ImageOptions _image_options = new ImageOptions.Builder()
-                    .setSquare(true)
+                    .setCircular(true)
                     .build();
             //加载网络头像
             x.image().loadDrawable(friend.getHead_pic(), _image_options, new Callback.CommonCallback<Drawable>() {
@@ -588,7 +588,7 @@ public class FriendService extends Service implements RosterListener {
                 }
             });
         }else{
-            Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.maillist))).getBitmap();
+            Bitmap _bitmap =((BitmapDrawable)(getResources().getDrawable(R.drawable.default_headpic))).getBitmap();
             bitmaps[0] = _bitmap;
         }
 
@@ -596,15 +596,22 @@ public class FriendService extends Service implements RosterListener {
         //pendingIntent
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //昵称
+        String _nickname = friend.getNickname();
+        String _content_title = null;
+        if (_nickname!=null&&!_nickname.equals("")&&!_nickname.equals("null")){
+            _content_title = _nickname;
+        }else{
+            _content_title = friend.getFriendid();
+        }
 
         //builder设置一些参数
         _builder.setSmallIcon(R.mipmap.ic_launcher)//app的logo
                 .setLargeIcon(bitmaps[0])//用户头像
-                .setContentTitle(friend.getNickname())//昵称
+                .setContentTitle(_content_title)//昵称
                 .setContentText(chatBean.getContent())//消息内容
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setContentIntent(pendingIntent)
-                .setFullScreenIntent(pendingIntent,true);
+                .setContentIntent(pendingIntent);
+//                .setFullScreenIntent(pendingIntent,true);
 
         mNotification = _builder.build();
         //通知
