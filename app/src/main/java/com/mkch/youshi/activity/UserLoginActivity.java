@@ -351,12 +351,13 @@ public class UserLoginActivity extends Activity {
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
-                                if (datas.getString("NickName") == null || datas.getString("NickName").equals("")) {
-                                    user.setNickName(datas.getString("MobileNumber"));
-                                } else {
+                                if (datas.getString("NickName") != null&&!datas.getString("NickName").equals("")&&!datas.getString("NickName").equals("null")) {
                                     user.setNickName(datas.getString("NickName"));
                                 }
-                                user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
+
+                                if (datas.getString("HeadPic")!=null&&!datas.getString("HeadPic").equals("")&&!datas.getString("HeadPic").equals("null")){
+                                    user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
+                                }
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
                                 } else {

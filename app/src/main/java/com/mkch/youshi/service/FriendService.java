@@ -32,6 +32,7 @@ import com.mkch.youshi.util.XmppHelper;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
@@ -43,6 +44,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smackx.offline.OfflineMessageManager;
 import org.json.JSONObject;
 import org.jxmpp.util.XmppStringUtils;
 import org.xutils.DbManager;
@@ -57,6 +59,7 @@ import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by SunnyJiang on 2016/9/14.
@@ -149,6 +152,7 @@ public class FriendService extends Service implements RosterListener {
         Log.d("jlj","MainActivity----------------------addAllXmppListener");
         addFriendListener();//添加好友请求监听
         addChatListener();//添加单聊监听
+        addOffLineMessageListener();//添加离线消息监听
 
     }
 
@@ -173,8 +177,6 @@ public class FriendService extends Service implements RosterListener {
                         //如果我没有此JID的好友，才弹出对话框选择是否需要接受好友请求
                         RosterEntry _entry = mRoster.getEntry(_request_jid);
                         if (_entry==null){
-//                            Message _message = mHandler.obtainMessage(MSG_OPEN_REV_FRIEND_DIALOG, _request_jid);
-//                            mHandler.sendMessage(_message);
                             //发送广播通知，有好友请求添加
                             Log.d("jlj","MainActivity-------------好友请求，"+_request_jid);
                             //直接存入数据库，该好友信息
@@ -254,9 +256,15 @@ public class FriendService extends Service implements RosterListener {
                                         Friend _friend = new Friend();
                                         _friend.setStatus(2);//待接收
                                         _friend.setShowinnewfriend(1);//接受好友请求
-                                        _friend.setHead_pic(_user.getHeadPic());//头像
-                                        _friend.setNickname(_user.getNickName()==null?_user.getOpenFireUserName():_user.getNickName());//昵称
-                                        _friend.setRemark(_user.getRealName());//备注
+                                        if (_user.getHeadPic()!=null&&!_user.getHeadPic().equals("")&&!_user.getHeadPic().equals("null")){
+                                            _friend.setHead_pic(CommonConstants.NOW_ADDRESS_PRE+_user.getHeadPic());//头像
+                                        }
+                                        if (_user.getNickName()!=null&&!_user.getNickName().equals("")&&!_user.getNickName().equals("null")){
+                                            _friend.setNickname(_user.getNickName());//昵称
+                                        }
+                                        if (_user.getNickName()!=null&&!_user.getRealName().equals("")&&!_user.getRealName().equals("null")){
+                                            _friend.setRemark(_user.getRealName());//备注
+                                        }
                                         _friend.setPhone(_user.getMobileNumber());//手机号码
                                         _friend.setUserid(_self_user.getOpenFireUserName());//自己的openfire用户名
                                         _friend.setFriendid(_user.getOpenFireUserName());//好友的openfire用户名
@@ -491,6 +499,30 @@ public class FriendService extends Service implements RosterListener {
         };
         chatmanager.addChatListener(mChartManagerLisenter);
 
+    }
+
+    /**
+     * 添加离线消息监听
+     */
+    public void addOffLineMessageListener(){
+        OfflineMessageManager offlineMessageManager = new OfflineMessageManager(connection);
+        try {
+            int messageCount = offlineMessageManager.getMessageCount();
+            Log.d("jlj","addOffLineMessageListener--------------------------messageCount="+messageCount);
+            List<org.jivesoftware.smack.packet.Message> messages = offlineMessageManager.getMessages();
+            for (org.jivesoftware.smack.packet.Message message:messages){
+                String body = message.getBody();
+                Log.d("jlj","addOffLineMessageListener--------------------------body="+body);
+            }
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
