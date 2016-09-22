@@ -56,6 +56,7 @@ import org.xutils.x;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -176,7 +177,7 @@ public class FriendService extends Service implements RosterListener {
                         Log.d("jlj", "-------------------from:" + _request_jid + ",to:" + _to_jid + "=subscribe");
                         //如果我没有此JID的好友，才弹出对话框选择是否需要接受好友请求
                         RosterEntry _entry = mRoster.getEntry(_request_jid);
-                        if (_entry==null){
+                        if (_entry == null) {
                             //发送广播通知，有好友请求添加
                             Log.d("jlj", "MainActivity-------------好友请求，" + _request_jid);
                             //直接存入数据库，该好友信息
@@ -257,13 +258,13 @@ public class FriendService extends Service implements RosterListener {
                                         Friend _friend = new Friend();
                                         _friend.setStatus(2);//待接收
                                         _friend.setShowinnewfriend(1);//接受好友请求
-                                        if (_user.getHeadPic()!=null&&!_user.getHeadPic().equals("")&&!_user.getHeadPic().equals("null")){
-                                            _friend.setHead_pic(CommonConstants.NOW_ADDRESS_PRE+_user.getHeadPic());//头像
+                                        if (_user.getHeadPic() != null && !_user.getHeadPic().equals("") && !_user.getHeadPic().equals("null")) {
+                                            _friend.setHead_pic(CommonConstants.NOW_ADDRESS_PRE + _user.getHeadPic());//头像
                                         }
-                                        if (_user.getNickName()!=null&&!_user.getNickName().equals("")&&!_user.getNickName().equals("null")){
+                                        if (_user.getNickName() != null && !_user.getNickName().equals("") && !_user.getNickName().equals("null")) {
                                             _friend.setNickname(_user.getNickName());//昵称
                                         }
-                                        if (_user.getNickName()!=null&&!_user.getRealName().equals("")&&!_user.getRealName().equals("null")){
+                                        if (_user.getNickName() != null && !_user.getRealName().equals("") && !_user.getRealName().equals("null")) {
                                             _friend.setRemark(_user.getRealName());//备注
                                         }
                                         _friend.setPhone(_user.getMobileNumber());//手机号码
@@ -387,17 +388,42 @@ public class FriendService extends Service implements RosterListener {
         //pendingIntent
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //昵称
-//
-//        //昵称
-//        if (mUser.get) {
-//
-//        }
+
+        //判断是否全天免打扰
+        if (mUser.getDisturb() == null || !mUser.getDisturb()) {
+            //如果全天免打扰关闭或者还没设置，接着判断是否开启夜间免打扰
+            if (mUser.getNight() == null || !mUser.getNight()) {
+                //如果夜间免打扰关闭或者还没设置,只需要判断提示音、振动是否开启
+                if (mUser.getSound() == null || mUser.getSound()) {
+                    _builder.setDefaults(Notification.DEFAULT_SOUND);
+                }
+                if (mUser.getVibrate() == null || mUser.getVibrate()) {
+                    _builder.setDefaults(Notification.DEFAULT_VIBRATE);
+                }
+            } else {
+                //如果夜间免打扰开启，获取当前时间和22：00到8:00比较
+                Calendar cal = Calendar.getInstance();// 当前日期
+                int hour = cal.get(Calendar.HOUR_OF_DAY);// 获取小时
+                int minute = cal.get(Calendar.MINUTE);// 获取分钟
+                int minuteOfDay = hour * 60 + minute;// 从0:00分开是到目前为止的分钟数
+                final int start = 22 * 60;// 起始时间 22:00的分钟数
+                final int end = 8 * 60;// 结束时间 8:00的分钟数
+                if (minuteOfDay <= start && minuteOfDay >= end) {
+                    //如果不处于夜间，再判断提示音、振动是否开启
+                    if (mUser.getSound() == null || mUser.getSound()) {
+                        _builder.setDefaults(Notification.DEFAULT_SOUND);
+                    }
+                    if (mUser.getVibrate() == null || mUser.getVibrate()) {
+                        _builder.setDefaults(Notification.DEFAULT_VIBRATE);
+                    }
+                }
+            }
+        }
         //builder设置一些参数
         _builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(_bitmap)
                 .setContentTitle("好友请求")
                 .setContentText(content + "请求添加您为好友")
-                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent)
                 .setFullScreenIntent(pendingIntent, true);
 
@@ -511,15 +537,15 @@ public class FriendService extends Service implements RosterListener {
     /**
      * 添加离线消息监听
      */
-    public void addOffLineMessageListener(){
+    public void addOffLineMessageListener() {
         OfflineMessageManager offlineMessageManager = new OfflineMessageManager(connection);
         try {
             int messageCount = offlineMessageManager.getMessageCount();
-            Log.d("jlj","addOffLineMessageListener--------------------------messageCount="+messageCount);
+            Log.d("jlj", "addOffLineMessageListener--------------------------messageCount=" + messageCount);
             List<org.jivesoftware.smack.packet.Message> messages = offlineMessageManager.getMessages();
-            for (org.jivesoftware.smack.packet.Message message:messages){
+            for (org.jivesoftware.smack.packet.Message message : messages) {
                 String body = message.getBody();
-                Log.d("jlj","addOffLineMessageListener--------------------------body="+body);
+                Log.d("jlj", "addOffLineMessageListener--------------------------body=" + body);
             }
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
@@ -527,7 +553,7 @@ public class FriendService extends Service implements RosterListener {
             e.printStackTrace();
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

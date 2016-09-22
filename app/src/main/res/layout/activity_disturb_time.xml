@@ -10,11 +10,88 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height" />
 
-    <com.mkch.youshi.view.DisturbTimeTabBarLayout
-        android:id="@+id/myDisturbTimeTabBarLayout"
+    <LinearLayout
+        android:id="@+id/layout_disturb_time_open"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"></com.mkch.youshi.view.DisturbTimeTabBarLayout>
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:layout_marginTop="10dp"
+        android:background="@color/common_white_color"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开启"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <ImageView
+            android:id="@+id/iv_disturb_time_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gou" />
+    </LinearLayout>
+
+    <View style="@style/commonLineStyle" />
+
+    <LinearLayout
+        android:id="@+id/layout_disturb_time_night"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@color/common_white_color"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="只在夜间开启"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <ImageView
+            android:id="@+id/iv_disturb_time_night"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gou" />
+    </LinearLayout>
+
+    <View style="@style/commonLineStyle" />
+
+    <LinearLayout
+        android:id="@+id/layout_disturb_time_close"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/friend_information_setting_height"
+        android:background="@color/common_white_color"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/new_friend_content_padding_top_or_bottom"
+        android:paddingLeft="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
+        android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="关闭"
+            android:textColor="@color/new_friend_name_color"
+            android:textSize="@dimen/friend_information_text_more_size" />
+
+        <ImageView
+            android:id="@+id/iv_disturb_time_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gou" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

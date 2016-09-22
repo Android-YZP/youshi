@@ -57,8 +57,6 @@ public class SettingActivity extends Activity {
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class SettingOnClickListener implements View.OnClickListener {
         @Override
