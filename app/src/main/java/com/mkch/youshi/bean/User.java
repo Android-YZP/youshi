@@ -36,12 +36,13 @@ public class User {
     private String Birthday;//生日
     private String Sex;//性别
     private String SexCache;//性别缓存
-    private String Address;
+    private String Address;//地区
     private String Signature;//个性签名
     private String CertNo;//身份证
     private Boolean Protected;//是否账号保护
     private Boolean AddmeVerify;//是否接受好友验证
     private Boolean ViewMySchedule;//是否允许查看表盘
+    private Boolean Recommend;//是否推荐通讯录好友
     private Boolean RealVerify;//是否实名认证
     private String TokenID;//令牌
 
@@ -243,6 +244,14 @@ public class User {
 
     public void setViewMySchedule(Boolean viewMySchedule) {
         ViewMySchedule = viewMySchedule;
+    }
+
+    public Boolean getRecommend() {
+        return Recommend;
+    }
+
+    public void setRecommend(Boolean recommend) {
+        Recommend = recommend;
     }
 
     public Boolean getRealVerify() {

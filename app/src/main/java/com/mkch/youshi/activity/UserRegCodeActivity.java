@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,27 +33,20 @@ public class UserRegCodeActivity extends Activity {
     private ImageView mIvBack;
     private TextView mTvTitle;
     private Button mBtnCommitCode;
-
     //手机号和验证码
     private String mPhone;
     private String mSmsCode;
-
     //手机介绍信息
     private TextView mTvPhoneInfo;
     private TextView mTvGetSmsAgain;
-
     //验证码
     private EditText mEtSmsCode;
-
-//	//业务层
+    //业务层
 //	private IUserBusiness mUserBusiness = new UserBusinessImp();
-
     private static ProgressDialog mProgressDialog = null;
-
     //定义倒计时handler
     private static Handler getcodeHandler;
     private int num;
-
     private Thread mDownTimeThread;
     private boolean mStopThread = false;
 
@@ -150,7 +142,6 @@ public class UserRegCodeActivity extends Activity {
         mDownTimeThread.start();
     }
 
-    //
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,24 +185,22 @@ public class UserRegCodeActivity extends Activity {
                 RequestParams requestParams = new RequestParams(CommonConstants.MessageCodeIsValid);
                 //包装请求参数
                 String _req_json = "{\"sMobileNumber\":\"" + mPhone + "\",\"VerifyCode\":\"" + smsCode + "\"}";
-                Log.d("zzzzzzzzzzzzzz", "_user_json is ----------------" + _req_json);
                 requestParams.addBodyParameter("", _req_json);//用户名
                 requestParams.addHeader("sVerifyCode", "3D8829FE");//头信息
                 x.http().post(requestParams, new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
                         if (result != null) {
-                            Log.d("zzzzzzzzzzzzzz", "----onSuccess:" + result);
                             try {
                                 JSONObject _json_result = new JSONObject(result);
                                 Boolean _success = (Boolean) _json_result.get("Success");
                                 if (_success) {
-                                    Intent _intent = new Intent(UserRegCodeActivity.this,UserRegUserNameActivity.class);
+                                    Intent _intent = new Intent(UserRegCodeActivity.this, UserRegUserNameActivity.class);
                                     _intent.putExtra("_phone", mPhone);
                                     _intent.putExtra("_code", mSmsCode);
                                     startActivity(_intent);
                                     UserRegCodeActivity.this.finish();
-                                }else{
+                                } else {
                                     Toast.makeText(UserRegCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
                                     return;
                                 }

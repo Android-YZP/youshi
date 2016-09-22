@@ -1,10 +1,14 @@
 package com.mkch.youshi.config;
 
 import android.app.Application;
+import android.app.Service;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Vibrator;
 
-import org.xutils.BuildConfig;
+import com.baidu.mapapi.SDKInitializer;
+import com.mkch.youshi.service.LocationService;
+
 import org.xutils.x;
 
 /**
@@ -14,6 +18,8 @@ public class MyApplication extends Application {
     private static Context context;
     private static Handler handler;
     private static int mainThreadId;
+    public LocationService locationService;
+    public Vibrator mVibrator;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,6 +29,12 @@ public class MyApplication extends Application {
         context = getApplicationContext();
         handler = new Handler();
         mainThreadId = android.os.Process.myTid();
+        /***
+         * 初始化定位sdk，建议在Application中创建
+         */
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     public static Handler getHandler() {

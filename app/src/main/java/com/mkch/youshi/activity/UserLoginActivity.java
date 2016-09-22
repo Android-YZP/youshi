@@ -351,9 +351,7 @@ public class UserLoginActivity extends Activity {
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
-                                if (datas.getString("NickName") != null&&!datas.getString("NickName").equals("")&&!datas.getString("NickName").equals("null")) {
-                                    user.setNickName(datas.getString("NickName"));
-                                }
+                                user.setNickName(datas.getString("NickName"));
 
                                 if (datas.getString("HeadPic")!=null&&!datas.getString("HeadPic").equals("")&&!datas.getString("HeadPic").equals("null")){
                                     user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
@@ -364,7 +362,9 @@ public class UserLoginActivity extends Activity {
                                     user.setYoushiNumber(datas.getString("UserName"));
                                 }
                                 user.setSex(datas.getString("Sex"));
+                                user.setAddress(datas.getString("Place"));
                                 user.setSignature(datas.getString("Sign"));
+                                user.setProtected(datas.getBoolean("Protected"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);

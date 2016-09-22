@@ -314,7 +314,7 @@ public class UserRegPhoneActivity extends Activity {
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.MobileNumberIsExist);
         //包装请求参数
-        String _req_json = "{\"sMobileNumber\":\"" + mPhone + "\"}";
+        String _req_json = "{\"sMobileNumber\":\"" + phone + "\"}";
         requestParams.addBodyParameter("", _req_json);//用户名
         requestParams.addHeader("sVerifyCode", "3D8829FE");//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
@@ -327,6 +327,9 @@ public class UserRegPhoneActivity extends Activity {
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             Toast.makeText(UserRegPhoneActivity.this, "手机号已注册", Toast.LENGTH_LONG).show();
+                            if (mProgressDialog != null) {
+                                mProgressDialog.dismiss();
+                            }
                             return;
                         } else {
                             sendVerificationCodeFromNet(mPhone, tokenID, mCode);

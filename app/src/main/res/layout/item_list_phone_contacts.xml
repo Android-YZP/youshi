@@ -65,7 +65,7 @@
             android:layout_width="@dimen/new_friend_add_btn_width"
             android:layout_height="@dimen/new_friend_add_btn_height"
             android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="已添加"
             android:textColor="@color/main_tabbar_item_text_font_color_sel"
             android:textSize="@dimen/friend_information_text_more_size"  />

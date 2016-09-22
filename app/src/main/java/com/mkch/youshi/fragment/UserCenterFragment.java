@@ -78,7 +78,11 @@ public class UserCenterFragment extends Fragment {
         //设置头像,昵称和优时号,本地没有就用默认
         if (mUser != null) {
             mIvHead.setImageUrl(mUser.getHeadPic(), R.drawable.maillist);
-            mTvName.setText(mUser.getNickName());
+            if (mUser.getNickName() == null ||mUser.getNickName().equals("")) {
+                mTvName.setText(mUser.getMobileNumber());
+            } else {
+                mTvName.setText(mUser.getNickName());
+            }
             if (mUser.getYoushiNumber() == null || mUser.getYoushiNumber().equals("")) {
                 mTvYoushiNumber.setText("优时号: 无");
             } else {
