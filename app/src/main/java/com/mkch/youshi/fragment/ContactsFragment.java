@@ -140,6 +140,16 @@ public class ContactsFragment extends Fragment implements SideBar
             return;
         }
         mUser = CommonUtil.getUserInfo(getActivity());
+        //更新好友请求数
+        updateNewFriendReqNum();
+        //加载好友列表
+        getFriendListFromNet();
+    }
+
+    /**
+     * 更新好友请求数
+     */
+    private void updateNewFriendReqNum() {
         String _self_openfirename = mUser.getOpenFireUserName();
 
         //从数据库获取请求好友的数量，并设置
@@ -166,8 +176,6 @@ public class ContactsFragment extends Fragment implements SideBar
             mTvNewFriendNum.setText(_req_friend_num);
 
         }
-        //加载好友列表
-        getFriendListFromNet();
     }
 
     /**
