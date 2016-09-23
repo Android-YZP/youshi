@@ -66,6 +66,8 @@ import java.util.List;
  */
 public class FriendService extends Service implements RosterListener {
     private static final int FRIEND_ADD_REQUEST_SUCCESS = 10;
+
+    private User mUser;
     /**
      * XMPP
      */
@@ -93,6 +95,7 @@ public class FriendService extends Service implements RosterListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        mUser = CommonUtil.getUserInfo(this);
         //通知service
         mNotification_manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mainxmpp();//进入首页后，xmpp的所有操作
@@ -119,9 +122,8 @@ public class FriendService extends Service implements RosterListener {
         connection = XmppHelper.getConnection();
 
         //用户自动登录
-        User _user = CommonUtil.getUserInfo(this);
-        final String _login_user = _user.getOpenFireUserName();
-        final String _login_pwd = _user.getPassword();
+        final String _login_user = mUser.getOpenFireUserName();
+        final String _login_pwd = mUser.getPassword();
         Log.d("jlj", "MainActivity----------------------mainxmpp=" + _login_user + "," + _login_pwd);
 
         //添加断线重连监听
@@ -223,7 +225,7 @@ public class FriendService extends Service implements RosterListener {
             @Override
             public void run() {
                 //自己的信息
-                final User _self_user = CommonUtil.getUserInfo(FriendService.this);
+                mUser = CommonUtil.getUserInfo(FriendService.this);
 
                 //获取该jid的用户名
                 String _openfire_username = XmppStringUtils.parseLocalpart(request_jid);
@@ -233,9 +235,9 @@ public class FriendService extends Service implements RosterListener {
 //                _openfire_username = "165094350";//test
                 //包装请求参数
                 String _req_json = "{\"OpenFireUserName\":\"" + _openfire_username + "\"}";
-                Log.d("jlj", "saveFriendToDB------------------onReceive-req_json=" + _req_json + "," + _self_user.getLoginCode());
+                Log.d("jlj", "saveFriendToDB------------------onReceive-req_json=" + _req_json + "," + mUser.getLoginCode());
                 requestParams.addBodyParameter("", _req_json);//用户名
-                requestParams.addHeader("sVerifyCode", _self_user.getLoginCode());//头信息
+                requestParams.addHeader("sVerifyCode", mUser.getLoginCode());//头信息
                 x.http().post(requestParams, new Callback.CommonCallback<String>() {
                     @Override
                     public void onSuccess(String result) {
@@ -254,7 +256,7 @@ public class FriendService extends Service implements RosterListener {
                                     if (_user_json_str != null && !_user_json_str.equals("")) {
                                         Gson _gson = new Gson();
                                         User _user = _gson.fromJson(_user_json_str, User.class);
-                                        String _self_user_openfirename = _self_user.getOpenFireUserName();//自己的openfirename
+                                        String _self_user_openfirename = mUser.getOpenFireUserName();//自己的openfirename
                                         String _friend_openfirename = _user.getOpenFireUserName();//好友的openfirename
 
                                         //保存用户请求列表
@@ -533,15 +535,16 @@ public class FriendService extends Service implements RosterListener {
                             try {
                                 //查找该ChatBean所属的消息盒子
                                 String _openfirename = _chat_bean.getUsername();//openfirename
-//                                String _openfirename = XmppStringUtils.parseLocalpart(_sender);
                                 Log.d("jlj", "addChatListener-----------------------------------_openfirename is" + _openfirename);
                                 //获取该好友的一些信息
+                                //查询本登录用户的，已添加的，某个好友
                                 Friend _friend = dbManager.selector(Friend.class)
                                         .where("friendid", "=", _openfirename)
                                         .and("status", "=", 1)
+                                        .and("userid","=",mUser.getOpenFireUserName())
                                         .findFirst();
                                 if (_friend == null) {
-                                    Log.d("jlj", "addChatListener-----------------------------------friend is null");
+                                    Log.d("jlj", "addChatListener-----------------------------------发送的friend is null");
                                     return;
                                 }
 

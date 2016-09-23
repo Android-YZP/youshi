@@ -118,6 +118,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
      */
     private void updateUIfromReceiver(final String userid) {
         try {
+            //本登录用户的，状态为已添加或待接受的，显示在新朋友的好友列表
             mFriends = dbManager.selector(Friend.class)
                     .where("status","in",new int[]{1,2})
                     .and("showinnewfriend","=","1")
@@ -154,13 +155,16 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     private void initData() {
         mTvTitle.setText("新的朋友");
+        User mUser = CommonUtil.getUserInfo(this);
         //查询数据库中待添加的好友列表
         dbManager = DBHelper.getDbManager();
         try {
+            //本登录用户的，状态为已添加或待接受的，显示在新朋友的好友列表
             mFriends = dbManager.selector(Friend.class)
                     .where("status","in",new int[]{1,2})
                     .and("showinnewfriend","=","1")
-                    .findAll();;
+                    .and("userid","=",mUser.getOpenFireUserName())
+                    .findAll();
             if (mFriends==null){
                 mFriends = new ArrayList<>();
             }
@@ -234,7 +238,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                 //更改数据库中该条信息，并重新刷新UI
                 Friend _friend = mFriends.get(info.position);
                 try {
-                    _friend.setShowinnewfriend(0);
+                    _friend.setShowinnewfriend(0);//不显示
                     dbManager.saveOrUpdate(_friend);
                 } catch (DbException e) {
                     e.printStackTrace();
@@ -292,7 +296,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                         if (_success) {
                             //更改此好友的已添加状态
                             Friend _friend = mFriends.get(position);
-                            _friend.setStatus(1);
+                            _friend.setStatus(1);//已添加
                             Log.d("jlj","----------------_friend-toString = "+_friend.toString());
                             //并更新数据库
                             try {
