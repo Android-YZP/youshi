@@ -28,7 +28,6 @@
         android:background="@color/common_white_color"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:text="江苏无锡"
         android:textColor="@color/new_friend_name_color"
         android:textSize="@dimen/friend_information_text_more_size" />
 
@@ -49,7 +48,7 @@
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:background="@drawable/bg_border_common_et"
         android:hint="请输入新的位置"
-        android:maxLength="10"
+        android:maxLength="30"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
         android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
