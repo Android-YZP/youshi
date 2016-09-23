@@ -48,6 +48,10 @@ public class User {
     private String ConflictNumber;//允许日程冲突的最大数量
     private String AffairTime;//事务单次时长
     private Boolean RealVerify;//是否实名认证
+    private Boolean Sound;//提示音开关
+    private Boolean Vibrate;//振动开关
+    private Boolean Disturb;//是否免打扰
+    private Boolean Night;//是否夜间
     private String TokenID;//令牌
 
     public User(String mobileNumber, String appVersion, String clientType, String clientVersion, String deviceInfo, String firm, String imageVerifyCode, String osType, String osUuid, String password) {
@@ -296,6 +300,38 @@ public class User {
 
     public void setRealVerify(Boolean realVerify) {
         RealVerify = realVerify;
+    }
+
+    public Boolean getSound() {
+        return Sound;
+    }
+
+    public void setSound(Boolean sound) {
+        Sound = sound;
+    }
+
+    public Boolean getVibrate() {
+        return Vibrate;
+    }
+
+    public void setVibrate(Boolean vibrate) {
+        Vibrate = vibrate;
+    }
+
+    public Boolean getDisturb() {
+        return Disturb;
+    }
+
+    public void setDisturb(Boolean disturb) {
+        Disturb = disturb;
+    }
+
+    public Boolean getNight() {
+        return Night;
+    }
+
+    public void setNight(Boolean night) {
+        Night = night;
     }
 
     public String getTokenID() {

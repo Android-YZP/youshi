@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.view.DisturbTimeTabBarLayout;
+import com.mkch.youshi.bean.User;
+import com.mkch.youshi.util.CommonUtil;
 
 public class DisturbTimeActivity extends Activity {
 
     private ImageView mIvBack;
     private TextView mTvTitle;
-    private DisturbTimeTabBarLayout mDisturbTimeTabBarLayout;
+    private LinearLayout mLayoutOpen, mLayoutNight, mLayoutClose;
+    private ImageView mIvOpen, mIvNight, mIvClose;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +32,34 @@ public class DisturbTimeActivity extends Activity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-        mDisturbTimeTabBarLayout = (DisturbTimeTabBarLayout) findViewById(R.id.myDisturbTimeTabBarLayout);
+        mLayoutOpen = (LinearLayout) findViewById(R.id.layout_disturb_time_open);
+        mLayoutNight = (LinearLayout) findViewById(R.id.layout_disturb_time_night);
+        mLayoutClose = (LinearLayout) findViewById(R.id.layout_disturb_time_close);
+        mIvOpen = (ImageView) findViewById(R.id.iv_disturb_time_open);
+        mIvNight = (ImageView) findViewById(R.id.iv_disturb_time_night);
+        mIvClose = (ImageView) findViewById(R.id.iv_disturb_time_close);
     }
 
     private void initData() {
+        mUser = CommonUtil.getUserInfo(this);
         mTvTitle.setText("消息免打扰");
+        if (mUser.getDisturb() == null) {
+            mIvOpen.setVisibility(View.GONE);
+            mIvNight.setVisibility(View.GONE);
+            mIvClose.setVisibility(View.VISIBLE);
+        } else if(mUser.getDisturb()){
+            mIvOpen.setVisibility(View.VISIBLE);
+            mIvNight.setVisibility(View.GONE);
+            mIvClose.setVisibility(View.GONE);
+        }else if(mUser.getNight()){
+            mIvOpen.setVisibility(View.GONE);
+            mIvNight.setVisibility(View.VISIBLE);
+            mIvClose.setVisibility(View.GONE);
+        }else {
+            mIvOpen.setVisibility(View.GONE);
+            mIvNight.setVisibility(View.GONE);
+            mIvClose.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setListener() {
@@ -41,21 +69,48 @@ public class DisturbTimeActivity extends Activity {
                 DisturbTimeActivity.this.finish();
             }
         });
-        //当用户选择免打扰时间后，设置对应发出提示音和振动的时间
-        mDisturbTimeTabBarLayout.setOnItemClickListener(new DisturbTimeTabBarLayout.IDisturbTimeTabBarCallBackListener() {
-            @Override
-            public void clickItem(int id) {
-                switch (id) {
-                    case R.id.index_open_item:
-                        break;
-                    case R.id.index_night_item:
-                        break;
-                    case R.id.index_close_item:
-                        break;
-                    default:
-                        break;
-                }
+        mLayoutOpen.setOnClickListener(new DisturbTimeOnClickListener());
+        mLayoutNight.setOnClickListener(new DisturbTimeOnClickListener());
+        mLayoutClose.setOnClickListener(new DisturbTimeOnClickListener());
+    }
+
+    /**
+     * 自定义点击监听类
+     */
+    private class DisturbTimeOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.layout_disturb_time_open:
+                    mUser.setDisturb(true);
+                    mUser.setNight(false);
+                    mIvOpen.setVisibility(View.VISIBLE);
+                    mIvNight.setVisibility(View.GONE);
+                    mIvClose.setVisibility(View.GONE);
+                    CommonUtil.saveUserInfo(mUser, DisturbTimeActivity.this);
+                    Toast.makeText(DisturbTimeActivity.this, "免打扰已开启", Toast.LENGTH_LONG).show();
+                    break;
+                case R.id.layout_disturb_time_night:
+                    mUser.setDisturb(false);
+                    mUser.setNight(true);
+                    mIvOpen.setVisibility(View.GONE);
+                    mIvNight.setVisibility(View.VISIBLE);
+                    mIvClose.setVisibility(View.GONE);
+                    CommonUtil.saveUserInfo(mUser, DisturbTimeActivity.this);
+                    Toast.makeText(DisturbTimeActivity.this, "只在夜间开启", Toast.LENGTH_LONG).show();
+                    break;
+                case R.id.layout_disturb_time_close:
+                    mUser.setDisturb(false);
+                    mUser.setNight(false);
+                    mIvOpen.setVisibility(View.GONE);
+                    mIvNight.setVisibility(View.GONE);
+                    mIvClose.setVisibility(View.VISIBLE);
+                    CommonUtil.saveUserInfo(mUser, DisturbTimeActivity.this);
+                    Toast.makeText(DisturbTimeActivity.this, "免打扰已关闭", Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    break;
             }
-        });
+        }
     }
 }
