@@ -92,11 +92,6 @@
         <activity android:name=".activity.PrivacyActivity" />
         <activity android:name=".activity.UniversalityActivity" />
         <activity android:name=".activity.QRCodeActivity" />
-        <activity
-            android:name=".activity.MipcaActivityCapture"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.ReviseAddressActivity" />
 
         <!--定位配置-->

@@ -116,9 +116,9 @@ public class UserInformationActivity extends Activity {
         ImageOptions _image_options = new ImageOptions.Builder()
                 .setCircular(true)
                 .build();
-        if (mUser.getHeadPic()!=null&&!mUser.getHeadPic().equals("")&&!mUser.getHeadPic().equals("null")){
-            x.image().bind(mIvHead,mUser.getHeadPic(),_image_options);
-        }else{
+        if (mUser.getHeadPic() != null && !mUser.getHeadPic().equals("") && !mUser.getHeadPic().equals("null")) {
+            x.image().bind(mIvHead, mUser.getHeadPic(), _image_options);
+        } else {
             mIvHead.setImageResource(R.drawable.default_headpic);
         }
     }
@@ -393,11 +393,6 @@ public class UserInformationActivity extends Activity {
         saveBitmap(photo);  //保存BitMap到本地
         //上传图片到服务器
         sendPicToServer();
-        if (photo == null) {
-            mIvHead.setImageResource(R.drawable.maillist);
-        } else {
-            mIvHead.setImageBitmap(photo);
-        }
 
         ByteArrayOutputStream baos = null;
         try {
@@ -475,6 +470,15 @@ public class UserInformationActivity extends Activity {
 
     private void showSuccess() {
         Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
+        //圆形
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
+        if (mUser.getHeadPic() != null && !mUser.getHeadPic().equals("") && !mUser.getHeadPic().equals("null")) {
+            x.image().bind(mIvHead, mUser.getHeadPic(), _image_options);
+        } else {
+            mIvHead.setImageResource(R.drawable.default_headpic);
+        }
     }
 
     /**
