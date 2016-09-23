@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.mkch.youshi.R;
@@ -27,6 +28,9 @@ import java.util.List;
  */
 @ContentView(R.layout.fragment_message)
 public class MessageFragment extends Fragment {
+
+    @ViewInject(R.id.et_message_search)
+    private EditText mEtSearchMsgBox;
 
     @ViewInject(R.id.lv_message_msgs)
     private ListView mLvMsgs;//消息盒子列表
@@ -53,7 +57,12 @@ public class MessageFragment extends Fragment {
         setListener();
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        //清除EditText的焦点
+        mEtSearchMsgBox.clearFocus();
+    }
 
     /**
      * 初始化数据
@@ -98,10 +107,6 @@ public class MessageFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onDestroy() {

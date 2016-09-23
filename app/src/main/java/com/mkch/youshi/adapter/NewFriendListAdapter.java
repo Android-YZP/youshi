@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.Friend;
 
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.List;
@@ -36,6 +37,10 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
     private List<Friend> mFriends;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
+    //圆形头像
+    private ImageOptions m_image_options = new ImageOptions.Builder()
+            .setCircular(true)
+            .build();
 
     public NewFriendListAdapter(){
     }
@@ -79,13 +84,10 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
         }
         Friend friend = mFriends.get(position);
         if (friend!=null){
-            //        friendViewHolder.iv_new_friend_head.setImageResource(newFriendHead[position]);
             String _head_pic = friend.getHead_pic();
             if (_head_pic!=null&&!_head_pic.equals("")&&!_head_pic.equals("null")){
-//                ImageOptions _image_options = new ImageOptions.Builder()
-//                        .setCircular(true)
-//                        .build();
-                x.image().bind(friendViewHolder.iv_new_friend_head,_head_pic);
+
+                x.image().bind(friendViewHolder.iv_new_friend_head,_head_pic,m_image_options);
             }else{
                 friendViewHolder.iv_new_friend_head.setImageResource(R.drawable.default_headpic);
             }

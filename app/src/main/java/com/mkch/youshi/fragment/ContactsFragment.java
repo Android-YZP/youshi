@@ -72,6 +72,7 @@ public class ContactsFragment extends Fragment implements SideBar
 
     private TextView mTvNewFriendNum;//请求添加好友的用户数量
     private DbManager dbManager;//数据库管理对象
+    private User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,17 +136,28 @@ public class ContactsFragment extends Fragment implements SideBar
      * 初始化界面数据
      */
     private void initData() {
+        if (getActivity()==null){
+            return;
+        }
+        mUser = CommonUtil.getUserInfo(getActivity());
+        String _self_openfirename = mUser.getOpenFireUserName();
+
         //从数据库获取请求好友的数量，并设置
         String _req_friend_num = "0";
         try {
             dbManager = DBHelper.getDbManager();
-            long count = dbManager.selector(Friend.class).where("status", "=", "2").and("showinnewfriend","=","1").count();
-            _req_friend_num = String.valueOf(count);
+            //本登录用户的，待接受，并显示在新朋友的数量
+            long count = dbManager.selector(Friend.class)
+                    .where("status", "=", "2")
+                    .and("showinnewfriend","=","1")
+                    .and("userid","=",_self_openfirename)
+                    .count();
+            _req_friend_num = String.valueOf(count);//请求好友的数量
 
-            long count_added = dbManager.selector(Friend.class).where("status", "=", "1").count();//已添加好友的数量
         } catch (DbException e) {
             e.printStackTrace();
         }
+        //待接受好友数量，显示在UI控件
         if (_req_friend_num.equals("0")){
             mTvNewFriendNum.setVisibility(View.GONE);
 
@@ -243,9 +255,11 @@ public class ContactsFragment extends Fragment implements SideBar
                         if (_success) {
                             //清除本地数据库该条好友信息，清除本地该条数据
                             try {
+                                //本登录用户的，已添加状态的，好友
                                 Friend first = dbManager.selector(Friend.class)
                                         .where("friendid", "=", openfirename)
                                         .and("status", "=", 1)
+                                        .and("userid","=",mUser.getOpenFireUserName())
                                         .findFirst();
                                 dbManager.delete(first);
                             } catch (DbException e) {
@@ -403,9 +417,11 @@ public class ContactsFragment extends Fragment implements SideBar
                             datas.clear();
                             //清除数据库中所有friend列表状态为1的好友
                             try {
-                            List<Friend> _yoshi_friends = dbManager.selector(Friend.class)
-                                    .where("status","=",1)
-                                    .findAll();
+                                //本登录用户的，已添加的，所有好友
+                                List<Friend> _yoshi_friends = dbManager.selector(Friend.class)
+                                        .where("status","=",1)
+                                        .and("userid","=",mUser.getOpenFireUserName())
+                                        .findAll();
                                 dbManager.delete(_yoshi_friends);
                             } catch (DbException e) {
                                 e.printStackTrace();
