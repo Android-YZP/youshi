@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.NewFriendListAdapter;
 import com.mkch.youshi.bean.User;
@@ -74,14 +75,26 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     Toast.makeText(NewFriendActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
                 case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
-                    String _request_jid = (String) msg.obj;
-                    Toast.makeText(NewFriendActivity.this, _request_jid, Toast.LENGTH_SHORT).show();
+                    String _friend_json = (String) msg.obj;
+                    Gson _gson = new Gson();
+                    Friend _friend = _gson.fromJson(_friend_json, Friend.class);
+                    //昵称
+                    String _nickname = _friend.getNickname();
+                    String _content_text_username = null;
+                    if (_nickname!=null&&!_nickname.equals("")&&!_nickname.equals("null")){
+                        _content_text_username = _nickname;
+                    }else{
+                        _content_text_username = _friend.getFriendid();
+                    }
+                    //提示
+                    Toast.makeText(NewFriendActivity.this,_content_text_username+",请求添加您为好友！", Toast.LENGTH_LONG).show();
                     //更新UI界面，获取最新的用户列表
-                    updateUIfromReceiver(_request_jid);
+                    updateUIfromReceiver(_friend.getUserid());
                     break;
                 case CommonConstants.FLAG_ALLOW_FRIEND_SUCCESS:
                     //更新UI界面，添加按钮变成已添加文字
                     updateUIfromAllowFriend();
+                    break;
                 default:
                     break;
             }
@@ -103,11 +116,12 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
     /**
      * 更新UI界面，获取最新的用户列表
      */
-    private void updateUIfromReceiver(final String _request_jid) {
+    private void updateUIfromReceiver(final String userid) {
         try {
             mFriends = dbManager.selector(Friend.class)
                     .where("status","in",new int[]{1,2})
                     .and("showinnewfriend","=","1")
+                    .and("userid","=",userid)
                     .findAll();
             Log.d("jlj","mFriends size is --------------------"+mFriends.size());
             for (int i=0;i<mFriends.size();i++){
@@ -158,11 +172,21 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         mAdapter.setOnItemButtonClickListener(this);
         mListView.setAdapter(mAdapter);
         //从广播中，接intent中内容，并更新UI
-        String _request_jid = getIntent().getStringExtra("_request_jid");
-        if (_request_jid!=null&&!_request_jid.equals("")){
-            Toast.makeText(NewFriendActivity.this, _request_jid, Toast.LENGTH_SHORT).show();
+        String _friend_json = getIntent().getStringExtra("_friend_json");
+        if (_friend_json!=null&&!_friend_json.equals("")){
+            Gson _gson = new Gson();
+            Friend _friend = _gson.fromJson(_friend_json, Friend.class);
+            //昵称
+            String _nickname = _friend.getNickname();
+            String _content_text_username = null;
+            if (_nickname!=null&&!_nickname.equals("")&&!_nickname.equals("null")){
+                _content_text_username = _nickname;
+            }else{
+                _content_text_username = _friend.getFriendid();
+            }
+            Toast.makeText(NewFriendActivity.this, _content_text_username+",请求添加您为好友！", Toast.LENGTH_SHORT).show();
             //更新UI界面，获取最新的用户列表
-            updateUIfromReceiver(_request_jid);
+            updateUIfromReceiver(_friend.getUserid());
 
         }
         //搜索框不弹出软键盘
@@ -320,7 +344,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
             @Override
             public void onFinished() {
                 Log.d("userLogin", "----onFinished");
-                //使用handler通知UI取消进度加载对话框
+                //取消进度加载对话框
             }
         });
     }

@@ -21,14 +21,14 @@ public class FriendsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         if (intent.getAction().equals("yoshi.action.friendsbroadcast")){
-            final String _request_jid = intent.getStringExtra("_request_jid");
-            Log.d("jlj","FriendsReceiver---------------------onReceive-jid="+_request_jid);
+            final String _friend_json = intent.getStringExtra("_friend_json");
+            Log.d("jlj","FriendsReceiver---------------------onReceive-_friend_json="+_friend_json);
 
 
             //获取成功
             Message _msg = new Message();
             _msg.what = RECEIVE_REQUEST_ADD_FRIEND;
-            _msg.obj = _request_jid;
+            _msg.obj = _friend_json;
             mHandler.sendMessage(_msg);
         }
     }

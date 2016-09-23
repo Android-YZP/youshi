@@ -8,7 +8,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_topbar_height"
-        android:background="@color/common_topbar_bg_color">
+        android:background="@color/common_topbar_bg_color"
+
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,6 +28,8 @@
         android:background="@color/message_search_part_bg_color"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         >
 
         <EditText
