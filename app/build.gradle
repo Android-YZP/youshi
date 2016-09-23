@@ -42,9 +42,7 @@ dependencies {
     //listview
     compile 'com.huxq17.xrefreshview:xrefreshview:3.5.2'
     //扫描二维码
-    compile 'com.google.zxing:core:3.2.1'
-    compile 'com.google.zxing:android-core:3.2.1'
-    compile 'com.github.yoojia:zxing:0.7@aar'
+    compile 'cn.yipianfengye.android:zxing-library:1.9'
     //依赖下面的库
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'

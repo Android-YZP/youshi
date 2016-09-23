@@ -72,11 +72,13 @@
 
         <TextView
             android:id="@+id/tv_user_information_name"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
+            android:gravity="right"
+            android:paddingLeft="18dp"
             android:singleLine="true"
             android:text="昵称"
             android:textColor="@color/friend_information_name_color"
@@ -227,11 +229,13 @@
 
         <TextView
             android:id="@+id/tv_user_information_address"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="@dimen/friend_information_head_margin_left"
             android:ellipsize="end"
+            android:gravity="right"
+            android:paddingLeft="18dp"
             android:singleLine="true"
             android:text="江苏无锡"
             android:textColor="@color/friend_information_name_color"

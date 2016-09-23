@@ -51,10 +51,12 @@
         android:textSize="@dimen/friend_information_text_remark_size" />
 
     <View
+        android:id="@+id/view_new_message_notice_line1"
         style="@style/commonLineStyle"
         android:layout_marginTop="@dimen/friend_information_margin_top" />
 
     <LinearLayout
+        android:id="@+id/layout_new_message_notice_voice"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:background="@color/common_white_color"
@@ -81,10 +83,12 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/view_new_message_notice_line2"
         style="@style/commonLineStyle"
         android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right" />
 
     <LinearLayout
+        android:id="@+id/layout_new_message_notice_vibration"
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
         android:background="@color/common_white_color"
@@ -110,5 +114,7 @@
             android:checked="true" />
     </LinearLayout>
 
-    <View style="@style/commonLineStyle" />
+    <View
+        android:id="@+id/view_new_message_notice_line3"
+        style="@style/commonLineStyle" />
 </LinearLayout>

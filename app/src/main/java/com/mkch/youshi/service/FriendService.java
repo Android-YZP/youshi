@@ -56,9 +56,8 @@ import org.xutils.x;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -475,12 +474,42 @@ public class FriendService extends Service implements RosterListener {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+        //判断是否全天免打扰
+        if (mUser.getDisturb() == null || !mUser.getDisturb()) {
+            //如果全天免打扰关闭或者还没设置，接着判断是否开启夜间免打扰
+            if (mUser.getNight() == null || !mUser.getNight()) {
+                //如果夜间免打扰关闭或者还没设置,只需要判断提示音、振动是否开启
+                if (mUser.getSound() == null || mUser.getSound()) {
+                    _builder.setDefaults(Notification.DEFAULT_SOUND);
+                }
+                if (mUser.getVibrate() == null || mUser.getVibrate()) {
+                    _builder.setDefaults(Notification.DEFAULT_VIBRATE);
+                }
+            } else {
+                //如果夜间免打扰开启，获取当前时间和22：00到8:00比较
+                Calendar cal = Calendar.getInstance();// 当前日期
+                int hour = cal.get(Calendar.HOUR_OF_DAY);// 获取小时
+                int minute = cal.get(Calendar.MINUTE);// 获取分钟
+                int minuteOfDay = hour * 60 + minute;// 从0:00分开是到目前为止的分钟数
+                final int start = 22 * 60;// 起始时间 22:00的分钟数
+                final int end = 8 * 60;// 结束时间 8:00的分钟数
+                if (minuteOfDay <= start && minuteOfDay >= end) {
+                    //如果不处于夜间，再判断提示音、振动是否开启
+                    if (mUser.getSound() == null || mUser.getSound()) {
+                        _builder.setDefaults(Notification.DEFAULT_SOUND);
+                    }
+                    if (mUser.getVibrate() == null || mUser.getVibrate()) {
+                        _builder.setDefaults(Notification.DEFAULT_VIBRATE);
+                    }
+                }
+            }
+        }
         //builder设置一些参数
         _builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(bitmaps[0])
                 .setContentTitle("好友请求")
                 .setContentText(_content_text_username + ",请求添加您为好友")
-                .setDefaults(Notification.DEFAULT_ALL)
+//                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent);
 //                .setFullScreenIntent(pendingIntent,true);
 
