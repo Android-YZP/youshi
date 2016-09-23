@@ -99,6 +99,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.ReviseAddressActivity" />
 
+        <!--定位配置-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -109,7 +110,8 @@
         </service>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Y94jKQ8inIQ9BKAK4nS24RXb4S4LQ3Lg" />
+            android:value="zrFiBx8eYGwjw3Iy635GG0vMPniPt6uV" />
+
         <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"
