@@ -23,6 +23,7 @@ import com.mkch.youshi.adapter.PhoneContactAdapter;
 import com.mkch.youshi.bean.ContactEntity;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 
@@ -32,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.kymjs.kjframe.KJActivity;
 import org.kymjs.kjframe.ui.BindView;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -58,6 +60,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
     private ListView mListView;
     private PhoneContactAdapter mAdapter;
     private static ProgressDialog mProgressDialog = null;
+    private DbManager dbManager;//数据库管理对象
 
     @Override
     public void setRootView() {
@@ -66,6 +69,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
     public void initData() {
         super.initData();
+        dbManager = DBHelper.getDbManager();
         getPhoneContacts();
     }
 
