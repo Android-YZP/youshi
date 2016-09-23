@@ -31,6 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
+            android:padding="5dp"
             android:text="扫描"
             android:textColor="@color/common_white_color"
             android:textSize="@dimen/friend_information_text_more_size" />
