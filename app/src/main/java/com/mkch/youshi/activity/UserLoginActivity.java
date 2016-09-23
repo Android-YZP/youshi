@@ -413,7 +413,7 @@ public class UserLoginActivity extends Activity {
             @Override
             public void onFinished() {
                 Log.d("userLogin", "----onFinished");
-                //使用handler通知UI取消进度加载对话框
+                //取消进度加载对话框
             }
         });
     }
