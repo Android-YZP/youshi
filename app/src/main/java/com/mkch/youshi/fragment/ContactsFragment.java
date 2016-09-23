@@ -349,8 +349,6 @@ public class ContactsFragment extends Fragment implements SideBar
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class MyContactsOnClickListener implements View.OnClickListener {
         @Override
@@ -417,7 +415,6 @@ public class ContactsFragment extends Fragment implements SideBar
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Contact data = new Contact();
                                 JSONObject jobj = mDatas.getJSONObject(i);
-//                                String name = jobj.getString("UserName");
                                 String HeadPic = jobj.getString("HeadPic");//头像
                                 String _head_pic = null;
                                 if (HeadPic!=null&&!HeadPic.equals("")&&!HeadPic.equals("null")){

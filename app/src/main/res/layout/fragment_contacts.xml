@@ -24,6 +24,7 @@
             android:id="@+id/iv_contacts_topbar_add_friend"
             android:layout_width="@dimen/contacts_image_add_friends_width_or_height"
             android:layout_height="@dimen/contacts_image_add_friends_width_or_height"
+            android:padding="5dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
