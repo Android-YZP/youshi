@@ -123,7 +123,7 @@ public class FriendService extends Service implements RosterListener {
         //用户自动登录
         final String _login_user = mUser.getOpenFireUserName();
         final String _login_pwd = mUser.getPassword();
-        Log.d("jlj", "MainActivity----------------------mainxmpp=" + _login_user + "," + _login_pwd);
+        Log.d("jlj", "FriendsReceiver----------------------mainxmpp=" + _login_user + "," + _login_pwd);
 
         //添加断线重连监听
         xmppConnectionListener = new XmppConnectionListener(_login_user, _login_pwd);
@@ -150,7 +150,7 @@ public class FriendService extends Service implements RosterListener {
      * 添加所有的监听器
      */
     private void addAllXmppListener() {
-        Log.d("jlj", "MainActivity----------------------addAllXmppListener");
+        Log.d("jlj", "FriendsReceiver----------------------addAllXmppListener");
         addFriendListener();//添加好友请求监听
         addChatListener();//添加单聊监听
         addOffLineMessageListener();//添加离线消息监听
@@ -179,7 +179,7 @@ public class FriendService extends Service implements RosterListener {
                         RosterEntry _entry = mRoster.getEntry(_request_jid);
                         if (_entry == null) {
                             //发送广播通知，有好友请求添加
-                            Log.d("jlj", "MainActivity-------------好友请求，" + _request_jid);
+                            Log.d("jlj", "FriendsReceiver-------------好友请求，" + _request_jid);
                             //直接存入数据库，该好友信息
                             saveFriendToDB(_request_jid);
 
@@ -394,9 +394,12 @@ public class FriendService extends Service implements RosterListener {
      * @param _friend_json
      */
     private void actionToNotifyNewFriendActivity(String _friend_json) {
+        //发送广播：若MainActivity处于显示状态，则通知界面更新UI
+        boolean isForeground_MainActivity = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.MainActivity");
+
         //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
         boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.NewFriendActivity");
-        if (isForeground) {
+        if (isForeground || isForeground_MainActivity) {
             Intent _intent = new Intent();
             _intent.setAction("yoshi.action.friendsbroadcast");
             _intent.putExtra("_friend_json", _friend_json);
@@ -404,6 +407,8 @@ public class FriendService extends Service implements RosterListener {
         } else {
             notifyInfo(_friend_json);
         }
+
+
     }
 
 
@@ -570,7 +575,7 @@ public class FriendService extends Service implements RosterListener {
                                 Friend _friend = dbManager.selector(Friend.class)
                                         .where("friendid", "=", _openfirename)
                                         .and("status", "=", 1)
-                                        .and("userid","=",mUser.getOpenFireUserName())
+                                        .and("userid", "=", mUser.getOpenFireUserName())
                                         .findFirst();
                                 if (_friend == null) {
                                     Log.d("jlj", "addChatListener-----------------------------------发送的friend is null");
