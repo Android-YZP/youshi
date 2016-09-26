@@ -56,8 +56,8 @@ public class MainActivity extends BaseActivity {
      * 找到所有视图
      */
     private void findView() {
-        mIndexTabBarLayout=(IndexTabBarLayout)findViewById(R.id.myIndexTabBarLayout);
-        mViewPager = (NoScrollViewPager)findViewById(R.id.myViewPager);
+        mIndexTabBarLayout = (IndexTabBarLayout) findViewById(R.id.myIndexTabBarLayout);
+        mViewPager = (NoScrollViewPager) findViewById(R.id.myViewPager);
         mViewPager.setOffscreenPageLimit(CACHE_PAGES);//设置预加载界面数量
         mViewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager()));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -127,8 +127,8 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 自定义ViewPager的适配器
-     * @author JLJ
      *
+     * @author JLJ
      */
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -159,7 +159,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private long exitTime=0;
+    private long exitTime = 0;
+
     /**
      * 第二次点击返回，退出
      */
@@ -179,7 +180,7 @@ public class MainActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mMonthChooseDate = intent.getStringExtra("Date");
-        Log.d("YZP", "-----------Main="+ mMonthChooseDate + "YZP");
+        Log.d("YZP", "-----------Main=" + mMonthChooseDate + "YZP");
     }
 
     public String getmMonthChooseDate() {

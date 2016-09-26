@@ -24,7 +24,7 @@ public class CommonConstants {
     public static final int FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS = 16;
     public static final int FLAG_CHANGE_SIGN_SUCCESS = 17;
     public static final int FLAG_CHANGE_ADDRESS_SUCCESS = 18;
-    public static final int FLAG_CHANGE_PHONE_SUCCESS = 19;
+    public static final int FLAG_REG_CODE_SHOW = 19;
     public static final int FLAG_CHANGE_PASSWORD_SUCCESS = 20;
     public static final int FLAG_CHANGE_PROTECTED_SUCCESS = 21;
     public static final int FLAG_CHANGE_ERROR1 = 22;
@@ -32,6 +32,8 @@ public class CommonConstants {
     public static final int FLAG_CHANGE_ERROR3 = 24;
     public static final int FLAG_CHANGE_VIEWMYSCHEDULE_SUCCESS = 25;
     public static final int FLAG_CHANGE_ADDMEVERIFY_SUCCESS = 26;
+    public static final int FLAG_GET_REG_MOBILEMGS_REGISTER_SUCCESS = 27;
+    public static final int FLAG_REG_PHONE_TOKENID_NO_EXIST = 28;
     /**
      * yaozhongping
      * 从100开始
@@ -73,9 +75,11 @@ public class CommonConstants {
     //登录是否需要图片验证码
     public static final String CheckLoginPickCodeExist = NOW_ADDRESS + "CheckLoginPickCodeExist";
     //切换登录图片验证码
-    public static final String ReloadLoginPicCode = NOW_ADDRESS + "ReloadLoginPicCode ";
+    public static final String ReloadLoginPicCode = NOW_ADDRESS + "ReloadLoginPicCode";
     //注册
     public static final String JOIN = NOW_ADDRESS + "Join";
+    //切换注册图片验证码
+    public static final String ReloadMessagePicCode = NOW_ADDRESS + "ReloadMessagePicCode";
     //获取TokenID
     public static final String GetTokenID = NOW_ADDRESS + "GetTokenID";
     //注册是否需要图片验证码

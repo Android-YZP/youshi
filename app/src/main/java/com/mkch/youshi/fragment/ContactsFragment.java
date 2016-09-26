@@ -94,8 +94,6 @@ public class ContactsFragment extends Fragment implements SideBar
         setListener();
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -444,12 +442,12 @@ public class ContactsFragment extends Fragment implements SideBar
                                 Log.d("jlj","--------------Username="+Nickname+",OpenFireUserName="+OpenFireUserName);
                                 if (Nickname!=null&&!Nickname.equals("")&&!Nickname.equals("null")){
                                     data.setName(Nickname);
-
+                                    data.setPinyin(HanziToPinyin.getPinYin(Nickname));
                                 }else{
                                     data.setName(OpenFireUserName);
+                                    data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
                                 data.setOpenFireName(OpenFireUserName);
-                                data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 datas.add(data);
                                 //临时使用-存储所有的优时好友列表数据-from JLJ
                                 User _self_user = CommonUtil.getUserInfo(getActivity());

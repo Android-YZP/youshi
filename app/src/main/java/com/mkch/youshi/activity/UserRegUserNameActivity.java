@@ -35,19 +35,12 @@ import java.net.SocketTimeoutException;
 public class UserRegUserNameActivity extends Activity {
     private ImageView mIvBack;
     private TextView mTvTitle;
-
     //密码和确认密码
     private EditText mEtPassword;
     private EditText mEtPassAgain;
     private Button mBtnRegister;
-
     private String mPhone;
     private String mCode;
-    private String mPassword;
-
-//	//业务层
-//	private IUserBusiness mUserBusiness = new UserBusinessImp();
-
     private static ProgressDialog mProgressDialog = null;
 
     @Override
@@ -65,7 +58,6 @@ public class UserRegUserNameActivity extends Activity {
         //密码和确认密码
         mEtPassword = (EditText) findViewById(R.id.et_user_reg_password);
         mEtPassAgain = (EditText) findViewById(R.id.et_user_reg_password_again);
-
         mBtnRegister = (Button) findViewById(R.id.btn_user_reg_register_commit);
     }
 
@@ -141,7 +133,6 @@ public class UserRegUserNameActivity extends Activity {
                     Toast.makeText(UserRegUserNameActivity.this, "密码格式是6到15位的字母数字组成", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                mPassword = password;//全局变量
                 userRegisterFromNet(mPhone, password, mCode);//用户注册
             }
 

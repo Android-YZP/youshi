@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.PhoneContactAdapter;
 import com.mkch.youshi.bean.ContactEntity;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
@@ -126,7 +127,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
     }
 
     /**
-     * 获取联系人列表
+     * 加载联系人列表
      */
     private void showListVerfy() {
         mAdapter = new PhoneContactAdapter(mListView, mContacts, this);
@@ -208,6 +209,13 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                     mContacts.remove(i);
                                     i--;
                                 }
+                            }
+                            for (int i = 0; i < mContacts.size(); i++) {
+                                //存储所有的已注册手机联系人列表数据
+                                User user = CommonUtil.getUserInfo(PhoneContactsActivity.this);
+                                String contactID = user.getOpenFireUserName();
+                                //获取所有的优时好友列表
+//                                PhoneContact contact = new PhoneContact(mContacts.get(i).getOpenFireUserName(),mContacts.get(i).getOpenFireUserName(),Nickname,Remark,MobileNumber,status,_self_userid);
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW);
                         }

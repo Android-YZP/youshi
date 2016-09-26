@@ -304,7 +304,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
-
                             //提醒添加成功
                             mHandler.sendEmptyMessage(CommonConstants.FLAG_ALLOW_FRIEND_SUCCESS);
                         } else {

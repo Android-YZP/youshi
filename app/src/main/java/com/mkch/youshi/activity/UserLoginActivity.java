@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.LoginUserJson;
+import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CheckUtil;
@@ -56,10 +57,37 @@ public class UserLoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-//        startActivity(new Intent(UserLoginActivity.this,MainActivity.class));//测试
-
         super.onCreate(savedInstanceState);
+        //当前app的真实版本号
+        int currentCode = CommonUtil.getAppVersion(this).getVersionCode();
+        UnLoginedUser unLoginedUser = CommonUtil.getUnLoginedUser(this);
+        //是否首次安装
+        if (unLoginedUser == null) {
+            //覆盖versioncode=20
+            unLoginedUser = new UnLoginedUser(currentCode, "");
+            CommonUtil.saveUnLoginedUser(unLoginedUser, this);
+//            //创建launch图标
+//            CommonUtil.createShortCut(this);
+        } else {
+            boolean isCoverInstallNewApp = false;//是否覆盖安装新版本的app
+            //当前是最新版，就不用清除数据
+            int oldversioncode = unLoginedUser.getVersioncode();//获取versioncode=20
+            //21,20
+            Log.i("jlj-userversion", "currentCode = " + currentCode + ",oldcode = " + oldversioncode);
+            if (currentCode > oldversioncode) {
+                isCoverInstallNewApp = true;//覆盖安装新版本的app
+            }
+            //覆盖安装，清除数据，跳转引导页，并覆盖用户版本信息
+            if (isCoverInstallNewApp) {
+//                Log.i("jlj-userversion-fugai", "clean");
+//                //清除数据
+//                DataCleanManager2.cleanApplicationData(MainActivity.this, new String[0]);
+                //覆盖当前app的真实版本号versioncode=21
+                unLoginedUser.setVersioncode(currentCode);
+                CommonUtil.saveUnLoginedUser(unLoginedUser, this);
+                return;
+            }
+        }
         //便于测试去掉登录
         User _user = CommonUtil.getUserInfo(this);
         if (_user != null) {
@@ -68,7 +96,6 @@ public class UserLoginActivity extends Activity {
             this.finish();
             return;
         }
-
         setContentView(R.layout.activity_user_login);
         initView();
         setListener();
@@ -353,8 +380,8 @@ public class UserLoginActivity extends Activity {
                                 user.setMobileNumber(datas.getString("MobileNumber"));
                                 user.setNickName(datas.getString("NickName"));
 
-                                if (datas.getString("HeadPic")!=null&&!datas.getString("HeadPic").equals("")&&!datas.getString("HeadPic").equals("null")){
-                                    user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE+datas.getString("HeadPic"));
+                                if (datas.getString("HeadPic") != null && !datas.getString("HeadPic").equals("") && !datas.getString("HeadPic").equals("null")) {
+                                    user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic"));
                                 }
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
