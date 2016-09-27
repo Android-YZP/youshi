@@ -191,11 +191,14 @@ public class AccountProtectActivity extends Activity {
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PROTECTED_SUCCESS);
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {

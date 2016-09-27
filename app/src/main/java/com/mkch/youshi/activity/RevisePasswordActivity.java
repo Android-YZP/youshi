@@ -185,6 +185,7 @@ public class RevisePasswordActivity extends Activity {
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PASSWORD_SUCCESS);
                         }else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
@@ -192,6 +193,8 @@ public class RevisePasswordActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PASSWORD_ERROR2);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            }else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {

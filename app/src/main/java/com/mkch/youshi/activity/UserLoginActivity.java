@@ -54,6 +54,7 @@ public class UserLoginActivity extends Activity {
     private static ProgressDialog mProgressDialog = null;//登录加载
     private User mUser;//用户信息
     private String mPicUrl;//图片验证码地址
+    private long exitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +137,20 @@ public class UserLoginActivity extends Activity {
                 return 15;
             }
         });
+    }
+
+    /**
+     * 第二次点击返回，退出
+     */
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(UserLoginActivity.this, "再按一次退出优时", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+            return;
+        }
+        UserLoginActivity.this.finish();
+        super.onBackPressed();
     }
 
     private void setListener() {
@@ -403,7 +418,6 @@ public class UserLoginActivity extends Activity {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
-                            Log.d("zzzzzzzzzzzzzzzzzzzzzz", _json_result.toString());
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             //填充本地用户信息
                             if (datas != null) {

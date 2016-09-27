@@ -473,6 +473,7 @@ public class UserForgotPasswordActivity extends Activity {
                             startActivity(_intent);
                             UserForgotPasswordActivity.this.finish();
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
@@ -486,6 +487,8 @@ public class UserForgotPasswordActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_REG_CODE_SHOW);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1008")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_REG_PHONE_TOKENID_NO_EXIST);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {

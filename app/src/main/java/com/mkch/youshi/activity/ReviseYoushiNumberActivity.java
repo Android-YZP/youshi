@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -182,13 +181,13 @@ public class ReviseYoushiNumberActivity extends Activity {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
-                    Log.d("jlj", "---------------------result = " + result);
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS);
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
@@ -196,6 +195,8 @@ public class ReviseYoushiNumberActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_IS_EXIST);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_FAIL);
+                            }else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {
