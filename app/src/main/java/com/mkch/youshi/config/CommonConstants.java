@@ -121,6 +121,8 @@ public class CommonConstants {
     public static final String ChangeViewMySchedule = NOW_ADDRESS + "ChangeViewMySchedule";
     //修改加用户好友时是否需要身份验证开关
     public static final String ChangeAddmeVerify = NOW_ADDRESS + "ChangeAddmeVerify";
+    //忘记密码
+    public static final String ForgetPassword = NOW_ADDRESS + "ForgetPassword";
     //zhangjun-----------------------------------------------end
 
 

@@ -82,7 +82,7 @@ public class RevisePhoneCodeActivity extends Activity {
         Bundle _bundle = getIntent().getExtras();
         if (_bundle != null) {
             mPhone = _bundle.getString("_phone");
-            mTvPhoneInfo.setText(Html.fromHtml("您的手机<font color='#d81759'>" + mPhone + "</font>会收到一条含有4位数字验证码的短信"));
+            mTvPhoneInfo.setText(Html.fromHtml("您的手机<font color='#d81759'>" + mPhone + "</font>会收到一条含有6位数字验证码的短信"));
         }
         //120s后重新获取验证码
         canGetSmsCodeAgain();
@@ -273,9 +273,14 @@ public class RevisePhoneCodeActivity extends Activity {
                     ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg1);
                     break;
                 case CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE:
-                    //认证错误
+                    //验证码已过期
                     String errorMsg3 = ("验证码已过期");
                     ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg3);
+                    break;
+                case CommonConstants.FLAG_GET_REG_MOBILEMGS_VALIDATE_CAN_GET_AGAIN_SUCCESS:
+                    //已重新发送验证码
+                    String errorMsg2 = ("已重新发送验证码");
+                    ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg2);
                     break;
                 default:
                     break;

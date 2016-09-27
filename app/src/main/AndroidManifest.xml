@@ -69,6 +69,7 @@
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
+        <activity android:name=".activity.UserForgotPasswordActivity" />
         <activity android:name=".activity.UserForgotCodeActivity" />
         <activity android:name=".activity.UserInformationActivity" />
         <activity android:name=".activity.MyFileActivity" />
@@ -93,7 +94,6 @@
         <activity android:name=".activity.UniversalityActivity" />
         <activity android:name=".activity.QRCodeActivity" />
         <activity android:name=".activity.ReviseAddressActivity" />
-
         <!--定位配置-->
         <service
             android:name="com.baidu.location.f"

@@ -362,7 +362,7 @@ public class UserLoginActivity extends Activity {
                     startActivity(_intent);
                     break;
                 case R.id.tv_user_login_forget:
-                    _intent = new Intent(UserLoginActivity.this, UserForgotCodeActivity.class);
+                    _intent = new Intent(UserLoginActivity.this, UserForgotPasswordActivity.class);
                     startActivity(_intent);
                     break;
                 default:

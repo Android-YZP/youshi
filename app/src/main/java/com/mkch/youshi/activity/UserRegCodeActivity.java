@@ -154,7 +154,7 @@ public class UserRegCodeActivity extends Activity {
                     startActivity(_intent);
                     UserRegCodeActivity.this.finish();
                 } else {
-                    Toast.makeText(UserRegCodeActivity.this, "短信验证码正在发送,请耐心等待", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserRegCodeActivity.this, "短信验证码已发送,请耐心等待", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -273,14 +273,19 @@ public class UserRegCodeActivity extends Activity {
                     ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg1);
                     break;
                 case CommonConstants.FLAG_MESSAGE_CODE_NO_EXIST:
-                    //认证错误
+                    //验证码不存在
                     String errorMsg2 = ("验证码不存在");
                     ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg2);
                     break;
                 case CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE:
-                    //认证错误
+                    //验证码已过期
                     String errorMsg3 = ("验证码已过期");
                     ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg3);
+                    break;
+                case CommonConstants.FLAG_GET_REG_MOBILEMGS_VALIDATE_CAN_GET_AGAIN_SUCCESS:
+                    //已重新发送验证码
+                    String errorMsg4 = ("已重新发送验证码");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg4);
                     break;
                 default:
                     break;

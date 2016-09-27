@@ -77,7 +77,6 @@ public class RevisePhoneActivity extends Activity {
             if (mIsEdit.equals("true")) {
                 mEtPhone.setText(mPhone);
                 mEtPhone.setTextColor(getResources().getColor(R.color.user_login_reg_or_forget_color));
-                mEtPhone.setEnabled(false);
             }
         }
         //1-检查tokanid是否为空，若为空，获取并覆盖本地SharedPreference数据；若不为空，获取直接使用

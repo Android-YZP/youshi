@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,32 +31,28 @@ import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-public class UserRegPhoneActivity extends Activity {
+public class UserForgotPasswordActivity extends Activity {
     private ImageView mIvBack;
     private TextView mTvTitle;
-    private Button mBtnCommitPhone;
-    //手机号
     private EditText mEtPhone;
-    //验证码
+    private Button mBtnGetCode;
+    //图片验证码
     private LinearLayout mLayoutCode;
     private EditText mEtCode;
     private ImageView mIvCode;
-    //是否选中checkbox
-    private CheckBox mCbIsRead;
-    private TextView mTvIsRead;
-    private TextView mTvProtocal;
-    private String mPhone, mCode;
+    //手机号和验证码
+    private String mPhone;
+    private String mPicCode;
     private String mIsEdit = "false";
-    private boolean ischecked;
+    private static ProgressDialog mProgressDialog = null;
     private UnLoginedUser mUnLoginedUser;
     private String tokenID;
     private String mPicUrl;//图片验证码地址
-    private static ProgressDialog mProgressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_reg_phone);
+        setContentView(R.layout.activity_user_forgot_password);
         initView();
         initData();
         setListener();
@@ -66,20 +61,16 @@ public class UserRegPhoneActivity extends Activity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
-        mEtPhone = (EditText) findViewById(R.id.et_user_reg_phone);
-        mLayoutCode = (LinearLayout) findViewById(R.id.layout_user_reg_phone_code);
-        mEtCode = (EditText) findViewById(R.id.et_user_reg_phone_code);
-        mIvCode = (ImageView) findViewById(R.id.iv_user_reg_phone_code);
-        mBtnCommitPhone = (Button) findViewById(R.id.btn_user_reg_getcode_phone_commit);
-        mCbIsRead = (CheckBox) findViewById(R.id.cb_user_reg_phone_ischecked);
-        mTvIsRead = (TextView) findViewById(R.id.tv_user_reg_phone_isread);
-        mTvProtocal = (TextView) findViewById(R.id.tv_user_reg_phone_read_protocal);
+        mEtPhone = (EditText) findViewById(R.id.et_user_forgot_password_phone);
+        mLayoutCode = (LinearLayout) findViewById(R.id.layout_user_forgot_password_code);
+        mEtCode = (EditText) findViewById(R.id.et_user_forgot_password_code);
+        mIvCode = (ImageView) findViewById(R.id.iv_user_forgot_password_code);
+        mBtnGetCode = (Button) findViewById(R.id.btn_user_forgot_password_get);
     }
 
     private void initData() {
-        mTvTitle.setText("注册");
+        mTvTitle.setText("找回密码");
         mLayoutCode.setVisibility(View.GONE);
-        //如果是重新获取验证码，获取手机号并设置，只要输入图片验证码
         Bundle _bundle = getIntent().getExtras();
         if (_bundle != null) {
             mIsEdit = _bundle.getString("_isEdit");
@@ -106,21 +97,30 @@ public class UserRegPhoneActivity extends Activity {
 
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                UserRegPhoneActivity.this.finish();
+                UserForgotPasswordActivity.this.finish();
             }
         });
-        mBtnCommitPhone.setOnClickListener(new UserRegPhoneOnClickListener());
-        mTvIsRead.setOnClickListener(new UserRegPhoneOnClickListener());
-        mIvCode.setOnClickListener(new UserRegPhoneOnClickListener());
-//		mTvProtocal.setOnClickListener(new UserRegPhoneOnClickListener());
+        mIvCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePicCodeFromNet(tokenID);
+            }
+        });
+        mBtnGetCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserCommitPhoneNumer();
+            }
+        });
     }
 
     private static class MyHandler extends Handler {
         private final WeakReference<Activity> mActivity;
 
-        public MyHandler(UserRegPhoneActivity activity) {
+        public MyHandler(UserForgotPasswordActivity activity) {
             mActivity = new WeakReference<Activity>(activity);
         }
 
@@ -134,42 +134,42 @@ public class UserRegPhoneActivity extends Activity {
                 case 0:
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
-                    ((UserRegPhoneActivity) mActivity.get()).showTip(errorMsg);
+                    ((UserForgotPasswordActivity) mActivity.get()).showTip(errorMsg);
                     break;
                 case CommonConstants.FLAG_CHANGE_ERROR1:
                     //认证错误
                     String errorMsg1 = ("认证错误");
-                    ((UserRegPhoneActivity) mActivity.get()).showTip(errorMsg1);
+                    ((UserForgotPasswordActivity) mActivity.get()).showTip(errorMsg1);
                     break;
                 case CommonConstants.FLAG_GET_USER_SEND_VERIFICATION_CODE:
                     //验证码发送太频繁
                     String errorMsg2 = ("验证码发送太频繁");
-                    ((UserRegPhoneActivity) mActivity.get()).showTip(errorMsg2);
+                    ((UserForgotPasswordActivity) mActivity.get()).showTip(errorMsg2);
                     break;
                 case CommonConstants.FLAG_REG_CODE_SHOW:
                     //图片验证码出现
-                    ((UserRegPhoneActivity) mActivity.get()).showImgVerfy2();
+                    ((UserForgotPasswordActivity) mActivity.get()).showImgVerfy2();
                     break;
                 case CommonConstants.FLAG_REG_PHONE_TOKENID_NO_EXIST:
                     //TokenID不存在
                     String errorMsg3 = ("TokenID不存在");
-                    ((UserRegPhoneActivity) mActivity.get()).showTip(errorMsg3);
+                    ((UserForgotPasswordActivity) mActivity.get()).showTip(errorMsg3);
                     break;
                 case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR:
                     //图片验证码错误
-                    ((UserRegPhoneActivity) mActivity.get()).imgVerifyError();
+                    ((UserForgotPasswordActivity) mActivity.get()).imgVerifyError();
                     break;
                 case CommonConstants.FLAG_COVER_TOKEN_ID_SUCCESS:
                     //覆盖TokenID成功
-                    ((UserRegPhoneActivity) mActivity.get()).isShowPicCodeFromNet();
+                    ((UserForgotPasswordActivity) mActivity.get()).isShowPicCodeFromNet();
                     break;
                 case CommonConstants.FLAG_GET_USER_JOIN_IMG_VERIFY_SHOW:
                     //需要图片验证码
-                    ((UserRegPhoneActivity) mActivity.get()).showImgVerfy();
+                    ((UserForgotPasswordActivity) mActivity.get()).showImgVerfy();
                     break;
                 case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE:
                     //手动切换图片验证码
-                    ((UserRegPhoneActivity) mActivity.get()).changeImgVerfy();
+                    ((UserForgotPasswordActivity) mActivity.get()).changeImgVerfy();
                     break;
                 default:
                     break;
@@ -217,6 +217,14 @@ public class UserRegPhoneActivity extends Activity {
     }
 
     /**
+     * 出现图片验证码
+     */
+    private void goLogin() {
+        this.showTip("密码重置成功");
+        UserForgotPasswordActivity.this.finish();
+    }
+
+    /**
      * 覆盖tokenID
      *
      * @throws Exception
@@ -237,7 +245,7 @@ public class UserRegPhoneActivity extends Activity {
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             tokenID = datas.getString("TokenID");
                             mUnLoginedUser.setTokenID(tokenID);
-                            CommonUtil.saveUnLoginedUser(mUnLoginedUser, UserRegPhoneActivity.this);
+                            CommonUtil.saveUnLoginedUser(mUnLoginedUser, UserForgotPasswordActivity.this);
                             //根据TokenID判断是否需要短信图片验证码
                             handler.sendEmptyMessage(CommonConstants.FLAG_COVER_TOKEN_ID_SUCCESS);
                         } else {
@@ -342,63 +350,34 @@ public class UserRegPhoneActivity extends Activity {
         });
     }
 
-    private class UserRegPhoneOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.iv_user_reg_phone_code:
-                    changePicCodeFromNet(tokenID);
-                    break;
-                case R.id.btn_user_reg_getcode_phone_commit:
-                    UserCommitPhoneNumer();
-                    break;
-                case R.id.tv_user_reg_phone_isread:
-                    //是否已读
-                    if (mCbIsRead.isChecked()) {
-                        mCbIsRead.setChecked(false);
-                    } else {
-                        mCbIsRead.setChecked(true);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     /**
      * 用户提交手机号码
      */
     public void UserCommitPhoneNumer() {
         mPhone = mEtPhone.getText().toString();
-        mCode = mEtCode.getText().toString();
-        ischecked = mCbIsRead.isChecked();
+        mPicCode = mEtCode.getText().toString();
         int isVisibel = mLayoutCode.getVisibility();
-        if (!ischecked) {
-            Toast.makeText(UserRegPhoneActivity.this, "您未同意注册协议", Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (isVisibel == View.VISIBLE && mEtCode.equals("")) {
-            Toast.makeText(UserRegPhoneActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserForgotPasswordActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
         if (isVisibel == View.VISIBLE && mEtCode == null) {
-            Toast.makeText(UserRegPhoneActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserForgotPasswordActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
             return;
         }
         if (mPhone != null && !mPhone.equals("")) {
             if (!CheckUtil.checkMobile(mPhone)) {
-                Toast.makeText(UserRegPhoneActivity.this, "手机号格式输入有误", Toast.LENGTH_LONG).show();
+                Toast.makeText(UserForgotPasswordActivity.this, "手机号格式输入有误", Toast.LENGTH_LONG).show();
                 return;
             }
             //弹出加载进度条
-            mProgressDialog = ProgressDialog.show(UserRegPhoneActivity.this, "请稍等", "正在玩命获取中...", true, true);
+            mProgressDialog = ProgressDialog.show(UserForgotPasswordActivity.this, "请稍等", "正在玩命获取中...", true, true);
             //开启副线程-检查手机号码是否存在
             checkPhoneFromNet(mPhone);
             //若检查不通过、提示报错信息；检查通过，跳转到下一个界面
             //进度条消失
         } else {
-            Toast.makeText(UserRegPhoneActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserForgotPasswordActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -425,14 +404,11 @@ public class UserRegPhoneActivity extends Activity {
                             if (mProgressDialog != null) {
                                 mProgressDialog.dismiss();
                             }
-                            Toast.makeText(UserRegPhoneActivity.this, "手机号已注册", Toast.LENGTH_SHORT).show();
-                            return;
+                            sendVerificationCodeFromNet(mPhone, tokenID, mPicCode);
                         } else {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
-                            if (_ErrorCode == null || _ErrorCode.equals("") || _ErrorCode.equals("null")) {
-                                sendVerificationCodeFromNet(mPhone, tokenID, mCode);
-                            } else if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else {
                                 CommonUtil.sendErrorMessage(_Message, handler);
@@ -491,11 +467,11 @@ public class UserRegPhoneActivity extends Activity {
                             if (mProgressDialog != null) {
                                 mProgressDialog.dismiss();
                             }
-                            Intent _intent = new Intent(UserRegPhoneActivity.this, UserRegCodeActivity.class);
+                            Intent _intent = new Intent(UserForgotPasswordActivity.this, UserForgotCodeActivity.class);
                             _intent.putExtra("_phone", mPhone);
                             _intent.putExtra("_tokenID", tokenID);
                             startActivity(_intent);
-                            UserRegPhoneActivity.this.finish();
+                            UserForgotPasswordActivity.this.finish();
                         } else {
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
