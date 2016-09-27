@@ -69,6 +69,7 @@ public class RevisePhoneActivity extends Activity {
     private void initData() {
         mTvTitle.setText("绑定新手机");
         mLayoutCode.setVisibility(View.GONE);
+        //如果是重新获取验证码，获取手机号并设置，只要输入图片验证码
         Bundle _bundle = getIntent().getExtras();
         if (_bundle != null) {
             mIsEdit = _bundle.getString("_isEdit");
@@ -238,6 +239,14 @@ public class RevisePhoneActivity extends Activity {
                             CommonUtil.saveUnLoginedUser(mUnLoginedUser, RevisePhoneActivity.this);
                             //根据TokenID判断是否需要短信图片验证码
                             handler.sendEmptyMessage(CommonConstants.FLAG_COVER_TOKEN_ID_SUCCESS);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -291,6 +300,16 @@ public class RevisePhoneActivity extends Activity {
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_USER_JOIN_IMG_VERIFY_SHOW);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                return;
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -328,6 +347,15 @@ public class RevisePhoneActivity extends Activity {
     public void UserCommitPhoneNumer() {
         mPhone = mEtPhone.getText().toString();
         mCode = mEtCode.getText().toString();
+        int isVisibel = mLayoutCode.getVisibility();
+        if (isVisibel == View.VISIBLE && mEtCode.equals("")) {
+            Toast.makeText(RevisePhoneActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (isVisibel == View.VISIBLE && mEtCode == null) {
+            Toast.makeText(RevisePhoneActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (mPhone != null && !mPhone.equals("")) {
             if (!CheckUtil.checkMobile(mPhone)) {
                 Toast.makeText(RevisePhoneActivity.this, "手机号格式输入有误", Toast.LENGTH_LONG).show();
@@ -370,7 +398,15 @@ public class RevisePhoneActivity extends Activity {
                             Toast.makeText(RevisePhoneActivity.this, "手机号已注册", Toast.LENGTH_LONG).show();
                             return;
                         } else {
-                            sendVerificationCodeFromNet(mPhone, tokenID, mCode);
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode == null || _ErrorCode.equals("") || _ErrorCode.equals("null")) {
+                                sendVerificationCodeFromNet(mPhone, tokenID, mCode);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -496,6 +532,14 @@ public class RevisePhoneActivity extends Activity {
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

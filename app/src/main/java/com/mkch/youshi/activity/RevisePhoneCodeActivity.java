@@ -35,7 +35,7 @@ public class RevisePhoneCodeActivity extends Activity {
     private TextView mTvTitle;
     private Button mBtnCommitCode;
     //手机号和验证码
-    private String mPhone, mCode;
+    private String mPhone;
     private String mSmsCode;
     //手机介绍信息
     private TextView mTvPhoneInfo;
@@ -201,11 +201,21 @@ public class RevisePhoneCodeActivity extends Activity {
                                     Toast.makeText(RevisePhoneCodeActivity.this, "已修改", Toast.LENGTH_LONG).show();
                                     RevisePhoneCodeActivity.this.finish();
                                 } else {
-                                    if (mProgressDialog != null) {
-                                        mProgressDialog.dismiss();
+                                    String _Message = _json_result.getString("Message");
+                                    String _ErrorCode = _json_result.getString("ErrorCode");
+                                    if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1004")) {
+                                        if (mProgressDialog != null) {
+                                            mProgressDialog.dismiss();
+                                        }
+                                        Toast.makeText(RevisePhoneCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
+                                        return;
+                                    } else {
+                                        CommonUtil.sendErrorMessage(_Message, handler);
                                     }
-                                    Toast.makeText(RevisePhoneCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
-                                    return;
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -256,6 +266,16 @@ public class RevisePhoneCodeActivity extends Activity {
                 case 0:
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE:
+                    //认证错误
+                    String errorMsg3 = ("验证码已过期");
+                    ((RevisePhoneCodeActivity) mActivity.get()).showTip(errorMsg3);
                     break;
                 default:
                     break;

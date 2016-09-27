@@ -199,11 +199,23 @@ public class UserRegCodeActivity extends Activity {
                                     startActivity(_intent);
                                     UserRegCodeActivity.this.finish();
                                 } else {
-                                    if (mProgressDialog != null) {
-                                        mProgressDialog.dismiss();
+                                    String _Message = _json_result.getString("Message");
+                                    String _ErrorCode = _json_result.getString("ErrorCode");
+                                    if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_MESSAGE_CODE_NO_EXIST);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
+                                        if (mProgressDialog != null) {
+                                            mProgressDialog.dismiss();
+                                        }
+                                        Toast.makeText(UserRegCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
+                                        return;
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1004")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE);
+                                    } else {
+                                        CommonUtil.sendErrorMessage(_Message, handler);
                                     }
-                                    Toast.makeText(UserRegCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
-                                    return;
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -254,6 +266,21 @@ public class UserRegCodeActivity extends Activity {
                 case 0:
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_MESSAGE_CODE_NO_EXIST:
+                    //认证错误
+                    String errorMsg2 = ("验证码不存在");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg2);
+                    break;
+                case CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE:
+                    //认证错误
+                    String errorMsg3 = ("验证码已过期");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg3);
                     break;
                 default:
                     break;

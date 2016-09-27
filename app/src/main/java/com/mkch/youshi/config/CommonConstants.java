@@ -32,8 +32,11 @@ public class CommonConstants {
     public static final int FLAG_CHANGE_ERROR3 = 24;
     public static final int FLAG_CHANGE_VIEWMYSCHEDULE_SUCCESS = 25;
     public static final int FLAG_CHANGE_ADDMEVERIFY_SUCCESS = 26;
-    public static final int FLAG_GET_REG_MOBILEMGS_REGISTER_SUCCESS = 27;
+    public static final int FLAG_CHANGE_YOUSHI_NUMBER_IS_EXIST = 27;
     public static final int FLAG_REG_PHONE_TOKENID_NO_EXIST = 28;
+    public static final int FLAG_CHANGE_YOUSHI_NUMBER_FAIL = 29;
+    public static final int FLAG_MESSAGE_CODE_NO_EXIST = 30;
+    public static final int FLAG_MESSAGE_CODE_IS_OVERDUE = 31;
     /**
      * yaozhongping
      * 从100开始

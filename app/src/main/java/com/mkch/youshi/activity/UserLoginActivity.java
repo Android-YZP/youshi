@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.method.NumberKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +24,6 @@ import com.mkch.youshi.bean.LoginUserJson;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
-import com.mkch.youshi.util.CheckUtil;
 import com.mkch.youshi.util.CommonUtil;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -111,6 +111,31 @@ public class UserLoginActivity extends Activity {
         mTvGoRegister = (TextView) findViewById(R.id.tv_user_login_reg);
         mTvGoForgot = (TextView) findViewById(R.id.tv_user_login_forget);
         mLayoutCode.setVisibility(View.GONE);
+        //设置账户和密码输入格式和长度限制
+        mEtAccount.setKeyListener(new NumberKeyListener() {
+            @Override
+            protected char[] getAcceptedChars() {
+                char[] numberChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '_', '-'};
+                return numberChars;
+            }
+
+            @Override
+            public int getInputType() {
+                return 20;
+            }
+        });
+        mEtPassword.setKeyListener(new NumberKeyListener() {
+            @Override
+            protected char[] getAcceptedChars() {
+                char[] numberChars = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ',', '.', '?', '!', ';', ':'};
+                return numberChars;
+            }
+
+            @Override
+            public int getInputType() {
+                return 15;
+            }
+        });
     }
 
     private void setListener() {
@@ -138,6 +163,11 @@ public class UserLoginActivity extends Activity {
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((UserLoginActivity) mActivity.get()).showTip(errorMsg);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((UserLoginActivity) mActivity.get()).showTip(errorMsg1);
                     break;
                 case CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS:
                     //登录成功
@@ -185,7 +215,6 @@ public class UserLoginActivity extends Activity {
      */
     private void imgVerifyError() {
         this.showTip("验证码错误");
-        //把ImageView重新刷新图片验证码
         changeImgVerfy();//更新图片验证码
     }
 
@@ -193,8 +222,7 @@ public class UserLoginActivity extends Activity {
      * 手机号或密码错误-提示并重刷图片验证码
      */
     private void accountError() {
-        this.showTip("手机号或密码错误");
-        //把ImageView重新刷新图片验证码
+        this.showTip("账号或密码错误");
         changePicCodeFromNet();//更新图片验证码
     }
 
@@ -251,7 +279,15 @@ public class UserLoginActivity extends Activity {
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW);
                         } else {
-                            handler.sendEmptyMessage(CommonConstants.FLAG_NO_GET_PICCODE);
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_NO_GET_PICCODE);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -300,15 +336,11 @@ public class UserLoginActivity extends Activity {
                     String code = mEtCode.getText().toString();
                     int isVisibel = mLayoutCode.getVisibility();
                     if (account == null || account.equals("")) {
-                        Toast.makeText(UserLoginActivity.this, "您未填写手机号", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserLoginActivity.this, "您未填写账号", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (password == null || password.equals("")) {
                         Toast.makeText(UserLoginActivity.this, "您未填写密码", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (!CheckUtil.checkMobile(account)) {
-                        Toast.makeText(UserLoginActivity.this, "手机号格式输入有误", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     if (isVisibel == View.VISIBLE && mEtCode.equals("")) {
@@ -357,7 +389,6 @@ public class UserLoginActivity extends Activity {
         user.setClientType("Android");
         user.setImageVerifyCode(code);
         user.setOsUuid(CommonUtil.getMyUUID(UserLoginActivity.this));
-
         LoginUserJson _login_user = new LoginUserJson(user);
         final Gson gson = new Gson();
         String _user_json = gson.toJson(_login_user);
@@ -366,32 +397,33 @@ public class UserLoginActivity extends Activity {
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d("jlj", "---------------------result = " + result);
                 if (result != null) {
                     //若result返回信息中登录成功，解析json数据并存于本地，再使用handler通知UI更新界面并进行下一步逻辑
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
+                            Log.d("zzzzzzzzzzzzzzzzzzzzzz", _json_result.toString());
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             //填充本地用户信息
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
                                 user.setNickName(datas.getString("NickName"));
-
+                                user.setYoushiNumber(datas.getString("UserName"));
                                 if (datas.getString("HeadPic") != null && !datas.getString("HeadPic").equals("") && !datas.getString("HeadPic").equals("null")) {
                                     user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic"));
                                 }
                                 user.setLoginCode(datas.getString("LoginCode"));
-                                if (datas.getString("UserName") == null || datas.getString("UserName").equals("")) {
-                                } else {
+                                if (datas.getString("UserName") != null && !datas.getString("UserName").equals("") && !datas.getString("UserName").equals("null")) {
                                     user.setYoushiNumber(datas.getString("UserName"));
                                 }
                                 user.setSex(datas.getString("Sex"));
                                 user.setAddress(datas.getString("Place"));
                                 user.setSignature(datas.getString("Sign"));
                                 user.setProtected(datas.getBoolean("Protected"));
+                                user.setAddmeVerify(datas.getBoolean("AddmeVerify"));
+                                user.setViewMySchedule(datas.getBoolean("ViewMySchedule"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
@@ -401,10 +433,14 @@ public class UserLoginActivity extends Activity {
                         } else {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
-                            if (_ErrorCode != null && _ErrorCode.equals("1004")) {
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1004")) {
                                 JSONObject datas = _json_result.getJSONObject("Datas");
                                 mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                                 handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1006")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1007")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_ACCOUNT_OR_PASSWORD_ERROR);
                             } else {
@@ -419,7 +455,6 @@ public class UserLoginActivity extends Activity {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("jlj", "-------onError = " + ex.getMessage());
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, handler);
@@ -434,13 +469,10 @@ public class UserLoginActivity extends Activity {
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Log.d("userLogin", "----onCancelled");
             }
 
             @Override
             public void onFinished() {
-                Log.d("userLogin", "----onFinished");
-                //使用handler通知UI取消进度加载对话框
             }
         });
     }
@@ -467,6 +499,14 @@ public class UserLoginActivity extends Activity {
                             JSONObject datas = _json_result.getJSONObject("Datas");
                             mPicUrl = CommonConstants.NOW_ADDRESS_PRE + datas.getString("PicCodePath");
                             handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_CHAGE);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
