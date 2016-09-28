@@ -28,6 +28,7 @@ import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.XmppConnectionListener;
 import com.mkch.youshi.util.XmppHelper;
+import com.mkch.youshi.view.HanziToPinyin;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.jivesoftware.smack.SmackException;
@@ -276,6 +277,9 @@ public class FriendService extends Service implements RosterListener {
                                             }
                                             if (_user.getNickName() != null && !_user.getNickName().equals("") && !_user.getNickName().equals("null")) {
                                                 _friend.setNickname(_user.getNickName());//昵称
+                                                _friend.setPinyin(HanziToPinyin.getPinYin(_user.getNickName()));
+                                            }else{
+                                                _friend.setPinyin(HanziToPinyin.getPinYin(_friend_openfirename));
                                             }
                                             if (_user.getRealName() != null && !_user.getRealName().equals("") && !_user.getRealName().equals("null")) {
                                                 _friend.setRemark(_user.getRealName());//备注
@@ -294,6 +298,9 @@ public class FriendService extends Service implements RosterListener {
                                             }
                                             if (_user.getNickName() != null && !_user.getNickName().equals("") && !_user.getNickName().equals("null")) {
                                                 _friend.setNickname(_user.getNickName());//昵称
+                                                _friend.setPinyin(HanziToPinyin.getPinYin(_user.getNickName()));
+                                            }else{
+                                                _friend.setPinyin(HanziToPinyin.getPinYin(_friend_openfirename));
                                             }
                                             if (_user.getRealName() != null && !_user.getRealName().equals("") && !_user.getRealName().equals("null")) {
                                                 _friend.setRemark(_user.getRealName());//备注

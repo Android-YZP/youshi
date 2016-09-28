@@ -160,6 +160,11 @@ public class ContactEntity implements Comparable<ContactEntity> {
 
     @Override
     public int compareTo(ContactEntity another) {
-        return this.pinyin.compareTo(another.getPinyin());
+        if (another!=null&&another.getPinyin()!=null&&!another.getPinyin().equals("")){
+            if (pinyin!=null&&!pinyin.equals("")){
+                return this.pinyin.compareTo(another.getPinyin());
+            }
+        }
+        return 1;
     }
 }

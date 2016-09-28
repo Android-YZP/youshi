@@ -9,6 +9,7 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -226,7 +227,12 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                             try {
                                 //存储前先清空数据库中的手机联系人
                                 List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
-                                dbManager.delete(contactEntities);
+                                Log.d("jlj","------------------------dbManager="+dbManager);
+                                if (contactEntities!=null&&contactEntities.size()>0){
+                                    Log.d("jlj","------------------------contactEntities size="+contactEntities.size());
+                                    dbManager.delete(contactEntities);
+                                }
+
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
@@ -274,6 +280,8 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                Log.d("jlj","------------------------onError:"+ex.getMessage());
+                ex.printStackTrace();
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);

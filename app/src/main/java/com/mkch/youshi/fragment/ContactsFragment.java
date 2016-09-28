@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -31,8 +32,6 @@ import com.mkch.youshi.activity.NewFriendActivity;
 import com.mkch.youshi.adapter.ContactAdapter;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
-import com.mkch.youshi.model.Contact;
-import com.mkch.youshi.model.ContactEntity;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
@@ -64,7 +63,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @BindView(id = R.id.list_contacts)
     private ListView mListView;
     private TextView mFooterView;
-    private List<Contact> datas = new ArrayList<>();
+    private List<Friend> datas = new ArrayList<>();
     private ContactAdapter mAdapter;
     private SideBar mSideBar;
     private TextView mDialog;
@@ -140,15 +139,16 @@ public class ContactsFragment extends Fragment implements SideBar
         updateNewFriendReqNum();
         dbManager = DBHelper.getDbManager();
         try {
-            List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
-            mAdapter = new ContactAdapter(mListView, datas);
-//            mAdapter = new PhoneContactAdapter(mListView, contactEntities, this);
-            mListView.setAdapter(mAdapter);
+            List<Friend> _friends = dbManager.selector(Friend.class).findAll();
+            if(_friends!=null&&_friends.size()>0){
+                mAdapter = new ContactAdapter(mListView, _friends);
+                Log.d("jlj","ContactsFragment----------------------new ContactAdapter");
+                mListView.setAdapter(mAdapter);
+            }
+
         } catch (DbException e) {
             e.printStackTrace();
         }
-        mAdapter = new ContactAdapter(mListView, datas);
-        mListView.setAdapter(mAdapter);
         //加载好友列表
         getFriendListFromNet();
     }
@@ -215,8 +215,8 @@ public class ContactsFragment extends Fragment implements SideBar
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int _position = info.position;
-        Contact _Contact = datas.get(_position);
-        String _openfirename = _Contact.getOpenFireName();
+        Friend _Contact = datas.get(_position);
+        String _openfirename = _Contact.getFriendid();
         switch (item.getItemId()) {
             case R.id.contact_menu_chat:
                 //进入单聊界面聊天
@@ -272,7 +272,10 @@ public class ContactsFragment extends Fragment implements SideBar
                                         .and("status", "=", 1)
                                         .and("userid", "=", mUser.getOpenFireUserName())
                                         .findFirst();
-                                dbManager.delete(first);
+                                if (first!=null){
+                                    dbManager.delete(first);
+                                }
+
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
@@ -440,14 +443,17 @@ public class ContactsFragment extends Fragment implements SideBar
                                         .where("status", "=", 1)
                                         .and("userid", "=", mUser.getOpenFireUserName())
                                         .findAll();
-                                dbManager.delete(_yoshi_friends);
+                                if (_yoshi_friends!=null&&_yoshi_friends.size()>0){
+                                    dbManager.delete(_yoshi_friends);
+                                }
+
                             } catch (DbException e) {
                                 e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             for (int i = 0; i < mDatas.length(); i++) {
-                                Contact data = new Contact();
+                                Friend data = new Friend();
                                 JSONObject jobj = mDatas.getJSONObject(i);
                                 String HeadPic = jobj.getString("HeadPic");//头像
                                 String _head_pic = null;
@@ -460,13 +466,15 @@ public class ContactsFragment extends Fragment implements SideBar
                                 //若登录名为空，则显示OpenFireUserName
                                 String OpenFireUserName = jobj.getString("OpenFireUserName");
                                 if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
-                                    data.setName(Nickname);
+                                    data.setNickname(Nickname);
                                     data.setPinyin(HanziToPinyin.getPinYin(Nickname));
+                                    Log.d("jlj","ContactsFragment1---------------------"+HanziToPinyin.getPinYin(Nickname));
                                 } else {
-                                    data.setName(OpenFireUserName);
+                                    data.setNickname(OpenFireUserName);
                                     data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
+                                    Log.d("jlj","ContactsFragment2---------------------"+HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
-                                data.setOpenFireName(OpenFireUserName);
+                                data.setFriendid(OpenFireUserName);
                                 datas.add(data);
                                 //临时使用-存储所有的优时好友列表数据-from JLJ
                                 User _self_user = CommonUtil.getUserInfo(getActivity());
@@ -543,9 +551,9 @@ public class ContactsFragment extends Fragment implements SideBar
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        ArrayList<Contact> temp = new ArrayList<>(datas);
-        for (Contact data : datas) {
-            if (data.getName().contains(s) || data.getPinyin().contains(s)) {
+        ArrayList<Friend> temp = new ArrayList<>(datas);
+        for (Friend data : datas) {
+            if (data.getNickname().contains(s) || data.getPinyin().contains(s)) {
             } else {
                 temp.remove(data);
             }
