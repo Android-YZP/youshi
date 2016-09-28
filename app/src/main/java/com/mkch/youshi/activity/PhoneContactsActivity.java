@@ -1,7 +1,6 @@
 package com.mkch.youshi.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,9 +18,9 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.PhoneContactAdapter;
-import com.mkch.youshi.bean.ContactEntity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.ContactEntity;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.view.HanziToPinyin;
@@ -36,6 +34,7 @@ import org.kymjs.kjframe.KJActivity;
 import org.kymjs.kjframe.ui.BindView;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -43,12 +42,12 @@ import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PhoneContactsActivity extends KJActivity implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
-
     //联系人名称
-    private ArrayList<ContactEntity> mContacts = new ArrayList<>();
+    private List<ContactEntity> mContacts = new ArrayList<>();
     private ArrayList<String> mNumbers = new ArrayList<>();
     private static final String[] PHONES_PROJECTION = new String[]{
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
@@ -60,7 +59,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
     @BindView(id = R.id.list_phone_contacts)
     private ListView mListView;
     private PhoneContactAdapter mAdapter;
-    private static ProgressDialog mProgressDialog = null;
     private DbManager dbManager;//数据库管理对象
 
     @Override
@@ -71,6 +69,13 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
     public void initData() {
         super.initData();
         dbManager = DBHelper.getDbManager();
+        try {
+            List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
+            mAdapter = new PhoneContactAdapter(mListView, contactEntities, this);
+            mListView.setAdapter(mAdapter);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
         getPhoneContacts();
     }
 
@@ -101,9 +106,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
         @Override
         public void handleMessage(Message msg) {
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
-            }
             int flag = msg.what;
             switch (flag) {
                 case 0:
@@ -113,6 +115,16 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                 case CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW:
                     //加载手机通讯录列表
                     ((PhoneContactsActivity) mActivity.get()).showListVerfy();
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((PhoneContactsActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR3:
+                    //请求失败
+                    String errorMsg3 = ("请求失败");
+                    ((PhoneContactsActivity) mActivity.get()).showTip(errorMsg3);
                     break;
                 default:
                     break;
@@ -170,8 +182,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
      * 获取通讯录信息
      */
     private void getPhoneContactsFromNet() {
-        //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(PhoneContactsActivity.this, "请稍等", "正在获取中...", true, true);
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.GetContactsInfo);
         //包装请求参数
@@ -189,7 +199,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
             public void onSuccess(String result) {
                 if (result != null) {
                     try {
-                        Log.d("zzzzzzzzzzzzzzzzzz", "----result:" + result);
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
@@ -198,26 +207,64 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                             for (int i = 0; i < datas.length(); i++) {
                                 JSONObject jobj = datas.getJSONObject(i);
                                 String openFireUserName = jobj.getString("OpenFireUserName");
-                                mContacts.get(i).setOpenFireUserName(openFireUserName);
+                                mContacts.get(i).setContactID(openFireUserName);
+                                if (jobj.getString("HeadPic") != null && !jobj.getString("HeadPic").equals("") && !jobj.getString("HeadPic").equals("null")) {
+                                    mContacts.get(i).setHeadPic(CommonConstants.TEST_ADDRESS_PRE + jobj.getString("HeadPic"));
+                                }
                                 boolean isAdd = jobj.getBoolean("IsAdd");
                                 mContacts.get(i).setAdd(isAdd);
                                 boolean IsRegister = jobj.getBoolean("IsRegister");
                                 mContacts.get(i).setRegister(IsRegister);
                             }
+                            //删除呢未注册的手机联系人信息
                             for (int i = 0; i < mContacts.size(); i++) {
                                 if (!mContacts.get(i).isRegister()) {
                                     mContacts.remove(i);
                                     i--;
                                 }
                             }
+                            try {
+                                //存储前先清空数据库中的手机联系人
+                                List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
+                                dbManager.delete(contactEntities);
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
+                            User _self_user = CommonUtil.getUserInfo(PhoneContactsActivity.this);
+                            String userID = _self_user.getOpenFireUserName();
+                            //存储所有的已注册手机联系人列表数据
                             for (int i = 0; i < mContacts.size(); i++) {
-                                //存储所有的已注册手机联系人列表数据
-                                User user = CommonUtil.getUserInfo(PhoneContactsActivity.this);
-                                String contactID = user.getOpenFireUserName();
+                                String contactID = mContacts.get(i).getContactID();
+                                String headPic = mContacts.get(i).getHeadPic();
+                                String name = mContacts.get(i).getName();
+                                String pinyin = mContacts.get(i).getPinyin();
+                                String number = mContacts.get(i).getNumber();
+                                boolean isAdd = mContacts.get(i).isAdd();
+                                int status = 0;
+                                if (isAdd) {
+                                    status = 1;
+                                } else {
+                                    status = 0;
+                                }
                                 //获取所有的优时好友列表
-//                                PhoneContact contact = new PhoneContact(mContacts.get(i).getOpenFireUserName(),mContacts.get(i).getOpenFireUserName(),Nickname,Remark,MobileNumber,status,_self_userid);
+                                ContactEntity contactEntity = new ContactEntity(contactID, headPic, name, pinyin, number, status, userID);
+                                try {
+                                    dbManager.save(contactEntity);
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_PHONE_CONTACT_SHOW);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, myHandler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

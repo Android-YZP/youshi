@@ -3,15 +3,15 @@ package com.mkch.youshi.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.ContactEntity;
+import com.mkch.youshi.model.ContactEntity;
 import com.mkch.youshi.util.RosterHelper;
 import com.mkch.youshi.util.XmppHelper;
 
@@ -20,9 +20,12 @@ import org.jxmpp.util.XmppStringUtils;
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
 import org.kymjs.kjframe.widget.KJAdapter;
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 联系人列表适配器
@@ -30,11 +33,11 @@ import java.util.Collections;
 public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements SectionIndexer {
 
     private KJBitmap kjb = new KJBitmap();
-    private ArrayList<ContactEntity> datas;
+    private List<ContactEntity> datas;
     private XMPPTCPConnection connection; //connection
     private Context mContext;//上下文
 
-    public PhoneContactAdapter(AbsListView view, ArrayList<ContactEntity> mDatas, Context mContext) {
+    public PhoneContactAdapter(AbsListView view, List<ContactEntity> mDatas, Context mContext) {
         super(view, mDatas, R.layout.item_list_phone_contacts);
         datas = mDatas;
         if (datas == null) {
@@ -48,25 +51,30 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
 
     @Override
     public void convert(AdapterHolder helper, ContactEntity item, boolean isScrolling) {
-
     }
 
     @Override
     public void convert(AdapterHolder holder, ContactEntity item, boolean isScrolling, final int position) {
 
         holder.setText(R.id.tv_phone_contacts_name, item.getName());
-//        ImageView headImg = holder.getView(R.id.iv_phone_contacts_head);
+        ImageView headImg = holder.getView(R.id.iv_phone_contacts_head);
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
+        if (item.getHeadPic() != null && !item.getHeadPic().equals("") && !item.getHeadPic().equals("null")) {
+            x.image().bind(headImg, item.getHeadPic(), _image_options);
+        } else {
+            headImg.setImageResource(R.drawable.default_headpic);
+        }
 //        if (isScrolling) {
-//            kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);
+//            kjb.displayCacheOrDefult(headImg, item.getHeadPic(), R.drawable.default_headpic);
 //        } else {
-//            kjb.displayWithLoadBitmap(headImg, item.getUrl(), R.drawable.default_head_rect);
+//            kjb.displayWithLoadBitmap(headImg, item.getHeadPic(), R.drawable.default_headpic);
 //        }
-
         TextView tvLetter = holder.getView(R.id.tv_list_phone_contacts_catalog);
         TextView tvAdded = holder.getView(R.id.tv_phone_contacts_added);
         View tvLine = holder.getView(R.id.line_list_phone_contacts);
         Button btnAdd = holder.getView(R.id.btn_phone_contacts_add);
-
         if (item.isAdd()) {
             btnAdd.setVisibility(View.GONE);
             tvAdded.setVisibility(View.VISIBLE);
@@ -77,12 +85,10 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     ContactEntity _contactEntiy = datas.get(position);
                     if (_contactEntiy != null) {
                         final String _name = _contactEntiy.getName();
-                        String _OpenFireUsrName = _contactEntiy.getOpenFireUserName();
-                        Log.d("jlj", "btn---------------------onclick=" + _name + "," + _OpenFireUsrName);
+                        String _OpenFireUsrName = _contactEntiy.getContactID();
                         //获取用户名和_OpenFireUsrName；并发起添加功能
                         final String _jid = XmppStringUtils.completeJidFrom(_OpenFireUsrName, connection.getServiceName());//转jid
                         AlertDialog.Builder _builder = new AlertDialog.Builder(mContext);
@@ -93,11 +99,9 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
                             public void onClick(DialogInterface dialog, int which) {
                                 //发送请求添加好友
                                 RosterHelper _roster_helper = RosterHelper.getInstance(connection);
-//                                String _nickname = XmppStringUtils.parseLocalpart(_jid);
                                 _roster_helper.addEntry(_jid, _name, "Friends");
                                 //立马删除好友
                                 _roster_helper.removeEntry(_jid);
-
                             }
                         });
                         _builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

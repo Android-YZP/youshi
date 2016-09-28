@@ -1,14 +1,15 @@
-package com.mkch.youshi.bean;
+package com.mkch.youshi.model;
+
+import org.xutils.db.annotation.Table;
 
 /**
- * 联系人javabean
- *
- * @author kymjs (http://www.kymjs.com/) on 9/16/15.
+ * 优时联系人
  */
+@Table(name = "friend")
 public class Contact implements Comparable<Contact> {
+    private int id;
     private String name;
     private String openFireName;
-    private int id;
     private String url;
     private String pinyin;
     private char firstChar;

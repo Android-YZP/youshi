@@ -6,7 +6,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.bean.Contact;
+import com.mkch.youshi.model.Contact;
 
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
@@ -14,6 +14,7 @@ import org.kymjs.kjframe.widget.KJAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 优时好友列表适配器
@@ -21,9 +22,9 @@ import java.util.Collections;
 public class ContactAdapter extends KJAdapter<Contact> implements SectionIndexer {
 
     private KJBitmap kjb = new KJBitmap();
-    private ArrayList<Contact> datas;
+    private List<Contact> datas;
 
-    public ContactAdapter(AbsListView view, ArrayList<Contact> mDatas) {
+    public ContactAdapter(AbsListView view, List<Contact> mDatas) {
         super(view, mDatas, R.layout.item_list_contact);
         datas = mDatas;
         if (datas == null) {
