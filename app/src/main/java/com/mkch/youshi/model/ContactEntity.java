@@ -34,7 +34,6 @@ public class ContactEntity implements Comparable<ContactEntity> {
     //所属用户ID（OpenFireUserName）
     @Column(name = "user_id")
     private String userID;
-    private boolean add;
     private boolean IsRegister;
     private char firstChar;
 
@@ -131,14 +130,6 @@ public class ContactEntity implements Comparable<ContactEntity> {
 
     public char getFirstChar() {
         return firstChar;
-    }
-
-    public boolean isAdd() {
-        return add;
-    }
-
-    public void setAdd(boolean add) {
-        this.add = add;
     }
 
     public boolean isRegister() {

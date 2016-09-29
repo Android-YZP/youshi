@@ -75,7 +75,7 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
         TextView tvAdded = holder.getView(R.id.tv_phone_contacts_added);
         View tvLine = holder.getView(R.id.line_list_phone_contacts);
         Button btnAdd = holder.getView(R.id.btn_phone_contacts_add);
-        if (item.isAdd()) {
+        if (item.getStatus() == 1) {
             btnAdd.setVisibility(View.GONE);
             tvAdded.setVisibility(View.VISIBLE);
         } else {

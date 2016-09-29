@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -89,7 +88,6 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setListener();
     }
 
@@ -142,10 +140,8 @@ public class ContactsFragment extends Fragment implements SideBar
             List<Friend> _friends = dbManager.selector(Friend.class).findAll();
             if(_friends!=null&&_friends.size()>0){
                 mAdapter = new ContactAdapter(mListView, _friends);
-                Log.d("jlj","ContactsFragment----------------------new ContactAdapter");
                 mListView.setAdapter(mAdapter);
             }
-
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -275,7 +271,6 @@ public class ContactsFragment extends Fragment implements SideBar
                                 if (first!=null){
                                     dbManager.delete(first);
                                 }
-
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
@@ -436,22 +431,6 @@ public class ContactsFragment extends Fragment implements SideBar
                             JSONArray mDatas = _json_result.getJSONArray("Datas");
                             //再次获取网络端数据时清除datas的数据-from JLJ
                             datas.clear();
-                            //清除数据库中所有friend列表状态为1的好友
-                            try {
-                                //本登录用户的，已添加的，所有好友
-                                List<Friend> _yoshi_friends = dbManager.selector(Friend.class)
-                                        .where("status", "=", 1)
-                                        .and("userid", "=", mUser.getOpenFireUserName())
-                                        .findAll();
-                                if (_yoshi_friends!=null&&_yoshi_friends.size()>0){
-                                    dbManager.delete(_yoshi_friends);
-                                }
-
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Friend data = new Friend();
                                 JSONObject jobj = mDatas.getJSONObject(i);
@@ -459,6 +438,7 @@ public class ContactsFragment extends Fragment implements SideBar
                                 String _head_pic = null;
                                 if (HeadPic != null && !HeadPic.equals("") && !HeadPic.equals("null")) {
                                     _head_pic = CommonConstants.NOW_ADDRESS_PRE + HeadPic;
+                                    data.setHead_pic(_head_pic);
                                 }
                                 String Nickname = jobj.getString("NickName");
                                 String MobileNumber = jobj.getString("MobileNumber");
@@ -468,11 +448,8 @@ public class ContactsFragment extends Fragment implements SideBar
                                 if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
                                     data.setNickname(Nickname);
                                     data.setPinyin(HanziToPinyin.getPinYin(Nickname));
-                                    Log.d("jlj","ContactsFragment1---------------------"+HanziToPinyin.getPinYin(Nickname));
                                 } else {
-                                    data.setNickname(OpenFireUserName);
                                     data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
-                                    Log.d("jlj","ContactsFragment2---------------------"+HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
@@ -480,10 +457,32 @@ public class ContactsFragment extends Fragment implements SideBar
                                 User _self_user = CommonUtil.getUserInfo(getActivity());
                                 int status = 1;//已添加好友
                                 String _self_userid = _self_user.getOpenFireUserName();
-                                //获取所有的优时好友列表
-                                Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, status, _self_userid);
+
                                 try {
-                                    dbManager.save(_friend);
+                                    Friend _friend_tab = dbManager.selector(Friend.class)
+                                            .where("friendid","=",OpenFireUserName)
+                                            .and("userid","=",_self_userid)
+                                            .findFirst();
+                                    if (_friend_tab!=null){
+                                        //有就更改他的字段
+                                        _friend_tab.setNickname(Nickname);
+                                        if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
+                                            _friend_tab.setNickname(Nickname);
+                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(Nickname));
+                                        } else {
+                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
+                                        }
+                                        _friend_tab.setHead_pic(_head_pic);
+                                        _friend_tab.setPhone(MobileNumber);
+                                        _friend_tab.setRemark(Remark);
+                                        _friend_tab.setStatus(1);
+                                        dbManager.saveOrUpdate(_friend_tab);
+                                    }else{
+                                        //没有就插入
+                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, status, _self_userid);
+                                        dbManager.save(_friend);
+                                    }
+
                                 } catch (DbException e) {
                                     e.printStackTrace();
                                 }

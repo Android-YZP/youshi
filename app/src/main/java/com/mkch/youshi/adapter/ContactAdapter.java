@@ -2,6 +2,7 @@ package com.mkch.youshi.adapter;
 
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -11,6 +12,8 @@ import com.mkch.youshi.model.Friend;
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
 import org.kymjs.kjframe.widget.KJAdapter;
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +44,15 @@ public class ContactAdapter extends KJAdapter<Friend> implements SectionIndexer 
     public void convert(AdapterHolder holder, Friend item, boolean isScrolling, int position) {
 
         holder.setText(R.id.tv_contact_name, item.getNickname());
-//        ImageView headImg = holder.getView(R.id.iv_contact_head);
+        ImageView headImg = holder.getView(R.id.iv_contact_head);
+        ImageOptions _image_options = new ImageOptions.Builder()
+                .setCircular(true)
+                .build();
+        if (item.getHead_pic() != null && !item.getHead_pic().equals("") && !item.getHead_pic().equals("null")) {
+            x.image().bind(headImg, item.getHead_pic(), _image_options);
+        } else {
+            headImg.setImageResource(R.drawable.default_headpic);
+        }
 //        if (isScrolling) {
 //            kjb.displayCacheOrDefult(headImg, item.getUrl(), R.drawable.default_head_rect);
 //        } else {

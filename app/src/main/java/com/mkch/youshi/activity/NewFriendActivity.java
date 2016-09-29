@@ -95,6 +95,14 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     //更新UI界面，添加按钮变成已添加文字
                     updateUIfromAllowFriend();
                     break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    Toast.makeText(NewFriendActivity.this, "认证错误", Toast.LENGTH_SHORT).show();
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR3:
+                    //请求失败
+                    Toast.makeText(NewFriendActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                    break;
                 default:
                     break;
             }
@@ -108,7 +116,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
      * 更新UI界面，添加按钮变成已添加
      */
     private void updateUIfromAllowFriend() {
-        Log.d("jlj", "--------------------------updateUIfromAllowFriend");
         mAdapter.notifyDataSetChanged();
     }
 
@@ -124,7 +131,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     .and("showinnewfriend", "=", "1")
                     .and("userid", "=", userid)
                     .findAll();
-            Log.d("jlj", "mFriends size is --------------------" + mFriends.size());
             for (int i = 0; i < mFriends.size(); i++) {
                 Log.d("jlj", "mFriends[" + i + "]=" + mFriends.get(i).toString());
             }
@@ -167,7 +173,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     .and("showinnewfriend", "=", "1")
                     .and("userid", "=", mUser.getOpenFireUserName())
                     .findAll();
-            if (mFriends == null) {
+            if (mFriends == null || mFriends.size() == 0) {
                 mLine1.setVisibility(View.GONE);
                 mLine2.setVisibility(View.GONE);
                 mFriends = new ArrayList<>();
@@ -204,8 +210,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         mFriendsReceiver = new FriendsReceiver(mHandler);
         IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
         registerReceiver(mFriendsReceiver, _intent_filter);
-
-
     }
 
     private void setListener() {
@@ -247,7 +251,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     dbManager.saveOrUpdate(_friend);
                 } catch (DbException e) {
                     e.printStackTrace();
-                    Log.d("jlj", "------------------" + e.getMessage());
                     return true;
                 }
                 mFriends.remove(info.position);//从集合中去除该对象
@@ -267,7 +270,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
      */
     @Override
     public void clickItemButton(int position) {
-        Log.d("jlj", "NewFriendActivity----------------onClick=" + mFriends.get(position).getPhone());
         String _openfire_username = mFriends.get(position).getFriendid();
         //异步请求网络，接受该用户的好友添加
         addFriendFromNet(_openfire_username, position);
@@ -288,13 +290,11 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         RequestParams requestParams = new RequestParams(CommonConstants.AllowFriend);
         //包装请求参数
         String _req_json = "{\"OpenFireName\":\"" + _openfire_username + "\"}";
-        Log.d("jlj", "addFriendFromNet------------------req_json=" + _req_json + "," + _self_user.getLoginCode());
         requestParams.addBodyParameter("", _req_json);//用户名
         requestParams.addHeader("sVerifyCode", _self_user.getLoginCode());//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d("jlj", "addFriendFromNet-onSuccess---------------------result = " + result);
                 if (result != null) {
                     //若result返回信息中登录成功，解析json数据并存于本地，再使用handler通知UI更新界面并进行下一步逻辑
                     try {
@@ -304,7 +304,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                             //更改此好友的已添加状态
                             Friend _friend = mFriends.get(position);
                             _friend.setStatus(1);//已添加
-                            Log.d("jlj", "----------------_friend-toString = " + _friend.toString());
                             //并更新数据库
                             try {
                                 dbManager.saveOrUpdate(_friend);
@@ -317,9 +316,9 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
-                                Log.d("jlj", "getInfoByOpenFireName-------------1001");
+                                mHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
-                                Log.d("jlj", "getInfoByOpenFireName-------------1002");
+                                mHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
                             } else {
                                 CommonUtil.sendErrorMessage(_Message, mHandler);
                             }
@@ -333,7 +332,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("jlj", "-------onError = " + ex.getMessage());
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, mHandler);
@@ -348,21 +346,16 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Log.d("userLogin", "----onCancelled");
             }
 
             @Override
             public void onFinished() {
-                Log.d("userLogin", "----onFinished");
-                //取消进度加载对话框
             }
         });
     }
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class NewFriendOnClickListener implements View.OnClickListener {
         @Override

@@ -9,7 +9,6 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -61,6 +60,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
     private ListView mListView;
     private PhoneContactAdapter mAdapter;
     private DbManager dbManager;//数据库管理对象
+    private boolean isAdd;
 
     @Override
     public void setRootView() {
@@ -72,8 +72,10 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
         dbManager = DBHelper.getDbManager();
         try {
             List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
-            mAdapter = new PhoneContactAdapter(mListView, contactEntities, this);
-            mListView.setAdapter(mAdapter);
+            if (contactEntities != null && contactEntities.size() > 0) {
+                mAdapter = new PhoneContactAdapter(mListView, contactEntities, this);
+                mListView.setAdapter(mAdapter);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -212,8 +214,14 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                 if (jobj.getString("HeadPic") != null && !jobj.getString("HeadPic").equals("") && !jobj.getString("HeadPic").equals("null")) {
                                     mContacts.get(i).setHeadPic(CommonConstants.TEST_ADDRESS_PRE + jobj.getString("HeadPic"));
                                 }
-                                boolean isAdd = jobj.getBoolean("IsAdd");
-                                mContacts.get(i).setAdd(isAdd);
+                                isAdd = jobj.getBoolean("IsAdd");
+                                int status = 0;
+                                if (isAdd) {
+                                    status = 1;
+                                } else {
+                                    status = 0;
+                                }
+                                mContacts.get(i).setStatus(status);
                                 boolean IsRegister = jobj.getBoolean("IsRegister");
                                 mContacts.get(i).setRegister(IsRegister);
                             }
@@ -227,9 +235,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                             try {
                                 //存储前先清空数据库中的手机联系人
                                 List<ContactEntity> contactEntities = dbManager.selector(ContactEntity.class).findAll();
-                                Log.d("jlj","------------------------dbManager="+dbManager);
-                                if (contactEntities!=null&&contactEntities.size()>0){
-                                    Log.d("jlj","------------------------contactEntities size="+contactEntities.size());
+                                if (contactEntities != null && contactEntities.size() > 0) {
                                     dbManager.delete(contactEntities);
                                 }
 
@@ -245,13 +251,7 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
                                 String name = mContacts.get(i).getName();
                                 String pinyin = mContacts.get(i).getPinyin();
                                 String number = mContacts.get(i).getNumber();
-                                boolean isAdd = mContacts.get(i).isAdd();
-                                int status = 0;
-                                if (isAdd) {
-                                    status = 1;
-                                } else {
-                                    status = 0;
-                                }
+                                int status = mContacts.get(i).getStatus();
                                 //获取所有的优时好友列表
                                 ContactEntity contactEntity = new ContactEntity(contactID, headPic, name, pinyin, number, status, userID);
                                 try {
@@ -280,7 +280,6 @@ public class PhoneContactsActivity extends KJActivity implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("jlj","------------------------onError:"+ex.getMessage());
                 ex.printStackTrace();
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
