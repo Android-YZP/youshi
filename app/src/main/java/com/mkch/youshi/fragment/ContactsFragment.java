@@ -138,7 +138,7 @@ public class ContactsFragment extends Fragment implements SideBar
         dbManager = DBHelper.getDbManager();
         try {
             List<Friend> _friends = dbManager.selector(Friend.class).findAll();
-            if(_friends!=null&&_friends.size()>0){
+            if (_friends != null && _friends.size() > 0) {
                 mAdapter = new ContactAdapter(mListView, _friends);
                 mListView.setAdapter(mAdapter);
             }
@@ -186,6 +186,28 @@ public class ContactsFragment extends Fragment implements SideBar
         mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
         mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
         mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
+                if (datas == null || datas.size() == 0) {
+                    try {
+                        Friend friend = dbManager.selector(Friend.class)
+                                .where("id", "=", position + 1)
+                                .findFirst();
+                        String contactID = friend.getFriendid();
+                        _intent.putExtra("_contactID", contactID);
+                        startActivity(_intent);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String contactID = datas.get(position).getFriendid();
+                    _intent.putExtra("_contactID", contactID);
+                    startActivity(_intent);
+                }
+            }
+        });
         //注册contextmenu
         registerForContextMenu(mListView);
     }
@@ -268,7 +290,7 @@ public class ContactsFragment extends Fragment implements SideBar
                                         .and("status", "=", 1)
                                         .and("userid", "=", mUser.getOpenFireUserName())
                                         .findFirst();
-                                if (first!=null){
+                                if (first != null) {
                                     dbManager.delete(first);
                                 }
                             } catch (DbException e) {
@@ -451,6 +473,10 @@ public class ContactsFragment extends Fragment implements SideBar
                                 } else {
                                     data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
+                                String place = jobj.getString("place");
+                                data.setPlace(place);
+                                String sign = jobj.getString("sign");
+                                data.setSign(sign);
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
                                 //临时使用-存储所有的优时好友列表数据-from JLJ
@@ -460,10 +486,10 @@ public class ContactsFragment extends Fragment implements SideBar
 
                                 try {
                                     Friend _friend_tab = dbManager.selector(Friend.class)
-                                            .where("friendid","=",OpenFireUserName)
-                                            .and("userid","=",_self_userid)
+                                            .where("friendid", "=", OpenFireUserName)
+                                            .and("userid", "=", _self_userid)
                                             .findFirst();
-                                    if (_friend_tab!=null){
+                                    if (_friend_tab != null) {
                                         //有就更改他的字段
                                         _friend_tab.setNickname(Nickname);
                                         if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
@@ -476,8 +502,10 @@ public class ContactsFragment extends Fragment implements SideBar
                                         _friend_tab.setPhone(MobileNumber);
                                         _friend_tab.setRemark(Remark);
                                         _friend_tab.setStatus(1);
+                                        _friend_tab.setPlace(place);
+                                        _friend_tab.setSign(sign);
                                         dbManager.saveOrUpdate(_friend_tab);
-                                    }else{
+                                    } else {
                                         //没有就插入
                                         Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, status, _self_userid);
                                         dbManager.save(_friend);

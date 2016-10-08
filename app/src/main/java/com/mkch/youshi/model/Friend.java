@@ -8,8 +8,8 @@ import org.xutils.db.annotation.Table;
  * 优时好友
  */
 @Table(name = "friend")
-public class Friend implements Comparable<Friend>{
-    @Column(name = "id",isId = true,autoGen = true)
+public class Friend implements Comparable<Friend> {
+    @Column(name = "id", isId = true, autoGen = true)
     private int id;
     /**
      * 优时好友ID（OpenFireUserName）
@@ -63,6 +63,16 @@ public class Friend implements Comparable<Friend>{
      */
     @Column(name = "first_char")
     private char firstChar;
+    /**
+     * 地区
+     */
+    @Column(name = "place")
+    private String place;
+    /**
+     * 个性签名
+     */
+    @Column(name = "sign")
+    private String sign;
 
     public Friend() {
     }
@@ -172,6 +182,22 @@ public class Friend implements Comparable<Friend>{
         this.showinnewfriend = showinnewfriend;
     }
 
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
     @Override
     public String toString() {
         return "Friend{" +
@@ -191,8 +217,8 @@ public class Friend implements Comparable<Friend>{
 
     @Override
     public int compareTo(Friend another) {
-        if (another!=null&&another.getPinyin()!=null&&!another.getPinyin().equals("")){
-            if (pinyin!=null&&!pinyin.equals("")){
+        if (another != null && another.getPinyin() != null && !another.getPinyin().equals("")) {
+            if (pinyin != null && !pinyin.equals("")) {
                 return this.pinyin.compareTo(another.getPinyin());
             }
         }

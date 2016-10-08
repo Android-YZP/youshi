@@ -123,6 +123,8 @@ public class CommonConstants {
     public static final String ChangeAddmeVerify = NOW_ADDRESS + "ChangeAddmeVerify";
     //忘记密码
     public static final String ForgetPassword = NOW_ADDRESS + "ForgetPassword";
+    //备注好友
+    public static final String RemarkFriend = NOW_ADDRESS + "RemarkFriend";
     //zhangjun-----------------------------------------------end
 
 

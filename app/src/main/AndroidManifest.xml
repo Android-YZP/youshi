@@ -105,7 +105,7 @@
         </service>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="zrFiBx8eYGwjw3Iy635GG0vMPniPt6uV" />
+            android:value="Gx873cAuaZ4CprvsgPatRGzmoHzwrnYk" />
 
         <!--今日-->
         <activity
@@ -132,8 +132,9 @@
         <!-- 消息 -->
         <activity android:name=".activity.GroupDetailActivity" />
         <activity android:name=".activity.MultiChatActivity" />
-        <activity android:name=".activity.ChatActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.GroupChatActivity" />
 
         <service
