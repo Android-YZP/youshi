@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -18,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +34,7 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.view.ContactListView;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 
@@ -57,12 +58,13 @@ public class ContactsFragment extends Fragment implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
 
     private ImageView mIvAddFriend;
-    private LinearLayout mLayoutNewFriend, mLayoutGroupChat, mLayoutTest;
+    private LinearLayout mLayoutNewFriend, mLayoutGroupChat;
     private static ProgressDialog mProgressDialog = null;
     @BindView(id = R.id.list_contacts)
-    private ListView mListView;
+    private ContactListView mListView;
     private TextView mFooterView;
     private List<Friend> datas = new ArrayList<>();
+    private List<Friend> _friends;
     private ContactAdapter mAdapter;
     private SideBar mSideBar;
     private TextView mDialog;
@@ -112,11 +114,10 @@ public class ContactsFragment extends Fragment implements SideBar
         mTvNewFriendNum = (TextView) view.findViewById(R.id.tv_contacts_new_friend_number);
         mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
         mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
-        mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
         mSideBar = (SideBar) view.findViewById(R.id.sidebar_contacts);
         mDialog = (TextView) view.findViewById(R.id.tv_contacts_dialog);
         mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
-        mListView = (ListView) view.findViewById(R.id.list_contacts);
+        mListView = (ContactListView) view.findViewById(R.id.list_contacts);
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);
         mSearchInput.addTextChangedListener(this);
@@ -137,8 +138,9 @@ public class ContactsFragment extends Fragment implements SideBar
         updateNewFriendReqNum();
         dbManager = DBHelper.getDbManager();
         try {
-            List<Friend> _friends = dbManager.selector(Friend.class).findAll();
+            _friends = dbManager.selector(Friend.class).findAll();
             if (_friends != null && _friends.size() > 0) {
+                mFooterView.setText(_friends.size() + "位联系人");
                 mAdapter = new ContactAdapter(mListView, _friends);
                 mListView.setAdapter(mAdapter);
             }
@@ -185,26 +187,28 @@ public class ContactsFragment extends Fragment implements SideBar
         mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
         mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
         mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
-        mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
-                if (datas == null || datas.size() == 0) {
-                    try {
-                        Friend friend = dbManager.selector(Friend.class)
-                                .where("id", "=", position + 1)
-                                .findFirst();
-                        String contactID = friend.getFriendid();
+                if (position != _friends.size()) {
+                    Log.d("---------------------", String.valueOf(position));
+                    if (datas == null || datas.size() == 0) {
+                        try {
+                            Friend friend = dbManager.selector(Friend.class)
+                                    .where("id", "=", position + 1)
+                                    .findFirst();
+                            String contactID = friend.getFriendid();
+                            _intent.putExtra("_contactID", contactID);
+                            startActivity(_intent);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        String contactID = datas.get(position).getFriendid();
                         _intent.putExtra("_contactID", contactID);
                         startActivity(_intent);
-                    } catch (DbException e) {
-                        e.printStackTrace();
                     }
-                } else {
-                    String contactID = datas.get(position).getFriendid();
-                    _intent.putExtra("_contactID", contactID);
-                    startActivity(_intent);
                 }
             }
         });
@@ -420,10 +424,6 @@ public class ContactsFragment extends Fragment implements SideBar
                         break;
                     case R.id.layout_contacts_group_chat:
                         _intent = new Intent(getActivity(), GroupChatActivity.class);
-                        getActivity().startActivity(_intent);
-                        break;
-                    case R.id.layout_contacts_test:
-                        _intent = new Intent(getActivity(), FriendInformationActivity.class);
                         getActivity().startActivity(_intent);
                         break;
                     default:
