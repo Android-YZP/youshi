@@ -3,6 +3,7 @@ package com.mkch.youshi.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -34,7 +35,6 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
 
     private KJBitmap kjb = new KJBitmap();
     private List<ContactEntity> datas;
-    private XMPPTCPConnection connection; //connection
     private Context mContext;//上下文
 
     public PhoneContactAdapter(AbsListView view, List<ContactEntity> mDatas, Context mContext) {
@@ -44,8 +44,6 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             datas = new ArrayList<>();
         }
         Collections.sort(datas);
-        //获取连接
-        connection = XmppHelper.getConnection();
         this.mContext = mContext;
     }
 
@@ -85,32 +83,10 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.d("jlj","phoneContactAdapter button--------------------------------add onClick");
                     ContactEntity _contactEntiy = datas.get(position);
                     if (_contactEntiy != null) {
-                        final String _name = _contactEntiy.getName();
-                        String _OpenFireUsrName = _contactEntiy.getContactID();
-                        //获取用户名和_OpenFireUsrName；并发起添加功能
-                        final String _jid = XmppStringUtils.completeJidFrom(_OpenFireUsrName, connection.getServiceName());//转jid
-                        AlertDialog.Builder _builder = new AlertDialog.Builder(mContext);
-                        _builder.setTitle("添加好友");
-                        _builder.setMessage("确定添加" + _jid + "为好友吗？");
-                        _builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //发送请求添加好友
-                                RosterHelper _roster_helper = RosterHelper.getInstance(connection);
-                                _roster_helper.addEntry(_jid, _name, "Friends");
-                                //立马删除好友
-                                _roster_helper.removeEntry(_jid);
-                            }
-                        });
-                        _builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        _builder.show();
+
                     }
                 }
             });

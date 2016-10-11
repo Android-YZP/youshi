@@ -59,8 +59,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
 
     private static ProgressDialog mProgressDialog = null;//登录加载
 
-    //广播接收
-    private FriendsReceiver mFriendsReceiver;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -73,23 +71,6 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(NewFriendActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-                    break;
-                case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
-                    String _friend_json = (String) msg.obj;
-                    Gson _gson = new Gson();
-                    Friend _friend = _gson.fromJson(_friend_json, Friend.class);
-                    //昵称
-                    String _nickname = _friend.getNickname();
-                    String _content_text_username = null;
-                    if (_nickname != null && !_nickname.equals("") && !_nickname.equals("null")) {
-                        _content_text_username = _nickname;
-                    } else {
-                        _content_text_username = _friend.getFriendid();
-                    }
-                    //提示
-                    Toast.makeText(NewFriendActivity.this, _content_text_username + ",请求添加您为好友！", Toast.LENGTH_LONG).show();
-                    //更新UI界面，获取最新的用户列表
-                    updateUIfromReceiver(_friend.getUserid());
                     break;
                 case CommonConstants.FLAG_ALLOW_FRIEND_SUCCESS:
                     //更新UI界面，添加按钮变成已添加文字
@@ -206,10 +187,7 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
         //搜索框不弹出软键盘
         mEtSearch.setInputType(InputType.TYPE_NULL);
 
-        //注册广播
-        mFriendsReceiver = new FriendsReceiver(mHandler);
-        IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
-        registerReceiver(mFriendsReceiver, _intent_filter);
+
     }
 
     private void setListener() {
@@ -379,7 +357,5 @@ public class NewFriendActivity extends Activity implements NewFriendListAdapter.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //解除广播
-        unregisterReceiver(mFriendsReceiver);
     }
 }
