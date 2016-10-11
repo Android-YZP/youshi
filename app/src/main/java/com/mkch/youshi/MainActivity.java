@@ -1,7 +1,6 @@
 package com.mkch.youshi;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,7 +22,6 @@ import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.receiver.FriendsReceiver;
-import com.mkch.youshi.service.FriendService;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.view.IndexTabBarLayout;
@@ -177,10 +175,7 @@ public class MainActivity extends BaseActivity {
         mUserCenterFragment = new UserCenterFragment();
         mUser = CommonUtil.getUserInfo(this);
 
-        //注册广播
-        mFriendsReceiver = new FriendsReceiver(mHandler);
-        IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
-        registerReceiver(mFriendsReceiver,_intent_filter);
+
     }
 
     /**
@@ -206,20 +201,12 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-        initServiceListener();//启动初始化需要监听的service
 
 
-    }
-
-    /**
-     * 启动初始化需要监听的service
-     */
-    private void initServiceListener() {
-        //启动监听好友请求添加和好友状态
-        Intent _intent = new Intent(MainActivity.this, FriendService.class);
-        startService(_intent);
 
     }
+
+
 
 
     /**
@@ -287,7 +274,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //解除广播
-        unregisterReceiver(mFriendsReceiver);
+
     }
 }
