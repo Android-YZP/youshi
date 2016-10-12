@@ -274,6 +274,16 @@ public class ReviseAddressActivity extends Activity {
                     //修改成功
                     ((ReviseAddressActivity) mActivity.get()).updateUserInfo();
                     break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((ReviseAddressActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR3:
+                    //请求失败
+                    String errorMsg3 = ("请求失败");
+                    ((ReviseAddressActivity) mActivity.get()).showTip(errorMsg3);
+                    break;
                 default:
                     break;
             }
@@ -316,6 +326,16 @@ public class ReviseAddressActivity extends Activity {
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ADDRESS_SUCCESS);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

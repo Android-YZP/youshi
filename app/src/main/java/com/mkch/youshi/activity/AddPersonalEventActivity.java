@@ -84,6 +84,9 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private DbManager mDbManager;
     private TextView mTvSubmission;
     private List<Friend> allChooseFriends;
+    private TextView mTvAddress;
+    private double mLatitude;
+    private double mLongitude;
 
 
     @Override
@@ -93,7 +96,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         initView();
         initData();
         setListener();
-
     }
 
     private void initData() {
@@ -119,6 +121,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
 
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
+        mTvAddress = (TextView) findViewById(R.id.tv_address);
         mTvPlace = (TextView) findViewById(R.id.tv_personal_event_place);
         mRgLabel = (RadioGroup) findViewById(R.id.gr_label);
 
@@ -186,8 +189,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         switch (v.getId()) {
             //前半部分
             case R.id.rl_choose_address://选择地址
-                startActivity(new Intent(AddPersonalEventActivity.
-                        this, ChooseAddressActivity.class));
+                startActivityForResult(new Intent(AddPersonalEventActivity.
+                        this, ChooseAddressActivity.class), 6);
                 break;
             //中间部分的点击事件
             case R.id.rl_start_time://开始时间
@@ -225,8 +228,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     return;
                 }
                 //备注不为空
-                if (TextUtils.isEmpty(mTvPersonalEventDescription.getText().toString())) {
-                    showTip("请输入备注");
+                if (TextUtils.isEmpty(mTvPlace.getText().toString())) {
+                    showTip("请选择地址");
                     return;
                 }
                 saveDataOfDb();
@@ -244,18 +247,31 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //返回提前提醒
         if (resultCode == 0 && requestCode == 0 && data != null) {
             mRemindTime = data.getIntExtra("RemindTime", 0);
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
 
+        //返回地址
+        if (resultCode == 6 && requestCode == 6 && data != null) {
+            String address = data.getStringExtra("address");
+            mLatitude = data.getDoubleExtra("latitude", 0);
+            mLongitude = data.getDoubleExtra("longitude", 0);
+            if (!TextUtils.isEmpty(address)) {
+                mTvPlace.setText(address);
+            }
+        }
+
+        //返回报送人
         if (resultCode == 5 && requestCode == 5 && data != null) {
             String chooseFriends = data.getStringExtra("ChooseFriends");
             Gson gson = new Gson();
-            mFriends = gson.fromJson(chooseFriends,
+            mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
                     new TypeToken<List<String>>() {
                     }.getType());
+
             for (int i = 0; i < mFriends.size(); i++) {
                 User _user = CommonUtil.getUserInfo(UIUtils.getContext());
                 if (_user != null) {
@@ -269,6 +285,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     }
                 }
             }
+
             mTvSubmission.setText("");
             for (int i = 0; i < allChooseFriends.size(); i++) {
                 String nickname = allChooseFriends.get(i).getNickname();
@@ -278,8 +295,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
                 }
             }
-
-
         }
     }
 
@@ -288,7 +303,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
      */
     private void saveDataOfNet() {
         //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(AddPersonalEventActivity.this, "请稍等", "正在登录中...", true, true);
+        mProgressDialog = ProgressDialog.show(AddPersonalEventActivity.this, "请稍等", "正在保存中...", true, true);
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.SAVESCHEDULE);
         //包装请求参数
@@ -359,7 +374,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     }
 
     /**
-     * 生成个人事件的json数据
+     * 生成个人事件的json数据/
      *
      * @return
      */
@@ -368,10 +383,10 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         ViewModelBean viewModelBean = new ViewModelBean();
         viewModelBean.setScheduleType(0);//事件类型
         viewModelBean.setSubject(mEtTheme.getText().toString());//主题
-        viewModelBean.setPlace("宜兴");//地址
+        viewModelBean.setPlace(mTvPlace.getText().toString());//地址
         viewModelBean.setLabel(mLable);//标签
-        viewModelBean.setLatitude("21.323231");//维度
-        viewModelBean.setLongitude("1.2901921");//精度
+        viewModelBean.setLatitude(mLatitude + "");//维度
+        viewModelBean.setLongitude(mLongitude + "");//精度
         viewModelBean.setIsOneDay(isAllDay);//是否是全日
         viewModelBean.setStartTime(mTvStartTime.getText().toString());//开始时间
         viewModelBean.setStopTime(mTvEndTime.getText().toString());//结束时间
@@ -396,7 +411,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
             schedule = new Schedule();
-            schedule.setAddress("hefei");
+            schedule.setAddress(mTvPlace.getText().toString());
             schedule.setType(0);
             schedule.setTitle(mEtTheme.getText().toString());
             schedule.setLabel(mLable);

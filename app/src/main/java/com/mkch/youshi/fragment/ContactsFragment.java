@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,12 +29,12 @@ import com.mkch.youshi.activity.FriendInformationActivity;
 import com.mkch.youshi.activity.GroupChatActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
 import com.mkch.youshi.adapter.ContactAdapter;
-import com.mkch.youshi.bean.Contact;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.view.ContactListView;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 
@@ -59,12 +58,13 @@ public class ContactsFragment extends Fragment implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
 
     private ImageView mIvAddFriend;
-    private LinearLayout mLayoutNewFriend, mLayoutGroupChat, mLayoutTest;
+    private LinearLayout mLayoutNewFriend, mLayoutGroupChat;
     private static ProgressDialog mProgressDialog = null;
     @BindView(id = R.id.list_contacts)
-    private ListView mListView;
+    private ContactListView mListView;
     private TextView mFooterView;
-    private ArrayList<Contact> datas = new ArrayList<>();
+    private List<Friend> datas = new ArrayList<>();
+    private List<Friend> _friends;
     private ContactAdapter mAdapter;
     private SideBar mSideBar;
     private TextView mDialog;
@@ -72,6 +72,7 @@ public class ContactsFragment extends Fragment implements SideBar
 
     private TextView mTvNewFriendNum;//请求添加好友的用户数量
     private DbManager dbManager;//数据库管理对象
+    private User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,11 +90,8 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setListener();
     }
-
-
 
     @Override
     public void onResume() {
@@ -116,46 +114,70 @@ public class ContactsFragment extends Fragment implements SideBar
         mTvNewFriendNum = (TextView) view.findViewById(R.id.tv_contacts_new_friend_number);
         mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
         mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
-        mLayoutTest = (LinearLayout) view.findViewById(R.id.layout_contacts_test);
         mSideBar = (SideBar) view.findViewById(R.id.sidebar_contacts);
         mDialog = (TextView) view.findViewById(R.id.tv_contacts_dialog);
         mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
-        mListView = (ListView) view.findViewById(R.id.list_contacts);
-
+        mListView = (ContactListView) view.findViewById(R.id.list_contacts);
         mSideBar.setTextView(mDialog);
         mSideBar.setOnTouchingLetterChangedListener(this);
         mSearchInput.addTextChangedListener(this);
         // 给listView设置adapter
         mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
         mListView.addFooterView(mFooterView);
-//        getFriendListFromNet();//把该调用挪到initData-from JLJ
     }
 
     /**
      * 初始化界面数据
      */
     private void initData() {
+        if (getActivity() == null) {
+            return;
+        }
+        mUser = CommonUtil.getUserInfo(getActivity());
+        //更新好友请求数
+        updateNewFriendReqNum();
+        dbManager = DBHelper.getDbManager();
+        try {
+            _friends = dbManager.selector(Friend.class).findAll();
+            if (_friends != null && _friends.size() > 0) {
+                mFooterView.setText(_friends.size() + "位联系人");
+                mAdapter = new ContactAdapter(mListView, _friends);
+                mListView.setAdapter(mAdapter);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        //加载好友列表
+        getFriendListFromNet();
+    }
+
+    /**
+     * 更新好友请求数
+     */
+    private void updateNewFriendReqNum() {
+        String _self_openfirename = mUser.getOpenFireUserName();
         //从数据库获取请求好友的数量，并设置
         String _req_friend_num = "0";
         try {
             dbManager = DBHelper.getDbManager();
-            long count = dbManager.selector(Friend.class).where("status", "=", "2").and("showinnewfriend","=","1").count();
-            _req_friend_num = String.valueOf(count);
+            //本登录用户的，待接受，并显示在新朋友的数量
+            long count = dbManager.selector(Friend.class)
+                    .where("status", "=", "2")
+                    .and("showinnewfriend", "=", "1")
+                    .and("userid", "=", _self_openfirename)
+                    .count();
+            _req_friend_num = String.valueOf(count);//请求好友的数量
 
-            long count_added = dbManager.selector(Friend.class).where("status", "=", "1").count();//已添加好友的数量
         } catch (DbException e) {
             e.printStackTrace();
         }
-        if (_req_friend_num.equals("0")){
+        //待接受好友数量，显示在UI控件
+        if (_req_friend_num.equals("0")) {
             mTvNewFriendNum.setVisibility(View.GONE);
-
-        }else{
+        } else {
             mTvNewFriendNum.setVisibility(View.VISIBLE);
             mTvNewFriendNum.setText(_req_friend_num);
-
         }
-        //加载好友列表
-        getFriendListFromNet();
     }
 
     /**
@@ -165,13 +187,38 @@ public class ContactsFragment extends Fragment implements SideBar
         mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
         mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
         mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
-        mLayoutTest.setOnClickListener(new MyContactsOnClickListener());
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
+                if (position != _friends.size()) {
+                    Log.d("---------------------", String.valueOf(position));
+                    if (datas == null || datas.size() == 0) {
+                        try {
+                            Friend friend = dbManager.selector(Friend.class)
+                                    .where("id", "=", position + 1)
+                                    .findFirst();
+                            String contactID = friend.getFriendid();
+                            _intent.putExtra("_contactID", contactID);
+                            startActivity(_intent);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        String contactID = datas.get(position).getFriendid();
+                        _intent.putExtra("_contactID", contactID);
+                        startActivity(_intent);
+                    }
+                }
+            }
+        });
         //注册contextmenu
         registerForContextMenu(mListView);
     }
 
     /**
      * 设置上下文长按Item时的菜单
+     *
      * @param menu
      * @param v
      * @param menuInfo
@@ -179,7 +226,7 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.context_menu, menu);
         }
@@ -189,22 +236,21 @@ public class ContactsFragment extends Fragment implements SideBar
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
         int _position = info.position;
-        Contact _Contact = datas.get(_position);
-        String _openfirename = _Contact.getOpenFireName();
-        switch (item.getItemId()){
+        Friend _Contact = datas.get(_position);
+        String _openfirename = _Contact.getFriendid();
+        switch (item.getItemId()) {
             case R.id.contact_menu_chat:
                 //进入单聊界面聊天
-                if (getActivity()!=null){
+                if (getActivity() != null) {
                     Intent _intent = new Intent(getActivity(), ChatActivity.class);
-                    _intent.putExtra("_openfirename",_openfirename);
+                    _intent.putExtra("_openfirename", _openfirename);
                     startActivity(_intent);
                 }
                 return true;
             case R.id.contact_menu_del:
                 //异步请求网络接口，删除该好友
-                deleteFriendFromNet(_openfirename,_position);
+                deleteFriendFromNet(_openfirename, _position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -214,10 +260,11 @@ public class ContactsFragment extends Fragment implements SideBar
 
     /**
      * 异步请求网络接口，删除该好友
+     *
      * @param openfirename
      */
     private void deleteFriendFromNet(final String openfirename, final int position) {
-        if (getActivity()==null){
+        if (getActivity() == null) {
             return;
         }
         //弹出加载进度条
@@ -228,13 +275,11 @@ public class ContactsFragment extends Fragment implements SideBar
         RequestParams requestParams = new RequestParams(CommonConstants.DeleteFriend);
         //包装请求参数
         String _req_json = "{\"OpenFireName\":\"" + openfirename + "\"}";
-        Log.d("jlj","deleteFriendFromNet------------------req_json="+_req_json+","+_self_user.getLoginCode());
         requestParams.addBodyParameter("", _req_json);//用户名
         requestParams.addHeader("sVerifyCode", _self_user.getLoginCode());//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d("jlj","deleteFriendFromNet-onSuccess---------------------result = "+result);
                 if (result != null) {
                     //若result返回信息中删除成功
                     try {
@@ -243,15 +288,18 @@ public class ContactsFragment extends Fragment implements SideBar
                         if (_success) {
                             //清除本地数据库该条好友信息，清除本地该条数据
                             try {
+                                //本登录用户的，已添加状态的，好友
                                 Friend first = dbManager.selector(Friend.class)
                                         .where("friendid", "=", openfirename)
                                         .and("status", "=", 1)
+                                        .and("userid", "=", mUser.getOpenFireUserName())
                                         .findFirst();
-                                dbManager.delete(first);
+                                if (first != null) {
+                                    dbManager.delete(first);
+                                }
                             } catch (DbException e) {
                                 e.printStackTrace();
                             }
-
                             datas.remove(position);
                             //提醒删除成功
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_DELETE_FRIEND_SUCCESS);
@@ -259,9 +307,9 @@ public class ContactsFragment extends Fragment implements SideBar
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
-                                Log.d("jlj", "deleteFriendFromNet-------------1001");
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
-                                Log.d("jlj", "deleteFriendFromNet-------------1002");
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
                             } else {
                                 CommonUtil.sendErrorMessage(_Message, myHandler);
                             }
@@ -275,7 +323,6 @@ public class ContactsFragment extends Fragment implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("jlj", "deleteFriendFromNet-------onError = " + ex.getMessage());
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
@@ -290,15 +337,12 @@ public class ContactsFragment extends Fragment implements SideBar
 
             @Override
             public void onCancelled(CancelledException cex) {
-                Log.d("jlj", "deleteFriendFromNet----onCancelled");
             }
 
             @Override
             public void onFinished() {
-                Log.d("jlj", "deleteFriendFromNet----onFinished");
             }
         });
-
 
 
     }
@@ -313,7 +357,7 @@ public class ContactsFragment extends Fragment implements SideBar
             switch (flag) {
                 case 0:
                     //出现错误
-                    if (getActivity()!=null){
+                    if (getActivity() != null) {
                         String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                         Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
                     }
@@ -324,10 +368,24 @@ public class ContactsFragment extends Fragment implements SideBar
                     break;
                 case CommonConstants.FLAG_DELETE_FRIEND_SUCCESS:
                     //刷新UI
-                    if (getActivity()!=null){
+                    if (getActivity() != null) {
                         Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
                         mAdapter.notifyDataSetChanged();
                         mFooterView.setText(datas.size() + "位联系人");
+                    }
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    if (getActivity() != null) {
+                        String errorMsg1 = ("认证错误");
+                        Toast.makeText(getActivity(), errorMsg1, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR3:
+                    //请求失败
+                    if (getActivity() != null) {
+                        String errorMsg3 = ("请求失败");
+                        Toast.makeText(getActivity(), errorMsg3, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -349,8 +407,6 @@ public class ContactsFragment extends Fragment implements SideBar
 
     /**
      * 自定义点击监听类
-     *
-     * @author JLJ
      */
     private class MyContactsOnClickListener implements View.OnClickListener {
         @Override
@@ -368,10 +424,6 @@ public class ContactsFragment extends Fragment implements SideBar
                         break;
                     case R.id.layout_contacts_group_chat:
                         _intent = new Intent(getActivity(), GroupChatActivity.class);
-                        getActivity().startActivity(_intent);
-                        break;
-                    case R.id.layout_contacts_test:
-                        _intent = new Intent(getActivity(), FriendInformationActivity.class);
                         getActivity().startActivity(_intent);
                         break;
                     default:
@@ -393,64 +445,87 @@ public class ContactsFragment extends Fragment implements SideBar
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
-                Log.d("jlj","------------------result="+result);
                 if (result != null) {
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             JSONArray mDatas = _json_result.getJSONArray("Datas");
-                            Log.d("jlj","------------------mDatas="+mDatas.toString());
                             //再次获取网络端数据时清除datas的数据-from JLJ
                             datas.clear();
-                            //清除数据库中所有friend列表状态为1的好友
-                            try {
-                            List<Friend> _yoshi_friends = dbManager.selector(Friend.class)
-                                    .where("status","=",1)
-                                    .findAll();
-                                dbManager.delete(_yoshi_friends);
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            } catch (Exception e){
-                                e.printStackTrace();
-                            }
                             for (int i = 0; i < mDatas.length(); i++) {
-                                Contact data = new Contact();
+                                Friend data = new Friend();
                                 JSONObject jobj = mDatas.getJSONObject(i);
-//                                String name = jobj.getString("UserName");
                                 String HeadPic = jobj.getString("HeadPic");//头像
                                 String _head_pic = null;
-                                if (HeadPic!=null&&!HeadPic.equals("")&&!HeadPic.equals("null")){
-                                    _head_pic = CommonConstants.NOW_ADDRESS_PRE+HeadPic;
+                                if (HeadPic != null && !HeadPic.equals("") && !HeadPic.equals("null")) {
+                                    _head_pic = CommonConstants.NOW_ADDRESS_PRE + HeadPic;
+                                    data.setHead_pic(_head_pic);
                                 }
                                 String Nickname = jobj.getString("NickName");
                                 String MobileNumber = jobj.getString("MobileNumber");
                                 String Remark = jobj.getString("Remark");
                                 //若登录名为空，则显示OpenFireUserName
                                 String OpenFireUserName = jobj.getString("OpenFireUserName");
-                                Log.d("jlj","--------------Username="+Nickname+",OpenFireUserName="+OpenFireUserName);
-                                if (Nickname!=null&&!Nickname.equals("")&&!Nickname.equals("null")){
-                                    data.setName(Nickname);
-
-                                }else{
-                                    data.setName(OpenFireUserName);
+                                if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
+                                    data.setNickname(Nickname);
+                                    data.setPinyin(HanziToPinyin.getPinYin(Nickname));
+                                } else {
+                                    data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
-                                data.setOpenFireName(OpenFireUserName);
-                                data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
+                                String place = jobj.getString("place");
+                                data.setPlace(place);
+                                String sign = jobj.getString("sign");
+                                data.setSign(sign);
+                                data.setFriendid(OpenFireUserName);
                                 datas.add(data);
                                 //临时使用-存储所有的优时好友列表数据-from JLJ
                                 User _self_user = CommonUtil.getUserInfo(getActivity());
                                 int status = 1;//已添加好友
                                 String _self_userid = _self_user.getOpenFireUserName();
-                                //获取所有的优时好友列表
-                                Friend _friend = new Friend(OpenFireUserName,_head_pic,Nickname,Remark,MobileNumber,status,_self_userid);
+
                                 try {
-                                    dbManager.save(_friend);
+                                    Friend _friend_tab = dbManager.selector(Friend.class)
+                                            .where("friendid", "=", OpenFireUserName)
+                                            .and("userid", "=", _self_userid)
+                                            .findFirst();
+                                    if (_friend_tab != null) {
+                                        //有就更改他的字段
+                                        _friend_tab.setNickname(Nickname);
+                                        if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
+                                            _friend_tab.setNickname(Nickname);
+                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(Nickname));
+                                        } else {
+                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
+                                        }
+                                        _friend_tab.setHead_pic(_head_pic);
+                                        _friend_tab.setPhone(MobileNumber);
+                                        _friend_tab.setRemark(Remark);
+                                        _friend_tab.setStatus(1);
+                                        _friend_tab.setPlace(place);
+                                        _friend_tab.setSign(sign);
+                                        dbManager.saveOrUpdate(_friend_tab);
+                                    } else {
+                                        //没有就插入
+                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, status, _self_userid);
+                                        dbManager.save(_friend);
+                                    }
+
                                 } catch (DbException e) {
                                     e.printStackTrace();
                                 }
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, myHandler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -503,9 +578,9 @@ public class ContactsFragment extends Fragment implements SideBar
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        ArrayList<Contact> temp = new ArrayList<>(datas);
-        for (Contact data : datas) {
-            if (data.getName().contains(s) || data.getPinyin().contains(s)) {
+        ArrayList<Friend> temp = new ArrayList<>(datas);
+        for (Friend data : datas) {
+            if (data.getNickname().contains(s) || data.getPinyin().contains(s)) {
             } else {
                 temp.remove(data);
             }

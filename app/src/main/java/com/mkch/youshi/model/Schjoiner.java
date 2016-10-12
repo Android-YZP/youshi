@@ -24,7 +24,7 @@ public class Schjoiner {
      * 优时好友ID（服务端/本地数据库）
      */
     @Column(name = "joiner_id")
-    private int joiner_id;
+    private String joiner_id;
 
     /**
      * (是否接受（0,未操作  1，接受  2,拒绝）)
@@ -66,11 +66,11 @@ public class Schjoiner {
         this.sid = sid;
     }
 
-    public int getJoiner_id() {
+    public String getJoiner_id() {
         return joiner_id;
     }
 
-    public void setJoiner_id(int joiner_id) {
+    public void setJoiner_id(String joiner_id) {
         this.joiner_id = joiner_id;
     }
 

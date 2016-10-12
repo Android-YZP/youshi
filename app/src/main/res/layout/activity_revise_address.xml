@@ -51,7 +51,6 @@
         android:hint="请输入新的位置"
         android:maxLength="10"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/user_login_username_or_password_color"
         android:textSize="@dimen/common_et_text_font_size" />
 

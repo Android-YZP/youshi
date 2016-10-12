@@ -1,7 +1,6 @@
 package com.mkch.youshi.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.Friend;
 
+import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
 import java.util.List;
@@ -22,25 +22,30 @@ import java.util.List;
  * 新的朋友列表
  * Created by SunnyJiang on 2016/8/18.
  */
-public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
+public class NewFriendListAdapter extends BaseAdapter implements ListAdapter {
 
-    public interface OnItemButtonClickListener{
+    public interface OnItemButtonClickListener {
         void clickItemButton(int position);
     }
+
     private OnItemButtonClickListener onItemButtonClickListener;
 
-    public void setOnItemButtonClickListener(OnItemButtonClickListener onItemButtonClickListener){
+    public void setOnItemButtonClickListener(OnItemButtonClickListener onItemButtonClickListener) {
         this.onItemButtonClickListener = onItemButtonClickListener;
     }
 
     private List<Friend> mFriends;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
+    //圆形头像
+    private ImageOptions m_image_options = new ImageOptions.Builder()
+            .setCircular(true)
+            .build();
 
-    public NewFriendListAdapter(){
+    public NewFriendListAdapter() {
     }
 
-    public NewFriendListAdapter(Context context,List<Friend> mFriends) {
+    public NewFriendListAdapter(Context context, List<Friend> mFriends) {
         this.mContext = context;
         this.mFriends = mFriends;
         mLayoutInflater = LayoutInflater.from(context);
@@ -64,7 +69,7 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         FriendViewHolder friendViewHolder = null;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_list_new_friend, null);
             friendViewHolder = new FriendViewHolder();
             friendViewHolder.iv_new_friend_head = (ImageView) convertView.findViewById(R.id.iv_new_friend_head);
@@ -73,38 +78,34 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
             friendViewHolder.btn_new_friend_add = (Button) convertView.findViewById(R.id.btn_new_friend_add);
             friendViewHolder.tv_new_friend_added = (TextView) convertView.findViewById(R.id.tv_new_friend_added);
             convertView.setTag(friendViewHolder);
-
-        }else{
+        } else {
             friendViewHolder = (FriendViewHolder) convertView.getTag();
         }
         Friend friend = mFriends.get(position);
-        if (friend!=null){
-            //        friendViewHolder.iv_new_friend_head.setImageResource(newFriendHead[position]);
+        if (friend != null) {
             String _head_pic = friend.getHead_pic();
-            if (_head_pic!=null&&!_head_pic.equals("")&&!_head_pic.equals("null")){
-//                ImageOptions _image_options = new ImageOptions.Builder()
-//                        .setCircular(true)
-//                        .build();
-                x.image().bind(friendViewHolder.iv_new_friend_head,_head_pic);
-            }else{
+            if (_head_pic != null && !_head_pic.equals("") && !_head_pic.equals("null")) {
+
+                x.image().bind(friendViewHolder.iv_new_friend_head, _head_pic, m_image_options);
+            } else {
                 friendViewHolder.iv_new_friend_head.setImageResource(R.drawable.default_headpic);
             }
 
             String _nick_name = friend.getNickname();
-            if (_nick_name!=null&&!_nick_name.equals("")){
+            if (_nick_name != null && !_nick_name.equals("")) {
                 friendViewHolder.tv_new_friend_name.setText(_nick_name);
-            }else{
+            } else {
                 friendViewHolder.tv_new_friend_name.setText(friend.getFriendid());
             }
 
             String _phone = friend.getPhone();
-            if (_phone!=null&&!_phone.equals("")){
+            if (_phone != null && !_phone.equals("")) {
                 friendViewHolder.tv_new_friend_remark.setText(_phone);
-            }else{
+            } else {
                 friendViewHolder.tv_new_friend_remark.setText("");
             }
             int _status = friend.getStatus();
-            if (_status==2){
+            if (_status == 2) {
                 //待接受
                 friendViewHolder.btn_new_friend_add.setVisibility(View.VISIBLE);
                 friendViewHolder.tv_new_friend_added.setVisibility(View.GONE);
@@ -112,28 +113,19 @@ public class NewFriendListAdapter extends BaseAdapter implements ListAdapter{
                     @Override
                     public void onClick(View v) {
                         //点击了接接受
-                        Log.d("jlj","----------------onClick="+mFriends.get(position).getNickname());
                         onItemButtonClickListener.clickItemButton(position);
                     }
                 });
-
-            }else if (_status==1){
+            } else if (_status == 1) {
                 //已添加
                 friendViewHolder.btn_new_friend_add.setVisibility(View.GONE);
                 friendViewHolder.tv_new_friend_added.setVisibility(View.VISIBLE);
-
             }
-
-
         }
-
         return convertView;
     }
 
-
-
-
-    class FriendViewHolder{
+    class FriendViewHolder {
         private ImageView iv_new_friend_head;
         private TextView tv_new_friend_name;
         private TextView tv_new_friend_remark;

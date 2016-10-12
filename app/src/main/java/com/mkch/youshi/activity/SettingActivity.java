@@ -89,6 +89,7 @@ public class SettingActivity extends Activity {
                     CommonUtil.clearUserInfo(SettingActivity.this);
                     _intent = new Intent(SettingActivity.this, UserLoginActivity.class);
                     startActivity(_intent);
+                    SettingActivity.this.finish();
                     break;
                 default:
                     break;

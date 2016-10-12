@@ -25,7 +25,7 @@
             android:layout_marginBottom="@dimen/user_reg_code_intro_text_margin_top_or_bottom"
             android:layout_marginTop="@dimen/user_reg_code_intro_text_margin_top_or_bottom"
             android:lineSpacingMultiplier="1.2"
-            android:text="您的手机15861521065会收到一条含有4位数字验证码的短信"
+            android:text="您的手机15861521065会收到一条含有6位数字验证码的短信"
             android:textColor="@color/common_content_text_font_color"
             android:textSize="@dimen/user_reg_code_intro_text_font_size" />
     </LinearLayout>
@@ -35,11 +35,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_reg_phone_et_height"
         android:background="@drawable/bg_border_common_et"
-        android:hint="请输入验证码"
+        android:hint="请输入短信验证码"
         android:inputType="number"
         android:maxLength="6"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:textColor="@color/common_et_text_font_color"
+        android:textColorHint="@color/main_tabbar_border_color"
         android:textSize="@dimen/common_et_text_font_size" />
 
     <Button
@@ -63,7 +63,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/user_reg_phone_text_read_protocal_margin_left"
         android:layout_marginTop="@dimen/user_reg_phone_text_read_protocal_margin_top"
-        android:text="重新发送验证码(60s)"
+        android:text="重新发送验证码(120s)"
         android:textColor="@color/user_reg_phone_et_text_font_color"
         android:textSize="@dimen/user_reg_phone_text_read_protocal_text_font_size" />
 </LinearLayout>

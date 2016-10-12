@@ -39,14 +39,11 @@ public class UserRegCodeActivity extends Activity {
     //手机介绍信息
     private TextView mTvPhoneInfo;
     private TextView mTvGetSmsAgain;
-    //验证码
+    //短信验证码
     private EditText mEtSmsCode;
-    //业务层
-//	private IUserBusiness mUserBusiness = new UserBusinessImp();
     private static ProgressDialog mProgressDialog = null;
     //定义倒计时handler
     private static Handler getcodeHandler;
-    private int num;
     private Thread mDownTimeThread;
     private boolean mStopThread = false;
 
@@ -59,21 +56,21 @@ public class UserRegCodeActivity extends Activity {
         setListener();
     }
 
-    //	@Override
-//	protected void onDestroy() {
-//		super.onDestroy();
-//		mStopThread = true;//中断线程
-//	}
-//
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mStopThread = true;//中断线程
+    }
+
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
         mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
         mBtnCommitCode = (Button) findViewById(R.id.btn_user_reg_getcode_code_commit);
-
         //手机号介绍信息
         mTvPhoneInfo = (TextView) findViewById(R.id.tv_user_reg_intro);
         //验证码
         mEtSmsCode = (EditText) findViewById(R.id.et_user_reg_code);
+        mTvGetSmsAgain = (TextView) findViewById(R.id.tv_user_reg_code_getcode_again);
     }
 
     private void initData() {
@@ -82,9 +79,9 @@ public class UserRegCodeActivity extends Activity {
         Bundle _bundle = getIntent().getExtras();
         if (_bundle != null) {
             mPhone = _bundle.getString("_phone");
-            mTvPhoneInfo.setText(Html.fromHtml("您的手机<font color='#d81759'>" + mPhone + "</font>会收到一条含有4位数字验证码的短信"));
+            mTvPhoneInfo.setText(Html.fromHtml("您的手机<font color='#d81759'>" + mPhone + "</font>会收到一条含有6位数字验证码的短信"));
         }
-        //60s后重新获取验证码
+        //120s后重新获取验证码
         canGetSmsCodeAgain();
     }
 
@@ -93,7 +90,6 @@ public class UserRegCodeActivity extends Activity {
      */
     private void canGetSmsCodeAgain() {
         //倒计时获取验证码
-        mTvGetSmsAgain = (TextView) findViewById(R.id.tv_user_reg_code_getcode_again);
         getcodeHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -109,11 +105,9 @@ public class UserRegCodeActivity extends Activity {
                         mTvGetSmsAgain.setText("重新发送验证码(" + num + "s)");
                     }
                 }
-
             }
         };
         getCodeFromNet();//重新倒计时
-
     }
 
     private void getCodeFromNet() {
@@ -121,7 +115,7 @@ public class UserRegCodeActivity extends Activity {
             @Override
             public void run() {
                 int i;
-                for (i = 60; i >= 0; i--) {
+                for (i = 120; i >= 0; i--) {
                     try {
                         if (mStopThread) {
                             break;
@@ -149,20 +143,21 @@ public class UserRegCodeActivity extends Activity {
                 UserRegCodeActivity.this.finish();
             }
         });
-
-//		mTvGetSmsAgain.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View view) {
-//				String getcodeText = mTvGetSmsAgain.getText().toString();
-//				if (getcodeText!=null&&getcodeText.equals("重新发送验证码")) {
-//					//重新发送验证码到该手机
-//					checkPhoneFromNetGetSmsCodeAgain(mPhone);
-//				}else{
-//					Toast.makeText(UserRegCodeActivity.this, "短信验证码正在发送,请耐心等待", Toast.LENGTH_SHORT).show();
-//				}
-//			}
-//		});
+        mTvGetSmsAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String getcodeText = mTvGetSmsAgain.getText().toString();
+                if (getcodeText != null && getcodeText.equals("重新发送验证码")) {
+                    Intent _intent = new Intent(UserRegCodeActivity.this, UserRegPhoneActivity.class);
+                    _intent.putExtra("_isEdit", "true");
+                    _intent.putExtra("_phone", mPhone);
+                    startActivity(_intent);
+                    UserRegCodeActivity.this.finish();
+                } else {
+                    Toast.makeText(UserRegCodeActivity.this, "短信验证码已发送,请耐心等待", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         mBtnCommitCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -195,14 +190,32 @@ public class UserRegCodeActivity extends Activity {
                                 JSONObject _json_result = new JSONObject(result);
                                 Boolean _success = (Boolean) _json_result.get("Success");
                                 if (_success) {
+                                    if (mProgressDialog != null) {
+                                        mProgressDialog.dismiss();
+                                    }
                                     Intent _intent = new Intent(UserRegCodeActivity.this, UserRegUserNameActivity.class);
                                     _intent.putExtra("_phone", mPhone);
                                     _intent.putExtra("_code", mSmsCode);
                                     startActivity(_intent);
                                     UserRegCodeActivity.this.finish();
                                 } else {
-                                    Toast.makeText(UserRegCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
-                                    return;
+                                    String _Message = _json_result.getString("Message");
+                                    String _ErrorCode = _json_result.getString("ErrorCode");
+                                    if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_MESSAGE_CODE_NO_EXIST);
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
+                                        if (mProgressDialog != null) {
+                                            mProgressDialog.dismiss();
+                                        }
+                                        Toast.makeText(UserRegCodeActivity.this, "验证码不正确", Toast.LENGTH_LONG).show();
+                                        return;
+                                    } else if (_ErrorCode != null && _ErrorCode.equals("1004")) {
+                                        handler.sendEmptyMessage(CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE);
+                                    } else {
+                                        CommonUtil.sendErrorMessage(_Message, handler);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -254,13 +267,26 @@ public class UserRegCodeActivity extends Activity {
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg);
                     break;
-//			case CommonConstants.FLAG_GET_REG_MOBILEMGS_VALIDATE_SUCCESS:
-//				((UserRegCodeActivity)mActivity.get()).goNextActivity();
-//				break;
-//			case CommonConstants.FLAG_GET_REG_MOBILEMGS_REGISTER_SUCCESS:
-//				//重新发送验证码
-//				((UserRegCodeActivity)mActivity.get()).sendAgainSuccess();
-//				break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_MESSAGE_CODE_NO_EXIST:
+                    //验证码不存在
+                    String errorMsg2 = ("验证码不存在");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg2);
+                    break;
+                case CommonConstants.FLAG_MESSAGE_CODE_IS_OVERDUE:
+                    //验证码已过期
+                    String errorMsg3 = ("验证码已过期");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg3);
+                    break;
+                case CommonConstants.FLAG_GET_REG_MOBILEMGS_VALIDATE_CAN_GET_AGAIN_SUCCESS:
+                    //已重新发送验证码
+                    String errorMsg4 = ("已重新发送验证码");
+                    ((UserRegCodeActivity) mActivity.get()).showTip(errorMsg4);
+                    break;
                 default:
                     break;
             }
@@ -272,55 +298,4 @@ public class UserRegCodeActivity extends Activity {
     private void showTip(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
-//
-//	public void sendAgainSuccess() {
-//		getCodeFromNet();//重新倒计时
-//		Toast.makeText(UserRegCodeActivity.this, "短信验证码已发送,请耐心等待", Toast.LENGTH_SHORT).show();
-//	}
-//
-//	public void goNextActivity() {
-//		Intent _intent = new Intent(UserRegCodeActivity.this,UserRegUserNameActivity.class);
-//		_intent.putExtra("_phone", mPhone);
-//		_intent.putExtra("_code", mSmsCode);
-//
-//		startActivity(_intent);
-//		UserRegCodeActivity.this.finish();
-//	}
-//
-//	//重新获取验证码
-//	private void checkPhoneFromNetGetSmsCodeAgain(final String phone) {
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					//差登录用户id
-//					String result = mUserBusiness.getMobilemsgRegister(phone);
-//					Log.d(CommonConstants.LOGCAT_TAG_NAME + "_result_reg_code_getMobilemsgRegister", result);
-//					JSONObject jsonObj = new JSONObject(result);
-//					boolean Success = jsonObj.getBoolean("success");
-//					if(Success){
-//						//获取成功
-//						handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_MOBILEMGS_REGISTER_SUCCESS);
-//					}else{
-//						//获取错误代码，并查询出错误文字
-//						String errorMsg = jsonObj.getString("errorMsg");
-//						CommonUtil.sendErrorMessage(errorMsg,handler);
-//					}
-//				} catch (ConnectTimeoutException e) {
-//					e.printStackTrace();
-//					CommonUtil.sendErrorMessage(CommonConstants.MSG_REQUEST_TIMEOUT,handler);
-//				}catch (SocketTimeoutException e) {
-//					e.printStackTrace();
-//					CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_RESPONSE_TIMEOUT,handler);
-//				}
-//				catch (ServiceException e) {
-//					e.printStackTrace();
-//					CommonUtil.sendErrorMessage(e.getMessage(),handler);
-//				} catch (Exception e) {
-//					//what = 0;sendmsg 0;
-//					CommonUtil.sendErrorMessage("注册-重新获取验证码："+CommonConstants.MSG_GET_ERROR,handler);
-//				}
-//			}
-//		}).start();
-//	}
 }

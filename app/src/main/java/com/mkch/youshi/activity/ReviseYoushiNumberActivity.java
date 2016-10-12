@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.method.NumberKeyListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -126,6 +125,21 @@ public class ReviseYoushiNumberActivity extends Activity {
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     ((ReviseYoushiNumberActivity) mActivity.get()).showTip(errorMsg);
                     break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((ReviseYoushiNumberActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_IS_EXIST:
+                    //认证错误
+                    String errorMsg2 = ("优时号已存在,请重新输入");
+                    ((ReviseYoushiNumberActivity) mActivity.get()).showTip(errorMsg2);
+                    break;
+                case CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_FAIL:
+                    //认证错误
+                    String errorMsg3 = ("保存失败");
+                    ((ReviseYoushiNumberActivity) mActivity.get()).showTip(errorMsg3);
+                    break;
                 case CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS:
                     //修改成功
                     ((ReviseYoushiNumberActivity) mActivity.get()).updateUserInfo();
@@ -167,12 +181,23 @@ public class ReviseYoushiNumberActivity extends Activity {
             @Override
             public void onSuccess(String result) {
                 if (result != null) {
-                    Log.d("jlj", "---------------------result = " + result);
                     try {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_SUCCESS);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_IS_EXIST);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_FAIL);
+                            }else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

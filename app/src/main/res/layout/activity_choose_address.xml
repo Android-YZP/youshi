@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root_view"
+    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mkch.youshi.activity.ChooseAddressActivity">
+
+    <include
+        layout="@layout/add_event_common_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_topbar_height" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f0f0f0"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/et_entry_address"
+            style="@style/AddressEditTextStyle"
+            android:layout_marginTop="7dp" />
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+        android:id="@+id/tv_now_address"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center_vertical"
+        android:text="正在获取地址......"
+        android:textColor="@color/text_black"
+        android:textSize="14sp" />
+
+    <View style="@style/lineOfAffairList" />
+</LinearLayout>

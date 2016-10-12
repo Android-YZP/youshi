@@ -19,8 +19,10 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
+
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,9 @@ public class ChooseSomeoneActivity extends AppCompatActivity {
     private void initData() {
         netFriendList = new ArrayList<>();
         getFriendsFromDb();
-        mSomeoneListView.setAdapter(new ChooseAdapter());
+        if (all != null) {
+            mSomeoneListView.setAdapter(new ChooseAdapter());
+        }
     }
 
 
