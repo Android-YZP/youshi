@@ -68,12 +68,13 @@ public class ChatBean {
      * @param type 消息接收or发送
      * @param date 时间
      */
-    public ChatBean(String username, String content, int type, String date) {
+    public ChatBean(String username, String content, int type, String date,int msgboxid) {
         this.username = username;
         this.content = content;
         this.type = type;
         this.date = date;
         this.msgModel = MESSAGE_MODEL_TEXT;
+        this.msgboxid = msgboxid;
     }
 
     /**

@@ -222,8 +222,8 @@ public class ChatActivity extends BaseActivity {
         SimpleAdapter _adapter = new SimpleAdapter(this,_maps,R.layout.gv_item_chat_more_action,new String[]{"pic_res","str_name"},new int[]{R.id.iv_item_chat_more_action,R.id.tv_item_chat_more_action});
         //设置适配器
         mGvMoreAction.setAdapter(_adapter);
-
-
+        //临时插入几条测试数据
+        queryChatsInfoFromDB("");
     }
 
     /**
@@ -237,14 +237,38 @@ public class ChatActivity extends BaseActivity {
         LinearLayoutManager _layout_manager = new LinearLayoutManager(this);
         mRvList.setLayoutManager(_layout_manager);
         //初始化list聊天数据
-        //默认数据
-        m_chart_list = new ArrayList<>();
-        m_chart_list.add(new ChatBean("张三","你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊",ChatBean.MESSAGE_TYPE_IN,"2016-09-01 14:50"));
-        m_chart_list.add(new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10"));
-        m_chart_list.add(new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23"));
-        m_chart_list.add(new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25"));
+
+
+        try {
+            //默认数据----------------------start
+            long count = dbManager.selector(MessageBox.class).where("jid", "=", "1234").count();
+            //若无此消息盒子，创建默认数据集合
+            if (count==0){
+                MessageBox _msg_box = new MessageBox("","","",0,"");
+                _msg_box.setJid("1234");
+                boolean isSave = dbManager.saveBindingId(_msg_box);
+                if (isSave){
+                    ChatBean chatBean1 = new ChatBean("张三", "你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊", ChatBean.MESSAGE_TYPE_IN, "2016-09-01 14:50:24",_msg_box.getId());
+                    ChatBean chatBean2 = new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10:20", _msg_box.getId());
+                    ChatBean chatBean3 = new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23:14", _msg_box.getId());
+                    ChatBean chatBean4 = new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25:59", _msg_box.getId());
+                    dbManager.save(chatBean1);
+                    dbManager.save(chatBean2);
+                    dbManager.save(chatBean3);
+                    dbManager.save(chatBean4);
+                }
+            }
+
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
         //查询该JID的消息盒子的所有消息
         try {
+            jid = "1234";//调用静态的临时数据1234
+            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","",1,"10001");
+
             //查询
             dbManager = DBHelper.getDbManager();
             m_messageBox = dbManager.selector(MessageBox.class)
