@@ -13,11 +13,11 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.ContactEntity;
-import com.mkch.youshi.util.RosterHelper;
-import com.mkch.youshi.util.XmppHelper;
+import com.tencent.TIMAddFriendRequest;
+import com.tencent.TIMFriendResult;
+import com.tencent.TIMFriendshipManager;
+import com.tencent.TIMValueCallBack;
 
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jxmpp.util.XmppStringUtils;
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
 import org.kymjs.kjframe.widget.KJAdapter;
@@ -83,10 +83,45 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("jlj","phoneContactAdapter button--------------------------------add onClick");
                     ContactEntity _contactEntiy = datas.get(position);
                     if (_contactEntiy != null) {
+                        //创建请求列表
+                        final String _name = _contactEntiy.getName();
+                        final List<TIMAddFriendRequest> reqList = new ArrayList<>();
+                        //添加好友请求
+                        TIMAddFriendRequest req = new TIMAddFriendRequest();
+                        req.setIdentifier(_contactEntiy.getContactID());
+                        reqList.add(req);
+                        //申请添加好友
+                        AlertDialog.Builder _builder = new AlertDialog.Builder(mContext);
+                        _builder.setTitle("添加好友");
+                        _builder.setMessage("确定添加" + _name + "为好友吗？");
+                        _builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                TIMFriendshipManager.getInstance().addFriend(reqList, new TIMValueCallBack<List<TIMFriendResult>>() {
+                                    @Override
+                                    public void onError(int code, String desc) {
+                                        Log.d("zzz--addFriend failed: ", code + "Error:" + desc);
+                                    }
 
+                                    @Override
+                                    public void onSuccess(List<TIMFriendResult> result) {
+                                        Log.d("zzz----------addFriend", "addFriend is success");
+                                        for (TIMFriendResult res : result) {
+                                            Log.d("zzz----------addFriend", "identifier: " + res.getIdentifer() + " status: " + res.getStatus());
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        _builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        _builder.show();
                     }
                 }
             });

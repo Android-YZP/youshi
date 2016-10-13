@@ -138,6 +138,8 @@
             android:name=".activity.ChatActivity"
             android:launchMode="singleTop" />
         <activity android:name=".activity.GroupChatActivity" />
+        <!--  IM相关service -->
+        <service android:name=".service.FriendService" />
         <!--  消息收发service -->
         <service
             android:name="com.tencent.qalsdk.service.QalService"

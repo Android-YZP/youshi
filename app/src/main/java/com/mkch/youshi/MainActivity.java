@@ -1,6 +1,7 @@
 package com.mkch.youshi;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.mkch.youshi.activity.BaseActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.fragment.ContactsFragment;
@@ -22,13 +22,11 @@ import com.mkch.youshi.fragment.TodayFragment;
 import com.mkch.youshi.fragment.UserCenterFragment;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.receiver.FriendsReceiver;
+import com.mkch.youshi.service.FriendService;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
-import com.tencent.TIMCallBack;
-import com.tencent.TIMManager;
-import com.tencent.TIMUser;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -49,9 +47,6 @@ public class MainActivity extends BaseActivity {
     private DbManager dbManager;
     //用户信息
     private User mUser;
-    private String identify, userSig;
-    public static final int ACCOUNT_TYPE = 7882;
-    public static final int SDK_APPID = 1400016695;
 
     //广播接收
     private FriendsReceiver mFriendsReceiver;
@@ -66,17 +61,6 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
                 case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
-                    String _friend_json = (String) msg.obj;
-                    Gson _gson = new Gson();
-                    Friend _friend = _gson.fromJson(_friend_json, Friend.class);
-                    //昵称
-                    String _nickname = _friend.getNickname();
-                    String _content_text_username = null;
-                    if (_nickname != null && !_nickname.equals("") && !_nickname.equals("null")) {
-                        _content_text_username = _nickname;
-                    } else {
-                        _content_text_username = _friend.getFriendid();
-                    }
                     //更新UI，刷新待接受的优时好友数量
                     updateUIfromReceiver();
                     break;
@@ -123,7 +107,6 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TIMManager.getInstance().init(getApplicationContext());
         initView();
         initData();
         setListener();
@@ -167,28 +150,10 @@ public class MainActivity extends BaseActivity {
         mContactsFragment = new ContactsFragment();
         mUserCenterFragment = new UserCenterFragment();
         mUser = CommonUtil.getUserInfo(this);
-        tlsLogin();
-    }
-
-    //登录IM功能
-    private void tlsLogin() {
-        identify = mUser.getOpenFireUserName();
-        userSig = mUser.getUserSig();
-        TIMUser user = new TIMUser();
-        user.setAccountType(String.valueOf(ACCOUNT_TYPE));
-        user.setAppIdAt3rd(String.valueOf(SDK_APPID));
-        user.setIdentifier(identify);
-        TIMManager.getInstance().login(SDK_APPID, user, userSig, new TIMCallBack() {
-            @Override
-            public void onError(int i, String s) {
-                Log.d("zzz----------imsdkLogin", i + "Error:" + s);
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.d("zzz----------imsdkLogin", "login is success");
-            }
-        });
+        //注册广播
+        mFriendsReceiver = new FriendsReceiver(mHandler);
+        IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
+        registerReceiver(mFriendsReceiver,_intent_filter);
     }
 
     /**
@@ -214,8 +179,18 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        initServiceListener();//启动初始化需要监听的service
     }
 
+
+    /**
+     * 启动初始化需要监听的service
+     */
+    private void initServiceListener() {
+        //启动监听好友请求添加和好友状态
+        Intent _intent = new Intent(MainActivity.this, FriendService.class);
+        startService(_intent);
+    }
 
     /**
      * 自定义ViewPager的适配器
