@@ -247,20 +247,20 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
                         this, ChooseFileActivity.class), 4);
                 break;
             case R.id.tv_add_event_complete://完成
-                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
-                    showTip("请输入主题");
-                    return;
-                }
-                //备注不为空
-                if (TextUtils.isEmpty(mEtManyPeopleDesc.getText().toString())) {
-                    showTip("请输入备注");
-                    return;
-                }
-                //参与人不为空
-                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
-                    showTip("请选择参与人");
-                    return;
-                }
+//                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+//                    showTip("请输入主题");
+//                    return;
+//                }
+//                //备注不为空
+//                if (TextUtils.isEmpty(mEtManyPeopleDesc.getText().toString())) {
+//                    showTip("请输入备注");
+//                    return;
+//                }
+//                //参与人不为空
+//                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+//                    showTip("请选择参与人");
+//                    return;
+//                }
                 saveDataOfNet();
                 saveDataOfDb();
                 saveReporterToDb();
@@ -390,7 +390,8 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             mDbManager = DBHelper.getDbManager();
             schedule = new Schedule();
             schedule.setAddress(mTvPlace.getText().toString());
-            schedule.setType(3);
+            schedule.setType(3);//多人事件
+            schedule.setSch_status(0);//自己是发起者状态
             schedule.setTitle(mEtTheme.getText().toString());
             schedule.setLabel(mLable);
             schedule.setLatitude(mLatitude + "");
@@ -407,6 +408,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             e.printStackTrace();
         }
     }
+
     /**
      * 将报送人储存本地数据库
      */
@@ -442,6 +444,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             e.printStackTrace();
         }
     }
+
     /**
      * 更新数据库的同步状态
      */
@@ -535,7 +538,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             }
 
             mTvJoinSubmission.setText("");
-            UIUtils.showTip("返回参与人"+chooseFriends+allChooseJoinFriends.size());
+            UIUtils.showTip("返回参与人" + chooseFriends + allChooseJoinFriends.size());
             for (int i = 0; i < allChooseJoinFriends.size(); i++) {
                 String nickname = allChooseJoinFriends.get(i).getNickname();
                 if (!StringUtils.isEmpty(nickname)) {

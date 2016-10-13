@@ -88,7 +88,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private double mLatitude;
     private double mLongitude;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +111,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
         mTvTitle.setText("添加个人事件");//标题
     }
-
 
     private void initView() {
         mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
@@ -223,15 +221,15 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 break;
             case R.id.tv_add_event_complete://完成
 
-                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
-                    showTip("请输入主题");
-                    return;
-                }
-                //备注不为空
-                if (TextUtils.isEmpty(mTvPlace.getText().toString())) {
-                    showTip("请选择地址");
-                    return;
-                }
+//                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+//                    showTip("请输入主题");
+//                    return;
+//                }
+//                //备注不为空
+//                if (TextUtils.isEmpty(mTvPlace.getText().toString())) {
+//                    showTip("请选择地址");
+//                    return;
+//                }
                 saveDataOfDb();
                 saveReporterToDb();
                 saveDataOfNet();
@@ -374,7 +372,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     }
 
     /**
-     * 生成个人事件的json数据/
+     * 生成个人事件的json数据
      *
      * @return
      */
@@ -507,6 +505,5 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             }
         }
     }
-
 
 }

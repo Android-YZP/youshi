@@ -347,6 +347,7 @@ public class CommonUtil {
     /**
      * 计算出总时间
      * 输入时间String和次数
+     *
      * @return
      */
     public static String TatloTimes(String Time, int Times) {
@@ -368,6 +369,15 @@ public class CommonUtil {
         }
         return hours + "小时" + mins + "分钟";
 
+    }
+
+    /**
+     * 得到当前时间
+     * @return
+     */
+    public static String getDate() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+        return sDateFormat.format(new java.util.Date());
     }
 
 }

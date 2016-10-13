@@ -16,7 +16,8 @@
             android:id="@+id/cb_complete"
             style="@style/remind_checkbox_style"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:clickable="false" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -52,6 +53,7 @@
                             android:layout_width="45dp"
                             android:layout_height="15dp"
                             android:layout_alignBottom="@+id/tv_lv_name"
+                            android:layout_marginTop="3dp"
                             android:background="@drawable/shape_progressbar_bg"
                             android:max="100"
                             android:progress="17"
@@ -60,9 +62,9 @@
 
                         <com.mkch.youshi.view.MyProgress
                             android:id="@+id/mp_progress"
-                            android:layout_width="70dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="17dp"
-                            android:layout_marginTop="5dp" />
+                            android:layout_marginTop="7dp" />
 
                         <TextView
                             android:id="@+id/tv_time_stop"
@@ -70,16 +72,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="8月10号截止" />
+                            android:text="8月10号" />
                     </FrameLayout>
 
                     <TextView
                         android:id="@+id/tv_progress"
                         style="@style/common_text_gray_24"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:paddingLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="3dp"
+                        android:gravity="center"
                         android:text="20%" />
 
                     <TextView
@@ -94,16 +96,6 @@
 
 
             </LinearLayout>
-
-            <TextView
-                style="@style/common_text_gray_24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:paddingLeft="8dp"
-                android:text="今天" />
 
             <View
                 style="@style/commonLineStyle"

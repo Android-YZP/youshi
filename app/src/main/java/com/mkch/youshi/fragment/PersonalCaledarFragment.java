@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,15 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.activity.PersonalDetialEventActivity;
 import com.mkch.youshi.activity.PersonalDetialHabitActivity;
 import com.mkch.youshi.activity.PersonalDetialsAffairActivity;
+import com.mkch.youshi.adapter.PersonalCalAdapter;
 import com.mkch.youshi.bean.PersonalEventBean;
+import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.MyProgress;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 
@@ -28,9 +35,12 @@ import java.util.ArrayList;
  * Created by Smith on 2016/9/6.
  */
 public class PersonalCaledarFragment extends Fragment {
-
+   private ArrayList<Schedule> mPerCals;
     private ListView mLvPersonCalendar;
     private ArrayList<PersonalEventBean> mEventBeens;
+    public final static int PERSONAL_EVENT = 0;
+    public final static int PERSONAL_AFFAIR = 1;
+    public final static int PERSONAL_HABIT = 2;
 
     @Nullable
     @Override
@@ -44,21 +54,9 @@ public class PersonalCaledarFragment extends Fragment {
     }
 
     private void initData() {
+        mPerCals = initPerData();
         mEventBeens = new ArrayList<>();
-        addTestData1();
-        addTestData2();
-        addTestData2();
-        addTestData2();
-        addTestData3();
-        addTestData3();
-        addTestData3();
-        addTestData4();
-        addTestData4();
-        addTestData4();
-        addTestData5();
-        addTestData5();
-        addTestData5();
-        mLvPersonCalendar.setAdapter(new MyAdapter());
+        mLvPersonCalendar.setAdapter(new PersonalCalAdapter(mPerCals));
     }
 
     private void initView(View view) {
@@ -66,19 +64,32 @@ public class PersonalCaledarFragment extends Fragment {
     }
 
 
+    private ArrayList<Schedule> initPerData() {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schedule> all = (ArrayList<Schedule>) mDbManager.selector(Schedule.class).where("type", "<",
+                    3).findAll();
+            Log.d("yzp",all.size()+"haha");
+            return all;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void initListener() {
         mLvPersonCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int kind = mEventBeens.get(position).getKind();
+                int kind = mPerCals.get(position).getType();
                 Intent intent = null;
-                if (kind == PersonalEventBean.PERSONAL_EVENT) {
+                if (kind == PERSONAL_EVENT) {
                      intent = new Intent(UIUtils.getContext(),
                             PersonalDetialEventActivity.class);
-                } else if (kind == PersonalEventBean.PERSONAL_AFFAIR) {
+                } else if (kind == PERSONAL_AFFAIR) {
                      intent = new Intent(UIUtils.getContext(),
                             PersonalDetialsAffairActivity.class);
-                } else if (kind == PersonalEventBean.PERSONAL_HABIT) {
+                } else if (kind == PERSONAL_HABIT) {
                      intent = new Intent(UIUtils.getContext(),
                             PersonalDetialHabitActivity.class);
                 }
@@ -105,7 +116,6 @@ public class PersonalCaledarFragment extends Fragment {
         public long getItemId(int position) {
             return position;
         }
-
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = UIUtils.inflate(R.layout.item_list_personal_calendar);
@@ -170,56 +180,6 @@ public class PersonalCaledarFragment extends Fragment {
             }
             return view;
         }
-    }
 
-
-    private void addTestData1() {
-        PersonalEventBean personalEventBean = new PersonalEventBean();
-        personalEventBean.setKind(PersonalEventBean.PERSONAL_EVENT);
-        personalEventBean.setTheme("修电脑");
-        personalEventBean.setEndTime("8月10日");
-        personalEventBean.setComplete(false);
-        mEventBeens.add(personalEventBean);
-    }
-
-    private void addTestData2() {
-        PersonalEventBean personalEventBean = new PersonalEventBean();
-        personalEventBean.setKind(PersonalEventBean.PERSONAL_AFFAIR);
-        personalEventBean.setTheme("修电脑");
-        personalEventBean.setProgress(65);
-        personalEventBean.setEndTime("8月17日");
-        personalEventBean.setTime("8");
-        personalEventBean.setComplete(true);
-        mEventBeens.add(personalEventBean);
-    }
-
-    private void addTestData3() {
-        PersonalEventBean personalEventBean = new PersonalEventBean();
-        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
-        personalEventBean.setTheme("修电脑");
-        personalEventBean.setComplete(true);
-        personalEventBean.setTimes(6);
-        personalEventBean.setCompleteTimes(3);
-        mEventBeens.add(personalEventBean);
-    }
-
-    private void addTestData4() {
-        PersonalEventBean personalEventBean = new PersonalEventBean();
-        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
-        personalEventBean.setTheme("晨跑");
-        personalEventBean.setComplete(false);
-        personalEventBean.setTimes(7);
-        personalEventBean.setCompleteTimes(2);
-        mEventBeens.add(personalEventBean);
-    }
-
-    private void addTestData5() {
-        PersonalEventBean personalEventBean = new PersonalEventBean();
-        personalEventBean.setKind(PersonalEventBean.PERSONAL_HABIT);
-        personalEventBean.setTheme("唱歌");
-        personalEventBean.setComplete(false);
-        personalEventBean.setTimes(3);
-        personalEventBean.setCompleteTimes(1);
-        mEventBeens.add(personalEventBean);
     }
 }
