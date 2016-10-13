@@ -342,7 +342,10 @@ public class ChatActivity extends BaseActivity {
                 mLineMoreAction.setVisibility(View.VISIBLE);
                 CommonUtil.hideInput(this,mEtChatInput);//隐藏输入法
             }
-            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+
+            if (m_chart_list!=null){
+                mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+            }
             break;
         }
     }
