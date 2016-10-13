@@ -25,6 +25,7 @@ android {
     }
 }
 
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -44,9 +45,15 @@ dependencies {
     //扫描二维码
     compile 'cn.yipianfengye.android:zxing-library:1.9'
     //依赖下面的库
-    compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     //相册插件
     compile files('libs/IndoorscapeAlbumPlugin.jar')
+    compile files('libs/wup-1.0.0-SNAPSHOT.jar')
+    compile files('libs/tls_sdk.jar')
+    compile files('libs/soload.jar')
+    compile files('libs/qalsdk.jar')
+    compile files('libs/mobilepb.jar')
+    compile files('libs/imsdk.jar')
+    compile files('libs/bugly_1.3.0_imsdk_release.jar')
 }

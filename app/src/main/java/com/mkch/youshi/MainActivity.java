@@ -26,6 +26,9 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.view.IndexTabBarLayout;
 import com.mkch.youshi.view.NoScrollViewPager;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMManager;
+import com.tencent.TIMUser;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -33,11 +36,8 @@ import org.xutils.view.annotation.ContentView;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
-
     private IndexTabBarLayout mIndexTabBarLayout;//底部整个控件
-
     private NoScrollViewPager mViewPager;
-
     private int CACHE_PAGES = 3;
     //四个fragment
     private Fragment mTodayFragment;
@@ -45,19 +45,21 @@ public class MainActivity extends BaseActivity {
     private Fragment mContactsFragment;
     private Fragment mUserCenterFragment;
     private String mMonthChooseDate;
-
     //数据库管理对象
     private DbManager dbManager;
     //用户信息
     private User mUser;
+    private String identify, userSig;
+    public static final int ACCOUNT_TYPE = 7882;
+    public static final int SDK_APPID = 1400016695;
 
     //广播接收
     private FriendsReceiver mFriendsReceiver;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int _what = msg.what;
-            switch (_what){
+            switch (_what) {
                 case 0:
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
@@ -70,22 +72,18 @@ public class MainActivity extends BaseActivity {
                     //昵称
                     String _nickname = _friend.getNickname();
                     String _content_text_username = null;
-                    if (_nickname!=null&&!_nickname.equals("")&&!_nickname.equals("null")){
+                    if (_nickname != null && !_nickname.equals("") && !_nickname.equals("null")) {
                         _content_text_username = _nickname;
-                    }else{
+                    } else {
                         _content_text_username = _friend.getFriendid();
                     }
-
                     //更新UI，刷新待接受的优时好友数量
                     updateUIfromReceiver();
                     break;
-
                 default:
                     break;
             }
-
             super.handleMessage(msg);
-
         }
     };
 
@@ -94,9 +92,7 @@ public class MainActivity extends BaseActivity {
      */
     private void updateUIfromReceiver() {
         TextView _tv_new_friends_recevier_num = (TextView) mContactsFragment.getView().findViewById(R.id.tv_contacts_new_friend_number);
-
         String _self_openfirename = mUser.getOpenFireUserName();
-
         //从数据库获取请求好友的数量，并设置
         String _req_friend_num = "0";
         try {
@@ -104,19 +100,19 @@ public class MainActivity extends BaseActivity {
             //本登录用户的，待接受，并显示在新朋友的数量
             long count = dbManager.selector(Friend.class)
                     .where("status", "=", "2")
-                    .and("showinnewfriend","=","1")
-                    .and("userid","=",_self_openfirename)
+                    .and("showinnewfriend", "=", "1")
+                    .and("userid", "=", _self_openfirename)
                     .count();
             _req_friend_num = String.valueOf(count);//请求好友的数量
-            Log.d("jlj","MainActivity---------------------"+_req_friend_num);
+            Log.d("jlj", "MainActivity---------------------" + _req_friend_num);
         } catch (DbException e) {
             e.printStackTrace();
         }
         //待接受好友数量，显示在UI控件
-        if (_req_friend_num.equals("0")){
+        if (_req_friend_num.equals("0")) {
             _tv_new_friends_recevier_num.setVisibility(View.GONE);
 
-        }else{
+        } else {
             _tv_new_friends_recevier_num.setVisibility(View.VISIBLE);
             _tv_new_friends_recevier_num.setText(_req_friend_num);
 
@@ -127,12 +123,11 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        TIMManager.getInstance().init(getApplicationContext());
         initView();
         initData();
         setListener();
     }
-
-
 
     /**
      * 初始化界面
@@ -158,12 +153,10 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int postion, float percent, int pxLocation) {
-
             }
 
             @Override
             public void onPageScrollStateChanged(int position) {
-
             }
         });
     }
@@ -174,8 +167,28 @@ public class MainActivity extends BaseActivity {
         mContactsFragment = new ContactsFragment();
         mUserCenterFragment = new UserCenterFragment();
         mUser = CommonUtil.getUserInfo(this);
+        tlsLogin();
+    }
 
+    //登录IM功能
+    private void tlsLogin() {
+        identify = mUser.getOpenFireUserName();
+        userSig = mUser.getUserSig();
+        TIMUser user = new TIMUser();
+        user.setAccountType(String.valueOf(ACCOUNT_TYPE));
+        user.setAppIdAt3rd(String.valueOf(SDK_APPID));
+        user.setIdentifier(identify);
+        TIMManager.getInstance().login(SDK_APPID, user, userSig, new TIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz----------imsdkLogin", i + "Error:" + s);
+            }
 
+            @Override
+            public void onSuccess() {
+                Log.d("zzz----------imsdkLogin", "login is success");
+            }
+        });
     }
 
     /**
@@ -201,12 +214,7 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
-
-
     }
-
-
 
 
     /**
@@ -239,7 +247,6 @@ public class MainActivity extends BaseActivity {
         public int getCount() {
             return 4;
         }
-
     }
 
 
@@ -274,6 +281,5 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 }
