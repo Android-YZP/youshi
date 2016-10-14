@@ -380,4 +380,27 @@ public class CommonUtil {
         return sDateFormat.format(new java.util.Date());
     }
 
+    /**
+     * 得到标签名称
+     * @param label 标签号
+     * @return
+     */
+    public static String getLabelName(int label) {
+        switch (label) {
+            case 0:
+                return "个人";
+            case 1:
+                return "工作";
+            case 2:
+                return "娱乐";
+            case 3:
+                return "重要";
+            case 4:
+                return "健康";
+            case 5:
+                return "其他";
+        }
+        return "";
+    }
+
 }

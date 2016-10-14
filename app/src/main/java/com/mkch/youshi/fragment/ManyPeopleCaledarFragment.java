@@ -30,6 +30,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Smith on 2016/9/6.
+ * 将个人日程,多人日程的列表完成,详情界面完善
+ * 添加事件必要的接口以及数据字段完善.
  */
 public class ManyPeopleCaledarFragment extends Fragment {
 
@@ -63,13 +65,12 @@ public class ManyPeopleCaledarFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.d("_gson_str", "_gson_str" + position);
+
                 Gson gson = new Gson();
-                ManyPeopleEvenBean manyPeopleEvenBean = mManyPeopleEvenBeens.get(position);
+                Schedule schedule = mSchedules.get(position);
                 Intent i = new Intent(getActivity(),
                         ManyPeopleEventDetial.class);
-                String _gson_str = gson.toJson(manyPeopleEvenBean);//传一个数组的数据到另外一个界面
-                Log.d("_gson_str", _gson_str);
+                String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
                 i.putExtra("mgonsn", _gson_str);
                 startActivity(i);
             }
