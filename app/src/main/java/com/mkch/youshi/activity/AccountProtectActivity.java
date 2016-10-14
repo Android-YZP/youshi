@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.CommonEquipmentListAdapter;
+import com.mkch.youshi.bean.Equipment;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
@@ -34,6 +35,7 @@ import org.xutils.x;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 public class AccountProtectActivity extends Activity {
 
@@ -44,8 +46,7 @@ public class AccountProtectActivity extends Activity {
     private boolean isCheck = false;
     private User mUser;
     private static ProgressDialog mProgressDialog = null;
-    //长按后选择的操作列表
-    private String[] operation_list = {"删除"};
+    private ArrayList<Equipment> equipments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +74,22 @@ public class AccountProtectActivity extends Activity {
         } else {
             mCBProtected.setChecked(false);
         }
-        ListAdapter mAdapter = new CommonEquipmentListAdapter(AccountProtectActivity.this);
+        if (equipments == null || equipments.size() == 0) {
+            Equipment equipment1 = new Equipment();
+            equipment1.setEquipmentName("小米5s");
+            equipment1.setEquipmentType("android-22");
+            equipments.add(equipment1);
+            Equipment equipment2 = new Equipment();
+            equipment2.setEquipmentName("华为p9");
+            equipment2.setEquipmentType("android-22");
+            equipments.add(equipment2);
+            Equipment equipment3 = new Equipment();
+            equipment3.setEquipmentName("魅族pro6");
+            equipment3.setEquipmentType("android-22");
+            equipments.add(equipment3);
+        }
+        ListAdapter mAdapter = new CommonEquipmentListAdapter(AccountProtectActivity.this, equipments);
         mListView.setAdapter(mAdapter);
-//        //保持TextView在GridView的最后一个
-//        GridView gridView = new GridView(this);
-//        TextView textView = new TextView(this);
-//        ArrayList<String> list = new ArrayList();
-//        gridView.addView(textView,list.size());
     }
 
     private void setListener() {
@@ -97,21 +107,17 @@ public class AccountProtectActivity extends Activity {
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                new AlertDialog.Builder(AccountProtectActivity.this).setTitle("请输入").setView(
-                        new EditText(AccountProtectActivity.this)).setPositiveButton("确定", null)
-                        .setNegativeButton("取消", null).show();
-            }
-        });
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                new AlertDialog.Builder(AccountProtectActivity.this).setItems(operation_list, new DialogInterface.OnClickListener() {
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                final EditText editName = new EditText(AccountProtectActivity.this);
+                new AlertDialog.Builder(AccountProtectActivity.this).setTitle("请输入新的设备名称").setView(
+                        editName).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        TextView name = (TextView) view.findViewById(R.id.tv_common_equipment_name);
+                        name.setText(editName.getText().toString());
                     }
-                }).show();
-                return true;
+                })
+                        .setNegativeButton("取消", null).show();
             }
         });
     }
@@ -191,11 +197,14 @@ public class AccountProtectActivity extends Activity {
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PROTECTED_SUCCESS);
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {

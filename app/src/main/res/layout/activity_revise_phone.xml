@@ -20,7 +20,6 @@
         android:inputType="phone"
         android:maxLength="11"
         android:paddingLeft="@dimen/user_reg_phone_et_phone_text_padding_left"
-        android:textColor="@color/common_et_text_font_color"
         android:textColorHint="@color/main_tabbar_border_color"
         android:textSize="@dimen/common_et_text_font_size" />
 

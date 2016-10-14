@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -255,6 +254,16 @@ public class UserInformationActivity extends Activity {
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_UPLOAD_SUCCESS);
+                        } else {
+                            String _Message = _json_result.getString("Message");
+                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
+                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
+                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, myHandler);
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -347,7 +356,6 @@ public class UserInformationActivity extends Activity {
      */
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("zj", "--------------------------" + resultCode);
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:// 当选择拍照时调用
                 startPhotoZoom(imageUri);
@@ -454,6 +462,16 @@ public class UserInformationActivity extends Activity {
                 case CommonConstants.FLAG_UPLOAD_SUCCESS:
                     //修改成功
                     ((UserInformationActivity) mActivity.get()).showSuccess();
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR1:
+                    //认证错误
+                    String errorMsg1 = ("认证错误");
+                    ((UserInformationActivity) mActivity.get()).showTip(errorMsg1);
+                    break;
+                case CommonConstants.FLAG_CHANGE_ERROR3:
+                    //请求失败
+                    String errorMsg3 = ("请求失败");
+                    ((UserInformationActivity) mActivity.get()).showTip(errorMsg3);
                     break;
                 default:
                     break;

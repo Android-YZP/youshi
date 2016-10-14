@@ -69,6 +69,7 @@
         <activity android:name=".activity.UserRegPhoneActivity" />
         <activity android:name=".activity.UserRegCodeActivity" />
         <activity android:name=".activity.UserRegUserNameActivity" />
+        <activity android:name=".activity.UserForgotPasswordActivity" />
         <activity android:name=".activity.UserForgotCodeActivity" />
         <activity android:name=".activity.UserInformationActivity" />
         <activity android:name=".activity.MyFileActivity" />
@@ -93,7 +94,6 @@
         <activity android:name=".activity.UniversalityActivity" />
         <activity android:name=".activity.QRCodeActivity" />
         <activity android:name=".activity.ReviseAddressActivity" />
-
         <!--定位配置-->
         <service
             android:name="com.baidu.location.f"
@@ -132,8 +132,9 @@
         <!-- 消息 -->
         <activity android:name=".activity.GroupDetailActivity" />
         <activity android:name=".activity.MultiChatActivity" />
-        <activity android:name=".activity.ChatActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.GroupChatActivity" />
 
         <service
@@ -145,7 +146,11 @@
         <receiver
             android:name=".receiver.ChatReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true"></receiver><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

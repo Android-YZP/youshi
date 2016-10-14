@@ -32,12 +32,16 @@ import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.NetScheduleModel;
 import com.mkch.youshi.bean.NetScheduleModel.ViewModelBean.TimeSpanListBean;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.DialogFactory;
+import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -89,6 +93,10 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private int mTotalTimeHour;
     private int mTotalTimeMints;
     private int mAllDayChooseTimes;
+    private double mLatitude;
+    private List<String> mFriends;
+    private List<Friend> allChooseFriends;
+    private double mLongitude;
 
 
     private static int mYear;
@@ -115,6 +123,8 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private DbManager mDbManager;
     private Schedule schedule;
     private ArrayList<TimeSpanListBean> mTimeSpanListBeans;
+    private TextView mTvPlace;
+    private TextView mTvSubmission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +160,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mAffairDate = (RelativeLayout) findViewById(R.id.rl_affair_date);
         mTwoStartDate = (TextView) findViewById(R.id.tv_two_start_date);
         mTwoEndDate = (TextView) findViewById(R.id.tv_two_end_date);
+        mTvPlace = (TextView) findViewById(R.id.tv_personal_event_place);
         mAffairWeek = (RelativeLayout) findViewById(R.id.rl_affair_week);
         mTvAffairWeek = (TextView) findViewById(R.id.tv_Add_Affair_week);
         mAffairChooseTime = (RelativeLayout) findViewById(R.id.rl_affair_choose_time);
@@ -159,12 +170,14 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         mSubmission = (RelativeLayout) findViewById(R.id.rl_submission);
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mTvRemindBefore = (TextView) findViewById(R.id.tv_remind_before);
+        mTvSubmission = (TextView) findViewById(R.id.tv_submission);
         mRemark = (LinearLayout) findViewById(R.id.ll_remark);
         mEtPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
     }
 
     private void initData() {
         mTvTitle.setText("添加个人事务");
+        allChooseFriends = new ArrayList<>();
     }
 
     private void setListener() {
@@ -223,10 +236,9 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_choose_address://选择地址
-                startActivity(new Intent(AddPersonalAffairActivity.this,
-                        ChooseAddressActivity.class));
+                startActivityForResult(new Intent(AddPersonalAffairActivity.
+                        this, ChooseAddressActivity.class), 6);
                 break;
-
             case R.id.rl_affair_date://日期
                 showTwoDayOptionDialog(this, mTwoStartDate, mTwoEndDate);
                 break;
@@ -246,8 +258,12 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
 
             //后半部分的点击事件
             case R.id.rl_submission://报送
-                startActivity(new Intent(AddPersonalAffairActivity.
-                        this, ChooseSomeoneActivity.class));
+                if (mFriends != null && allChooseFriends != null) {
+                    mFriends.clear();
+                    allChooseFriends.clear();
+                }
+                startActivityForResult(new Intent(AddPersonalAffairActivity.
+                        this, ChooseSomeoneActivity.class), 5);
                 break;
             case R.id.rl_remind_before://提前提醒
                 startActivityForResult(new Intent(AddPersonalAffairActivity.
@@ -273,6 +289,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     return;
                 }
                 saveDataOfDb();
+                saveReporterToDb();
                 saveDataOfNet();
                 break;
             default:
@@ -363,16 +380,16 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         NetScheduleModel.ViewModelBean viewModelBean = new NetScheduleModel.ViewModelBean();
         viewModelBean.setScheduleType(1);//事件类型//个人事务
         viewModelBean.setSubject(mEtTheme.getText().toString());//主题
-        viewModelBean.setPlace("宜兴");//地址
+        viewModelBean.setPlace(mTvPlace.getText().toString());//地址
         viewModelBean.setLabel(mLable);//标签
-        viewModelBean.setLatitude("21.323231");//维度
-        viewModelBean.setLongitude("1.2901921");//精度
+        viewModelBean.setLatitude(mLatitude + "");//维度
+        viewModelBean.setLongitude(mLongitude + "");//精度
         viewModelBean.setStartTime(mTwoStartDate.getText().toString());//开始时间
         viewModelBean.setStopTime(mTwoEndDate.getText().toString());//结束时间
         viewModelBean.setTimeSpanList(mTimeSpanListBeans);//时间段集合
         viewModelBean.setWeeks(replaceWeek(mWeek));//周
         viewModelBean.setTotalTime(mAffairTimeAllTime.getText().toString());//总时长
-//        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
+        viewModelBean.setSendOpenFireNameList(mFriends);//添加报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
         viewModelBean.setDescription(mEtPersonalEventDescription.getText().toString());//描述,备注
         netScheduleModel.setViewModel(viewModelBean);
@@ -393,19 +410,19 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
             schedule = new Schedule();
-            schedule.setAddress("宜兴");
+            schedule.setAddress(mTvPlace.getText().toString());
             schedule.setType(1);//日程类型
             schedule.setTitle(mEtTheme.getText().toString());//标题,主题
             schedule.setLabel(mLable);//标签
-            schedule.setLatitude("21.323231");
-            schedule.setLongitude("1.2901921");
+            schedule.setLatitude(mLatitude + "");
+            schedule.setLongitude(mLongitude + "");
             schedule.setAhead_warn(mRemindTime);//提前提醒
             schedule.setSyc_status(0);//同步状态
             schedule.setBegin_time(mTwoStartDate.getText().toString());
             schedule.setEnd_time(mTwoEndDate.getText().toString());
             schedule.setWhich_week(replaceWeek(mWeek));//周
             schedule.setTotal_time(mAffairTimeAllTime.getText().toString());//总时长
-            //时间段//报送人
+            //时间段
             schedule.setRemark(mEtPersonalEventDescription.getText().toString());//备注
             mDbManager.saveOrUpdate(schedule);
             for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
@@ -422,7 +439,23 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             e.printStackTrace();
         }
     }
-
+    /**
+     * 将报送人储存本地数据库
+     */
+    private void saveReporterToDb() {
+        try {
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                mDbManager = DBHelper.getDbManager();
+                Schreport schreport = new Schreport();
+                schreport.setFriendid(allChooseFriends.get(i).getFriendid());
+                schreport.setSid(schedule.getId());
+                mDbManager.saveOrUpdate(schreport);
+            }
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 更新从服务端返回的唯一标识ID:serverID
@@ -448,6 +481,49 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
 
+
+            //返回报送人
+            if (resultCode == 5 && requestCode == 5 && data != null) {
+                String chooseFriends = data.getStringExtra("ChooseFriends");
+                Gson gson = new Gson();
+                mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
+                        new TypeToken<List<String>>() {
+                        }.getType());
+
+                for (int i = 0; i < mFriends.size(); i++) {
+                    User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+                    if (_user != null) {
+                        try {
+                            mDbManager = DBHelper.getDbManager();
+                            List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                                    _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
+                            allChooseFriends.add(all.get(0));
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                mTvSubmission.setText("");
+                for (int i = 0; i < allChooseFriends.size(); i++) {
+                    String nickname = allChooseFriends.get(i).getNickname();
+                    if (!StringUtils.isEmpty(nickname)) {
+                        mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+                    } else {
+                        mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+                    }
+                }
+            }
+
+        //返回地址
+        if (resultCode == 6 && requestCode == 6 && data != null) {
+            String address = data.getStringExtra("address");
+            mLatitude = data.getDoubleExtra("latitude", 0);
+            mLongitude = data.getDoubleExtra("longitude", 0);
+            if (!TextUtils.isEmpty(address)) {
+                mTvPlace.setText(address);
+            }
+        }
         if (resultCode == 1 && requestCode == 1 && data != null) {//选择周几
             mWeek = data.getStringExtra("Week");
             String _week = replaceWeek();//将1234567换成周一,周二,周三

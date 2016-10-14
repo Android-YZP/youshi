@@ -1,8 +1,15 @@
 package com.mkch.youshi.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -11,22 +18,82 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
 import com.mkch.youshi.R;
+import com.mkch.youshi.adapter.AddressAdapter;
+import com.mkch.youshi.util.UIUtils;
 
 import java.util.List;
 
 public class ChooseAddressActivity extends AppCompatActivity {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
-    private TextView viewById;
+    private TextView mNowAddress;
+    private LinearLayout mLlRootView;
+    private TextView mTvCancel;
+    private TextView mTvComplete;
+    private TextView mTvTitle;
+    private double mLatitude;
+    private double mLongitude;
+    private EditText mEtEntryAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_address);
-        viewById = (TextView) findViewById(R.id.tv);
+
+        initView();
+        initData();
+        setListener();
         onCreate();
         initLocation();
         mLocationClient.start();
     }
+
+    private void initView() {
+        mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+
+        mNowAddress = (TextView) findViewById(R.id.tv_now_address);
+        mEtEntryAddress = (EditText) findViewById(R.id.et_entry_address);
+        mLlRootView = (LinearLayout) findViewById(R.id.rl_root_view);
+
+    }
+
+    private void initData() {
+        mTvTitle.setText("位置");
+    }
+
+    private void setListener() {
+        //完成
+        mTvComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String entryAddr = mEtEntryAddress.getText().toString();
+              if (!TextUtils.isEmpty(entryAddr)) {
+                  sendResult(entryAddr);
+              }else {
+                  UIUtils.showTip("请输入地址");
+              }
+
+            }
+        });
+        //取消
+        mTvCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //当前地址
+        mNowAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nowAddress = mNowAddress.getText().toString();
+                sendResult(nowAddress.substring(5, nowAddress.length()));
+            }
+        });
+    }
+
     public void onCreate() {
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
@@ -50,6 +117,18 @@ public class ChooseAddressActivity extends AppCompatActivity {
         mLocationClient.setLocOption(option);
     }
 
+    /**
+     * 返回地址
+     */
+    public void sendResult(String address) {
+        Intent intent = getIntent();
+        intent.putExtra("address", address);
+        intent.putExtra("latitude", mLatitude);
+        intent.putExtra("longitude", mLongitude);
+        ChooseAddressActivity.this.setResult(6, intent);
+        ChooseAddressActivity.this.finish();
+    }
+
     public class MyLocationListener implements BDLocationListener {
 
         @Override
@@ -62,8 +141,10 @@ public class ChooseAddressActivity extends AppCompatActivity {
             sb.append(location.getLocType());
             sb.append("\nlatitude : ");
             sb.append(location.getLatitude());
+            mLatitude = location.getLatitude();
             sb.append("\nlontitude : ");
             sb.append(location.getLongitude());
+            mLongitude = location.getLongitude();
             sb.append("\nradius : ");
             sb.append(location.getRadius());
             if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
@@ -103,18 +184,32 @@ public class ChooseAddressActivity extends AppCompatActivity {
             }
             sb.append("\nlocationdescribe : ");
             sb.append(location.getLocationDescribe());// 位置语义化信息
-            List<Poi> list = location.getPoiList();// POI数据
+            final List<Poi> list = location.getPoiList();// POI数据
             if (list != null) {
                 sb.append("\npoilist size = : ");
                 sb.append(list.size());
-                for (Poi p : list) {
-                    sb.append("\npoi= : ");
-                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
-                }
+
+//                for (Poi p : list) {
+//                    sb.append("\npoi= : ");
+//                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
+//                    //添加数据到界面
+//                }
+                ListView lvAddress = new ListView(ChooseAddressActivity.this);
+                lvAddress.setAdapter(new AddressAdapter(list));
+                lvAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        UIUtils.showTip(list.get(position).getName());
+                        sendResult(list.get(position).getName());
+                    }
+                });
+                lvAddress.setPadding(15, 0, 15, 0);
+                mLlRootView.addView(lvAddress);
             }
 
             Log.i("BaiduLocationApiDem", sb.toString());
-            viewById.setText(sb.toString());
+            mNowAddress.setText("当前位置: " + location.getLocationDescribe());
+            mLocationClient.stop();
         }
     }
 }

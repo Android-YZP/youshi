@@ -140,6 +140,7 @@
         android:layout_height="44dp">
 
         <TextView
+            android:id="@+id/tv_address"
             style="@style/firstOfAffairList"
             android:text="地址" />
 
@@ -148,7 +149,7 @@
             style="@style/lastOfAffairList"
             android:drawablePadding="8dp"
             android:drawableRight="@drawable/list_arrow"
-            android:text="宜兴" />
+            android:hint="请选择地址" />
     </RelativeLayout>
 
     <View style="@style/lineOfAffairList" />

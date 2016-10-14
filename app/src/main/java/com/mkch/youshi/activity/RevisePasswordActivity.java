@@ -90,7 +90,7 @@ public class RevisePasswordActivity extends Activity {
                     Toast.makeText(RevisePasswordActivity.this, "两次密码输入不一致", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                //检查密码、确认密码的输入规则是否输入有误
+                //检查新密码的输入规则是否有误
                 if (newpwd.length() < 6 || newpwd.length() > 15 || !CheckUtil.checkPassword(newpwd)) {
                     Toast.makeText(RevisePasswordActivity.this, "密码格式是6到15位的字母数字组成", Toast.LENGTH_SHORT).show();
                     return;
@@ -185,6 +185,7 @@ public class RevisePasswordActivity extends Activity {
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PASSWORD_SUCCESS);
                         }else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
@@ -192,6 +193,8 @@ public class RevisePasswordActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_PASSWORD_ERROR2);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            }else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {

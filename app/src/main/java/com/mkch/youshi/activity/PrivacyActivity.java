@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -199,11 +198,14 @@ public class PrivacyActivity extends Activity {
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_VIEWMYSCHEDULE_SUCCESS);
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {
@@ -255,17 +257,19 @@ public class PrivacyActivity extends Activity {
             public void onSuccess(String result) {
                 if (result != null) {
                     try {
-                        Log.d("jlj", "---------------------result = " + result);
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
                             handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ADDMEVERIFY_SUCCESS);
                         } else {
+                            String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
+                            } else {
+                                CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }
                     } catch (JSONException e) {
