@@ -9,6 +9,24 @@
     </style>
 
     <!--姚中平start-->
+    <!--选择地址-自定义搜索框风格-->
+    <style name="AddressEditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/common_et_height</item>
+        <item name="android:layout_marginLeft">@dimen/message_et_search_margin_left_or_right</item>
+        <item name="android:layout_marginRight">@dimen/message_et_search_margin_left_or_right</item>
+        <item name="android:hint">输入地址</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionSearch</item>
+        <item name="android:background">@color/common_white_color</item>
+        <item name="android:textSize">@dimen/common_et_text_font_size</item>
+        <item name="android:textColor">@color/common_et_text_font_color</item>
+        <item name="android:textColorHint">@color/common_content_text_font_color</item>
+        <item name="android:paddingLeft">@dimen/common_et_padding_left</item>
+        <item name="android:drawablePadding">@dimen/common_et_drawable_padding</item>
+
+    </style>
+
     <style name="weekName">
         <item name="android:layout_width">0.0dip</item>
         <item name="android:layout_height">wrap_content</item>

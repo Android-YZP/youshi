@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mkch.youshi.config.MyApplication;
 
@@ -65,6 +66,10 @@ public class UIUtils {
     public static float px2dip(int px) {
         float density = getContext().getResources().getDisplayMetrics().density;
         return px / density;
+    }
+
+    public static void showTip(String str) {
+        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
     }
 
     ////////////加载布局文件////////

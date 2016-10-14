@@ -16,30 +16,36 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.ManyPeopleEventDetial;
+import com.mkch.youshi.adapter.ManPeopleCalAdapter;
 import com.mkch.youshi.bean.ManyPeopleEvenBean;
+import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.view.ManyPeopleItemView;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 
 /**
  * Created by Smith on 2016/9/6.
+ * 将个人日程,多人日程的列表完成,详情界面完善
+ * 添加事件必要的接口以及数据字段完善.
  */
 public class ManyPeopleCaledarFragment extends Fragment {
 
     private ListView mLvManyPeopleCalendar;
     private ArrayList<ManyPeopleEvenBean> mManyPeopleEvenBeens;
+    private ArrayList<Schedule> mSchedules;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.many_people_caledar_fragment, container, false);
-
         initView(view);
         initData();
         initListener();
         return view;
-
-
     }
 
     private void initView(View view) {
@@ -50,51 +56,66 @@ public class ManyPeopleCaledarFragment extends Fragment {
         mLvManyPeopleCalendar.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                Log.d("_gson_str", "_gson_str2"+position);
+                Log.d("_gson_str", "_gson_str2" + position);
                 return true;
             }
         });
+
         mLvManyPeopleCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.d("_gson_str", "_gson_str"+position);
+
                 Gson gson = new Gson();
-                ManyPeopleEvenBean manyPeopleEvenBean = mManyPeopleEvenBeens.get(position);
+                Schedule schedule = mSchedules.get(position);
                 Intent i = new Intent(getActivity(),
-                       ManyPeopleEventDetial.class);
-                String _gson_str = gson.toJson(manyPeopleEvenBean);//传一个数组的数据到另外一个界面
-                Log.d("_gson_str", _gson_str);
+                        ManyPeopleEventDetial.class);
+                String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
                 i.putExtra("mgonsn", _gson_str);
                 startActivity(i);
             }
         });
     }
 
+    /**
+     * 从数据库中查找出所有的多人事件
+     *
+     * @return
+     */
+    private ArrayList<Schedule> initPerData() {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schedule> all = (ArrayList<Schedule>) mDbManager.selector(Schedule.class).where("type", "=",
+                    3).findAll();
+            Log.d("yzp", all.size() + "haha");
+            return all;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     private void initData() {
         mManyPeopleEvenBeens = new ArrayList<>();
-        testData1();
-        testData1();
-        testData1();
-        testData2();
-        testData2();
-        testData2();
-        testData3();
-        testData3();
-        testData3();
-        testData4();
-        testData4();
-        testData4();
-        testData4();
-        testData5();
-        testData5();
-        testData5();
-        testData5();
-        mLvManyPeopleCalendar.setAdapter(new MyAdapter());
-    }
+        mSchedules = initPerData();
+        if (mSchedules != null) {
+            mLvManyPeopleCalendar.setAdapter(new ManPeopleCalAdapter(mSchedules) {
+                //点击接受之后上传网络
+                @Override
+                public void accept2Net() {
+                    UIUtils.showTip("接受,上传了网络");
+                    //如果网络上传失败,则重新从数据库查找数据,刷新界面
+                    //上传成功则更新数据库数据,同时将这个事件上传网络.
+                }
 
+                //点击拒绝之后上传网络
+                @Override
+                public void refuse2Net() {
+                    UIUtils.showTip("拒绝,上传了网络");
+                }
+            });
+        }
+    }
 
     class MyAdapter extends BaseAdapter {
 
@@ -177,65 +198,8 @@ public class ManyPeopleCaledarFragment extends Fragment {
                 _manyPeopleSponsor.setVisibility(View.GONE);
                 _TvManyPeopleRefuse.setVisibility(View.VISIBLE);
             }
-
             return view;
         }
     }
 
-
-    private void testData1() {
-        ManyPeopleEvenBean manyPeopleEvenBean = new ManyPeopleEvenBean();
-        manyPeopleEvenBean.setState(ManyPeopleEvenBean.MANY_PEOPLE_SPONSOR);
-        manyPeopleEvenBean.setTheme("买生日蛋糕");
-        manyPeopleEvenBean.setCreationTime("2016年8月5日");
-        manyPeopleEvenBean.setStopTime("8月10日");
-        manyPeopleEvenBean.setSponsor("自己");
-        mManyPeopleEvenBeens.add(manyPeopleEvenBean);
-    }
-
-    private void testData2() {
-        ManyPeopleEvenBean manyPeopleEvenBean = new ManyPeopleEvenBean();
-        manyPeopleEvenBean.setState(ManyPeopleEvenBean.MANY_PEOPLE_CHOOSE);
-        manyPeopleEvenBean.setTheme("学游泳");
-        manyPeopleEvenBean.setCreationTime("2016年8月5日");
-        manyPeopleEvenBean.setStopTime("8月10日");
-        manyPeopleEvenBean.setSponsor("小雨");
-        mManyPeopleEvenBeens.add(manyPeopleEvenBean);
-    }
-
-    private void testData3() {
-        ManyPeopleEvenBean manyPeopleEvenBean = new ManyPeopleEvenBean();
-        manyPeopleEvenBean.setState(ManyPeopleEvenBean.MANY_PEOPLE_ACCEPT);
-        manyPeopleEvenBean.setTheme("国内游");
-        manyPeopleEvenBean.setCreationTime("2016年8月5日");
-        manyPeopleEvenBean.setStopTime("8月10日");
-        manyPeopleEvenBean.setSponsor("小雨");
-        mManyPeopleEvenBeens.add(manyPeopleEvenBean);
-    }
-
-
-    private void testData4() {
-        ManyPeopleEvenBean manyPeopleEvenBean = new ManyPeopleEvenBean();
-        manyPeopleEvenBean.setState(ManyPeopleEvenBean.MANY_PEOPLE_REFUSE);
-        manyPeopleEvenBean.setTheme("黄山爬山");
-        manyPeopleEvenBean.setCreationTime("2016年8月5日");
-        manyPeopleEvenBean.setStopTime("8月10日");
-        manyPeopleEvenBean.setSponsor("小雨");
-        mManyPeopleEvenBeens.add(manyPeopleEvenBean);
-    }
-
-    private void testData5() {
-        ManyPeopleEvenBean manyPeopleEvenBean = new ManyPeopleEvenBean();
-        manyPeopleEvenBean.setState(ManyPeopleEvenBean.MANY_PEOPLE_ACCEPT);
-        manyPeopleEvenBean.setTheme("日本洗桑拿");
-        manyPeopleEvenBean.setCreationTime("2016年8月5日");
-        manyPeopleEvenBean.setStopTime("2016年8月10日");
-        manyPeopleEvenBean.setSponsor("小雨");
-        manyPeopleEvenBean.setLocation("宜兴");
-        manyPeopleEvenBean.setComplete(true);
-        manyPeopleEvenBean.setLabel("个人");
-        manyPeopleEvenBean.setSubmission("小夏");
-        manyPeopleEvenBean.setParticipants("老总");
-        mManyPeopleEvenBeens.add(manyPeopleEvenBean);
-    }
 }
