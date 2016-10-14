@@ -37,6 +37,7 @@ public class CommonConstants {
     public static final int FLAG_CHANGE_YOUSHI_NUMBER_FAIL = 29;
     public static final int FLAG_MESSAGE_CODE_NO_EXIST = 30;
     public static final int FLAG_MESSAGE_CODE_IS_OVERDUE = 31;
+    public static final int FLAG_GET_ADD_FRIEND_INFORMATION = 32;
     /**
      * yaozhongping
      * 从100开始
