@@ -16,18 +16,20 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.NetScheduleModel;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
-
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +38,6 @@ import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
-
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -69,6 +70,12 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private ArrayList<NetScheduleModel.ViewModelBean.TimeSpanListBean> mTimeSpanListBeans;
     private TextView mTvHabitChooseTime;
     private ProgressDialog mProgressDialog;
+    private double mLatitude;
+    private double mLongitude;
+    private TextView mTvPlace;
+    private List<String> mFriends;
+    private List<Friend> allChooseFriends;
+    private TextView mTvSubmission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     }
 
     private void initData() {
+        allChooseFriends = new ArrayList<>();
         mTvTitle.setText("添加个人习惯");
     }
 
@@ -87,6 +95,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mTvCancel = (TextView) findViewById(R.id.tv_add_event_cancel);
         mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
         mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+        mTvPlace = (TextView) findViewById(R.id.tv_personal_event_place);
 
         mEtTheme = (EditText) findViewById(R.id.et_theme);
         mChooseAddress = (RelativeLayout) findViewById(R.id.rl_choose_address);
@@ -100,6 +109,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         mTvHabitChooseTime = (TextView) findViewById(R.id.tv_habit_choose_time);
 
         mSubmission = (RelativeLayout) findViewById(R.id.rl_submission);
+        mTvSubmission = (TextView) findViewById(R.id.tv_submission);
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mRemark = (LinearLayout) findViewById(R.id.ll_remark);
         mTvPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
@@ -157,8 +167,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         switch (v.getId()) {
             //前半部分
             case R.id.rl_choose_address://选择地址
-                startActivity(new Intent(AddPersonalHabitActivity.this,
-                        ChooseAddressActivity.class));
+                startActivityForResult(new Intent(AddPersonalHabitActivity.
+                        this, ChooseAddressActivity.class), 6);
                 break;
 
             case R.id.rl_habit_week://周
@@ -172,8 +182,12 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 break;
             //后半部分的点击事件
             case R.id.rl_submission://报送
-                startActivity(new Intent(AddPersonalHabitActivity.this,
-                        ChooseSomeoneActivity.class));
+                if (mFriends != null && allChooseFriends != null) {
+                    mFriends.clear();
+                    allChooseFriends.clear();
+                }
+                startActivityForResult(new Intent(AddPersonalHabitActivity.
+                        this, ChooseSomeoneActivity.class), 5);
                 break;
             case R.id.tv_add_event_complete://完成
                 if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
@@ -190,8 +204,9 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                     showTip("请选择时间段");
                     return;
                 }
-                saveDataOfDb();
                 saveDataOfNet();
+                saveDataOfDb();
+                saveReporterToDb();
                 break;
             case R.id.tv_add_event_cancel://取消
                 finish();
@@ -238,7 +253,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                         JSONObject datas = (JSONObject) _json_result.get("Datas");
                         int id = datas.getInt("Id");
                         Log.d("YZP", "---------------------_success = " + id + "");
-                        updateServerIDAndUpdateSycStatus(id);//更新唯一ID
+                        updateServerIDAndSycStatus(id);//更新唯一ID
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -290,9 +305,9 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         viewModelBean.setScheduleType(2);//事件类型//个人习惯
         viewModelBean.setSubject(mEtTheme.getText().toString());//主题
         viewModelBean.setLabel(mLable);//标签
-        viewModelBean.setPlace("宜兴");//地址
-        viewModelBean.setLatitude("21.323231");//维度
-        viewModelBean.setLongitude("1.2901921");//精度
+        viewModelBean.setPlace(mTvPlace.getText().toString());//地址
+        viewModelBean.setLatitude(mLatitude + "");//维度
+        viewModelBean.setLongitude(mLongitude + "");//精度
         viewModelBean.setWeekTimes(mWeek.length());//周期
         viewModelBean.setWeeks(replaceWeek(mWeek));//周
         viewModelBean.setTimeSpanList(mTimeSpanListBeans);//时间段集合
@@ -305,6 +320,23 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         return textJson;
     }
 
+    /**
+     * 将报送人储存本地数据库
+     */
+    private void saveReporterToDb() {
+        try {
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                mDbManager = DBHelper.getDbManager();
+                Schreport schreport = new Schreport();
+                schreport.setFriendid(allChooseFriends.get(i).getFriendid());
+                schreport.setSid(schedule.getId());
+                mDbManager.saveOrUpdate(schreport);
+            }
+        } catch (DbException e) {
+            Log.d("yzp", e.getMessage() + "-----------");
+            e.printStackTrace();
+        }
+    }
     /**
      * 将日程储存本地数据库
      * 数据库和网络数据的储存
@@ -319,9 +351,9 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             schedule.setType(2);//日程类型//个人习惯
             schedule.setTitle(mEtTheme.getText().toString());//标题,主题
             schedule.setLabel(mLable);//标签
-            schedule.setAddress("宜兴");
-            schedule.setLatitude("21.323231");
-            schedule.setLongitude("1.2901921");
+            schedule.setAddress(mTvPlace.getText().toString());
+            schedule.setLatitude(mLatitude + "");
+            schedule.setLongitude(mLongitude + "");
             schedule.setSyc_status(0);//同步状态
             schedule.setTimes_of_week(mWeek.length());//周期
             schedule.setWhich_week(replaceWeek(mWeek));//周
@@ -348,7 +380,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
      * 更新从服务端返回的唯一标识ID:serverID
      * 更新同步状态
      */
-    private void updateServerIDAndUpdateSycStatus(int dateid) {
+    private void updateServerIDAndSycStatus(int dateid) {
         try {
             schedule.setServerid(dateid);
             schedule.setSyc_status(1);
@@ -367,13 +399,56 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
+        //返回报送人
+        if (resultCode == 5 && requestCode == 5 && data != null) {
+            String chooseFriends = data.getStringExtra("ChooseFriends");
+            Gson gson = new Gson();
+            mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
+                    new TypeToken<List<String>>() {
+                    }.getType());
+
+            for (int i = 0; i < mFriends.size(); i++) {
+                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+                if (_user != null) {
+                    try {
+                        mDbManager = DBHelper.getDbManager();
+                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                                _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
+                        allChooseFriends.add(all.get(0));
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            mTvSubmission.setText("");
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                String nickname = allChooseFriends.get(i).getNickname();
+                if (!StringUtils.isEmpty(nickname)) {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+                } else {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+                }
+            }
+        }
+
+        //返回地址
+        if (resultCode == 6 && requestCode == 6 && data != null) {
+            String address = data.getStringExtra("address");
+            mLatitude = data.getDoubleExtra("latitude", 0);
+            mLongitude = data.getDoubleExtra("longitude", 0);
+            if (!TextUtils.isEmpty(address)) {
+                mTvPlace.setText(address);
+            }
+        }
+        //返回周
         if (resultCode == 1 && requestCode == 1 && data != null) {
             mWeek = data.getStringExtra("Week");
             String _week = replaceWeek();//将1234567换成周一,周二,周三
             mTvHabitWeek.setText(_week);
             mTvHabitCircle.setText("每周" + mWeek.length() + "次");
         }
-
+        //时间段
         if (resultCode == 2 && requestCode == 2 && data != null) {//选择时间段
             String _timeSpanListBeanListString = data.getStringExtra("TimeSpanListBeanList");
             Gson gson = new Gson();
@@ -424,6 +499,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private void showTip(String str) {
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
+
 
     private class MyHandler extends Handler {
         private final WeakReference<Activity> mActivity;

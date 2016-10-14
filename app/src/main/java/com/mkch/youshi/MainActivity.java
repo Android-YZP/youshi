@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.mkch.youshi.activity.BaseActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.fragment.ContactsFragment;
@@ -136,10 +137,12 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int postion, float percent, int pxLocation) {
+
             }
 
             @Override
             public void onPageScrollStateChanged(int position) {
+
             }
         });
     }

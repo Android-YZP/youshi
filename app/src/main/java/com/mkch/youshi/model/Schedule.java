@@ -5,13 +5,18 @@ import org.xutils.db.annotation.Table;
 
 /**
  * Created by Smith on 2016/9/9.
+ * 上传网络还需要2个字段
+ * create_time (创建时间:也需要同步保存到网络)
+ * affair_progress (事务完成进度:单独做成一个接口)
+ * habit_complete_times (习惯是无限循环的,一个习惯从网上被拉下来.
+ * 当前天以前的数据没有本地记录的则默认没有完成不需要上传网络)
  */
-@Table(name="schedule")
+@Table(name = "schedule")
 public class Schedule {
     /**
      * 主键自增长ID
      */
-    @Column(name = "id",isId = true,autoGen = true)//主键自增长ID
+    @Column(name = "id", isId = true, autoGen = true)//主键自增长ID
     private int id;
     /**
      * 服务端编号
@@ -74,6 +79,22 @@ public class Schedule {
     @Column(name = "begin_time")
     private String begin_time;
     /**
+     * 结束时间//////////////////////////////////////////////
+     */
+    @Column(name = "affair_progress")
+    private int affair_progress;
+    /**
+     * 习惯的完成次数//////////////////////////////////////////////
+     */
+    @Column(name = "habit_complete_times")
+    private int habit_complete_times;
+    /**
+     * 多人日程的状态//////////////////////////////////////////////
+     * 日程状态(0:自己是发起者,1:待接受状态,2:已经接受状态,3:已经拒绝状态)
+     */
+    @Column(name = "sch_status")
+    private int sch_status;
+    /**
      * 结束时间
      */
     @Column(name = "end_time")
@@ -127,6 +148,30 @@ public class Schedule {
                 ", single_duration='" + single_duration + '\'' +
                 ", userid='" + userid + '\'' +
                 '}';
+    }
+
+    public int getSch_status() {
+        return sch_status;
+    }
+
+    public void setSch_status(int sch_status) {
+        this.sch_status = sch_status;
+    }
+
+    public int getAffair_progress() {
+        return affair_progress;
+    }
+
+    public void setAffair_progress(int affair_progress) {
+        this.affair_progress = affair_progress;
+    }
+
+    public int getHabit_complete_times() {
+        return habit_complete_times;
+    }
+
+    public void setHabit_complete_times(int habit_complete_times) {
+        this.habit_complete_times = habit_complete_times;
     }
 
     public int getId() {

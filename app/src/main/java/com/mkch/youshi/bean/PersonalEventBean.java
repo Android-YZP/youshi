@@ -4,9 +4,9 @@ package com.mkch.youshi.bean;
  * Created by Smith on 2016/9/6.
  */
 public class PersonalEventBean {
-    public final static int PERSONAL_EVENT = 1;
-    public final static int PERSONAL_AFFAIR = 2;
-    public final static int PERSONAL_HABIT = 3;
+    public final static int PERSONAL_EVENT = 0;
+    public final static int PERSONAL_AFFAIR = 1;
+    public final static int PERSONAL_HABIT = 2;
     private int kind;//种类
     private int times;//一周的次数
     private int CompleteTimes;//一周的完成次数

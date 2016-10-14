@@ -109,7 +109,8 @@
         </service>
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="Gx873cAuaZ4CprvsgPatRGzmoHzwrnYk" />
+            android:value="zrFiBx8eYGwjw3Iy635GG0vMPniPt6uV" />
+
         <!--今日-->
         <activity
             android:name=".fragment.month.MonthActivity"
@@ -131,6 +132,7 @@
         <activity android:name=".activity.AddPersonalHabitActivity" />
         <activity android:name=".activity.SearchEventActivity" />
         <activity android:name=".activity.ChooseFileActivity" />
+
         <!-- 消息 -->
         <activity android:name=".activity.GroupDetailActivity" />
         <activity android:name=".activity.MultiChatActivity" />
@@ -176,4 +178,5 @@
             </intent-filter>
         </receiver>
     </application>
+
 </manifest>
