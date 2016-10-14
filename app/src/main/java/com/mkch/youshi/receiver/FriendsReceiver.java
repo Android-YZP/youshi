@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.util.CommonUtil;
@@ -30,8 +29,6 @@ public class FriendsReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         if (intent.getAction().equals("yoshi.action.friendsbroadcast")){
             final String _friend_json = intent.getStringExtra("_friend_json");
-            Log.d("jlj","FriendsReceiver---------------------onReceive-_friend_json="+_friend_json);
-
             mUser = CommonUtil.getUserInfo(context);
             //判断是否全天免打扰
             if (mUser.getDisturb() == null || !mUser.getDisturb()) {

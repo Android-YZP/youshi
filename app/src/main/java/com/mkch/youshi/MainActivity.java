@@ -153,6 +153,7 @@ public class MainActivity extends BaseActivity {
         mContactsFragment = new ContactsFragment();
         mUserCenterFragment = new UserCenterFragment();
         mUser = CommonUtil.getUserInfo(this);
+        Log.d("jlj","--------------------initData:"+mUser.getOpenFireUserName());
         //注册广播
         mFriendsReceiver = new FriendsReceiver(mHandler);
         IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
