@@ -3,6 +3,7 @@ package com.mkch.youshi.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -10,7 +11,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.ManyPeopleEvenBean;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
@@ -61,31 +64,46 @@ public class ManyPeopleEventDetial extends AppCompatActivity {
         Schedule schedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = findRepPer(schedule.getId());
-        Log.e("传过来的数据2", repPer.get(0).getFriendid());
+
+        ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+        ArrayList<Schjoiner> joinPer = findJoinPer(schedule.getId());
+        Log.e("传过来的数据2", joinPer.size() + "");
 
         mTvEventsTheme.setText(schedule.getTitle());
         mTvEventsLabel.setText(CommonUtil.getLabelName(schedule.getLabel()));
         mTvEventLocation.setText(schedule.getAddress());
         mTvEventsStTime.setText(schedule.getBegin_time());
         mTvEventEndTime.setText(schedule.getEnd_time());
-//        mTvEventsRepPer.setText(schedule.get());//报送人以及参与人
-//        mTvEventsJoinPer.setText(schedule.getAddress());
+        //报送人
+        if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
+            for (int i = 0; i < repPer.size(); i++) {
+                mTvEventsRepPer.setText(mTvEventsRepPer.getText().toString() +
+                        CommonUtil.findFriName(repPer.get(i).getFriendid()));
+            }
+        }
+        //参与人
+        if (joinPer != null && joinPer.size() != 0 && !joinPer.isEmpty()) {
+            for (int i = 0; i < joinPer.size(); i++) {
+                mTvEventsJoinPer.setText(mTvEventsJoinPer.getText().toString() +
+                        CommonUtil.findFriName(joinPer.get(i).getJoiner_id()));
+            }
+        }
+        //提前提醒
         mTvEventsBeTime.setText("提前" + schedule.getAhead_warn() + "分钟");
     }
 
+
     /**
      * 用日程id查找该日程的报送人
-     *
      * @param sid
      */
-    private ArrayList<Schreport> findRepPer(int sid) {
+    private ArrayList<Schjoiner> findJoinPer(int sid) {
         DbManager mDbManager = DBHelper.getDbManager();
         try {
-            ArrayList<Schreport> schreports = (ArrayList<Schreport>) mDbManager.selector(Schreport.class).where("sid", "=",
+            ArrayList<Schjoiner> schjoiners = (ArrayList<Schjoiner>) mDbManager.selector(Schjoiner.class).where("sid", "=",
                     sid).findAll();
-            Log.d("yzp", schreports.size() + "haha");
-            return schreports;
+            Log.d("yzp", schjoiners.size() + "haha");
+            return schjoiners;
         } catch (DbException e) {
             e.printStackTrace();
             return null;

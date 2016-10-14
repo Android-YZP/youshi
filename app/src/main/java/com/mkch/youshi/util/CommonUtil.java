@@ -27,6 +27,11 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.AppVersion;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
+import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Schreport;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -401,6 +406,75 @@ public class CommonUtil {
                 return "其他";
         }
         return "";
+    }
+    /**
+     * 用日程id查找该日程的报送人
+     *
+     * @param sid
+     */
+    public static  ArrayList<Schreport> findRepPer(int sid) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schreport> schreports = (ArrayList<Schreport>) mDbManager.selector(Schreport.class).where("sid", "=",
+                    sid).findAll();
+            Log.d("yzp", schreports.size() + "haha");
+            return schreports;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * 用报送人id查找该报送人的姓名
+     * 有设置昵称返回昵称
+     * 没有设置昵称返回friendID
+     */
+    public static String findFriName(String friendId) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<Friend> friends = null;
+        try {
+            friends = (ArrayList<Friend>) mDbManager.selector(Friend.class).where("friendid", "=",
+                    friendId).findAll();
+            Log.d("haha5", friends.size() + "");
+            if (!TextUtils.isEmpty(friends.get(0).getNickname() + "")){
+                return friends.get(0).getNickname() + " ";
+            }else {
+                return friends.get(0).getPhone()+" ";
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+    /**
+     * 将123456换成周一周二周三
+     *
+     * @return
+     */
+    public static String replaceNumberWeek(String week) {
+        String _week1 = week.replace("1", "周一 ");
+        String _week2 = _week1.replace("2", "周二 ");
+        String _week3 = _week2.replace("3", "周三 ");
+        String _week4 = _week3.replace("4", "周四 ");
+        String _week5 = _week4.replace("5", "周五 ");
+        String _week6 = _week5.replace("6", "周六 ");
+        return _week6.replace("7", "周日");
+    }
+
+
+    /**
+     * 将123456换成周1.2.3.
+     *
+     * @return
+     */
+    public static String replaceWeek(String week) {
+        String _week1 = week.replace("1", "1,");
+        String _week2 = _week1.replace("2", "2,");
+        String _week3 = _week2.replace("3", "3,");
+        String _week4 = _week3.replace("4", "4,");
+        String _week5 = _week4.replace("5", "5,");
+        String _week6 = _week5.replace("6", "6,");
+        return _week6.replace("7", "7,");
     }
 
 }

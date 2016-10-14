@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.PersonalDetialEventActivity;
 import com.mkch.youshi.activity.PersonalDetialHabitActivity;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
  * Created by Smith on 2016/9/6.
  */
 public class PersonalCaledarFragment extends Fragment {
-   private ArrayList<Schedule> mPerCals;
+   private ArrayList<Schedule> mSchedule;
     private ListView mLvPersonCalendar;
     private ArrayList<PersonalEventBean> mEventBeens;
     public final static int PERSONAL_EVENT = 0;
@@ -54,9 +55,9 @@ public class PersonalCaledarFragment extends Fragment {
     }
 
     private void initData() {
-        mPerCals = initPerData();
+        mSchedule = initPerData();
         mEventBeens = new ArrayList<>();
-        mLvPersonCalendar.setAdapter(new PersonalCalAdapter(mPerCals));
+        mLvPersonCalendar.setAdapter(new PersonalCalAdapter(mSchedule));
     }
 
     private void initView(View view) {
@@ -81,11 +82,12 @@ public class PersonalCaledarFragment extends Fragment {
         mLvPersonCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int kind = mPerCals.get(position).getType();
+                int kind = mSchedule.get(position).getType();
                 Intent intent = null;
                 if (kind == PERSONAL_EVENT) {
                      intent = new Intent(UIUtils.getContext(),
                             PersonalDetialEventActivity.class);
+
                 } else if (kind == PERSONAL_AFFAIR) {
                      intent = new Intent(UIUtils.getContext(),
                             PersonalDetialsAffairActivity.class);
@@ -94,6 +96,10 @@ public class PersonalCaledarFragment extends Fragment {
                             PersonalDetialHabitActivity.class);
                 }
                 if (intent!=null){
+                    Gson gson = new Gson();
+                    Schedule schedule = mSchedule.get(position);
+                    String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
+                    intent.putExtra("mgonsn", _gson_str);
                     startActivity(intent);
                 }
             }

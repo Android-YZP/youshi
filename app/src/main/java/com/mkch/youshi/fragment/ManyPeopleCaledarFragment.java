@@ -64,8 +64,6 @@ public class ManyPeopleCaledarFragment extends Fragment {
         mLvManyPeopleCalendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
                 Gson gson = new Gson();
                 Schedule schedule = mSchedules.get(position);
                 Intent i = new Intent(getActivity(),

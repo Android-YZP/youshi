@@ -30,6 +30,7 @@
                     android:text="主题" />
 
                 <TextView
+                    android:id="@+id/tv_affair_theme"
                     style="@style/detial_gray"
                     android:text="买蛋糕" />
 
@@ -45,6 +46,7 @@
                     android:text="标签" />
 
                 <TextView
+                    android:id="@+id/tv_affair_label"
                     style="@style/detial_gray"
                     android:text="工作" />
 
@@ -60,6 +62,7 @@
                     android:text="地点" />
 
                 <TextView
+                    android:id="@+id/tv_affair_location"
                     style="@style/detial_gray"
                     android:text="宜兴" />
 
@@ -75,6 +78,7 @@
                     android:text="日期" />
 
                 <TextView
+                    android:id="@+id/tv_affair_time"
                     style="@style/detial_gray"
                     android:text="2016年8月17日至8月14日" />
 
@@ -90,6 +94,7 @@
                     android:text="周" />
 
                 <TextView
+                    android:id="@+id/tv_affair_which_week"
                     style="@style/detial_gray"
                     android:text="周一,周二,周三" />
 
@@ -106,6 +111,7 @@
                     android:text="时间段选择" />
 
                 <TextView
+                    android:id="@+id/tv_affair_time_pice"
                     style="@style/detial_gray"
                     android:text="09:00~10:00 10:00~11:00" />
 
@@ -121,6 +127,7 @@
                     android:text="时长" />
 
                 <TextView
+                    android:id="@+id/tv_affair_total_time"
                     style="@style/detial_gray"
                     android:text="1小时" />
 
@@ -136,6 +143,7 @@
                     android:text="报送" />
 
                 <TextView
+                    android:id="@+id/tv_affair_rep_per"
                     style="@style/detial_gray"
                     android:text="哈尼" />
 
@@ -151,6 +159,7 @@
                     android:text="提前提醒" />
 
                 <TextView
+                    android:id="@+id/tv_affair_before_time"
                     style="@style/detial_gray"
                     android:text="无" />
 

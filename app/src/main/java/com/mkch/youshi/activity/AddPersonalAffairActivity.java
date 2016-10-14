@@ -387,7 +387,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         viewModelBean.setStartTime(mTwoStartDate.getText().toString());//开始时间
         viewModelBean.setStopTime(mTwoEndDate.getText().toString());//结束时间
         viewModelBean.setTimeSpanList(mTimeSpanListBeans);//时间段集合
-        viewModelBean.setWeeks(replaceWeek(mWeek));//周
+        viewModelBean.setWeeks(CommonUtil.replaceWeek(mWeek));//周
         viewModelBean.setTotalTime(mAffairTimeAllTime.getText().toString());//总时长
         viewModelBean.setSendOpenFireNameList(mFriends);//添加报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
@@ -420,7 +420,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             schedule.setSyc_status(0);//同步状态
             schedule.setBegin_time(mTwoStartDate.getText().toString());
             schedule.setEnd_time(mTwoEndDate.getText().toString());
-            schedule.setWhich_week(replaceWeek(mWeek));//周
+            schedule.setWhich_week(CommonUtil.replaceWeek(mWeek));//周
             schedule.setTotal_time(mAffairTimeAllTime.getText().toString());//总时长
             //时间段
             schedule.setRemark(mEtPersonalEventDescription.getText().toString());//备注
@@ -526,7 +526,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         }
         if (resultCode == 1 && requestCode == 1 && data != null) {//选择周几
             mWeek = data.getStringExtra("Week");
-            String _week = replaceWeek();//将1234567换成周一,周二,周三
+            String _week = CommonUtil.replaceNumberWeek(mWeek);//将1234567换成周一,周二,周三
             mTvAffairWeek.setText(_week);
 
             //计算有效时间天数
@@ -590,35 +590,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     }
 
 
-    /**
-     * 将123456换成周一周二周三
-     *
-     * @return
-     */
-    private String replaceWeek() {
-        String _week1 = mWeek.replace("1", "周一 ");
-        String _week2 = _week1.replace("2", "周二 ");
-        String _week3 = _week2.replace("3", "周三 ");
-        String _week4 = _week3.replace("4", "周四 ");
-        String _week5 = _week4.replace("5", "周五 ");
-        String _week6 = _week5.replace("6", "周六 ");
-        return _week6.replace("7", "周日");
-    }
 
-    /**
-     * 将123456换成周1.2.3.
-     *
-     * @return
-     */
-    private String replaceWeek(String week) {
-        String _week1 = week.replace("1", "1,");
-        String _week2 = _week1.replace("2", "2,");
-        String _week3 = _week2.replace("3", "3,");
-        String _week4 = _week3.replace("4", "4,");
-        String _week5 = _week4.replace("5", "5,");
-        String _week6 = _week5.replace("6", "6,");
-        return _week6.replace("7", "7,");
-    }
 
 
     /**
