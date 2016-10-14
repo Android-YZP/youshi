@@ -366,6 +366,8 @@ public class UserLoginActivity extends Activity {
                         Toast.makeText(UserLoginActivity.this, "您未填写验证码", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    //弹出加载进度条
+                    mProgressDialog = ProgressDialog.show(UserLoginActivity.this, null, "正在加载中...", true, true);
                     if (isVisibel == View.GONE) {
                         checkIsNeedValidImgFromNet();
                     } else {
@@ -393,8 +395,7 @@ public class UserLoginActivity extends Activity {
      * @param password 密码
      */
     private void userLoginFromNet(final String account, final String password, final String code) {
-        //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(UserLoginActivity.this, "请稍等", "正在登录中...", true, true);
+
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.LOGIN);
         //包装请求参数
@@ -440,6 +441,7 @@ public class UserLoginActivity extends Activity {
                                 user.setViewMySchedule(datas.getBoolean("ViewMySchedule"));
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
+                                user.setUserSig(datas.getString("UserSign"));
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
                             }
                             //提醒登录成功
@@ -487,8 +489,6 @@ public class UserLoginActivity extends Activity {
 
             @Override
             public void onFinished() {
-                Log.d("userLogin", "----onFinished");
-                //使用handler通知UI取消进度加载对话框
             }
         });
     }

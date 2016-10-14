@@ -34,6 +34,7 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.JsonUtils;
 import com.mkch.youshi.view.ContactListView;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
@@ -456,26 +457,26 @@ public class ContactsFragment extends Fragment implements SideBar
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Friend data = new Friend();
                                 JSONObject jobj = mDatas.getJSONObject(i);
-                                String HeadPic = jobj.getString("HeadPic");//头像
+                                String HeadPic = JsonUtils.getString(jobj,"HeadPic");//头像
                                 String _head_pic = null;
                                 if (HeadPic != null && !HeadPic.equals("") && !HeadPic.equals("null")) {
                                     _head_pic = CommonConstants.NOW_ADDRESS_PRE + HeadPic;
                                     data.setHead_pic(_head_pic);
                                 }
-                                String Nickname = jobj.getString("NickName");
-                                String MobileNumber = jobj.getString("MobileNumber");
-                                String Remark = jobj.getString("Remark");
+                                String Nickname = JsonUtils.getString(jobj,"NickName");
+                                String MobileNumber = JsonUtils.getString(jobj,"MobileNumber");
+                                String Remark = JsonUtils.getString(jobj,"Remark");
                                 //若登录名为空，则显示OpenFireUserName
-                                String OpenFireUserName = jobj.getString("OpenFireUserName");
+                                String OpenFireUserName = JsonUtils.getString(jobj,"OpenFireUserName");
                                 if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
                                     data.setNickname(Nickname);
                                     data.setPinyin(HanziToPinyin.getPinYin(Nickname));
                                 } else {
                                     data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
-                                String place = jobj.getString("place");
+                                String place = JsonUtils.getString(jobj,"place");
                                 data.setPlace(place);
-                                String sign = jobj.getString("sign");
+                                String sign = JsonUtils.getString(jobj,"sign");
                                 data.setSign(sign);
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
@@ -517,8 +518,8 @@ public class ContactsFragment extends Fragment implements SideBar
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
                         } else {
-                            String _Message = _json_result.getString("Message");
-                            String _ErrorCode = _json_result.getString("ErrorCode");
+                            String _Message = JsonUtils.getString(_json_result,"Message");
+                            String _ErrorCode = JsonUtils.getString(_json_result,"ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
@@ -535,6 +536,7 @@ public class ContactsFragment extends Fragment implements SideBar
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);

@@ -3,7 +3,6 @@ package com.mkch.youshi.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +80,6 @@ public class UserCenterFragment extends Fragment {
         ImageOptions _image_options = new ImageOptions.Builder()
                 .setCircular(true)
                 .build();
-        Log.d("jlj", "---------------------zzzzzzzzzzzzzzzzzzzz = " + mUser.getHeadPic());
         //设置头像,昵称和优时号,本地没有就用默认
         if (mUser != null) {
             if (mUser.getHeadPic()!=null&&!mUser.getHeadPic().equals("")&&!mUser.getHeadPic().equals("null")){

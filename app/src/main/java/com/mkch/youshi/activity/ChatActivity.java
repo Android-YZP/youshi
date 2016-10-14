@@ -101,19 +101,13 @@ public class ChatActivity extends BaseActivity {
     private RecyclerView mRvList;
     private String m_jid;
 
-    //xmpp
-    private XMPPTCPConnection connection;
-    private Chat mChat;
-    private ChatManager chatmanager;
-
-    private DbManager dbManager;
+    private DbManager dbManager;//数据库管理对象
 
     //数据
     private List<ChatBean> m_chart_list;
     private ChartListAdapter m_adapter;
 
     private static ProgressDialog mProgressDialog = null;//加载
-    private ChatReceiver mChatReceiver;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -127,25 +121,6 @@ public class ChatActivity extends BaseActivity {
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(ChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-                    break;
-                case ChatReceiver.RECEIVE_CHAT_MSG:
-                    int _chat_id = (int) msg.obj;//最新的一条消息-写在广播接收处
-                    if (_chat_id!=0){
-                        Log.d("jlj","ChatActivity-----------------------------_chat_id"+_chat_id);
-                        //查询该消息内容并刷新到UI
-                        try {
-                            ChatBean _chat_bean = dbManager.findById(ChatBean.class,_chat_id);
-                            //更新UI界面，获取最新的用户列表
-                            updateUIfromReceiver(_chat_bean);
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-
-                    }
-
-
                     break;
                 case CommonConstants.SEND_MSG_SUCCESS:
                     m_adapter.notifyDataSetChanged();
@@ -177,8 +152,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        connection = XmppHelper.getConnection();
-        chatmanager = ChatManager.getInstanceFor(connection);
         dbManager = DBHelper.getDbManager();
         initData();
         setListener();
@@ -187,9 +160,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mChatReceiver!=null){
-            unregisterReceiver(mChatReceiver);
-        }
 
     }
 
@@ -233,42 +203,6 @@ public class ChatActivity extends BaseActivity {
     private void initData() {
         //标题
         mTvTitle.setText("单聊");
-        //_openfirename获取聊天对象
-        Intent _intent = getIntent();
-        if (_intent!=null){
-            String _openfirename = _intent.getStringExtra("_openfirename");
-            if (_openfirename!=null&&!_openfirename.equals("")){
-
-                try {
-                    mFriend = dbManager.selector(Friend.class)
-                            .where("friendid","=",_openfirename)
-                            .and("status","=","1")
-                            .findFirst();
-                    if (mFriend!=null){
-                        Log.d("jlj","ChatActivity mFriend--------------------" + mFriend.toString());
-
-                    }else{
-                        Log.d("jlj","ChatActivity mFriend--------------------数据异常");
-                        return;
-                    }
-                    //查询出与该好友的消息记录，并更新UI
-                    m_jid = XmppStringUtils.completeJidFrom(mFriend.getFriendid(),connection.getServiceName());
-                    queryChatsInfoFromDB(m_jid);//从数据库查询聊天信息
-                    //创建一个聊天
-                    mChat = chatmanager.createChat(m_jid);
-                    //注册聊天监听的Receiver
-                    mChatReceiver = new ChatReceiver(mHandler);
-                    IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
-                    registerReceiver(mChatReceiver,filter);
-
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-        }
-
 
         //gridview网格视图-更多动作
         //数据源
@@ -288,8 +222,8 @@ public class ChatActivity extends BaseActivity {
         SimpleAdapter _adapter = new SimpleAdapter(this,_maps,R.layout.gv_item_chat_more_action,new String[]{"pic_res","str_name"},new int[]{R.id.iv_item_chat_more_action,R.id.tv_item_chat_more_action});
         //设置适配器
         mGvMoreAction.setAdapter(_adapter);
-
-
+        //临时插入几条测试数据
+        queryChatsInfoFromDB("");
     }
 
     /**
@@ -303,14 +237,38 @@ public class ChatActivity extends BaseActivity {
         LinearLayoutManager _layout_manager = new LinearLayoutManager(this);
         mRvList.setLayoutManager(_layout_manager);
         //初始化list聊天数据
-        //默认数据
-//        m_chart_list = new ArrayList<>();
-//        m_chart_list.add(new ChatBean("张三","你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊",ChatBean.MESSAGE_TYPE_IN,"2016-09-01 14:50"));
-//        m_chart_list.add(new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10"));
-//        m_chart_list.add(new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23"));
-//        m_chart_list.add(new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25"));
+
+
+        try {
+            //默认数据----------------------start
+            long count = dbManager.selector(MessageBox.class).where("jid", "=", "1234").count();
+            //若无此消息盒子，创建默认数据集合
+            if (count==0){
+                MessageBox _msg_box = new MessageBox("","","",0,"");
+                _msg_box.setJid("1234");
+                boolean isSave = dbManager.saveBindingId(_msg_box);
+                if (isSave){
+                    ChatBean chatBean1 = new ChatBean("张三", "你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊", ChatBean.MESSAGE_TYPE_IN, "2016-09-01 14:50:24",_msg_box.getId());
+                    ChatBean chatBean2 = new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10:20", _msg_box.getId());
+                    ChatBean chatBean3 = new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23:14", _msg_box.getId());
+                    ChatBean chatBean4 = new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25:59", _msg_box.getId());
+                    dbManager.save(chatBean1);
+                    dbManager.save(chatBean2);
+                    dbManager.save(chatBean3);
+                    dbManager.save(chatBean4);
+                }
+            }
+
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
         //查询该JID的消息盒子的所有消息
         try {
+            jid = "1234";//调用静态的临时数据1234
+            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","",1,"10001");
+
             //查询
             dbManager = DBHelper.getDbManager();
             m_messageBox = dbManager.selector(MessageBox.class)
@@ -384,7 +342,10 @@ public class ChatActivity extends BaseActivity {
                 mLineMoreAction.setVisibility(View.VISIBLE);
                 CommonUtil.hideInput(this,mEtChatInput);//隐藏输入法
             }
-            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+
+            if (m_chart_list!=null){
+                mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+            }
             break;
         }
     }
@@ -402,50 +363,54 @@ public class ChatActivity extends BaseActivity {
             //发出去后立马清空edittext
             mEtChatInput.setText("");
             //开启副线程-发送消息
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String _full_user = connection.getUser();
-                        String _openfirename = XmppStringUtils.parseLocalpart(_full_user);
-                        //localMessage
-                        ChatBean _local_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
-
-                        //remoteMessage
-                        ChatBean _remote_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
-
-                        Gson _gson = new Gson();
-                        String _gson_str = _gson.toJson(_remote_message);
-                        Log.d("jlj","sendInfoToFriend--------------send msg = "+_gson_str);
-                        mChat.sendMessage(_gson_str);
-
-                        m_chart_list.add(_local_message);
-                        if (mMessageBoxId==0){
-                            //新增该消息盒子
-                            m_messageBox = new MessageBox(mFriend.getHead_pic(),mFriend.getNickname(),_local_message.getContent(),0,TimesUtils.getNow(),0,MessageBox.MB_TYPE_CHAT,m_jid);
-                            dbManager.saveBindingId(m_messageBox);
-                            mMessageBoxId = m_messageBox.getId();
-                        }else{
-                            //更新消息盒子
-                            m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                            m_messageBox.setTitle(mFriend.getNickname());
-                            m_messageBox.setInfo(_local_message.getContent());
-                            m_messageBox.setLasttime(TimesUtils.getNow());
-                            dbManager.saveOrUpdate(m_messageBox);
-                        }
-                        _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-                        dbManager.save(_local_message);//保存一条消息到数据库
-
-                        mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-                    } catch (SmackException.NotConnectedException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }).start();
+//            sendMsg(_msg);
     }
+
+//    private void sendMsg(final String _msg) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String _full_user = connection.getUser();
+//                    String _openfirename = XmppStringUtils.parseLocalpart(_full_user);
+//                    //localMessage
+//                    ChatBean _local_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+//
+//                    //remoteMessage
+//                    ChatBean _remote_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
+//
+//                    Gson _gson = new Gson();
+//                    String _gson_str = _gson.toJson(_remote_message);
+//                    Log.d("jlj","sendInfoToFriend--------------send msg = "+_gson_str);
+//                    mChat.sendMessage(_gson_str);
+//
+//                    m_chart_list.add(_local_message);
+//                    if (mMessageBoxId==0){
+//                        //新增该消息盒子
+//                        m_messageBox = new MessageBox(mFriend.getHead_pic(),mFriend.getNickname(),_local_message.getContent(),0,TimesUtils.getNow(),0,MessageBox.MB_TYPE_CHAT,m_jid);
+//                        dbManager.saveBindingId(m_messageBox);
+//                        mMessageBoxId = m_messageBox.getId();
+//                    }else{
+//                        //更新消息盒子
+//                        m_messageBox.setBoxLogo(mFriend.getHead_pic());
+//                        m_messageBox.setTitle(mFriend.getNickname());
+//                        m_messageBox.setInfo(_local_message.getContent());
+//                        m_messageBox.setLasttime(TimesUtils.getNow());
+//                        dbManager.saveOrUpdate(m_messageBox);
+//                    }
+//                    _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
+//                    dbManager.save(_local_message);//保存一条消息到数据库
+//
+//                    mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
+//                } catch (SmackException.NotConnectedException e) {
+//                    e.printStackTrace();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }).start();
+//    }
 
     /**
      * 切换键盘和语音

@@ -3,6 +3,7 @@ package com.mkch.youshi.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -12,11 +13,11 @@ import android.widget.TextView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.ContactEntity;
-import com.mkch.youshi.util.RosterHelper;
-import com.mkch.youshi.util.XmppHelper;
+import com.tencent.TIMAddFriendRequest;
+import com.tencent.TIMFriendResult;
+import com.tencent.TIMFriendshipManager;
+import com.tencent.TIMValueCallBack;
 
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jxmpp.util.XmppStringUtils;
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
 import org.kymjs.kjframe.widget.KJAdapter;
@@ -34,7 +35,6 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
 
     private KJBitmap kjb = new KJBitmap();
     private List<ContactEntity> datas;
-    private XMPPTCPConnection connection; //connection
     private Context mContext;//上下文
 
     public PhoneContactAdapter(AbsListView view, List<ContactEntity> mDatas, Context mContext) {
@@ -44,8 +44,6 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
             datas = new ArrayList<>();
         }
         Collections.sort(datas);
-        //获取连接
-        connection = XmppHelper.getConnection();
         this.mContext = mContext;
     }
 
@@ -87,21 +85,34 @@ public class PhoneContactAdapter extends KJAdapter<ContactEntity> implements Sec
                 public void onClick(View v) {
                     ContactEntity _contactEntiy = datas.get(position);
                     if (_contactEntiy != null) {
+                        //创建请求列表
                         final String _name = _contactEntiy.getName();
-                        String _OpenFireUsrName = _contactEntiy.getContactID();
-                        //获取用户名和_OpenFireUsrName；并发起添加功能
-                        final String _jid = XmppStringUtils.completeJidFrom(_OpenFireUsrName, connection.getServiceName());//转jid
+                        final List<TIMAddFriendRequest> reqList = new ArrayList<>();
+                        //添加好友请求
+                        TIMAddFriendRequest req = new TIMAddFriendRequest();
+                        req.setIdentifier(_contactEntiy.getContactID());
+                        reqList.add(req);
+                        //申请添加好友
                         AlertDialog.Builder _builder = new AlertDialog.Builder(mContext);
                         _builder.setTitle("添加好友");
-                        _builder.setMessage("确定添加" + _jid + "为好友吗？");
+                        _builder.setMessage("确定添加" + _name + "为好友吗？");
                         _builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //发送请求添加好友
-                                RosterHelper _roster_helper = RosterHelper.getInstance(connection);
-                                _roster_helper.addEntry(_jid, _name, "Friends");
-                                //立马删除好友
-                                _roster_helper.removeEntry(_jid);
+                                TIMFriendshipManager.getInstance().addFriend(reqList, new TIMValueCallBack<List<TIMFriendResult>>() {
+                                    @Override
+                                    public void onError(int code, String desc) {
+                                        Log.d("zzz--addFriend failed: ", code + "Error:" + desc);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(List<TIMFriendResult> result) {
+                                        Log.d("zzz----------addFriend", "addFriend is success");
+                                        for (TIMFriendResult res : result) {
+                                            Log.d("zzz----------addFriend", "identifier: " + res.getIdentifer() + " status: " + res.getStatus());
+                                        }
+                                    }
+                                });
                             }
                         });
                         _builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {

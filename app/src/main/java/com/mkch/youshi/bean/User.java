@@ -53,6 +53,7 @@ public class User {
     private Boolean Disturb;//是否免打扰
     private Boolean Night;//是否夜间
     private String TokenID;//令牌
+    private String UserSig;//用户签名
 
     public User(String mobileNumber, String appVersion, String clientType, String clientVersion, String deviceInfo, String firm, String imageVerifyCode, String osType, String osUuid, String password) {
         MobileNumber = mobileNumber;
@@ -356,6 +357,14 @@ public class User {
 
     public void setOpenFireUserName(String openFireUserName) {
         OpenFireUserName = openFireUserName;
+    }
+
+    public String getUserSig() {
+        return UserSig;
+    }
+
+    public void setUserSig(String userSig) {
+        UserSig = userSig;
     }
 
     @Override

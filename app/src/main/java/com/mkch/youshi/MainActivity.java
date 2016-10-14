@@ -35,11 +35,8 @@ import org.xutils.view.annotation.ContentView;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
-
     private IndexTabBarLayout mIndexTabBarLayout;//底部整个控件
-
     private NoScrollViewPager mViewPager;
-
     private int CACHE_PAGES = 3;
     //四个fragment
     private Fragment mTodayFragment;
@@ -47,7 +44,6 @@ public class MainActivity extends BaseActivity {
     private Fragment mContactsFragment;
     private Fragment mUserCenterFragment;
     private String mMonthChooseDate;
-
     //数据库管理对象
     private DbManager dbManager;
     //用户信息
@@ -55,39 +51,24 @@ public class MainActivity extends BaseActivity {
 
     //广播接收
     private FriendsReceiver mFriendsReceiver;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             int _what = msg.what;
-            switch (_what){
+            switch (_what) {
                 case 0:
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
                 case FriendsReceiver.RECEIVE_REQUEST_ADD_FRIEND:
-                    String _friend_json = (String) msg.obj;
-                    Gson _gson = new Gson();
-                    Friend _friend = _gson.fromJson(_friend_json, Friend.class);
-                    //昵称
-                    String _nickname = _friend.getNickname();
-                    String _content_text_username = null;
-                    if (_nickname!=null&&!_nickname.equals("")&&!_nickname.equals("null")){
-                        _content_text_username = _nickname;
-                    }else{
-                        _content_text_username = _friend.getFriendid();
-                    }
-
                     //更新UI，刷新待接受的优时好友数量
                     updateUIfromReceiver();
                     break;
-
                 default:
                     break;
             }
-
             super.handleMessage(msg);
-
         }
     };
 
@@ -96,9 +77,7 @@ public class MainActivity extends BaseActivity {
      */
     private void updateUIfromReceiver() {
         TextView _tv_new_friends_recevier_num = (TextView) mContactsFragment.getView().findViewById(R.id.tv_contacts_new_friend_number);
-
         String _self_openfirename = mUser.getOpenFireUserName();
-
         //从数据库获取请求好友的数量，并设置
         String _req_friend_num = "0";
         try {
@@ -106,19 +85,19 @@ public class MainActivity extends BaseActivity {
             //本登录用户的，待接受，并显示在新朋友的数量
             long count = dbManager.selector(Friend.class)
                     .where("status", "=", "2")
-                    .and("showinnewfriend","=","1")
-                    .and("userid","=",_self_openfirename)
+                    .and("showinnewfriend", "=", "1")
+                    .and("userid", "=", _self_openfirename)
                     .count();
             _req_friend_num = String.valueOf(count);//请求好友的数量
-            Log.d("jlj","MainActivity---------------------"+_req_friend_num);
+            Log.d("jlj", "MainActivity---------------------" + _req_friend_num);
         } catch (DbException e) {
             e.printStackTrace();
         }
         //待接受好友数量，显示在UI控件
-        if (_req_friend_num.equals("0")){
+        if (_req_friend_num.equals("0")) {
             _tv_new_friends_recevier_num.setVisibility(View.GONE);
 
-        }else{
+        } else {
             _tv_new_friends_recevier_num.setVisibility(View.VISIBLE);
             _tv_new_friends_recevier_num.setText(_req_friend_num);
 
@@ -133,8 +112,6 @@ public class MainActivity extends BaseActivity {
         initData();
         setListener();
     }
-
-
 
     /**
      * 初始化界面
@@ -176,7 +153,6 @@ public class MainActivity extends BaseActivity {
         mContactsFragment = new ContactsFragment();
         mUserCenterFragment = new UserCenterFragment();
         mUser = CommonUtil.getUserInfo(this);
-
         //注册广播
         mFriendsReceiver = new FriendsReceiver(mHandler);
         IntentFilter _intent_filter = new IntentFilter("yoshi.action.friendsbroadcast");
@@ -207,9 +183,8 @@ public class MainActivity extends BaseActivity {
             }
         });
         initServiceListener();//启动初始化需要监听的service
-
-
     }
+
 
     /**
      * 启动初始化需要监听的service
@@ -218,9 +193,7 @@ public class MainActivity extends BaseActivity {
         //启动监听好友请求添加和好友状态
         Intent _intent = new Intent(MainActivity.this, FriendService.class);
         startService(_intent);
-
     }
-
 
     /**
      * 自定义ViewPager的适配器
@@ -252,7 +225,6 @@ public class MainActivity extends BaseActivity {
         public int getCount() {
             return 4;
         }
-
     }
 
 
@@ -287,7 +259,5 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //解除广播
-        unregisterReceiver(mFriendsReceiver);
     }
 }
