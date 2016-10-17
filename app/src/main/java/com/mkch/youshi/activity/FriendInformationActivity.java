@@ -22,7 +22,7 @@ import org.xutils.x;
 public class FriendInformationActivity extends Activity {
 
     private ImageView mIvBack, mIvHead;
-    private TextView mTvMore, mTvRemark, mTvName, mTvSetting, mTvPlace;
+    private TextView mTvMore, mTvRemark, mTvYoushiNumber,mTvName, mTvSetting, mTvPlace;
     private View mLine1, mLine2, mLine3, mLine4, mLine5, mLine6;
     private LinearLayout mLayoutPhone, mLayoutDescribe, mLayoutPlace;
     private String contactID;
@@ -43,6 +43,7 @@ public class FriendInformationActivity extends Activity {
         mTvMore = (TextView) findViewById(R.id.tv_friend_information_more);
         mIvHead = (ImageView) findViewById(R.id.iv_friend_information_head);
         mTvRemark = (TextView) findViewById(R.id.tv_friend_information_remark);
+        mTvYoushiNumber = (TextView) findViewById(R.id.tv_friend_information_youshi_number);
         mTvName = (TextView) findViewById(R.id.tv_friend_information_name);
         mTvSetting = (TextView) findViewById(R.id.tv_friend_information_setting);
         mLayoutPhone = (LinearLayout) findViewById(R.id.layout_friend_information_phone);
@@ -87,16 +88,21 @@ public class FriendInformationActivity extends Activity {
                 } else {
                     mTvRemark.setVisibility(View.GONE);
                 }
+                if (friend.getYoushi_number() != null && !friend.getYoushi_number().equals("") && !friend.getYoushi_number().equals("null")) {
+                    mTvYoushiNumber.setText("优时号: " + friend.getYoushi_number());
+                } else {
+                    mTvYoushiNumber.setVisibility(View.GONE);
+                }
                 if (friend.getNickname() != null && !friend.getNickname().equals("") && !friend.getNickname().equals("null")) {
                     mTvName.setText("昵称: " + friend.getNickname());
                 } else {
-                    mTvName.setText("昵称: ");
+                    mTvName.setText("昵称: "+friend.getPhone());
                 }
-//                if (friend.getPlace() != null && !friend.getPlace().equals("") && !friend.getPlace().equals("null")) {
-//                    mTvPlace.setText(friend.getPlace());
-//                } else {
-//                    mLayoutPlace.setVisibility(View.GONE);
-//                }
+                if (friend.getPlace() != null && !friend.getPlace().equals("") && !friend.getPlace().equals("null")) {
+                    mTvPlace.setText(friend.getPlace());
+                } else {
+                    mLayoutPlace.setVisibility(View.GONE);
+                }
             } catch (DbException e) {
                 e.printStackTrace();
             }

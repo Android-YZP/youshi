@@ -1,8 +1,6 @@
 package com.mkch.youshi.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,24 +20,15 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.MessageBox;
-import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
-import com.mkch.youshi.util.TimesUtils;
-import com.mkch.youshi.util.XmppHelper;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jxmpp.util.XmppStringUtils;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
@@ -267,7 +256,7 @@ public class ChatActivity extends BaseActivity {
         //查询该JID的消息盒子的所有消息
         try {
             jid = "1234";//调用静态的临时数据1234
-            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","",1,"10001");
+            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","","","","","",1,"10001");
 
             //查询
             dbManager = DBHelper.getDbManager();

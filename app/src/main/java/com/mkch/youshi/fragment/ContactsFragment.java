@@ -191,8 +191,8 @@ public class ContactsFragment extends Fragment implements SideBar
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
-                if (position != _friends.size()) {
+                if (position != _friends.size() && position != datas.size()) {
+                    Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
                     Log.d("---------------------", String.valueOf(position));
                     if (datas == null || datas.size() == 0) {
                         try {
@@ -457,26 +457,30 @@ public class ContactsFragment extends Fragment implements SideBar
                             for (int i = 0; i < mDatas.length(); i++) {
                                 Friend data = new Friend();
                                 JSONObject jobj = mDatas.getJSONObject(i);
-                                String HeadPic = JsonUtils.getString(jobj,"HeadPic");//头像
+                                String HeadPic = JsonUtils.getString(jobj, "HeadPic");//头像
                                 String _head_pic = null;
                                 if (HeadPic != null && !HeadPic.equals("") && !HeadPic.equals("null")) {
                                     _head_pic = CommonConstants.NOW_ADDRESS_PRE + HeadPic;
                                     data.setHead_pic(_head_pic);
                                 }
-                                String Nickname = JsonUtils.getString(jobj,"NickName");
-                                String MobileNumber = JsonUtils.getString(jobj,"MobileNumber");
-                                String Remark = JsonUtils.getString(jobj,"Remark");
+                                String Nickname = JsonUtils.getString(jobj, "NickName");
+                                String MobileNumber = JsonUtils.getString(jobj, "MobileNumber");
+                                String Remark = JsonUtils.getString(jobj, "Remark");
                                 //若登录名为空，则显示OpenFireUserName
-                                String OpenFireUserName = JsonUtils.getString(jobj,"OpenFireUserName");
+                                String OpenFireUserName = JsonUtils.getString(jobj, "OpenFireUserName");
                                 if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
                                     data.setNickname(Nickname);
                                     data.setPinyin(HanziToPinyin.getPinYin(Nickname));
                                 } else {
                                     data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
                                 }
-                                String place = JsonUtils.getString(jobj,"place");
+                                String youshiNumber = JsonUtils.getString(jobj, "UserName");
+                                data.setYoushi_number(youshiNumber);
+                                String place = JsonUtils.getString(jobj, "place");
                                 data.setPlace(place);
-                                String sign = JsonUtils.getString(jobj,"sign");
+                                String sex = JsonUtils.getString(jobj, "sex");
+                                data.setSex(sex);
+                                String sign = JsonUtils.getString(jobj, "sign");
                                 data.setSign(sign);
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
@@ -503,12 +507,14 @@ public class ContactsFragment extends Fragment implements SideBar
                                         _friend_tab.setPhone(MobileNumber);
                                         _friend_tab.setRemark(Remark);
                                         _friend_tab.setStatus(1);
+                                        _friend_tab.setYoushi_number(youshiNumber);
                                         _friend_tab.setPlace(place);
+                                        _friend_tab.setSex(sex);
                                         _friend_tab.setSign(sign);
                                         dbManager.saveOrUpdate(_friend_tab);
                                     } else {
                                         //没有就插入
-                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, status, _self_userid);
+                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, sex, sign, status, _self_userid);
                                         dbManager.save(_friend);
                                     }
 
@@ -518,8 +524,8 @@ public class ContactsFragment extends Fragment implements SideBar
                             }
                             myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
                         } else {
-                            String _Message = JsonUtils.getString(_json_result,"Message");
-                            String _ErrorCode = JsonUtils.getString(_json_result,"ErrorCode");
+                            String _Message = JsonUtils.getString(_json_result, "Message");
+                            String _ErrorCode = JsonUtils.getString(_json_result, "ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
                                 myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {

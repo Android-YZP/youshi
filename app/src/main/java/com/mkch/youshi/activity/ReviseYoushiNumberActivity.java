@@ -99,7 +99,7 @@ public class ReviseYoushiNumberActivity extends Activity {
                     Toast.makeText(ReviseYoushiNumberActivity.this, "优时号必须以字母开头", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (mUser.getYoushiNumber() == null) {
+                if (mUser.getYoushiNumber() == null || mUser.getYoushiNumber().equals("")) {
                     ChangeNickNameFromNet();
                 }
             }
@@ -195,7 +195,7 @@ public class ReviseYoushiNumberActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_IS_EXIST);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1003")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_YOUSHI_NUMBER_FAIL);
-                            }else {
+                            } else {
                                 CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }

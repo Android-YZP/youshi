@@ -32,6 +32,7 @@ import com.tencent.TIMFriendshipProxyStatus;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
+import com.tencent.TIMProfileSystemElem;
 import com.tencent.TIMSNSChangeInfo;
 import com.tencent.TIMSNSSystemElem;
 import com.tencent.TIMUser;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * Created by ZJ on 2016/10/13.
  */
-public class FriendService extends Service implements TIMMessageListener{
+public class FriendService extends Service implements TIMMessageListener {
 
     private User mUser;
     private String identify, userSig;
@@ -74,7 +75,6 @@ public class FriendService extends Service implements TIMMessageListener{
         super.onCreate();
         TIMManager.getInstance().init(getApplicationContext());
         mUser = CommonUtil.getUserInfo(this);
-
         TIMManager.getInstance().setFriendshipProxyListener(mListener);
         TIMManager.getInstance().addMessageListener(this);
         //通知service
@@ -118,47 +118,46 @@ public class FriendService extends Service implements TIMMessageListener{
     TIMFriendshipProxyListener mListener = new TIMFriendshipProxyListener() {
         @Override
         public void OnProxyStatusChange(TIMFriendshipProxyStatus timFriendshipProxyStatus) {
-            Log.d("jlj","-------------------------OnProxyStatusChange");
+            Log.d("jlj", "-------------------------OnProxyStatusChange");
         }
 
         @Override
         public void OnAddFriends(List<TIMUserProfile> list) {
-            Log.d("jlj","-------------------------OnAddFriends");
+            Log.d("jlj", "-------------------------OnAddFriends");
         }
 
         @Override
         public void OnDelFriends(List<String> list) {
-            Log.d("jlj","-------------------------OnDelFriends");
+            Log.d("jlj", "-------------------------OnDelFriends");
         }
 
         @Override
         public void OnFriendProfileUpdate(List<TIMUserProfile> list) {
-            Log.d("jlj","-------------------------OnFriendProfileUpdate");
+            Log.d("jlj", "-------------------------OnFriendProfileUpdate");
         }
 
         @Override
         public void OnAddFriendReqs(List<TIMSNSChangeInfo> list) {
-            Log.d("jlj","-------------------------OnAddFriendReqs");
+            Log.d("jlj", "-------------------------OnAddFriendReqs");
             for (TIMSNSChangeInfo itemInfo : list) {
                 friendIdentify = itemInfo.getIdentifier();
-
             }
             saveFriendToDB(friendIdentify);
         }
 
         @Override
         public void OnAddFriendGroups(List<TIMFriendGroup> list) {
-            Log.d("jlj","-------------------------OnAddFriendGroups");
+            Log.d("jlj", "-------------------------OnAddFriendGroups");
         }
 
         @Override
         public void OnDelFriendGroups(List<String> list) {
-            Log.d("jlj","-------------------------OnDelFriendGroups");
+            Log.d("jlj", "-------------------------OnDelFriendGroups");
         }
 
         @Override
         public void OnFriendGroupUpdate(List<TIMFriendGroup> list) {
-            Log.d("jlj","-------------------------OnFriendGroupUpdate");
+            Log.d("jlj", "-------------------------OnFriendGroupUpdate");
         }
     };
 
@@ -434,29 +433,31 @@ public class FriendService extends Service implements TIMMessageListener{
 
     @Override
     public boolean onNewMessages(List<TIMMessage> list) {
-        Log.d("jlj","-----------------------onNewMessages");
-        if (list!=null&&list.size()>0){
-            for (TIMMessage timMessage:list){
+        Log.d("jlj", "-----------------------onNewMessages");
+        if (list != null && list.size() > 0) {
+            for (TIMMessage timMessage : list) {
                 long elementCount = timMessage.getElementCount();
-                Log.d("jlj","-----------------------elementCount="+elementCount);
-                if (elementCount>0){
-                    for (int j = 0;j<elementCount;j++){
+                Log.d("jlj", "-----------------------elementCount=" + elementCount);
+                if (elementCount > 0) {
+                    for (int j = 0; j < elementCount; j++) {
                         TIMElem element = timMessage.getElement(j);
-                        if (element instanceof TIMSNSSystemElem){
+                        if (element instanceof TIMSNSSystemElem) {
                             List<TIMSNSChangeInfo> changeInfoList = ((TIMSNSSystemElem) element).getChangeInfoList();
-                            for (TIMSNSChangeInfo timsnsChangeInfo:changeInfoList){
-                                String identifier = timsnsChangeInfo.getIdentifier();
-                                Log.d("jlj","changeInfoList one is-----"+identifier);
+                            for (TIMSNSChangeInfo timsnsChangeInfo : changeInfoList) {
+                                friendIdentify = timsnsChangeInfo.getIdentifier();
+                                Log.d("jlj", "changeInfoList one is-----" + friendIdentify);
+                                saveFriendToDB(friendIdentify);
                             }
-
-                        }else{
-                            Log.d("jlj","-----------------------other element");
+                        } else if (element instanceof TIMProfileSystemElem) {
+                            String name = ((TIMProfileSystemElem) element).getNickName();
+                            Log.d("jlj", "TIMProfileSystemElem name is-----" + name);
+                        } else {
+                            Log.d("jlj", "-----------------------" + element.getType());
                         }
                     }
                 }
             }
         }
-
         return false;
     }
 }

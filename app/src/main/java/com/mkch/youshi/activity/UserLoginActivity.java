@@ -442,7 +442,6 @@ public class UserLoginActivity extends Activity {
                                 user.setOpenFireUserName(datas.getString("OpenfireUserName"));
                                 user.setPassword(password);
                                 user.setUserSig(datas.getString("UserSign"));
-                                Log.d("zzzLogin------------",datas.getString("OpenfireUserName"));
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
                             }
                             //提醒登录成功
