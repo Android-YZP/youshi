@@ -1,13 +1,8 @@
 package com.mkch.youshi.config;
 
 import android.app.Application;
-import android.app.Service;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Vibrator;
-
-import com.baidu.mapapi.SDKInitializer;
-import com.mkch.youshi.service.LocationService;
 
 import org.xutils.x;
 
