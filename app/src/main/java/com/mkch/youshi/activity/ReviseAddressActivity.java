@@ -16,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.baidu.location.BDLocation;
+//import com.baidu.location.BDLocationListener;
+//import com.baidu.location.LocationClient;
+//import com.baidu.location.LocationClientOption;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -154,7 +158,7 @@ public class ReviseAddressActivity extends Activity {
         mTvPosition.setText(str);
         mLocationClient.stop();
     }
-
+//
     /*****
      * 定位结果回调，重写onReceiveLocation方法
      */
