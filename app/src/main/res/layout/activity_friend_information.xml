@@ -264,11 +264,12 @@
                 style="@style/commonLineStyle" />
 
             <View
+                android:id="@+id/tv_friend_information_line7"
                 style="@style/commonLineStyle"
                 android:layout_marginTop="@dimen/friend_information_margin_top" />
 
             <LinearLayout
-                android:id="@+id/layout_friend_information_place"
+                android:id="@+id/layout_friend_information_place_and_sign"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/friend_information_address_height"
                 android:background="@color/common_white_color"
@@ -276,6 +277,7 @@
                 android:paddingLeft="@dimen/friend_information_setting_padding_left">
 
                 <LinearLayout
+                    android:id="@+id/layout_friend_information_place"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -301,6 +303,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_friend_information_signature"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -328,7 +331,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View style="@style/commonLineStyle" />
+            <View
+                android:id="@+id/tv_friend_information_line8"
+                style="@style/commonLineStyle" />
 
             <ImageView
                 android:layout_width="210dp"

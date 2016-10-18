@@ -22,9 +22,10 @@ import org.xutils.x;
 public class FriendInformationActivity extends Activity {
 
     private ImageView mIvBack, mIvHead;
-    private TextView mTvMore, mTvRemark, mTvYoushiNumber,mTvName, mTvSetting, mTvPlace;
-    private View mLine1, mLine2, mLine3, mLine4, mLine5, mLine6;
-    private LinearLayout mLayoutPhone, mLayoutDescribe, mLayoutPlace;
+    private TextView mTvMore, mTvRemark, mTvYoushiNumber, mTvName, mTvSetting, mTvPlace, mTvSign;
+    private View mLine1, mLine2, mLine3, mLine4, mLine5, mLine6, mLine7, mLine8;
+    private LinearLayout mLayoutPhone, mLayoutDescribe, mLayoutShow, mLayoutPlace, mLayoutSign;
+    private boolean isShowPlace, isShowSign;
     private String contactID;
     private User mUser;
     private DbManager dbManager;//数据库管理对象
@@ -54,8 +55,13 @@ public class FriendInformationActivity extends Activity {
         mLine4 = (View) findViewById(R.id.tv_friend_information_line4);
         mLine5 = (View) findViewById(R.id.tv_friend_information_line5);
         mLine6 = (View) findViewById(R.id.tv_friend_information_line6);
+        mLine7 = (View) findViewById(R.id.tv_friend_information_line7);
+        mLine8 = (View) findViewById(R.id.tv_friend_information_line8);
+        mLayoutShow = (LinearLayout) findViewById(R.id.layout_friend_information_place_and_sign);
         mLayoutPlace = (LinearLayout) findViewById(R.id.layout_friend_information_place);
+        mLayoutSign = (LinearLayout) findViewById(R.id.layout_friend_information_signature);
         mTvPlace = (TextView) findViewById(R.id.tv_friend_information_address);
+        mTvSign = (TextView) findViewById(R.id.tv_friend_information_signature);
     }
 
     private void initData() {
@@ -96,12 +102,26 @@ public class FriendInformationActivity extends Activity {
                 if (friend.getNickname() != null && !friend.getNickname().equals("") && !friend.getNickname().equals("null")) {
                     mTvName.setText("昵称: " + friend.getNickname());
                 } else {
-                    mTvName.setText("昵称: "+friend.getPhone());
+                    mTvName.setText("昵称: " + friend.getPhone());
                 }
                 if (friend.getPlace() != null && !friend.getPlace().equals("") && !friend.getPlace().equals("null")) {
                     mTvPlace.setText(friend.getPlace());
+                    isShowPlace = true;
                 } else {
                     mLayoutPlace.setVisibility(View.GONE);
+                    isShowPlace = false;
+                }
+                if (friend.getSign() != null && !friend.getSign().equals("") && !friend.getSign().equals("null")) {
+                    mTvSign.setText(friend.getSign());
+                    isShowSign = true;
+                } else {
+                    mLayoutSign.setVisibility(View.GONE);
+                    isShowSign = false;
+                }
+                if (!isShowPlace && !isShowSign) {
+                    mLayoutShow.setVisibility(View.GONE);
+                    mLine7.setVisibility(View.GONE);
+                    mLine8.setVisibility(View.GONE);
                 }
             } catch (DbException e) {
                 e.printStackTrace();
@@ -132,6 +152,7 @@ public class FriendInformationActivity extends Activity {
             switch (view.getId()) {
                 case R.id.tv_friend_information_more:
                     _intent = new Intent(FriendInformationActivity.this, InformationSettingActivity.class);
+                    _intent.putExtra("_contactID", contactID);
                     startActivity(_intent);
                     break;
                 case R.id.tv_friend_information_setting:

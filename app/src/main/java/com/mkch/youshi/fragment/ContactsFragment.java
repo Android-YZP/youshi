@@ -191,7 +191,8 @@ public class ContactsFragment extends Fragment implements SideBar
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position != _friends.size() && position != datas.size()) {
+                if (position == _friends.size() || position == datas.size()) {
+                } else {
                     Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
                     Log.d("---------------------", String.valueOf(position));
                     if (datas == null || datas.size() == 0) {
@@ -344,8 +345,6 @@ public class ContactsFragment extends Fragment implements SideBar
             public void onFinished() {
             }
         });
-
-
     }
 
     private class MyHandler extends Handler {
@@ -476,11 +475,11 @@ public class ContactsFragment extends Fragment implements SideBar
                                 }
                                 String youshiNumber = JsonUtils.getString(jobj, "UserName");
                                 data.setYoushi_number(youshiNumber);
-                                String place = JsonUtils.getString(jobj, "place");
+                                String place = JsonUtils.getString(jobj, "Place");
                                 data.setPlace(place);
-                                String sex = JsonUtils.getString(jobj, "sex");
+                                String sex = JsonUtils.getString(jobj, "Sex");
                                 data.setSex(sex);
-                                String sign = JsonUtils.getString(jobj, "sign");
+                                String sign = JsonUtils.getString(jobj, "Sign");
                                 data.setSign(sign);
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
