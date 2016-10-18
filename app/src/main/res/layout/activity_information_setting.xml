@@ -48,7 +48,7 @@
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
-            android:id="@+id/cb_information_setting_look_him"
+            android:id="@+id/cb_information_setting_black_list"
             style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

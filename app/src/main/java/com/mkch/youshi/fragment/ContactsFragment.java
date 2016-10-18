@@ -70,7 +70,6 @@ public class ContactsFragment extends Fragment implements SideBar
     private SideBar mSideBar;
     private TextView mDialog;
     private EditText mSearchInput;
-
     private TextView mTvNewFriendNum;//请求添加好友的用户数量
     private DbManager dbManager;//数据库管理对象
     private User mUser;
@@ -477,6 +476,10 @@ public class ContactsFragment extends Fragment implements SideBar
                                 data.setYoushi_number(youshiNumber);
                                 String place = JsonUtils.getString(jobj, "Place");
                                 data.setPlace(place);
+                                String phoneNumber = JsonUtils.getString(jobj, "PhoneNumber");
+                                data.setPhone_number(phoneNumber);
+                                String description = JsonUtils.getString(jobj, "Description");
+                                data.setDescription(description);
                                 String sex = JsonUtils.getString(jobj, "Sex");
                                 data.setSex(sex);
                                 String sign = JsonUtils.getString(jobj, "Sign");
@@ -508,15 +511,16 @@ public class ContactsFragment extends Fragment implements SideBar
                                         _friend_tab.setStatus(1);
                                         _friend_tab.setYoushi_number(youshiNumber);
                                         _friend_tab.setPlace(place);
+                                        _friend_tab.setPhone_number(phoneNumber);
+                                        _friend_tab.setDescription(description);
                                         _friend_tab.setSex(sex);
                                         _friend_tab.setSign(sign);
                                         dbManager.saveOrUpdate(_friend_tab);
                                     } else {
                                         //没有就插入
-                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, sex, sign, status, _self_userid);
+                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, phoneNumber, description, sex, sign, status, _self_userid);
                                         dbManager.save(_friend);
                                     }
-
                                 } catch (DbException e) {
                                     e.printStackTrace();
                                 }

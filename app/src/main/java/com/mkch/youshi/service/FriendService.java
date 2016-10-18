@@ -63,7 +63,7 @@ public class FriendService extends Service implements TIMMessageListener {
     //通知
     private NotificationManager mNotification_manager;
     private Notification mNotification;
-    private String friendIdentify, friendNickName;
+    private String friendIdentify;
 
     @Override
     public IBinder onBind(Intent intent) {

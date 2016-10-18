@@ -2,6 +2,7 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,19 +15,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 
 public class RemarkInformationActivity extends Activity {
 
@@ -36,7 +43,10 @@ public class RemarkInformationActivity extends Activity {
     private TextView mTvFinish;
     private View mLine1, mLine2, mLine3, mLine4;
     private String openFireName, remark, phone, phone1, phone2, phone3, phone4, phone5, description;
+    private ArrayList<String> remarkPhones = new ArrayList<>();
     private static ProgressDialog mProgressDialog = null;
+    private User mUser;
+    private DbManager dbManager;//数据库管理对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +82,37 @@ public class RemarkInformationActivity extends Activity {
         mLine3.setVisibility(View.GONE);
         mEtPhone5.setVisibility(View.GONE);
         mLine4.setVisibility(View.GONE);
+        mUser = CommonUtil.getUserInfo(this);
+        dbManager = DBHelper.getDbManager();
         Bundle _bundle = getIntent().getExtras();
         if (_bundle != null) {
             openFireName = _bundle.getString("_contactID");
+            try {
+                Friend friend = dbManager.selector(Friend.class)
+                        .where("friendid", "=", openFireName)
+                        .and("userid", "=", mUser.getOpenFireUserName())
+                        .findFirst();
+                //加载好友备注
+                if (friend.getRemark() != null && !friend.getRemark().equals("") && !friend.getRemark().equals("null")) {
+                    mEtRemark.setText(friend.getRemark());
+                }
+                //加载好友备注电话
+                if (friend.getPhone_number() != null && !friend.getPhone_number().equals("") && !friend.getPhone_number().equals("null")) {
+                    String[] phones = friend.getPhone_number().split("\\|");
+                    for (int i = 0; i < phones.length; i++) {
+                        if (phones[i] != null && !phones[i].equals("") && !phones[i].equals("null")) {
+                            remarkPhones.add(phones[i]);
+                        }
+                    }
+                    showPhone();
+                }
+                //加载好友描述
+                if (friend.getDescription() != null && !friend.getDescription().equals("") && !friend.getDescription().equals("null")) {
+                    mEtDescription.setText(friend.getDescription());
+                }
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -181,6 +219,67 @@ public class RemarkInformationActivity extends Activity {
         });
     }
 
+    //根据获取的备注电话号码，来判断如何显示界面
+    private void showPhone() {
+        switch (remarkPhones.size()) {
+            case 1:
+                mLine1.setVisibility(View.VISIBLE);
+                mEtPhone2.setVisibility(View.VISIBLE);
+                mEtPhone1.setText(remarkPhones.get(0));
+                break;
+            case 2:
+                mLine1.setVisibility(View.VISIBLE);
+                mLine2.setVisibility(View.VISIBLE);
+                mEtPhone2.setVisibility(View.VISIBLE);
+                mEtPhone3.setVisibility(View.VISIBLE);
+                mEtPhone1.setText(remarkPhones.get(0));
+                mEtPhone2.setText(remarkPhones.get(1));
+                break;
+            case 3:
+                mLine1.setVisibility(View.VISIBLE);
+                mLine2.setVisibility(View.VISIBLE);
+                mLine3.setVisibility(View.VISIBLE);
+                mEtPhone2.setVisibility(View.VISIBLE);
+                mEtPhone3.setVisibility(View.VISIBLE);
+                mEtPhone4.setVisibility(View.VISIBLE);
+                mEtPhone1.setText(remarkPhones.get(0));
+                mEtPhone2.setText(remarkPhones.get(1));
+                mEtPhone3.setText(remarkPhones.get(2));
+                break;
+            case 4:
+                mLine1.setVisibility(View.VISIBLE);
+                mLine2.setVisibility(View.VISIBLE);
+                mLine3.setVisibility(View.VISIBLE);
+                mLine4.setVisibility(View.VISIBLE);
+                mEtPhone2.setVisibility(View.VISIBLE);
+                mEtPhone3.setVisibility(View.VISIBLE);
+                mEtPhone4.setVisibility(View.VISIBLE);
+                mEtPhone5.setVisibility(View.VISIBLE);
+                mEtPhone1.setText(remarkPhones.get(0));
+                mEtPhone2.setText(remarkPhones.get(1));
+                mEtPhone3.setText(remarkPhones.get(2));
+                mEtPhone4.setText(remarkPhones.get(3));
+                break;
+            case 5:
+                mLine1.setVisibility(View.VISIBLE);
+                mLine2.setVisibility(View.VISIBLE);
+                mLine3.setVisibility(View.VISIBLE);
+                mLine4.setVisibility(View.VISIBLE);
+                mEtPhone2.setVisibility(View.VISIBLE);
+                mEtPhone3.setVisibility(View.VISIBLE);
+                mEtPhone4.setVisibility(View.VISIBLE);
+                mEtPhone5.setVisibility(View.VISIBLE);
+                mEtPhone1.setText(remarkPhones.get(0));
+                mEtPhone2.setText(remarkPhones.get(1));
+                mEtPhone3.setText(remarkPhones.get(2));
+                mEtPhone4.setText(remarkPhones.get(3));
+                mEtPhone5.setText(remarkPhones.get(4));
+                break;
+            default:
+                break;
+        }
+    }
+
     private static class MyHandler extends Handler {
         private final WeakReference<Activity> mActivity;
 
@@ -228,6 +327,9 @@ public class RemarkInformationActivity extends Activity {
 
     public void updateUserInfo() {
         Toast.makeText(this, "已修改", Toast.LENGTH_LONG).show();
+        Intent _intent = new Intent(RemarkInformationActivity.this, FriendInformationActivity.class);
+        _intent.putExtra("_contactID", openFireName);
+        startActivity(_intent);
         RemarkInformationActivity.this.finish();
     }
 
@@ -252,7 +354,19 @@ public class RemarkInformationActivity extends Activity {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
-                            handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_NICKNAME_SUCCESS);
+                            try {
+                                Friend friend = dbManager.selector(Friend.class)
+                                        .where("friendid", "=", openFireName)
+                                        .and("userid", "=", mUser.getOpenFireUserName())
+                                        .findFirst();
+                                friend.setRemark(remark);
+                                friend.setPhone_number(phone);
+                                friend.setDescription(description);
+                                dbManager.saveOrUpdate(friend);
+                                handler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_NICKNAME_SUCCESS);
+                            } catch (DbException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");

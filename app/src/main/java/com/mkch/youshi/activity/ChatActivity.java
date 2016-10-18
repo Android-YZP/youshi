@@ -256,7 +256,7 @@ public class ChatActivity extends BaseActivity {
         //查询该JID的消息盒子的所有消息
         try {
             jid = "1234";//调用静态的临时数据1234
-            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","","","","","",1,"10001");
+            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","","","","","","","",1,"10001");
 
             //查询
             dbManager = DBHelper.getDbManager();
