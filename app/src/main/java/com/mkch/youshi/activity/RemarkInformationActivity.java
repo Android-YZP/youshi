@@ -2,7 +2,6 @@ package com.mkch.youshi.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -327,9 +326,6 @@ public class RemarkInformationActivity extends Activity {
 
     public void updateUserInfo() {
         Toast.makeText(this, "已修改", Toast.LENGTH_LONG).show();
-        Intent _intent = new Intent(RemarkInformationActivity.this, FriendInformationActivity.class);
-        _intent.putExtra("_contactID", openFireName);
-        startActivity(_intent);
         RemarkInformationActivity.this.finish();
     }
 

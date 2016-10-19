@@ -12,15 +12,20 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.tencent.TIMCallBack;
 import com.tencent.TIMElem;
@@ -35,6 +40,7 @@ import com.tencent.TIMMessageListener;
 import com.tencent.TIMProfileSystemElem;
 import com.tencent.TIMSNSChangeInfo;
 import com.tencent.TIMSNSSystemElem;
+import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
 import com.tencent.TIMUserProfile;
 
@@ -42,6 +48,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -433,11 +440,12 @@ public class FriendService extends Service implements TIMMessageListener {
 
     @Override
     public boolean onNewMessages(List<TIMMessage> list) {
-        Log.d("jlj", "-----------------------onNewMessages");
+        Log.d("zzz", "-----------------------onNewMessages");
         if (list != null && list.size() > 0) {
             for (TIMMessage timMessage : list) {
                 long elementCount = timMessage.getElementCount();
-                Log.d("jlj", "-----------------------elementCount=" + elementCount);
+                String sender = timMessage.getSender();
+                Log.d("zzz", "-----------------------elementCount=" + elementCount);
                 if (elementCount > 0) {
                     for (int j = 0; j < elementCount; j++) {
                         TIMElem element = timMessage.getElement(j);
@@ -445,19 +453,155 @@ public class FriendService extends Service implements TIMMessageListener {
                             List<TIMSNSChangeInfo> changeInfoList = ((TIMSNSSystemElem) element).getChangeInfoList();
                             for (TIMSNSChangeInfo timsnsChangeInfo : changeInfoList) {
                                 friendIdentify = timsnsChangeInfo.getIdentifier();
-                                Log.d("jlj", "changeInfoList one is-----" + friendIdentify);
+                                Log.d("zzz", "changeInfoList one is-----" + friendIdentify);
                                 saveFriendToDB(friendIdentify);
                             }
+                        } else if (element instanceof TIMTextElem) {
+                            String msg = ((TIMTextElem) element).getText();
+                            Log.d("zzz", "TIMTextElem sender is-----" + sender);
+                            Log.d("zzz", "TIMTextElem is-----" + msg);
+                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                            receiveMessage(sender, msg);
                         } else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
-                            Log.d("jlj", "TIMProfileSystemElem name is-----" + name);
+                            Log.d("zzz", "TIMProfileSystemElem name is-----" + name);
                         } else {
-                            Log.d("jlj", "-----------------------" + element.getType());
+                            Log.d("zzz", "-----------------------" + element.getType());
                         }
                     }
                 }
             }
         }
         return false;
+    }
+
+    //显示获取的聊天信息
+    private void receiveMessage(final String sender, final String msg) {
+        if (msg != null) {
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(sender, msg, ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
+            DbManager dbManager = DBHelper.getDbManager();
+            int chat_id = 0;
+            try {
+                //获取该好友的一些信息
+                //查询本登录用户的，已添加的，某个好友
+                Friend _friend = dbManager.selector(Friend.class)
+                        .where("friendid", "=", sender)
+                        .and("status", "=", 1)
+                        .and("userid", "=", mUser.getOpenFireUserName())
+                        .findFirst();
+                if (_friend == null) {
+                    Log.d("jlj", "addChatListener-----------------------------------发送的friend is null");
+                    return;
+                }
+                int _messagebox_id = 0;
+                if (sender != null && !sender.equals("")) {
+                    String friendId = _friend.getFriendid() + "@" + "TIMConversationType.C2C";
+                    String selfId = mUser.getOpenFireUserName();
+                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
+                            .and("self_id", "=", selfId).findFirst();
+                    if (messageBox == null) {
+                        messageBox = new MessageBox(_friend.getHead_pic(), _friend.getNickname(), _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                        dbManager.saveBindingId(messageBox);//新增消息盒子
+                        _messagebox_id = messageBox.getId();
+                    } else {
+                        _messagebox_id = messageBox.getId();
+                    }
+                }
+                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+                dbManager.saveBindingId(_chat_bean);//新增消息
+                chat_id = _chat_bean.getId();
+                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 单聊-去通知界面采取相应的动作
+     *
+     * @param _chat_bean
+     * @param chat_id
+     * @param _friend
+     */
+    private void actionToNotifyChatActivity(ChatBean _chat_bean, int chat_id, Friend _friend) {
+        //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
+        boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.ChatActivity");
+        if (isForeground) {
+            Intent intent = new Intent();
+            intent.putExtra("chat_id", chat_id);
+            intent.setAction("yoshi.action.chatsbroadcast");
+            sendBroadcast(intent);
+        } else {
+            //通知
+            notifyInfoFromChat(_chat_bean, _friend);
+        }
+    }
+
+    /**
+     * 通知有消息
+     */
+    private void notifyInfoFromChat(ChatBean chatBean, Friend friend) {
+        Notification.Builder _builder = new Notification.Builder(this);
+        //intent
+        Intent _intent = new Intent(this, ChatActivity.class);
+        _intent.putExtra("_openfirename", friend.getFriendid());
+        //头像
+        final Bitmap[] bitmaps = new Bitmap[1];
+        String _head_pic_url = friend.getHead_pic();
+        if (_head_pic_url != null && !_head_pic_url.equals("") && !_head_pic_url.equals("null")) {
+            //圆形图片
+            ImageOptions _image_options = new ImageOptions.Builder()
+                    .setCircular(true)
+                    .setUseMemCache(false)
+                    .build();
+            //加载网络头像
+            x.image().loadDrawable(friend.getHead_pic(), _image_options, new Callback.CommonCallback<Drawable>() {
+                @Override
+                public void onSuccess(Drawable result) {
+                    Bitmap _bitmap = ((BitmapDrawable) result).getBitmap();
+                    bitmaps[0] = _bitmap;
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+                }
+
+                @Override
+                public void onFinished() {
+                }
+            });
+        } else {
+            Bitmap _bitmap = ((BitmapDrawable) (getResources().getDrawable(R.drawable.default_headpic))).getBitmap();
+            bitmaps[0] = _bitmap;
+        }
+        //pendingIntent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //昵称
+        String _nickname = friend.getNickname();
+        String _content_title = null;
+        if (_nickname != null && !_nickname.equals("") && !_nickname.equals("null")) {
+            _content_title = _nickname;
+        } else {
+            _content_title = friend.getFriendid();
+        }
+        //builder设置一些参数
+        _builder.setSmallIcon(R.mipmap.ic_launcher)//app的logo
+                .setLargeIcon(bitmaps[0])//用户头像
+                .setContentTitle(_content_title)//昵称
+                .setContentText(chatBean.getContent())//消息内容
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent);
+//                .setFullScreenIntent(pendingIntent,true);
+        mNotification = _builder.build();
+        mNotification.flags = Notification.FLAG_AUTO_CANCEL;
+        //通知
+        mNotification_manager.notify(0, mNotification);
     }
 }

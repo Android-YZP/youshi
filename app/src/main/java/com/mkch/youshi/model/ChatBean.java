@@ -9,7 +9,7 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "chat")
 public class ChatBean {
-    @Column(name = "id",isId = true,autoGen = true)
+    @Column(name = "id", isId = true, autoGen = true)
     private int id;
     @Column(name = "username")
     private String username;//消息的发送者
@@ -43,11 +43,15 @@ public class ChatBean {
     @Column(name = "msgboxid")
     private int msgboxid;//外键表id
 
-    private MessageBox getMessageBox(DbManager db) throws Exception{
-        return db.findById(MessageBox.class,msgboxid);
+    private MessageBox getMessageBox(DbManager db) throws Exception {
+        return db.findById(MessageBox.class, msgboxid);
     }
 
-    public ChatBean() {
+    public ChatBean(String _openfirename, String _msg, int messageTypeOut, String now) {
+        this.username = _openfirename;
+        this.content = _msg;
+        this.type = messageTypeOut;
+        this.date = now;
     }
 
     public ChatBean(String username, String content) {
@@ -63,12 +67,13 @@ public class ChatBean {
 
     /**
      * 发送文本
+     *
      * @param username 发送者
-     * @param content 内容
-     * @param type 消息接收or发送
-     * @param date 时间
+     * @param content  内容
+     * @param type     消息接收or发送
+     * @param date     时间
      */
-    public ChatBean(String username, String content, int type, String date,int msgboxid) {
+    public ChatBean(String username, String content, int type, String date, int msgboxid) {
         this.username = username;
         this.content = content;
         this.type = type;
@@ -79,9 +84,10 @@ public class ChatBean {
 
     /**
      * 语音消息
+     *
      * @param username 发送者
-     * @param date 时间
-     * @param type 消息接收or发送
+     * @param date     时间
+     * @param type     消息接收or发送
      * @param duration 时长
      * @param fileName 文件名
      */
@@ -91,7 +97,7 @@ public class ChatBean {
         this.type = type;
         this.duration = duration;
         this.fileName = fileName;
-        this.content = (duration/1000)+"\'"+(duration%1000)+"\"语音消息";
+        this.content = (duration / 1000) + "\'" + (duration % 1000) + "\"语音消息";
         this.msgModel = MESSAGE_MODEL_AUDIO;
     }
 

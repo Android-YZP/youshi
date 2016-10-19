@@ -1,6 +1,8 @@
 package com.mkch.youshi.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,12 +24,21 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.MessageBox;
+import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.TimesUtils;
+import com.tencent.TIMConversation;
+import com.tencent.TIMConversationType;
+import com.tencent.TIMManager;
+import com.tencent.TIMMessage;
+import com.tencent.TIMTextElem;
+import com.tencent.TIMValueCallBack;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -81,55 +92,66 @@ public class ChatActivity extends BaseActivity {
 
     @ViewInject(R.id.gv_chat_more_action)
     private GridView mGvMoreAction;//更多操作-网格视图
-
-
-    /*
-    聊天
-     */
+    // 聊天
     @ViewInject(R.id.rv_chart_list)
     private RecyclerView mRvList;
-    private String m_jid;
-
     private DbManager dbManager;//数据库管理对象
-
     //数据
     private List<ChatBean> m_chart_list;
     private ChartListAdapter m_adapter;
-
+    private String _openfirename;
     private static ProgressDialog mProgressDialog = null;//加载
+    private ChatReceiver mChatReceiver;
+    private User mUser;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
             }
             int _what = msg.what;
-            switch (_what){
+            switch (_what) {
                 case 0:
                     //出现错误
                     String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
                     Toast.makeText(ChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
+                case ChatReceiver.RECEIVE_CHAT_MSG:
+                    int _chat_id = (int) msg.obj;//最新的一条消息-写在广播接收处
+                    if (_chat_id != 0) {
+                        Log.d("zzz----RECEIVE_CHAT_MSG", String.valueOf(_chat_id));
+                        //查询该消息内容并刷新到UI
+                        try {
+                            ChatBean _chat_bean = dbManager.findById(ChatBean.class, _chat_id);
+                            //更新UI界面，获取最新的用户列表
+                            updateUIfromReceiver(_chat_bean);
+                        } catch (DbException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
                 case CommonConstants.SEND_MSG_SUCCESS:
+                    Log.d("zzz----SEND_MSG_SUCCESS", "");
                     m_adapter.notifyDataSetChanged();
                     mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
                     break;
                 default:
                     break;
             }
-
             super.handleMessage(msg);
-
         }
     };
     private int mMessageBoxId;
     private Friend mFriend;
     private MessageBox m_messageBox;
-
+    private String friendId, selfId;
 
     /**
      * 更新UI界面，获取最新的聊天记录
+     *
      * @param _chat_bean
      */
     private void updateUIfromReceiver(ChatBean _chat_bean) {
@@ -149,7 +171,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     private void setListener() {
@@ -157,7 +178,7 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 //当获取焦点时，只要有其他面板在打开状态，隐藏这些面板，差表情面板未设计
-                if (hasFocus){
+                if (hasFocus) {
                     mLineMoreAction.setVisibility(View.GONE);
                 }
             }
@@ -165,177 +186,158 @@ public class ChatActivity extends BaseActivity {
         mEtChatInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d("jlj","----------------------afterTextChanged："+s.toString());
                 String _input_text = s.toString();
-                if (_input_text!=null&&!_input_text.equals("")){
+                if (_input_text != null && !_input_text.equals("")) {
                     mIvGoMoreAction.setVisibility(View.GONE);
                     mBtnChatSend.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     mIvGoMoreAction.setVisibility(View.VISIBLE);
                     mBtnChatSend.setVisibility(View.GONE);
                 }
             }
         });
-
     }
 
     private void initData() {
-        //标题
-        mTvTitle.setText("单聊");
-
+        mUser = CommonUtil.getUserInfo(this);
+        selfId = mUser.getOpenFireUserName();
+        //获取会话
+        Intent _intent = getIntent();
+        if (_intent != null) {
+            _openfirename = _intent.getStringExtra("_openfirename");
+            if (_openfirename != null && !_openfirename.equals("")) {
+                try {
+                    mFriend = dbManager.selector(Friend.class)
+                            .where("friendid", "=", _openfirename)
+                            .and("status", "=", "1")
+                            .findFirst();
+                    //标题
+                    if (mFriend.getNickname() == null || mFriend.getNickname().equals("")) {
+                        mTvTitle.setText(mFriend.getPhone());
+                    } else {
+                        mTvTitle.setText(mFriend.getNickname());
+                    }
+                    friendId = mFriend.getFriendid() + "@" + "TIMConversationType.C2C";
+                    queryChatsInfoFromDB(friendId, selfId);
+                    //注册聊天监听的Receiver
+                    mChatReceiver = new ChatReceiver(mHandler);
+                    IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
+                    registerReceiver(mChatReceiver, filter);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         //gridview网格视图-更多动作
         //数据源
         int[] _pic_reses = new int[]{R.drawable.chat_photo,
-        R.drawable.chat_shot,
-        R.drawable.chat_location,
-        R.drawable.chat_file};
-        String[] _str_names = new String[]{"照片","拍摄","位置","文件"};
-        List<Map<String,Object>> _maps = new ArrayList<>();
-        for (int i=0;i<4;i++){
+                R.drawable.chat_shot,
+                R.drawable.chat_location,
+                R.drawable.chat_file};
+        String[] _str_names = new String[]{"照片", "拍摄", "位置", "文件"};
+        List<Map<String, Object>> _maps = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
             HashMap<String, Object> _map1 = new HashMap<>();
-            _map1.put("pic_res",_pic_reses[i]);
-            _map1.put("str_name",_str_names[i]);
+            _map1.put("pic_res", _pic_reses[i]);
+            _map1.put("str_name", _str_names[i]);
             _maps.add(_map1);
         }
         //适配器
-        SimpleAdapter _adapter = new SimpleAdapter(this,_maps,R.layout.gv_item_chat_more_action,new String[]{"pic_res","str_name"},new int[]{R.id.iv_item_chat_more_action,R.id.tv_item_chat_more_action});
+        SimpleAdapter _adapter = new SimpleAdapter(this, _maps, R.layout.gv_item_chat_more_action, new String[]{"pic_res", "str_name"}, new int[]{R.id.iv_item_chat_more_action, R.id.tv_item_chat_more_action});
         //设置适配器
         mGvMoreAction.setAdapter(_adapter);
-        //临时插入几条测试数据
-        queryChatsInfoFromDB("");
     }
 
     /**
      * 从数据库查询聊天信息
-     * @param jid
+     *
+     * @param
      */
-    private void queryChatsInfoFromDB(String jid) {
-
+    private void queryChatsInfoFromDB(final String friendId, final String selfId) {
         //聊天内容列表
         //布局管理器
         LinearLayoutManager _layout_manager = new LinearLayoutManager(this);
         mRvList.setLayoutManager(_layout_manager);
         //初始化list聊天数据
-
-
         try {
-            //默认数据----------------------start
-            long count = dbManager.selector(MessageBox.class).where("jid", "=", "1234").count();
-            //若无此消息盒子，创建默认数据集合
-            if (count==0){
-                MessageBox _msg_box = new MessageBox("","","",0,"");
-                _msg_box.setJid("1234");
-                boolean isSave = dbManager.saveBindingId(_msg_box);
-                if (isSave){
-                    ChatBean chatBean1 = new ChatBean("张三", "你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊你好啊", ChatBean.MESSAGE_TYPE_IN, "2016-09-01 14:50:24",_msg_box.getId());
-                    ChatBean chatBean2 = new ChatBean("张三","在？",ChatBean.MESSAGE_TYPE_IN,"2016-09-02 15:10:20", _msg_box.getId());
-                    ChatBean chatBean3 = new ChatBean("张三","在吗",ChatBean.MESSAGE_TYPE_IN,"2016-09-03 14:23:14", _msg_box.getId());
-                    ChatBean chatBean4 = new ChatBean("jsjlj","在的",ChatBean.MESSAGE_TYPE_OUT,"2016-09-03 14:25:59", _msg_box.getId());
-                    dbManager.save(chatBean1);
-                    dbManager.save(chatBean2);
-                    dbManager.save(chatBean3);
-                    dbManager.save(chatBean4);
-                }
-            }
-
-
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-
-        //查询该JID的消息盒子的所有消息
-        try {
-            jid = "1234";//调用静态的临时数据1234
-            mFriend = new Friend("10000","http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg","张三","","","","","","","","",1,"10001");
-
             //查询
             dbManager = DBHelper.getDbManager();
             m_messageBox = dbManager.selector(MessageBox.class)
-                    .where("jid", "=", jid)
+                    .where("friend_id", "=", friendId)
+                    .and("self_id", "=", selfId)
                     .findFirst();
             //若消息盒子存在，则获取消息盒子的ID以及该消息盒子的所有消息
-            if (m_messageBox !=null){
+            if (m_messageBox != null) {
                 mMessageBoxId = m_messageBox.getId();
                 m_chart_list = m_messageBox.getChatBeans(dbManager);
             }
-
-
         } catch (DbException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (m_chart_list==null){
+        if (m_chart_list == null) {
             m_chart_list = new ArrayList<>();
         }
-
         //适配器
-        m_adapter = new ChartListAdapter(m_chart_list,mFriend,CommonUtil.getUserInfo(this),this);
+        m_adapter = new ChartListAdapter(m_chart_list, mFriend, mUser, this);
         mRvList.setAdapter(m_adapter);
         mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
-
-
     }
 
-    @Event({R.id.iv_chat_topbar_back, R.id.iv_chat_topbar_ps,R.id.iv_chat_go_voice,R.id.iv_chat_go_keyboard,R.id.iv_chat_go_expression,R.id.iv_chat_go_more_action
-            ,R.id.et_chat_input,R.id.btn_chat_send})
+    @Event({R.id.iv_chat_topbar_back, R.id.iv_chat_topbar_ps, R.id.iv_chat_go_voice, R.id.iv_chat_go_keyboard, R.id.iv_chat_go_expression, R.id.iv_chat_go_more_action
+            , R.id.et_chat_input, R.id.btn_chat_send})
     private void clickOneButton(View view) {
         switch (view.getId()) {
             case R.id.btn_chat_send://发送
                 sendInfoToFriend();
                 break;
-        case R.id.iv_chat_topbar_back://返回按钮
-            this.finish();
-            break;
-        case R.id.iv_chat_topbar_ps://查看用户
-            break;
-        case R.id.iv_chat_go_voice://切换到语音
-            changeKeyboardAndVoice();
-
-            //隐藏发送按钮和显示更多
-            mIvGoMoreAction.setVisibility(View.VISIBLE);
-            mBtnChatSend.setVisibility(View.GONE);
-            break;
-        case R.id.iv_chat_go_keyboard://切换到键盘
-            changeKeyboardAndVoice();
-
-            //判断是否有文字在输入框
-            String _input_text_content = mEtChatInput.getText().toString();
-            if (_input_text_content!=null&&!_input_text_content.equals("")){
-                //隐藏更多和显示发送按钮
-                mIvGoMoreAction.setVisibility(View.GONE);
-                mBtnChatSend.setVisibility(View.VISIBLE);
-            }
-            break;
-        case R.id.et_chat_input://点击输入框
-            mLineMoreAction.setVisibility(View.GONE);//隐藏面板-差表情面板
-            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
-            break;
-        case R.id.iv_chat_go_expression://弹出表情
-            break;
-        case R.id.iv_chat_go_more_action://切换弹出更多操作
-            if (mLineMoreAction.getVisibility()==View.VISIBLE){
-                mLineMoreAction.setVisibility(View.GONE);
-            }else {
-                mLineMoreAction.setVisibility(View.VISIBLE);
-                CommonUtil.hideInput(this,mEtChatInput);//隐藏输入法
-            }
-
-            if (m_chart_list!=null){
+            case R.id.iv_chat_topbar_back://返回按钮
+                this.finish();
+                break;
+            case R.id.iv_chat_topbar_ps://查看用户
+                break;
+            case R.id.iv_chat_go_voice://切换到语音
+                changeKeyboardAndVoice();
+                //隐藏发送按钮和显示更多
+                mIvGoMoreAction.setVisibility(View.VISIBLE);
+                mBtnChatSend.setVisibility(View.GONE);
+                break;
+            case R.id.iv_chat_go_keyboard://切换到键盘
+                changeKeyboardAndVoice();
+                //判断是否有文字在输入框
+                String _input_text_content = mEtChatInput.getText().toString();
+                if (_input_text_content != null && !_input_text_content.equals("")) {
+                    //隐藏更多和显示发送按钮
+                    mIvGoMoreAction.setVisibility(View.GONE);
+                    mBtnChatSend.setVisibility(View.VISIBLE);
+                }
+                break;
+            case R.id.et_chat_input://点击输入框
+                mLineMoreAction.setVisibility(View.GONE);//隐藏面板-差表情面板
                 mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
-            }
-            break;
+                break;
+            case R.id.iv_chat_go_expression://弹出表情
+                break;
+            case R.id.iv_chat_go_more_action://切换弹出更多操作
+                if (mLineMoreAction.getVisibility() == View.VISIBLE) {
+                    mLineMoreAction.setVisibility(View.GONE);
+                } else {
+                    CommonUtil.hideInput(this, mEtChatInput);//隐藏输入法
+                    mLineMoreAction.setVisibility(View.VISIBLE);
+                }
+                if (m_chart_list != null) {
+                    mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+                }
+                break;
         }
     }
 
@@ -343,87 +345,96 @@ public class ChatActivity extends BaseActivity {
      * 发送信息给好友
      */
     private void sendInfoToFriend() {
-            final String _msg = mEtChatInput.getText().toString();
-            if (TextUtils.isEmpty(m_jid)||TextUtils.isEmpty(_msg)) {
-                Toast.makeText(getApplicationContext(), "接收方或内容不能为空", Toast.LENGTH_LONG).show();
-                mEtChatInput.setText("");
-                return;
-            }
-            //发出去后立马清空edittext
+        final String _msg = mEtChatInput.getText().toString();
+        if (TextUtils.isEmpty(_openfirename) || TextUtils.isEmpty(_msg)) {
+            Toast.makeText(getApplicationContext(), "接收方或内容不能为空", Toast.LENGTH_LONG).show();
             mEtChatInput.setText("");
-            //开启副线程-发送消息
-//            sendMsg(_msg);
+            return;
+        }
+        //发出去后立马清空edittext
+        mEtChatInput.setText("");
+        //开启副线程-发送消息
+        sendMsg(_msg);
     }
 
-//    private void sendMsg(final String _msg) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    String _full_user = connection.getUser();
-//                    String _openfirename = XmppStringUtils.parseLocalpart(_full_user);
-//                    //localMessage
-//                    ChatBean _local_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
-//
-//                    //remoteMessage
-//                    ChatBean _remote_message = new ChatBean(_openfirename,_msg,ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
-//
-//                    Gson _gson = new Gson();
-//                    String _gson_str = _gson.toJson(_remote_message);
-//                    Log.d("jlj","sendInfoToFriend--------------send msg = "+_gson_str);
-//                    mChat.sendMessage(_gson_str);
-//
-//                    m_chart_list.add(_local_message);
-//                    if (mMessageBoxId==0){
-//                        //新增该消息盒子
-//                        m_messageBox = new MessageBox(mFriend.getHead_pic(),mFriend.getNickname(),_local_message.getContent(),0,TimesUtils.getNow(),0,MessageBox.MB_TYPE_CHAT,m_jid);
-//                        dbManager.saveBindingId(m_messageBox);
-//                        mMessageBoxId = m_messageBox.getId();
-//                    }else{
-//                        //更新消息盒子
-//                        m_messageBox.setBoxLogo(mFriend.getHead_pic());
-//                        m_messageBox.setTitle(mFriend.getNickname());
-//                        m_messageBox.setInfo(_local_message.getContent());
-//                        m_messageBox.setLasttime(TimesUtils.getNow());
-//                        dbManager.saveOrUpdate(m_messageBox);
-//                    }
-//                    _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-//                    dbManager.save(_local_message);//保存一条消息到数据库
-//
-//                    mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-//                } catch (SmackException.NotConnectedException e) {
-//                    e.printStackTrace();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }).start();
-//    }
+    private void sendMsg(final String _msg) {
+        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+        TIMMessage msg = new TIMMessage();
+        //添加文本内容
+        TIMTextElem elem = new TIMTextElem();
+        elem.setText(_msg);
+        //将elem添加到消息
+        if (msg.addElement(elem) != 0) {
+            Log.d("zzz-------", "addElement failed");
+            return;
+        }
+        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz--------sendMessage", i + "Error:" + s);
+            }
+
+            @Override
+            public void onSuccess(TIMMessage timMessage) {
+                Log.d("zzz--------sendMessage", "sendMessage is success");
+                addMessageBox(_msg);
+            }
+        });
+    }
+
+    //发送成功
+    private void addMessageBox(final String msg) {
+        try {
+            Log.d("zzz-------addMessageBox", "addMessageBox is success");
+            //localMessage
+            ChatBean _local_message = new ChatBean(selfId, msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+            m_chart_list.add(_local_message);
+            Log.d("zzz-------addMessageBox", _local_message.toString());
+            if (mMessageBoxId == 0) {
+                Log.d("zzz-------addMessageBox", "1");
+                //新增该消息盒子
+                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                dbManager.saveBindingId(m_messageBox);
+                mMessageBoxId = m_messageBox.getId();
+            } else {
+                Log.d("zzz-------addMessageBox", "2");
+                //更新消息盒子
+                m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                m_messageBox.setTitle(mFriend.getNickname());
+                m_messageBox.setInfo(_local_message.getContent());
+                m_messageBox.setLasttime(TimesUtils.getNow());
+                dbManager.saveOrUpdate(m_messageBox);
+            }
+            Log.d("zzz-------addMessageBox", "3");
+            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
+            Log.d("zzz-------addMessageBox", "4");
+            dbManager.save(_local_message);//保存一条消息到数据库
+            Log.d("zzz-------addMessageBox", "5");
+            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
+            Log.d("zzz-------addMessageBox", "6");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 切换键盘和语音
      */
     private void changeKeyboardAndVoice() {
-        if (mLineKeybordBlock.getVisibility()== View.VISIBLE){
+        if (mLineKeybordBlock.getVisibility() == View.VISIBLE) {
             //点击了语音
-            CommonUtil.hideInput(this,mEtChatInput);//隐藏输入法
-
+            CommonUtil.hideInput(this, mEtChatInput);//隐藏输入法
             mIvGoVoice.setVisibility(View.GONE);
             mIvGoKeyboard.setVisibility(View.VISIBLE);
-
             mLineKeybordBlock.setVisibility(View.GONE);
             mBtnUseVoice.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             //点击了键盘
             mIvGoVoice.setVisibility(View.VISIBLE);
             mIvGoKeyboard.setVisibility(View.GONE);
-
             mLineKeybordBlock.setVisibility(View.VISIBLE);
             mBtnUseVoice.setVisibility(View.GONE);
         }
         mLineMoreAction.setVisibility(View.GONE);//隐藏面板-差表情面板
     }
-
-
 }

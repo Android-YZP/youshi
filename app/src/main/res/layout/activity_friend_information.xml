@@ -233,7 +233,6 @@
                 <View
                     android:id="@+id/tv_friend_information_line5"
                     style="@style/commonLineStyle"
-                    android:layout_marginLeft="@dimen/friend_information_address_padding_left"
                     android:layout_marginRight="@dimen/remark_information_divide_line_margin_left_or_right" />
 
                 <LinearLayout

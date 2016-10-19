@@ -1,7 +1,6 @@
 package com.mkch.youshi.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
-import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.TimesUtils;
 
 import org.xutils.image.ImageOptions;
@@ -41,7 +39,6 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mFriend = mFriend;
         this.mUser = mUser;
         this.mContext = mContext;
-
         fullNicname();//填充两个昵称
     }
 

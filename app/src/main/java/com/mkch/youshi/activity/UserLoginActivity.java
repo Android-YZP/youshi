@@ -395,7 +395,6 @@ public class UserLoginActivity extends Activity {
      * @param password 密码
      */
     private void userLoginFromNet(final String account, final String password, final String code) {
-
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.LOGIN);
         //包装请求参数

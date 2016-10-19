@@ -278,7 +278,7 @@ public class FriendOldService extends Service implements RosterListener {
                                             if (_user.getNickName() != null && !_user.getNickName().equals("") && !_user.getNickName().equals("null")) {
                                                 _friend.setNickname(_user.getNickName());//昵称
                                                 _friend.setPinyin(HanziToPinyin.getPinYin(_user.getNickName()));
-                                            }else{
+                                            } else {
                                                 _friend.setPinyin(HanziToPinyin.getPinYin(_friend_openfirename));
                                             }
                                             if (_user.getRealName() != null && !_user.getRealName().equals("") && !_user.getRealName().equals("null")) {
@@ -299,7 +299,7 @@ public class FriendOldService extends Service implements RosterListener {
                                             if (_user.getNickName() != null && !_user.getNickName().equals("") && !_user.getNickName().equals("null")) {
                                                 _friend.setNickname(_user.getNickName());//昵称
                                                 _friend.setPinyin(HanziToPinyin.getPinYin(_user.getNickName()));
-                                            }else{
+                                            } else {
                                                 _friend.setPinyin(HanziToPinyin.getPinYin(_friend_openfirename));
                                             }
                                             if (_user.getRealName() != null && !_user.getRealName().equals("") && !_user.getRealName().equals("null")) {
@@ -598,7 +598,7 @@ public class FriendOldService extends Service implements RosterListener {
                                             .where("jid", "=", _jid).findFirst();
 
                                     if (messageBox == null) {
-                                        messageBox = new MessageBox(_friend.getHead_pic(), _friend.getNickname(), _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, _jid);
+                                        messageBox = new MessageBox(_friend.getHead_pic(), _friend.getNickname(), _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, _jid, "");
                                         dbManager.saveBindingId(messageBox);//新增消息盒子
                                         _messagebox_id = messageBox.getId();
                                     } else {

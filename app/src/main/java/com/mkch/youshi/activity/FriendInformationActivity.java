@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class FriendInformationActivity extends Activity {
     private TextView mTvPhone1, mTvPhone2, mTvPhone3, mTvPhone4, mTvPhone5, mTvDescription;
     private View mLine1, mLine2, mLine3, mLine4, mLine5, mLine6, mLine7, mLine8;
     private LinearLayout mLayoutPhone, mLayoutDescribe, mLayoutShow, mLayoutPlace, mLayoutSign;
+    private Button mBtnSendMessage;
     private boolean isShowPlace, isShowSign;
     private String contactID;
     private ArrayList<String> remarkPhones = new ArrayList<>();
@@ -72,6 +74,7 @@ public class FriendInformationActivity extends Activity {
         mLayoutSign = (LinearLayout) findViewById(R.id.layout_friend_information_signature);
         mTvPlace = (TextView) findViewById(R.id.tv_friend_information_address);
         mTvSign = (TextView) findViewById(R.id.tv_friend_information_signature);
+        mBtnSendMessage = (Button) findViewById(R.id.btn_friend_information_send_message);
     }
 
     private void initData() {
@@ -180,6 +183,7 @@ public class FriendInformationActivity extends Activity {
         });
         mTvMore.setOnClickListener(new FriendInformationOnClickListener());
         mTvSetting.setOnClickListener(new FriendInformationOnClickListener());
+        mBtnSendMessage.setOnClickListener(new FriendInformationOnClickListener());
     }
 
     /**
@@ -201,6 +205,11 @@ public class FriendInformationActivity extends Activity {
                 case R.id.tv_friend_information_setting:
                     _intent = new Intent(FriendInformationActivity.this, RemarkInformationActivity.class);
                     _intent.putExtra("_contactID", contactID);
+                    startActivity(_intent);
+                    break;
+                case R.id.btn_friend_information_send_message:
+                    _intent = new Intent(FriendInformationActivity.this, ChatActivity.class);
+                    _intent.putExtra("_openfirename", contactID);
                     startActivity(_intent);
                     FriendInformationActivity.this.finish();
                     break;

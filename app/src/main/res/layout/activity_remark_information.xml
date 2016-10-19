@@ -43,6 +43,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <TextView
@@ -63,8 +65,8 @@
                 android:background="@color/common_white_color"
                 android:gravity="center_vertical"
                 android:hint="通过备注名记住联系人"
-                android:paddingLeft="@dimen/friend_information_setting_padding_left"
                 android:maxLength="20"
+                android:paddingLeft="@dimen/friend_information_setting_padding_left"
                 android:textColor="@color/new_friend_name_color"
                 android:textColorHint="@color/user_login_username_or_password_color"
                 android:textSize="@dimen/friend_information_text_more_size" />
@@ -191,8 +193,8 @@
                 android:background="@color/common_white_color"
                 android:gravity="center_vertical"
                 android:hint="添加更多备注信息"
-                android:paddingLeft="@dimen/friend_information_setting_padding_left"
                 android:maxLength="20"
+                android:paddingLeft="@dimen/friend_information_setting_padding_left"
                 android:textColor="@color/new_friend_name_color"
                 android:textColorHint="@color/user_login_username_or_password_color"
                 android:textSize="@dimen/friend_information_text_more_size" />
