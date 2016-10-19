@@ -98,8 +98,10 @@ public class PersonalCaledarFragment extends Fragment {
                 if (intent!=null){
                     Gson gson = new Gson();
                     Schedule schedule = mSchedule.get(position);
+                    int serverid = mSchedule.get(position).getServerid();
                     String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
                     intent.putExtra("mgonsn", _gson_str);
+                    intent.putExtra("Sid", serverid);
                     startActivity(intent);
                 }
             }

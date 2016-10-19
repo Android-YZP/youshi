@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -177,6 +179,27 @@ public class CommonUtil {
         }
     }
 
+    /**
+     * 判断网络是否可用
+     * @param context
+     * @return
+     */
+    public static boolean isnetWorkAvilable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager == null) {
+            Log.e("FlyleafActivity", "couldn't get connectivity manager");
+        } else {
+            NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+            if(networkInfos != null){
+                for (int i = 0, count = networkInfos.length; i < count; i++) {
+                    if(networkInfos[i].getState() == NetworkInfo.State.CONNECTED){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     /**
      * 获取UUID
      *
@@ -417,7 +440,6 @@ public class CommonUtil {
         try {
             ArrayList<Schreport> schreports = (ArrayList<Schreport>) mDbManager.selector(Schreport.class).where("sid", "=",
                     sid).findAll();
-            Log.d("yzp", schreports.size() + "haha");
             return schreports;
         } catch (DbException e) {
             e.printStackTrace();

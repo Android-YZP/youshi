@@ -165,12 +165,18 @@
 
             </LinearLayout>
 
-            <ImageView
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/bmapView"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/map" />
-
+                android:clickable="true" />
+            <Button
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:background="@null"/>
         </LinearLayout>
     </ScrollView>
 

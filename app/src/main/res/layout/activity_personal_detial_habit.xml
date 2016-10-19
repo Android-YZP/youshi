@@ -30,6 +30,7 @@
                     android:text="主题" />
 
                 <TextView
+                    android:id="@+id/tv_habit_theme"
                     style="@style/detial_gray"
                     android:text="会议" />
 
@@ -45,6 +46,7 @@
                     android:text="标签" />
 
                 <TextView
+                    android:id="@+id/tv_habit_label"
                     style="@style/detial_gray"
                     android:text="工作" />
 
@@ -60,6 +62,7 @@
                     android:text="地点" />
 
                 <TextView
+                    android:id="@+id/tv_habit_location"
                     style="@style/detial_gray"
                     android:text="宜兴" />
 
@@ -75,6 +78,7 @@
                     android:text="周期" />
 
                 <TextView
+                    android:id="@+id/tv_habit_week_times"
                     style="@style/detial_gray"
                     android:text="一周三次" />
 
@@ -91,6 +95,7 @@
                     android:text="周" />
 
                 <TextView
+                    android:id="@+id/tv_habit_which_weeks"
                     style="@style/detial_gray"
                     android:text="周一,周二,周三" />
 
@@ -106,25 +111,12 @@
                     android:text="时间段选择" />
 
                 <TextView
+                    android:id="@+id/tv_habit_times"
                     style="@style/detial_gray"
                     android:text="09:00~10:00 10:00~11:00" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/common_detial_black"
-                    android:text="时长" />
-
-                <TextView
-                    style="@style/detial_gray"
-                    android:text="1小时" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,6 +128,7 @@
                     android:text="报送" />
 
                 <TextView
+                    android:id="@+id/tv_habit_rep_person"
                     style="@style/detial_gray"
                     android:text="哈尼" />
 
@@ -151,16 +144,25 @@
                     android:text="提前提醒" />
 
                 <TextView
+                    android:id="@+id/tv_habit_before_time"
                     style="@style/detial_gray"
                     android:text="无" />
 
             </LinearLayout>
 
-            <ImageView
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/bmapView"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/map" />
+                android:clickable="true" />
+
+            <Button
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="删除"
+                android:background="@null"/>
 
         </LinearLayout>
     </ScrollView>

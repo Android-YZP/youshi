@@ -4,8 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
@@ -13,10 +18,11 @@ import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.UIUtils;
 
 import java.util.ArrayList;
 
-public class PersonalDetialsAffairActivity extends AppCompatActivity {
+public class PersonalDetialsAffairActivity extends BaseDetailActivity {
 
     private TextView mTvAffTheme;
     private TextView mTvAffLab;
@@ -34,8 +40,22 @@ public class PersonalDetialsAffairActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personal_detials_affair);
         initView();
         initData();
+        initMap();
+        initDelete();
     }
+    private void initMap() {
+        // 地图初始化
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
 
+        // 初始化搜索模块，注册事件监听
+        mSearch = GeoCoder.newInstance();
+        mSearch.setOnGetGeoCodeResultListener(this);
+
+        // Geo搜索
+        mSearch.geocode(new GeoCodeOption().city(
+                "").address(mTvAffloca.getText().toString()));
+    }
     private void initView() {
         mTvAffTheme = (TextView) findViewById(R.id.tv_affair_theme);
         mTvAffLab = (TextView) findViewById(R.id.tv_affair_label);
@@ -48,6 +68,19 @@ public class PersonalDetialsAffairActivity extends AppCompatActivity {
         mTvAffBefTime = (TextView) findViewById(R.id.tv_affair_before_time);
     }
 
+    private void initDelete() {
+        mBtDeleteSch = (Button) findViewById(R.id.Bt_delete_sch);
+        mBtDeleteSch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CommonUtil.isnetWorkAvilable(UIUtils.getContext())) {
+                    showAlertDialog();
+                } else {
+                    UIUtils.showTip("请检查网络");
+                }
+            }
+        });
+    }
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();
