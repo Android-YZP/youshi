@@ -49,7 +49,6 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
         mTvEventEndTime = (TextView) findViewById(R.id.tv_event_end_time);
         mTvEventRepPer = (TextView) findViewById(R.id.tv_event_rep_person);
         mTvEventBeTime = (TextView) findViewById(R.id.tv_event_before_time);
-
     }
 
     private void initDelete() {

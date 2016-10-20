@@ -60,7 +60,7 @@ import static com.mkch.youshi.activity.AddPersonalEventActivity.mProgressDialog;
 public class ManyPeopleCaledarFragment extends Fragment {
 
     private ListView mLvManyPeopleCalendar;
-    private ArrayList<ManyPeopleEvenBean> mManyPeopleEvenBeens;
+    private ArrayList<ManyPeopleEvenBean> mManyPeopleEvenBeens = new ArrayList<>();
     private ArrayList<Schedule> mSchedules;
 
     @Override
@@ -91,11 +91,13 @@ public class ManyPeopleCaledarFragment extends Fragment {
                 Gson gson = new Gson();
                 Schedule schedule = mSchedules.get(position);
                 int serverid = mSchedules.get(position).getServerid();
+                int mId = mSchedules.get(position).getId();
                 Intent i = new Intent(getActivity(),
                         ManyPeopleEventDetial.class);
                 String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
                 i.putExtra("mgonsn", _gson_str);
                 i.putExtra("Sid", serverid);
+                i.putExtra("id", mId);
                 startActivity(i);
             }
         });
@@ -120,13 +122,16 @@ public class ManyPeopleCaledarFragment extends Fragment {
     }
 
     private void initData() {
-        mManyPeopleEvenBeens = new ArrayList<>();
         mSchedules = initPerData();
         if (mSchedules != null) {
             mLvManyPeopleCalendar.setAdapter(new MyAdapter(mSchedules));
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
     /**
      * 封装请求参数
      *

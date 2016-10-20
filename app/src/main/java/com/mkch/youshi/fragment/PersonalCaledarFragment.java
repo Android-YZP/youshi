@@ -59,7 +59,11 @@ public class PersonalCaledarFragment extends Fragment {
         mEventBeens = new ArrayList<>();
         mLvPersonCalendar.setAdapter(new PersonalCalAdapter(mSchedule));
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
     private void initView(View view) {
         mLvPersonCalendar = (ListView) view.findViewById(R.id.lv_personal_caledar);
     }
@@ -99,14 +103,18 @@ public class PersonalCaledarFragment extends Fragment {
                     Gson gson = new Gson();
                     Schedule schedule = mSchedule.get(position);
                     int serverid = mSchedule.get(position).getServerid();
+                    int mId = mSchedule.get(position).getId();
                     String _gson_str = gson.toJson(schedule);//传一个数组的数据到详情界面
                     intent.putExtra("mgonsn", _gson_str);
                     intent.putExtra("Sid", serverid);
+                    intent.putExtra("id", mId);
                     startActivity(intent);
                 }
             }
         });
     }
+
+
 
     class MyAdapter extends BaseAdapter {
 

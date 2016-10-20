@@ -26,13 +26,18 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.mkch.youshi.R;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.fragment.ManyPeopleCaledarFragment;
+import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -52,11 +57,13 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
     MapView mMapView = null;
     Button mBtDeleteSch;
     int mSid;
+    int mId;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         mSid = intent.getIntExtra("Sid", -1);
+        mId = intent.getIntExtra("id", -1);
     }
 
     @Override
@@ -153,8 +160,26 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                JSONObject _json_result = null;
                 if (result != null) {
                     UIUtils.LogUtils(result + code);
+                    try {
+                        _json_result = new JSONObject(result);
+                        Boolean _success = (Boolean) _json_result.get("Success");
+                        if (_success) {
+                            DbManager mDbManager = DBHelper.getDbManager();
+                            //在网络上删除数据成功之后,把本地的也删除,然后结束本页面显示
+                            WhereBuilder whereBuilder = WhereBuilder.b();
+                            whereBuilder.and("id", "=", mId + "");
+//                          whereBuilder.and("id","=",mId).or("id","=","1").expr(" and mobile > '2015-12-29 00:00:01' ");
+                            int delete = mDbManager.delete(Schedule.class, whereBuilder);
+                            finish();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

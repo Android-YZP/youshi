@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -22,6 +24,7 @@ import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.UIUtils;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
@@ -48,8 +51,21 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         initView();
         initData();
         initMap();
+        initDelete();
     }
-
+    private void initDelete() {
+        mBtDeleteSch = (Button) findViewById(R.id.Bt_delete_sch);
+        mBtDeleteSch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CommonUtil.isnetWorkAvilable(UIUtils.getContext())) {
+                    showAlertDialog();
+                } else {
+                    UIUtils.showTip("请检查网络");
+                }
+            }
+        });
+    }
     private void initMap() {
                 // 地图初始化
         mMapView = (MapView) findViewById(R.id.bmapView);

@@ -89,9 +89,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
         Schedule schedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-
         ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
-
         mTvAffTheme.setText(schedule.getTitle());
         mTvAffLab.setText(CommonUtil.getLabelName(schedule.getLabel()));
         mTvAffloca.setText(schedule.getAddress());
@@ -108,6 +106,5 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
             }
         }
         mTvAffBefTime.setText("提前" + schedule.getAhead_warn() + "分钟");
-
     }
 }

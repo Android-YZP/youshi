@@ -81,6 +81,7 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
             }
         });
     }
+
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();

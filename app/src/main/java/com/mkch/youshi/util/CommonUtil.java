@@ -350,9 +350,6 @@ public class CommonUtil {
 
     /**
      * 给定一个日期判断是周几
-     *
-     * @param pTime
-     * @return
      * @throws Exception
      */
     public static int dayForWeek(String pTime) {
