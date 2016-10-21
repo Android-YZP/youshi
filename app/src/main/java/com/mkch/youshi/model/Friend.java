@@ -69,6 +69,16 @@ public class Friend implements Comparable<Friend> {
     @Column(name = "youshi_number")
     private String youshi_number;
     /**
+     * 备注电话号码
+     */
+    @Column(name = "phone_number")
+    private String phone_number;
+    /**
+     * 备注描述
+     */
+    @Column(name = "description")
+    private String description;
+    /**
      * 地区
      */
     @Column(name = "place")
@@ -87,13 +97,15 @@ public class Friend implements Comparable<Friend> {
     public Friend() {
     }
 
-    public Friend(String friendid, String head_pic, String nickname, String remark, String phone,String youshi_number, String place,String sex,String sign,int status, String userid) {
+    public Friend(String friendid, String head_pic, String nickname, String remark, String phone, String youshi_number,String phone_number,String description, String place, String sex, String sign, int status, String userid) {
         this.friendid = friendid;
         this.head_pic = head_pic;
         this.nickname = nickname;
         this.remark = remark;
         this.phone = phone;
         this.youshi_number = youshi_number;
+        this.phone_number = phone_number;
+        this.description = description;
         this.place = place;
         this.sex = sex;
         this.sign = sign;
@@ -202,6 +214,22 @@ public class Friend implements Comparable<Friend> {
 
     public void setYoushi_number(String youshi_number) {
         this.youshi_number = youshi_number;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPlace() {

@@ -30,8 +30,10 @@ public class MessageBox {
     private int type;//消息盒子的类型：单聊1、群聊2
     public static int MB_TYPE_CHAT = 1;
     public static int MB_TYPE_MUL_CHAT = 2;
-    @Column(name = "jid")
-    private String jid;//所属JID，跟type有关，若是单聊，如：JID=openfirename@yoshi.maikejia.com
+    @Column(name = "friend_id")
+    private String friend_id;//跟type有关，若是单聊，如：friend_id=openfirename@TIMConversationType.C2C
+    @Column(name = "self_id")
+    private String self_id;//用户自己的openfirename
 
     public List<ChatBean> getChatBeans(DbManager db) throws Exception{
         return db.selector(ChatBean.class).where("msgboxid","=",this.id).findAll();
@@ -40,7 +42,7 @@ public class MessageBox {
     public MessageBox() {
     }
 
-    public MessageBox(String boxLogo, String title, String info, int nums, String lasttime, int istop, int type, String jid) {
+    public MessageBox(String boxLogo, String title, String info, int nums, String lasttime, int istop, int type, String friend_id, String self_id) {
         this.boxLogo = boxLogo;
         this.title = title;
         this.info = info;
@@ -48,7 +50,8 @@ public class MessageBox {
         this.lasttime = lasttime;
         this.istop = istop;
         this.type = type;
-        this.jid = jid;
+        this.friend_id = friend_id;
+        this.self_id = self_id;
     }
 
     public MessageBox(String boxLogo, String title, String info, int nums, String lasttime) {
@@ -123,12 +126,20 @@ public class MessageBox {
         this.type = type;
     }
 
-    public String getJid() {
-        return jid;
+    public String getFriend_id() {
+        return friend_id;
     }
 
-    public void setJid(String jid) {
-        this.jid = jid;
+    public void setFriend_id(String friend_id) {
+        this.friend_id = friend_id;
+    }
+
+    public String getSelf_id() {
+        return self_id;
+    }
+
+    public void setSelf_id(String self_id) {
+        this.self_id = self_id;
     }
 
     @Override
@@ -142,7 +153,8 @@ public class MessageBox {
                 ", lasttime='" + lasttime + '\'' +
                 ", istop=" + istop +
                 ", type=" + type +
-                ", jid='" + jid + '\'' +
+                ", friend_id='" + friend_id + '\'' +
+                ", self_id='" + self_id + '\'' +
                 '}';
     }
 }

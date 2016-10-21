@@ -8,11 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,7 +20,6 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.AddFriendsActivity;
-import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.FriendInformationActivity;
 import com.mkch.youshi.activity.GroupChatActivity;
 import com.mkch.youshi.activity.NewFriendActivity;
@@ -70,7 +65,6 @@ public class ContactsFragment extends Fragment implements SideBar
     private SideBar mSideBar;
     private TextView mDialog;
     private EditText mSearchInput;
-
     private TextView mTvNewFriendNum;//请求添加好友的用户数量
     private DbManager dbManager;//数据库管理对象
     private User mUser;
@@ -168,7 +162,6 @@ public class ContactsFragment extends Fragment implements SideBar
                     .and("userid", "=", _self_openfirename)
                     .count();
             _req_friend_num = String.valueOf(count);//请求好友的数量
-
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -191,9 +184,9 @@ public class ContactsFragment extends Fragment implements SideBar
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position != _friends.size() && position != datas.size()) {
+                if (position == _friends.size() || position == datas.size()) {
+                } else {
                     Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
-                    Log.d("---------------------", String.valueOf(position));
                     if (datas == null || datas.size() == 0) {
                         try {
                             Friend friend = dbManager.selector(Friend.class)
@@ -213,139 +206,6 @@ public class ContactsFragment extends Fragment implements SideBar
                 }
             }
         });
-        //注册contextmenu
-        registerForContextMenu(mListView);
-    }
-
-    /**
-     * 设置上下文长按Item时的菜单
-     *
-     * @param menu
-     * @param v
-     * @param menuInfo
-     */
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (getActivity() != null) {
-            MenuInflater inflater = getActivity().getMenuInflater();
-            inflater.inflate(R.menu.context_menu, menu);
-        }
-
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int _position = info.position;
-        Friend _Contact = datas.get(_position);
-        String _openfirename = _Contact.getFriendid();
-        switch (item.getItemId()) {
-            case R.id.contact_menu_chat:
-                //进入单聊界面聊天
-                if (getActivity() != null) {
-                    Intent _intent = new Intent(getActivity(), ChatActivity.class);
-                    _intent.putExtra("_openfirename", _openfirename);
-                    startActivity(_intent);
-                }
-                return true;
-            case R.id.contact_menu_del:
-                //异步请求网络接口，删除该好友
-                deleteFriendFromNet(_openfirename, _position);
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-
-    }
-
-    /**
-     * 异步请求网络接口，删除该好友
-     *
-     * @param openfirename
-     */
-    private void deleteFriendFromNet(final String openfirename, final int position) {
-        if (getActivity() == null) {
-            return;
-        }
-        //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(getActivity(), null, "加载中...", true, true);
-        //自己的信息
-        final User _self_user = CommonUtil.getUserInfo(getActivity());
-        //根据openfireusername查询该用户的信息，并保存于数据库
-        RequestParams requestParams = new RequestParams(CommonConstants.DeleteFriend);
-        //包装请求参数
-        String _req_json = "{\"OpenFireName\":\"" + openfirename + "\"}";
-        requestParams.addBodyParameter("", _req_json);//用户名
-        requestParams.addHeader("sVerifyCode", _self_user.getLoginCode());//头信息
-        x.http().post(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                if (result != null) {
-                    //若result返回信息中删除成功
-                    try {
-                        JSONObject _json_result = new JSONObject(result);
-                        Boolean _success = (Boolean) _json_result.get("Success");
-                        if (_success) {
-                            //清除本地数据库该条好友信息，清除本地该条数据
-                            try {
-                                //本登录用户的，已添加状态的，好友
-                                Friend first = dbManager.selector(Friend.class)
-                                        .where("friendid", "=", openfirename)
-                                        .and("status", "=", 1)
-                                        .and("userid", "=", mUser.getOpenFireUserName())
-                                        .findFirst();
-                                if (first != null) {
-                                    dbManager.delete(first);
-                                }
-                            } catch (DbException e) {
-                                e.printStackTrace();
-                            }
-                            datas.remove(position);
-                            //提醒删除成功
-                            myHandler.sendEmptyMessage(CommonConstants.FLAG_DELETE_FRIEND_SUCCESS);
-                        } else {
-                            String _Message = _json_result.getString("Message");
-                            String _ErrorCode = _json_result.getString("ErrorCode");
-                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
-                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
-                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
-                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
-                            } else {
-                                CommonUtil.sendErrorMessage(_Message, myHandler);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                //使用handler通知UI提示用户错误信息
-                if (ex instanceof ConnectException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
-                } else if (ex instanceof ConnectTimeoutException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, myHandler);
-                } else if (ex instanceof SocketTimeoutException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, myHandler);
-                } else {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
-                }
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-            }
-
-            @Override
-            public void onFinished() {
-            }
-        });
-
-
     }
 
     private class MyHandler extends Handler {
@@ -366,14 +226,6 @@ public class ContactsFragment extends Fragment implements SideBar
                 case CommonConstants.FLAG_GET_FRIEND_LIST_SHOW:
                     //加载好友列表
                     showListVerfy();
-                    break;
-                case CommonConstants.FLAG_DELETE_FRIEND_SUCCESS:
-                    //刷新UI
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
-                        mAdapter.notifyDataSetChanged();
-                        mFooterView.setText(datas.size() + "位联系人");
-                    }
                     break;
                 case CommonConstants.FLAG_CHANGE_ERROR1:
                     //认证错误
@@ -476,19 +328,22 @@ public class ContactsFragment extends Fragment implements SideBar
                                 }
                                 String youshiNumber = JsonUtils.getString(jobj, "UserName");
                                 data.setYoushi_number(youshiNumber);
-                                String place = JsonUtils.getString(jobj, "place");
+                                String place = JsonUtils.getString(jobj, "Place");
                                 data.setPlace(place);
-                                String sex = JsonUtils.getString(jobj, "sex");
+                                String phoneNumber = JsonUtils.getString(jobj, "PhoneNumber");
+                                data.setPhone_number(phoneNumber);
+                                String description = JsonUtils.getString(jobj, "Description");
+                                data.setDescription(description);
+                                String sex = JsonUtils.getString(jobj, "Sex");
                                 data.setSex(sex);
-                                String sign = JsonUtils.getString(jobj, "sign");
+                                String sign = JsonUtils.getString(jobj, "Sign");
                                 data.setSign(sign);
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
-                                //临时使用-存储所有的优时好友列表数据-from JLJ
+                                //存储所有的优时好友列表数据
                                 User _self_user = CommonUtil.getUserInfo(getActivity());
                                 int status = 1;//已添加好友
                                 String _self_userid = _self_user.getOpenFireUserName();
-
                                 try {
                                     Friend _friend_tab = dbManager.selector(Friend.class)
                                             .where("friendid", "=", OpenFireUserName)
@@ -509,15 +364,16 @@ public class ContactsFragment extends Fragment implements SideBar
                                         _friend_tab.setStatus(1);
                                         _friend_tab.setYoushi_number(youshiNumber);
                                         _friend_tab.setPlace(place);
+                                        _friend_tab.setPhone_number(phoneNumber);
+                                        _friend_tab.setDescription(description);
                                         _friend_tab.setSex(sex);
                                         _friend_tab.setSign(sign);
                                         dbManager.saveOrUpdate(_friend_tab);
                                     } else {
                                         //没有就插入
-                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, sex, sign, status, _self_userid);
+                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, phoneNumber, description, sex, sign, status, _self_userid);
                                         dbManager.save(_friend);
                                     }
-
                                 } catch (DbException e) {
                                     e.printStackTrace();
                                 }

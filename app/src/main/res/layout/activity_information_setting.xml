@@ -31,23 +31,6 @@
         style="@style/commonLineStyle"
         android:layout_marginTop="@dimen/friend_information_margin_top" />
 
-    <TextView
-        android:id="@+id/tv_information_setting_recommend"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/friend_information_setting_height"
-        android:background="@color/common_white_color"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/friend_information_setting_padding_left"
-        android:text="把他推荐给朋友"
-        android:textColor="@color/new_friend_name_color"
-        android:textSize="@dimen/friend_information_text_more_size" />
-
-    <View style="@style/commonLineStyle" />
-
-    <View
-        style="@style/commonLineStyle"
-        android:layout_marginTop="@dimen/friend_information_margin_top" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/friend_information_setting_height"
@@ -60,41 +43,12 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:paddingLeft="@dimen/friend_information_setting_padding_left"
-            android:text="不让他看我的表盘"
+            android:text="加入黑名单"
             android:textColor="@color/new_friend_name_color"
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
-            android:id="@+id/cb_information_setting_look_me"
-            style="@style/MyCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/information_setting_checkbox_margin_right"
-            android:checked="false" />
-    </LinearLayout>
-
-    <View style="@style/commonLineStyle"
-        android:layout_marginLeft="@dimen/remark_information_divide_line_margin_left_or_right"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/friend_information_setting_height"
-        android:background="@color/common_white_color"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/friend_information_setting_padding_left"
-            android:text="不看他的表盘"
-            android:textColor="@color/new_friend_name_color"
-            android:textSize="@dimen/friend_information_text_more_size" />
-
-        <CheckBox
-            android:id="@+id/cb_information_setting_look_him"
+            android:id="@+id/cb_information_setting_black_list"
             style="@style/MyCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
