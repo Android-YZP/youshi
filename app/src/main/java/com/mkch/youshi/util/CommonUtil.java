@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,9 +30,12 @@ import com.mkch.youshi.bean.AppVersion;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schreport;
+import com.mkch.youshi.model.Schtime;
 
 import org.xutils.DbManager;
+import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
 import java.text.ParseException;
@@ -175,6 +180,29 @@ public class CommonUtil {
         if (imm != null) {
             imm.hideSoftInputFromWindow(mEtCommonText.getWindowToken(), 0);
         }
+    }
+
+    /**
+     * 判断网络是否可用
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isnetWorkAvilable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            Log.e("FlyleafActivity", "couldn't get connectivity manager");
+        } else {
+            NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+            if (networkInfos != null) {
+                for (int i = 0, count = networkInfos.length; i < count; i++) {
+                    if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -328,8 +356,6 @@ public class CommonUtil {
     /**
      * 给定一个日期判断是周几
      *
-     * @param pTime
-     * @return
      * @throws Exception
      */
     public static int dayForWeek(String pTime) {
@@ -378,6 +404,7 @@ public class CommonUtil {
 
     /**
      * 得到当前时间
+     *
      * @return
      */
     public static String getDate() {
@@ -387,6 +414,7 @@ public class CommonUtil {
 
     /**
      * 得到标签名称
+     *
      * @param label 标签号
      * @return
      */
@@ -407,23 +435,69 @@ public class CommonUtil {
         }
         return "";
     }
+
     /**
      * 用日程id查找该日程的报送人
      *
      * @param sid
      */
-    public static  ArrayList<Schreport> findRepPer(int sid) {
+    public static ArrayList<Schreport> findRepPer(int sid) {
         DbManager mDbManager = DBHelper.getDbManager();
         try {
             ArrayList<Schreport> schreports = (ArrayList<Schreport>) mDbManager.selector(Schreport.class).where("sid", "=",
                     sid).findAll();
-            Log.d("yzp", schreports.size() + "haha");
             return schreports;
         } catch (DbException e) {
             e.printStackTrace();
             return null;
         }
     }
+     /** 用日程id删除该日程的报送人
+     *
+     * @param sid
+     */
+    public static void DeleteRepPer(int sid) {
+        try {
+            DbManager mDbManager = DBHelper.getDbManager();
+            WhereBuilder whereBuilder = WhereBuilder.b();
+            whereBuilder.and("sid","=",sid+"");
+            mDbManager.delete(Schreport.class,whereBuilder);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+     /** 用日程id删除该日程的时间段
+     *
+     * @param sid
+     */
+    public static void DeleteSchTime(int sid) {
+        try {
+            DbManager mDbManager = DBHelper.getDbManager();
+            WhereBuilder whereBuilder = WhereBuilder.b();
+            whereBuilder.and("sid","=",sid+"");
+            mDbManager.delete(Schtime.class,whereBuilder);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用日程id查找该日程的时间段
+     *
+     * @param sid
+     */
+    public static ArrayList<Schtime> findSchTime(int sid) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schtime> schreports = (ArrayList<Schtime>) mDbManager.selector(Schtime.class).where("sid", "=",
+                    sid).findAll();
+            return schreports;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * 用报送人id查找该报送人的姓名
      * 有设置昵称返回昵称
@@ -436,16 +510,33 @@ public class CommonUtil {
             friends = (ArrayList<Friend>) mDbManager.selector(Friend.class).where("friendid", "=",
                     friendId).findAll();
             Log.d("haha5", friends.size() + "");
-            if (!TextUtils.isEmpty(friends.get(0).getNickname() + "")){
+            if (!TextUtils.isEmpty(friends.get(0).getNickname() + "")) {
                 return friends.get(0).getNickname() + " ";
-            }else {
-                return friends.get(0).getPhone()+" ";
+            } else {
+                return friends.get(0).getPhone() + " ";
             }
         } catch (DbException e) {
             e.printStackTrace();
             return "";
         }
     }
+
+    /**
+     * 用id查找一个日程
+     */
+    public static ArrayList<Schedule> findSch(String SchId) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<Schedule> Scheduls = null;
+        try {
+            Scheduls = (ArrayList<Schedule>) mDbManager.selector(Schedule.class).where("id", "=",
+                    SchId).findAll();
+            return Scheduls;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return Scheduls;
+        }
+    }
+
     /**
      * 将123456换成周一周二周三
      *
@@ -459,6 +550,20 @@ public class CommonUtil {
         String _week5 = _week4.replace("5", "周五 ");
         String _week6 = _week5.replace("6", "周六 ");
         return _week6.replace("7", "周日");
+    }
+  /**
+     * 将1,2,3,4,5,6,换成周一周二周三
+     *
+     * @return
+     */
+    public static String replaceNumWeek(String week) {
+        String _week1 = week.replace("1,", "周一 ");
+        String _week2 = _week1.replace("2,", "周二 ");
+        String _week3 = _week2.replace("3,", "周三 ");
+        String _week4 = _week3.replace("4,", "周四 ");
+        String _week5 = _week4.replace("5,", "周五 ");
+        String _week6 = _week5.replace("6,", "周六 ");
+        return _week6.replace("7,", "周日");
     }
 
 

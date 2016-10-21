@@ -5,8 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
@@ -17,13 +24,14 @@ import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
+import com.mkch.youshi.util.UIUtils;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 
-public class ManyPeopleEventDetial extends AppCompatActivity {
+public class ManyPeopleEventDetial extends BaseDetailActivity {
 
     private ManyPeopleEvenBean mManyPeopleDatas;
     private TextView mTvEventsTheme;
@@ -37,10 +45,40 @@ public class ManyPeopleEventDetial extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_many_people_event_detial);
         initView();
         initData();
+        initMap();
+        initDelete();
+        initTopBar();
+    }
+    private void initDelete() {
+        mBtDeleteSch = (Button) findViewById(R.id.Bt_delete_sch);
+        mBtDeleteSch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CommonUtil.isnetWorkAvilable(UIUtils.getContext())) {
+                    showAlertDialog();
+                } else {
+                    UIUtils.showTip("请检查网络");
+                }
+            }
+        });
+    }
+    private void initMap() {
+                // 地图初始化
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+
+        // 初始化搜索模块，注册事件监听
+        mSearch = GeoCoder.newInstance();
+        mSearch.setOnGetGeoCodeResultListener(this);
+
+        // Geo搜索
+        mSearch.geocode(new GeoCodeOption().city(
+               "").address(mTvEventLocation.getText().toString()));
     }
 
     private void initView() {

@@ -19,7 +19,7 @@
         android:background="#f0f0f0"
         android:orientation="vertical">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/et_entry_address"
             style="@style/AddressEditTextStyle"
             android:layout_marginTop="7dp" />

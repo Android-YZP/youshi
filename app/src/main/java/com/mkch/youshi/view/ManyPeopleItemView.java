@@ -15,8 +15,8 @@ import com.mkch.youshi.util.UIUtils;
  */
 
 public class ManyPeopleItemView extends FrameLayout {
-    public final int MANY_PEOPLE_SPONSOR = 1;//自己是发起者的状态
-    public final int MANY_PEOPLE_CHOOSE = 0;//待接受状态///////////////////////////////////////
+    public final int MANY_PEOPLE_SPONSOR = 0;//自己是发起者的状态
+    public final int MANY_PEOPLE_CHOOSE = 1;//待接受状态
     public final int MANY_PEOPLE_ACCEPT = 2;//接受状态
     public final int MANY_PEOPLE_REFUSE = 3;//拒绝状态
     private TextView mBtnManyPeopleAccept;

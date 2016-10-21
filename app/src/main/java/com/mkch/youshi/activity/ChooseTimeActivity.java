@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
+import com.mkch.youshi.model.Schtime;
+import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DialogFactory;
 import com.mkch.youshi.view.AddTimeListView;
 
@@ -31,6 +33,7 @@ public class ChooseTimeActivity extends AppCompatActivity {
     private chooseTimeAdapter mChooseTimeAdapter;
     private int hours;
     private int minutes;
+    private int mEventID;
 
 
     @Override
@@ -53,6 +56,21 @@ public class ChooseTimeActivity extends AppCompatActivity {
         mTvComplete.setText("完成");
         mTimeSpanListBeans = new ArrayList<>();
         mChooseTimeAdapter = new chooseTimeAdapter();
+
+//        Intent intent = getIntent();
+//        mEventID = intent.getIntExtra("eventID", -1);
+//        if (mEventID != -1) {
+//            ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mEventID);
+//            for (int i = 0; i < schTimes.size(); i++) {
+//                ViewModelBean.TimeSpanListBean timeSpanListBean = new ViewModelBean.TimeSpanListBean();
+//                timeSpanListBean.setStartTime(schTimes.get(i).getBegin_time());
+//                timeSpanListBean.setEndTime(schTimes.get(i).getEnd_time());
+//                timeSpanListBean.setRemindTime(schTimes.get(i).getWarning_time());
+//                timeSpanListBean.setTdate(schTimes.get(i).getDate());
+//                mTimeSpanListBeans.add(timeSpanListBean);
+//            }
+//        }
+
         mLvChooseTime.setAdapter(mChooseTimeAdapter);
 
     }

@@ -24,6 +24,7 @@ public abstract class ManPeopleCalAdapter extends MyBaseAdapter<Schedule> {
             public void accept() {
                 notifyDataSetChanged();
                 accept2Net();
+
             }
 
             @Override
@@ -33,6 +34,8 @@ public abstract class ManPeopleCalAdapter extends MyBaseAdapter<Schedule> {
             }
         };
     }
+
+
 
     public abstract void accept2Net();
 

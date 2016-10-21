@@ -133,6 +133,10 @@ public class CommonConstants {
 
     //通过忧时账号\手机号查询用户
     public static final String SAVESCHEDULE = NOW_ADDRESS + "SaveSchedule";
+    //参与人接受拒绝 sVerifyCode-登录认证码
+    public static final String JoinUserResult = NOW_ADDRESS + "JoinUserResult";
+    //删除日程
+    public static final String DeleteSchedule = NOW_ADDRESS + "DeleteSchedule";
 
     //yaozhongping-----------------------------------------------end
 
