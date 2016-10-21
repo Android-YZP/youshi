@@ -23,7 +23,7 @@ public class ChatReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("yoshi.action.chatsbroadcast")) {
             final int chat_id = intent.getIntExtra("chat_id", 0);
-            Log.d("jlj", "ChatReceiver---------------------onReceive-chat_id=" + chat_id);
+            Log.d("zzz", "ChatReceiver---------------------onReceive-chat_id=" + chat_id);
             //获取成功
             Message _msg = new Message();
             _msg.what = RECEIVE_CHAT_MSG;

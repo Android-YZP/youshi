@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
@@ -40,6 +39,7 @@ import com.tencent.TIMMessageListener;
 import com.tencent.TIMProfileSystemElem;
 import com.tencent.TIMSNSChangeInfo;
 import com.tencent.TIMSNSSystemElem;
+import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
 import com.tencent.TIMUserProfile;
@@ -48,7 +48,6 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
-import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -125,27 +124,27 @@ public class FriendService extends Service implements TIMMessageListener {
     TIMFriendshipProxyListener mListener = new TIMFriendshipProxyListener() {
         @Override
         public void OnProxyStatusChange(TIMFriendshipProxyStatus timFriendshipProxyStatus) {
-            Log.d("jlj", "-------------------------OnProxyStatusChange");
+            Log.d("zzz", "-------------------------OnProxyStatusChange");
         }
 
         @Override
         public void OnAddFriends(List<TIMUserProfile> list) {
-            Log.d("jlj", "-------------------------OnAddFriends");
+            Log.d("zzz", "-------------------------OnAddFriends");
         }
 
         @Override
         public void OnDelFriends(List<String> list) {
-            Log.d("jlj", "-------------------------OnDelFriends");
+            Log.d("zzz", "-------------------------OnDelFriends");
         }
 
         @Override
         public void OnFriendProfileUpdate(List<TIMUserProfile> list) {
-            Log.d("jlj", "-------------------------OnFriendProfileUpdate");
+            Log.d("zzz", "-------------------------OnFriendProfileUpdate");
         }
 
         @Override
         public void OnAddFriendReqs(List<TIMSNSChangeInfo> list) {
-            Log.d("jlj", "-------------------------OnAddFriendReqs");
+            Log.d("zzz", "-------------------------OnAddFriendReqs");
             for (TIMSNSChangeInfo itemInfo : list) {
                 friendIdentify = itemInfo.getIdentifier();
             }
@@ -154,12 +153,12 @@ public class FriendService extends Service implements TIMMessageListener {
 
         @Override
         public void OnAddFriendGroups(List<TIMFriendGroup> list) {
-            Log.d("jlj", "-------------------------OnAddFriendGroups");
+            Log.d("zzz", "-------------------------OnAddFriendGroups");
         }
 
         @Override
         public void OnDelFriendGroups(List<String> list) {
-            Log.d("jlj", "-------------------------OnDelFriendGroups");
+            Log.d("zzz", "-------------------------OnDelFriendGroups");
         }
 
         @Override
@@ -226,7 +225,6 @@ public class FriendService extends Service implements TIMMessageListener {
                                         .and("friendid", "=", _friend_openfirename)
                                         .findFirst();
                                 if (_friend == null) {
-                                    Log.d("jlj", "FriendService-------------------------friend add");
                                     //新增该好友信息到数据库
                                     _friend = new Friend();
                                     _friend.setStatus(2);//待接收
@@ -248,7 +246,6 @@ public class FriendService extends Service implements TIMMessageListener {
                                     _friend.setFriendid(_friend_openfirename);//好友的openfire用户名
                                     dbManager.saveBindingId(_friend);
                                 } else {
-                                    Log.d("jlj", "FriendService-------------------------friend update");
                                     //更新好友信息
                                     _friend.setStatus(2);//待接收
                                     _friend.setShowinnewfriend(1);//接受好友请求-显示状态
@@ -271,7 +268,6 @@ public class FriendService extends Service implements TIMMessageListener {
                                 }
                                 _friend_json = _gson.toJson(_friend);//该好友的信息json传输
                             } else {
-                                Log.d("jlj", "-------------------------friend json is null");
                                 return;
                             }
                             Message _msg = new Message();
@@ -282,9 +278,9 @@ public class FriendService extends Service implements TIMMessageListener {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");
                             if (_ErrorCode != null && _ErrorCode.equals("1001")) {
-                                Log.d("jlj", "getInfoByOpenFireName-------------1001");
+                                Log.d("zzz", "getInfoByOpenFireName-------------1001");
                             } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
-                                Log.d("jlj", "getInfoByOpenFireName-------------1002");
+                                Log.d("zzz", "getInfoByOpenFireName-------------1002");
                             } else {
                                 CommonUtil.sendErrorMessage(_Message, mHandler);
                             }
@@ -297,7 +293,6 @@ public class FriendService extends Service implements TIMMessageListener {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d("jlj", "receiver-----------onError" + ex.getMessage());
                 //使用handler通知UI提示用户错误信息
                 if (ex instanceof ConnectException) {
                     CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, mHandler);
@@ -373,7 +368,6 @@ public class FriendService extends Service implements TIMMessageListener {
             x.image().loadDrawable(_friend.getHead_pic(), _image_options, new Callback.CommonCallback<Drawable>() {
                 @Override
                 public void onSuccess(Drawable result) {
-                    Log.d("jlj", "-----------------------load head pic onSuccess");
                     Bitmap _bitmap = ((BitmapDrawable) result).getBitmap();
                     bitmaps[0] = _bitmap;
                 }
@@ -459,12 +453,15 @@ public class FriendService extends Service implements TIMMessageListener {
                         } else if (element instanceof TIMTextElem) {
                             String msg = ((TIMTextElem) element).getText();
                             Log.d("zzz", "TIMTextElem sender is-----" + sender);
-                            Log.d("zzz", "TIMTextElem is-----" + msg);
-                            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                            Log.d("zzz", "TIMTextElem content is-----" + msg);
                             receiveMessage(sender, msg);
+                        } else if (element instanceof TIMSoundElem) {
+                            long duration = ((TIMSoundElem) element).getDuration();
+                            Log.d("zzz", "TIMSoundElem sender is-----" + sender);
+                            Log.d("zzz", "TIMSoundElem duration is-----" + duration);
                         } else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
-                            Log.d("zzz", "TIMProfileSystemElem name is-----" + name);
+                            Log.d("zzz", "TIMProfileSystemElem content is-----" + name);
                         } else {
                             Log.d("zzz", "-----------------------" + element.getType());
                         }
@@ -490,19 +487,21 @@ public class FriendService extends Service implements TIMMessageListener {
                         .and("status", "=", 1)
                         .and("userid", "=", mUser.getOpenFireUserName())
                         .findFirst();
-                if (_friend == null) {
-                    Log.d("jlj", "addChatListener-----------------------------------发送的friend is null");
-                    return;
-                }
                 int _messagebox_id = 0;
                 if (sender != null && !sender.equals("")) {
-                    String friendId = _friend.getFriendid() + "@" + "TIMConversationType.C2C";
+                    String friendId = sender + "@" + "TIMConversationType.C2C";
                     String selfId = mUser.getOpenFireUserName();
                     //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
                     MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
                             .and("self_id", "=", selfId).findFirst();
                     if (messageBox == null) {
-                        messageBox = new MessageBox(_friend.getHead_pic(), _friend.getNickname(), _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                        String title = null;
+                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
+                            title = _friend.getPhone();
+                        } else {
+                            title = _friend.getNickname();
+                        }
+                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
                         dbManager.saveBindingId(messageBox);//新增消息盒子
                         _messagebox_id = messageBox.getId();
                     } else {
@@ -513,7 +512,7 @@ public class FriendService extends Service implements TIMMessageListener {
                 dbManager.saveBindingId(_chat_bean);//新增消息
                 chat_id = _chat_bean.getId();
                 actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
-            } catch (DbException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -33,6 +33,7 @@ import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.view.RecordButton;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMManager;
@@ -70,7 +71,7 @@ public class ChatActivity extends BaseActivity {
     private LinearLayout mLineKeybordBlock;//键盘输入框和表情选择
 
     @ViewInject(R.id.btn_chat_voice_use)
-    private Button mBtnUseVoice;
+    private RecordButton mBtnUseVoice;
 
     @ViewInject(R.id.iv_chat_go_keyboard)
     private ImageView mIvGoKeyboard;//去使用文字
@@ -119,18 +120,16 @@ public class ChatActivity extends BaseActivity {
                     break;
                 case ChatReceiver.RECEIVE_CHAT_MSG:
                     int _chat_id = (int) msg.obj;//最新的一条消息-写在广播接收处
-                    if (_chat_id != 0) {
-                        Log.d("zzz----RECEIVE_CHAT_MSG", String.valueOf(_chat_id));
-                        //查询该消息内容并刷新到UI
-                        try {
-                            ChatBean _chat_bean = dbManager.findById(ChatBean.class, _chat_id);
-                            //更新UI界面，获取最新的用户列表
-                            updateUIfromReceiver(_chat_bean);
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    Log.d("zzz----RECEIVE_CHAT_MSG", String.valueOf(_chat_id));
+                    //查询该消息内容并刷新到UI
+                    try {
+                        ChatBean _chat_bean = dbManager.findById(ChatBean.class, _chat_id);
+                        //更新UI界面，获取最新的用户列表
+                        updateUIfromReceiver(_chat_bean);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     break;
                 case CommonConstants.SEND_MSG_SUCCESS:
@@ -385,19 +384,15 @@ public class ChatActivity extends BaseActivity {
     //发送成功
     private void addMessageBox(final String msg) {
         try {
-            Log.d("zzz-------addMessageBox", "addMessageBox is success");
             //localMessage
             ChatBean _local_message = new ChatBean(selfId, msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
             m_chart_list.add(_local_message);
-            Log.d("zzz-------addMessageBox", _local_message.toString());
             if (mMessageBoxId == 0) {
-                Log.d("zzz-------addMessageBox", "1");
                 //新增该消息盒子
                 m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
                 dbManager.saveBindingId(m_messageBox);
                 mMessageBoxId = m_messageBox.getId();
             } else {
-                Log.d("zzz-------addMessageBox", "2");
                 //更新消息盒子
                 m_messageBox.setBoxLogo(mFriend.getHead_pic());
                 m_messageBox.setTitle(mFriend.getNickname());
@@ -405,13 +400,9 @@ public class ChatActivity extends BaseActivity {
                 m_messageBox.setLasttime(TimesUtils.getNow());
                 dbManager.saveOrUpdate(m_messageBox);
             }
-            Log.d("zzz-------addMessageBox", "3");
             _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-            Log.d("zzz-------addMessageBox", "4");
             dbManager.save(_local_message);//保存一条消息到数据库
-            Log.d("zzz-------addMessageBox", "5");
             mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-            Log.d("zzz-------addMessageBox", "6");
         } catch (Exception e) {
             e.printStackTrace();
         }

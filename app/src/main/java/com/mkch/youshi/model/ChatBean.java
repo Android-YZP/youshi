@@ -47,6 +47,9 @@ public class ChatBean {
         return db.findById(MessageBox.class, msgboxid);
     }
 
+    public ChatBean() {
+    }
+
     public ChatBean(String _openfirename, String _msg, int messageTypeOut, String now) {
         this.username = _openfirename;
         this.content = _msg;
@@ -179,5 +182,21 @@ public class ChatBean {
 
     public void setMsgboxid(int msgboxid) {
         this.msgboxid = msgboxid;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatBean{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", content='" + content + '\'' +
+                ", type=" + type +
+                ", date='" + date + '\'' +
+                ", msgModel=" + msgModel +
+                ", duration=" + duration +
+                ", fileName='" + fileName + '\'' +
+                ", status=" + status +
+                ", msgboxid=" + msgboxid +
+                '}';
     }
 }
