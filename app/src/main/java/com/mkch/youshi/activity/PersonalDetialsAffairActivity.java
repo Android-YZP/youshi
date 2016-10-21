@@ -33,16 +33,20 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
     private TextView mTvAffRepP;
     private TextView mTvAffBefTime;
     private TextView mTvAffTotalTime;
+    private Schedule mSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_detials_affair);
         initView();
+        initTopBar();
         initData();
+        setListener();
         initMap();
         initDelete();
     }
+
     private void initMap() {
         // 地图初始化
         mMapView = (MapView) findViewById(R.id.bmapView);
@@ -56,6 +60,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
         mSearch.geocode(new GeoCodeOption().city(
                 "").address(mTvAffloca.getText().toString()));
     }
+
     private void initView() {
         mTvAffTheme = (TextView) findViewById(R.id.tv_affair_theme);
         mTvAffLab = (TextView) findViewById(R.id.tv_affair_label);
@@ -81,23 +86,25 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
             }
         });
     }
+
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();
         Intent intent = getIntent();
         String s = intent.getStringExtra("mgonsn");
-        Schedule schedule = gson.fromJson(s,
+        mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
-        mTvAffTheme.setText(schedule.getTitle());
-        mTvAffLab.setText(CommonUtil.getLabelName(schedule.getLabel()));
-        mTvAffloca.setText(schedule.getAddress());
-        mTvAffTime.setText(schedule.getBegin_time()+"至"+schedule.getEnd_time());
-        mTvAffWhiceW.setText(CommonUtil.replaceNumberWeek(schedule.getWhich_week()).substring(0,
-                CommonUtil.replaceNumberWeek(schedule.getWhich_week()).length()-1));
+
+        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        mTvAffTheme.setText(mSchedule.getTitle());
+        mTvAffLab.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
+        mTvAffloca.setText(mSchedule.getAddress());
+        mTvAffTime.setText(mSchedule.getBegin_time() + "至" + mSchedule.getEnd_time());
+        mTvAffWhiceW.setText(CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).substring(0,
+                CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).length() - 1));
 //        mTvAffTimePice.setText(schedule.gett());//时间段
-        mTvAffTotalTime.setText(schedule.getTotal_time());
+        mTvAffTotalTime.setText(mSchedule.getTotal_time());
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
@@ -105,6 +112,24 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
                         CommonUtil.findFriName(repPer.get(i).getFriendid()));
             }
         }
-        mTvAffBefTime.setText("提前" + schedule.getAhead_warn() + "分钟");
+        mTvAffBefTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
+    }
+
+    private void setListener() {
+        mTvCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PersonalDetialsAffairActivity.this,
+                        AddPersonalAffairActivity.class);
+                intent.putExtra("eventID",mSchedule.getId());
+                startActivity(intent);
+            }
+        });
     }
 }

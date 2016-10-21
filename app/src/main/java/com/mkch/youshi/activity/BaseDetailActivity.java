@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -58,6 +59,9 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
     Button mBtDeleteSch;
     int mSid;
     int mId;
+    TextView mTvCancle;
+    TextView mTvComp;
+    TextView mTvTitle;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +70,15 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
         mId = intent.getIntExtra("id", -1);
     }
 
-    @Override
+    public void initTopBar() {
+        mTvCancle = (TextView) findViewById(R.id.tv_add_event_cancel);
+        mTvComp = (TextView) findViewById(R.id.tv_add_event_complete);
+        mTvTitle = (TextView) findViewById(R.id.tv_add_event_title);
+        mTvComp.setText("编辑");
+        mTvTitle.setText("详情信息");
+    }
+
+
     protected void onPause() {
         mMapView.onPause();
         super.onPause();
@@ -104,7 +116,6 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
 
         //设置默认的缩放比例
         mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(new MapStatus.Builder().zoom(17).build()));
-
     }
 
     @Override
@@ -218,9 +229,6 @@ public class BaseDetailActivity extends AppCompatActivity implements OnGetGeoCod
         builder.setTitle("提示");// 设置标题
         builder.setMessage("是否确定删除这个日程?");// 设置内容
         // 设置取消按钮
-        /**
-         * text 按钮显示的文字 listener 按钮对应的监听器
-         */
         builder.setNegativeButton("取消", null);
         // 设置确定按钮
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {

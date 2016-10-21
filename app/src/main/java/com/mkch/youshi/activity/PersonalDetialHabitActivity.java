@@ -32,15 +32,18 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
     private TextView mTvTotHour;
     private TextView mTvRepPer;
     private TextView mTvBeTime;
+    private Schedule mSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_detial_habit);
         initView();
+        initTopBar();
         initData();
         initMap();
         initDelete();
+        setListener();
     }
 
     private void initMap() {
@@ -81,25 +84,24 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
             }
         });
     }
-
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();
         Intent intent = getIntent();
         String s = intent.getStringExtra("mgonsn");
 
-        Schedule schedule = gson.fromJson(s,
+        mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
 
-        mTvTheme.setText(schedule.getTitle());
-        mTvlabel.setText(CommonUtil.getLabelName(schedule.getLabel()));
-        mTvLoc.setText(schedule.getAddress());
-        mTvWTimes.setText(CommonUtil.replaceNumberWeek(schedule.getTimes_of_week()+""));
-        mTvWWeeks.setText(schedule.getWhich_week());
-        mTvWWeeks.setText(schedule.getWhich_week());
-        mTvBeTime.setText("提前" + schedule.getAhead_warn() + "分钟");
+        mTvTheme.setText(mSchedule.getTitle());
+        mTvlabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
+        mTvLoc.setText(mSchedule.getAddress());
+        mTvWTimes.setText(CommonUtil.replaceNumberWeek(mSchedule.getTimes_of_week()+""));
+        mTvWWeeks.setText(mSchedule.getWhich_week());
+        mTvWWeeks.setText(mSchedule.getWhich_week());
+        mTvBeTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
@@ -107,6 +109,23 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
                         CommonUtil.findFriName(repPer.get(i).getFriendid()));
             }
         }
+    }
+    private void setListener() {
+        mTvCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PersonalDetialHabitActivity.this,
+                        AddPersonalEventActivity.class);
+                intent.putExtra("eventID",mSchedule.getId());
+                startActivity(intent);
+            }
+        });
     }
 
 

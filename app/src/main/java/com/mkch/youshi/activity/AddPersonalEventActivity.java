@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -79,36 +80,66 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private TextView mTvPlace;
     private EditText mTvPersonalEventDescription;
     private List<Schedule> allEvent;
-    private List<String> mFriends;
-    private Schedule schedule;
+    private List<String> mFriends = new ArrayList<>();
+    private Schedule schedule = new Schedule();
     private DbManager mDbManager;
     private TextView mTvSubmission;
-    private List<Friend> allChooseFriends;
+    private List<Friend> allChooseFriends = new ArrayList<>();
     private TextView mTvAddress;
     private double mLatitude;
     private double mLongitude;
+    private int mEventID;
+    private ArrayList<Schedule> mScheduleList;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_event);
         initView();
         initData();
         setListener();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int eventID = intent.getIntExtra("eventID", -1);
+        UIUtils.showTip(eventID + "onNewIntent");
     }
 
     private void initData() {
-        allChooseFriends = new ArrayList<>();
-        //初始化开始时间和结束时间
-        Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
-        t.setToNow(); // 取得系统时间。
-        mCurrentYear = t.year;
-        mCurrentMonth = t.month + 1;
-        mCurrentDay = t.monthDay;
-        mCurrentHour = t.hour;
-        mCurrentMinute = t.minute;
-        mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
-        mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+        //得到一个从详情界面传过来的,已经存在日程
+        Intent intent = getIntent();
+        mEventID = intent.getIntExtra("eventID", -1);
+        if (mEventID != -1) {
+            mScheduleList = CommonUtil.findSch(mEventID + "");
+            UIUtils.showTip(mScheduleList.get(0).getAddress());
+            mEtTheme.setText(mScheduleList.get(0).getTitle());
+            mTvStartTime.setText(mScheduleList.get(0).getBegin_time());
+            mTvEndTime.setText(mScheduleList.get(0).getEnd_time());
+            mTvPlace.setText(mScheduleList.get(0).getAddress());
+            mTvPersonalEventDescription.setText(mScheduleList.get(0).getRemark());
+            setRBChecked(mScheduleList.get(0).getLabel());//设置选择好的标签
+            //好友的初始化显示
+            ArrayList<Schreport> repPer = CommonUtil.findRepPer(mScheduleList.get(0).getId());
+            UIUtils.showTip(mScheduleList.get(0).getId()+"报送人");
+            UIUtils.showTip(repPer.size()+"报送人的数目");
+            for (int i = 0; i < repPer.size(); i++) {
+                mFriends.add(repPer.get(i).getFriendid());
+            }
+            setRepFriends(mFriends);
+        } else {
+            //初始化开始时间和结束时间
+            Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
+            t.setToNow(); // 取得系统时间。
+            mCurrentYear = t.year;
+            mCurrentMonth = t.month + 1;
+            mCurrentDay = t.monthDay;
+            mCurrentHour = t.hour;
+            mCurrentMinute = t.minute;
+            mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
+            mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+        }
         mTvTitle.setText("添加个人事件");//标题
     }
 
@@ -134,7 +165,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mRemindBefore = (RelativeLayout) findViewById(R.id.rl_remind_before);
         mTvRemindBefore = (TextView) findViewById(R.id.tv_remind_before);
         mTvPersonalEventDescription = (EditText) findViewById(R.id.et_add_event_description);
-
     }
 
     private void setListener() {
@@ -180,6 +210,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mRemindBefore.setOnClickListener(this);
         mTvComplete.setOnClickListener(this);
         mTvCancel.setOnClickListener(this);
+
     }
 
     @Override
@@ -269,30 +300,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
                     new TypeToken<List<String>>() {
                     }.getType());
-
-            for (int i = 0; i < mFriends.size(); i++) {
-                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
-                if (_user != null) {
-                    try {
-                        mDbManager = DBHelper.getDbManager();
-                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
-                                _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
-                        allChooseFriends.add(all.get(0));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            mTvSubmission.setText("");
-            for (int i = 0; i < allChooseFriends.size(); i++) {
-                String nickname = allChooseFriends.get(i).getNickname();
-                if (!StringUtils.isEmpty(nickname)) {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
-                } else {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
-                }
-            }
+            setRepFriends(mFriends);//设置报送人
         }
     }
 
@@ -408,7 +416,9 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         try {
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
-            schedule = new Schedule();
+            if (mEventID != -1) {
+                schedule = mScheduleList.get(0);
+            }
             schedule.setAddress(mTvPlace.getText().toString());
             schedule.setType(0);
             schedule.setTitle(mEtTheme.getText().toString());
@@ -422,6 +432,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             schedule.setBegin_time(mTvStartTime.getText().toString());
             schedule.setEnd_time(mTvEndTime.getText().toString());
             mDbManager.saveOrUpdate(schedule);
+
         } catch (DbException e) {
             Log.d("yzp", e.getMessage() + "-----------");
             e.printStackTrace();
@@ -470,6 +481,61 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             Log.d("yzp", e.getMessage() + "-----------");
             e.printStackTrace();
         }
+    }
+
+    //设置报送人
+    private void setRepFriends(List<String> friends) {
+        for (int i = 0; i < friends.size(); i++) {
+            User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+            if (_user != null) {
+                try {
+                    mDbManager = DBHelper.getDbManager();
+                    List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                            _user.getOpenFireUserName()).and("friendid", "=", friends.get(i)).findAll();
+                    allChooseFriends.add(all.get(0));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        mTvSubmission.setText("");
+        for (int i = 0; i < allChooseFriends.size(); i++) {
+            String nickname = allChooseFriends.get(i).getNickname();
+            if (!StringUtils.isEmpty(nickname)) {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+            } else {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+            }
+        }
+
+    }
+
+    //初始化标签
+    private void setRBChecked(int lableNum) {
+        int LableID = 0;
+        switch (lableNum) {
+            case 0:
+                LableID = R.id.rb_person;
+                break;
+            case 1:
+                LableID = R.id.rb_work;
+                break;
+            case 2:
+                LableID = R.id.rb_entertainment;
+                break;
+            case 3:
+                LableID = R.id.rb_important;
+                break;
+            case 4:
+                LableID = R.id.rb_health;
+                break;
+            case 5:
+                LableID = R.id.rb_other;
+                break;
+        }
+
+        RadioButton RBCheck = (RadioButton) findViewById(LableID);
+        RBCheck.setChecked(true);
     }
 
     private void showTip(String str) {

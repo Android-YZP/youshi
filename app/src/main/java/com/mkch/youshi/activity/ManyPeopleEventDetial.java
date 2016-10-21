@@ -52,6 +52,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         initData();
         initMap();
         initDelete();
+        initTopBar();
     }
     private void initDelete() {
         mBtDeleteSch = (Button) findViewById(R.id.Bt_delete_sch);

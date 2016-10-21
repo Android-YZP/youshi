@@ -1,13 +1,11 @@
 package com.mkch.youshi.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -30,15 +28,18 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
     private TextView mTvEventLoc;
     private TextView mTvEventLabel;
     private TextView mTvEventTheme;
+    private Schedule mSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_detial_event);
         initView();
+        initTopBar();
         initData();
         initMap();
         initDelete();
+        setListener();
     }
 
     private void initView() {
@@ -65,7 +66,6 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
         });
     }
 
-
     //初始化地图
     private void initMap() {
         // 地图初始化
@@ -81,20 +81,21 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
                 "").address(mTvEventLoc.getText().toString()));
     }
 
+
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();
         Intent intent = getIntent();
         String s = intent.getStringExtra("mgonsn");
-        Schedule schedule = gson.fromJson(s,
+        mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
-        mTvEventTheme.setText(schedule.getTitle());
-        mTvEventLabel.setText(CommonUtil.getLabelName(schedule.getLabel()));
-        mTvEventLoc.setText(schedule.getAddress());
-        mTvEventStaTime.setText(schedule.getBegin_time());
-        mTvEventEndTime.setText(schedule.getEnd_time());
+        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        mTvEventTheme.setText(mSchedule.getTitle());
+        mTvEventLabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
+        mTvEventLoc.setText(mSchedule.getAddress());
+        mTvEventStaTime.setText(mSchedule.getBegin_time());
+        mTvEventEndTime.setText(mSchedule.getEnd_time());
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
@@ -102,6 +103,24 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
                         CommonUtil.findFriName(repPer.get(i).getFriendid()));
             }
         }
-        mTvEventBeTime.setText("提前" + schedule.getAhead_warn() + "分钟");
+        mTvEventBeTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
+    }
+
+    private void setListener() {
+        mTvCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PersonalDetialEventActivity.this,
+                        AddPersonalEventActivity.class);
+                intent.putExtra("eventID",mSchedule.getId());
+                startActivity(intent);
+            }
+        });
     }
 }
