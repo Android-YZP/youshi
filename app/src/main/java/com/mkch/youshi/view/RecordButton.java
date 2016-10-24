@@ -72,7 +72,6 @@ public class RecordButton extends Button {
             recorder.release();
             recorder = null;
             //判断录音时长是否太短
-            Log.d("jlj", "duration is -------------------------" + (System.currentTimeMillis()) + "," + startTime);
             if ((System.currentTimeMillis() - startTime) < 1000) {
                 Toast.makeText(getContext(), "录音的时间太短", Toast.LENGTH_SHORT).show();
                 //删除录音文件

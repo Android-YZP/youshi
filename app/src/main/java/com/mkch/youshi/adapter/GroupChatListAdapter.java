@@ -16,7 +16,7 @@ import com.mkch.youshi.R;
  * Created by SunnyJiang on 2016/8/18.
  */
 public class GroupChatListAdapter extends BaseAdapter implements ListAdapter{
-    private Integer[] groupChatPics = new Integer[]{R.drawable.maillist,R.drawable.maillist,R.drawable.maillist};
+    private Integer[] groupChatPics = new Integer[]{R.drawable.groupchat,R.drawable.groupchat,R.drawable.groupchat};
     private String[] groupChatNames = new String[]{"群聊名称1","群聊名称2","群聊名称3"};
     private Context mContext;
 

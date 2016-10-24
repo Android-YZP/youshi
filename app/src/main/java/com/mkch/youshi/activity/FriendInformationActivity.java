@@ -189,7 +189,7 @@ public class FriendInformationActivity extends Activity {
     /**
      * 自定义点击监听类
      *
-     * @author JLJ
+     * @author ZJ
      */
     private class FriendInformationOnClickListener implements View.OnClickListener {
         @Override

@@ -4,22 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.adapter.AddFriendsMethodsListAdapter;
 import com.mkch.youshi.adapter.GroupChatListAdapter;
 
 public class GroupChatActivity extends Activity {
 
-    private ImageView mIvBack;
-    private TextView mTvTitle;
+    private ImageView mIvBack, mAdd;
     private ListView mListView;
 
     @Override
@@ -32,13 +26,12 @@ public class GroupChatActivity extends Activity {
     }
 
     private void initView() {
-        mIvBack = (ImageView) findViewById(R.id.iv_common_topbar_back);
-        mTvTitle = (TextView) findViewById(R.id.tv_common_topbar_title);
+        mIvBack = (ImageView) findViewById(R.id.iv_group_chat_back);
+        mAdd = (ImageView) findViewById(R.id.iv_group_chat_add);
         mListView = (ListView) findViewById(R.id.list_group_chat);
     }
 
     private void initData() {
-        mTvTitle.setText("群聊");
         ListAdapter mAdapter = new GroupChatListAdapter(GroupChatActivity.this);
         mListView.setAdapter(mAdapter);
     }
@@ -50,5 +43,26 @@ public class GroupChatActivity extends Activity {
                 GroupChatActivity.this.finish();
             }
         });
+        mAdd.setOnClickListener(new GroupChatOnClickListener());
+    }
+
+    /**
+     * 自定义点击监听类
+     *
+     * @author ZJ
+     */
+    private class GroupChatOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent _intent = null;
+            switch (view.getId()) {
+                case R.id.iv_group_chat_add:
+                    _intent = new Intent(GroupChatActivity.this, AddGroupChatActivity.class);
+                    startActivity(_intent);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
