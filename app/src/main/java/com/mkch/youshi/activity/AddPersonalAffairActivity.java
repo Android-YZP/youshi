@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,11 +95,9 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private int mTotalTimeMints;
     private int mAllDayChooseTimes;
     private double mLatitude;
-    private List<String> mFriends;
-    private List<Friend> allChooseFriends;
+    private List<String> mFriends = new ArrayList<>();
+    private List<Friend> allChooseFriends = new ArrayList<>();
     private double mLongitude;
-
-
     private static int mYear;
     private static int mMonth;
     private static int mDay;
@@ -121,10 +120,12 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private static LinearLayout mLLTwoOptionStartRootView;
     private static LinearLayout mLLTwoOptionEndRootView;
     private DbManager mDbManager;
-    private Schedule schedule;
-    private ArrayList<TimeSpanListBean> mTimeSpanListBeans;
+    private Schedule schedule = new Schedule();
+    private ArrayList<TimeSpanListBean> mTimeSpanListBeans = new ArrayList<>();
     private TextView mTvPlace;
     private TextView mTvSubmission;
+    private int mEventID;
+    private ArrayList<Schedule> mScheduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,21 +133,13 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_personal_affair);
         initView();
+        /**
+         * 初始化数据的时候检测传过来的ID,
+         * 有:则查找数据库里面的数据生成数据对象,在界面去显示,
+         * 没有:则跳过正常加载数据,
+         */
         initData();
         setListener();
-
-        /**-
-         * 在时间段选择界面,每选择一个时间段就判断是否有重叠的时间段.
-         * 没有就储存到数据库中.
-         * 计算出所有时间段的时间总和.传递给事务选择界面,
-         */
-
-        /**
-         * 拿到一天的总时长,
-         * 和选择的日期段,将每天计算出当天是星期几,和"周"进行比较.在"周"里面就加一天的总时长,
-         * 循环,计算出所有时间的总时长
-         */
-
     }
 
 
@@ -176,8 +169,53 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     }
 
     private void initData() {
+        //得到一个从详情界面传过来的,已经存在日程
+        Intent intent = getIntent();
+        mEventID = intent.getIntExtra("eventID", -1);
+        if (mEventID != -1) {
+            mScheduleList = CommonUtil.findSch(mEventID + "");
+            schedule = mScheduleList.get(0);
+            mEtTheme.setText(schedule.getTitle());
+            mTwoStartDate.setText(schedule.getBegin_time());
+            mTwoEndDate.setText(schedule.getEnd_time());
+            mTvPlace.setText(schedule.getAddress());
+            //周
+            mTvAffairWeek.setText(CommonUtil.replaceNumWeek(schedule.getWhich_week()));
+            mTvRemindBefore.setText(schedule.getAhead_warn() + "分钟前");
+            mEtPersonalEventDescription.setText(schedule.getRemark());
+            setRBChecked(schedule.getLabel());//设置选择好的标签
+            //时间段的设置
+            ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mEventID);
+            if (!schTimes.isEmpty()) {
+                for (int i = 0; i < schTimes.size(); i++) {
+                    TimeSpanListBean timeSpanListBean = new TimeSpanListBean();
+                    timeSpanListBean.setStartTime(schTimes.get(i).getBegin_time());
+                    timeSpanListBean.setEndTime(schTimes.get(i).getEnd_time());
+                    timeSpanListBean.setTdate(schTimes.get(i).getDate());
+                    timeSpanListBean.setRemindTime(schTimes.get(i).getWarning_time());
+                    timeSpanListBean.setStatus(schTimes.get(i).getStatus());
+                    mTimeSpanListBeans.add(timeSpanListBean);
+                }
+                mAffairTimeISChoose.setText("已选择");
+            }
+            //设置总时间
+            String totalTime = schedule.getTotal_time();
+            if (!totalTime.equals("0")) {
+                mAffairTimeAllTime.setText(totalTime);
+            }
+
+            //报送好友的初始化显示
+            ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+            UIUtils.showTip(schedule.getId() + "报送人");
+            UIUtils.showTip(repPer.size() + "报送人的数目");
+            for (int i = 0; i < repPer.size(); i++) {
+                mFriends.add(repPer.get(i).getFriendid());
+
+            }
+            setRepFriends(mFriends);
+        }
+
         mTvTitle.setText("添加个人事务");
-        allChooseFriends = new ArrayList<>();
     }
 
     private void setListener() {
@@ -247,15 +285,16 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                         ChooseWeekActivity.class), 1);
                 break;
             case R.id.rl_affair_choose_time://选择时间
-                startActivityForResult(new Intent(AddPersonalAffairActivity.this,
-                        ChooseTimeActivity.class), 2);
+                Intent intent = new Intent(AddPersonalAffairActivity.this,
+                        ChooseTimeActivity.class);
+                intent.putExtra("eventID", mEventID);
+                startActivityForResult(intent, 2);
 
                 break;
             case R.id.rl_affair_all_time://总时长
                 Toast.makeText(AddPersonalAffairActivity.this, "4",
                         Toast.LENGTH_SHORT).show();
                 break;
-
             //后半部分的点击事件
             case R.id.rl_submission://报送
                 if (mFriends != null && allChooseFriends != null) {
@@ -273,7 +312,6 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 finish();
                 break;
             case R.id.tv_add_event_complete://完成
-
                 if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
                     showTip("请输入主题");
                     return;
@@ -288,9 +326,16 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     showTip("请选择时间段");
                     return;
                 }
+                mProgressDialog = ProgressDialog.show(AddPersonalAffairActivity.this, "请稍等", "正在保存中...", true, true);
                 saveDataOfDb();
+                if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
+                    CommonUtil.DeleteRepPer(mEventID);
+                    CommonUtil.DeleteSchTime(mEventID);
+                }
                 saveReporterToDb();
-                saveDataOfNet();
+                if (CommonUtil.isnetWorkAvilable(this)) {//判断有网络就上传网络,否则就只保存在本地
+                    saveDataOfNet();
+                }
                 break;
             default:
                 break;
@@ -302,7 +347,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
      */
     private void saveDataOfNet() {
         //弹出加载进度条
-        mProgressDialog = ProgressDialog.show(AddPersonalAffairActivity.this, "请稍等", "正在保存中...", true, true);
+
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.SAVESCHEDULE);
         //包装请求参数
@@ -409,7 +454,6 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         try {
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
-            schedule = new Schedule();
             schedule.setAddress(mTvPlace.getText().toString());
             schedule.setType(1);//日程类型
             schedule.setTitle(mEtTheme.getText().toString());//标题,主题
@@ -439,6 +483,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             e.printStackTrace();
         }
     }
+
     /**
      * 将报送人储存本地数据库
      */
@@ -446,10 +491,10 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         try {
             for (int i = 0; i < allChooseFriends.size(); i++) {
                 mDbManager = DBHelper.getDbManager();
-                Schreport schreport = new Schreport();
-                schreport.setFriendid(allChooseFriends.get(i).getFriendid());
-                schreport.setSid(schedule.getId());
-                mDbManager.saveOrUpdate(schreport);
+                Schreport mSchreport = new Schreport();
+                mSchreport.setFriendid(allChooseFriends.get(i).getFriendid());
+                mSchreport.setSid(schedule.getId());
+                mDbManager.saveOrUpdate(mSchreport);
             }
         } catch (DbException e) {
             Log.d("yzp", e.getMessage() + "-----------");
@@ -482,38 +527,38 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         }
 
 
-            //返回报送人
-            if (resultCode == 5 && requestCode == 5 && data != null) {
-                String chooseFriends = data.getStringExtra("ChooseFriends");
-                Gson gson = new Gson();
-                mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
-                        new TypeToken<List<String>>() {
-                        }.getType());
+        //返回报送人
+        if (resultCode == 5 && requestCode == 5 && data != null) {
+            String chooseFriends = data.getStringExtra("ChooseFriends");
+            Gson gson = new Gson();
+            mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
+                    new TypeToken<List<String>>() {
+                    }.getType());
 
-                for (int i = 0; i < mFriends.size(); i++) {
-                    User _user = CommonUtil.getUserInfo(UIUtils.getContext());
-                    if (_user != null) {
-                        try {
-                            mDbManager = DBHelper.getDbManager();
-                            List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
-                                    _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
-                            allChooseFriends.add(all.get(0));
-                        } catch (DbException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                mTvSubmission.setText("");
-                for (int i = 0; i < allChooseFriends.size(); i++) {
-                    String nickname = allChooseFriends.get(i).getNickname();
-                    if (!StringUtils.isEmpty(nickname)) {
-                        mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
-                    } else {
-                        mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+            for (int i = 0; i < mFriends.size(); i++) {
+                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+                if (_user != null) {
+                    try {
+                        mDbManager = DBHelper.getDbManager();
+                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                                _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
+                        allChooseFriends.add(all.get(0));
+                    } catch (DbException e) {
+                        e.printStackTrace();
                     }
                 }
             }
+
+            mTvSubmission.setText("");
+            for (int i = 0; i < allChooseFriends.size(); i++) {
+                String nickname = allChooseFriends.get(i).getNickname();
+                if (!StringUtils.isEmpty(nickname)) {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+                } else {
+                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+                }
+            }
+        }
 
         //返回地址
         if (resultCode == 6 && requestCode == 6 && data != null) {
@@ -562,6 +607,61 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         }
     }
 
+    //设置报送人
+    private void setRepFriends(List<String> friends) {
+        for (int i = 0; i < friends.size(); i++) {
+            User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+            if (_user != null) {
+                try {
+                    mDbManager = DBHelper.getDbManager();
+                    List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                            _user.getOpenFireUserName()).and("friendid", "=", friends.get(i)).findAll();
+                    allChooseFriends.add(all.get(0));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        mTvSubmission.setText("");
+        for (int i = 0; i < allChooseFriends.size(); i++) {
+            String nickname = allChooseFriends.get(i).getNickname();
+            if (!StringUtils.isEmpty(nickname)) {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+            } else {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+            }
+        }
+
+    }
+
+    //初始化标签
+    private void setRBChecked(int lableNum) {
+        int LableID = 0;
+        switch (lableNum) {
+            case 0:
+                LableID = R.id.rb_person;
+                break;
+            case 1:
+                LableID = R.id.rb_work;
+                break;
+            case 2:
+                LableID = R.id.rb_entertainment;
+                break;
+            case 3:
+                LableID = R.id.rb_important;
+                break;
+            case 4:
+                LableID = R.id.rb_health;
+                break;
+            case 5:
+                LableID = R.id.rb_other;
+                break;
+        }
+
+        RadioButton RBCheck = (RadioButton) findViewById(LableID);
+        RBCheck.setChecked(true);
+    }
+
     /**
      * 遍历二个日期之间的有效选择时间天数
      */
@@ -588,9 +688,6 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         }
         return totlyTimes;
     }
-
-
-
 
 
     /**

@@ -126,10 +126,14 @@
         <activity android:name=".activity.PersonalDetialsAffairActivity" />
         <activity android:name=".activity.PersonalDetialHabitActivity" />
         <activity android:name=".activity.AddPersonalActivity" />
-        <activity android:name=".activity.AddManyPeopleEventActivity" />
-        <activity android:name=".activity.AddPersonalAffairActivity" />
-        <activity android:name=".activity.AddPersonalEventActivity" />
-        <activity android:name=".activity.AddPersonalHabitActivity" />
+        <activity android:name=".activity.AddManyPeopleEventActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".activity.AddPersonalAffairActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".activity.AddPersonalEventActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".activity.AddPersonalHabitActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".activity.SearchEventActivity" />
         <activity android:name=".activity.ChooseFileActivity" />
 

@@ -18,7 +18,10 @@
         <TextView
             android:id="@+id/tv_submission"
             style="@style/lastOfAffairList"
+            android:layout_marginLeft="55dp"
             android:drawablePadding="8dp"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:drawableRight="@drawable/btn_add"
             android:text="莫莫莫" />
     </RelativeLayout>
