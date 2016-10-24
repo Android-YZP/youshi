@@ -5,10 +5,34 @@
     android:background="@color/common_bg_color"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_common_topbar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height" />
+        android:layout_height="@dimen/common_topbar_height"
+        android:background="@color/common_topbar_bg_color">
+
+        <ImageView
+            android:id="@+id/iv_group_chat_back"
+            style="@style/commonTopbarBackStyle"
+            android:src="@drawable/nav_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="群聊"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/friend_information_text_size"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_group_chat_add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="15dp"
+            android:src="@drawable/nav_increase" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -3,6 +3,8 @@ package com.mkch.youshi.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -38,6 +40,7 @@ import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
+import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMValueCallBack;
 
@@ -47,6 +50,10 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +111,7 @@ public class ChatActivity extends BaseActivity {
     private static ProgressDialog mProgressDialog = null;//加载
     private ChatReceiver mChatReceiver;
     private User mUser;
+    MediaPlayer mediaPlayer = new MediaPlayer();
 
     private Handler mHandler = new Handler() {
         @Override
@@ -173,6 +181,64 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void setListener() {
+        mBtnUseVoice.setOnRecordFinishedListener(new RecordButton.OnRecordFinishedListener() {
+            @Override
+            public void onFinished(File audioFile, int duration) {
+                TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+                //构造一条消息
+                TIMMessage msg = new TIMMessage();
+                //添加语音
+                TIMSoundElem elem = new TIMSoundElem();
+                final String soundFile = audioFile.getAbsolutePath();
+                final int soundDuration = duration / 1000;
+                elem.setPath(soundFile); //填写语音文件路径
+                elem.setDuration(duration);  //填写语音时长
+                //将elem添加到消息
+                if (msg.addElement(elem) != 0) {
+                    Log.d("zzz-------", "addElement failed");
+                    return;
+                }
+                //发送消息
+                conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                    @Override
+                    public void onError(int code, String desc) {//发送消息失败
+                        Log.d("zzz---sendMessage sound", code + "Error:" + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(TIMMessage msg) {//发送消息成功
+                        Log.d("zzz---sendMessage sound", "sendMessage is success");
+                        addSoundMessageBox(soundFile, soundDuration);
+                    }
+                });
+            }
+        });
+        m_adapter.setOnItemClickListener(new ChartListAdapter.MyItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) throws IOException {
+                if (m_chart_list.get(position).getMsgModel() == 2) {
+                    if (mediaPlayer.isPlaying()) {
+                        Log.d("zzz---------mediaPlayer", "mediaPlayer is Playing");
+                        mediaPlayer.stop();
+                    } else {
+                        try {
+                            Log.d("zzz---------mediaPlayer", "mediaPlayer is stop");
+                            File audio = new File(m_chart_list.get(position).getFileName());
+                            FileInputStream fis = new FileInputStream(audio);
+                            mediaPlayer.reset();
+                            mediaPlayer.setDataSource(fis.getFD());
+                            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
         mEtChatInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -370,22 +436,49 @@ public class ChatActivity extends BaseActivity {
         conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
             @Override
             public void onError(int i, String s) {
-                Log.d("zzz--------sendMessage", i + "Error:" + s);
+                Log.d("zzz----sendMessage text", i + "Error:" + s);
             }
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
-                Log.d("zzz--------sendMessage", "sendMessage is success");
-                addMessageBox(_msg);
+                Log.d("zzz----sendMessage text", "sendMessage is success");
+                addTextMessageBox(_msg);
             }
         });
     }
 
-    //发送成功
-    private void addMessageBox(final String msg) {
+    //文本发送成功
+    private void addTextMessageBox(final String msg) {
         try {
             //localMessage
             ChatBean _local_message = new ChatBean(selfId, msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+            m_chart_list.add(_local_message);
+            if (mMessageBoxId == 0) {
+                //新增该消息盒子
+                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                dbManager.saveBindingId(m_messageBox);
+                mMessageBoxId = m_messageBox.getId();
+            } else {
+                //更新消息盒子
+                m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                m_messageBox.setTitle(mFriend.getNickname());
+                m_messageBox.setInfo(_local_message.getContent());
+                m_messageBox.setLasttime(TimesUtils.getNow());
+                dbManager.saveOrUpdate(m_messageBox);
+            }
+            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
+            dbManager.save(_local_message);//保存一条消息到数据库
+            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //语音发送成功
+    private void addSoundMessageBox(final String file, final int duration) {
+        try {
+            //localMessage
+            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, duration, file, "[语音]");
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子

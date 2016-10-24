@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -52,16 +53,20 @@ import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
 
+import java.io.File;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.mkch.youshi.view.RecordButton.generate;
+
 /**
  * Created by ZJ on 2016/10/13.
  */
 public class FriendService extends Service implements TIMMessageListener {
-
+    public static final File AUDIO_DIR = new File(Environment.getExternalStorageDirectory(), "audio");
+    File audioFile;
     private User mUser;
     private String identify, userSig;
     public static final int ACCOUNT_TYPE = 7882;
@@ -454,11 +459,27 @@ public class FriendService extends Service implements TIMMessageListener {
                             String msg = ((TIMTextElem) element).getText();
                             Log.d("zzz", "TIMTextElem sender is-----" + sender);
                             Log.d("zzz", "TIMTextElem content is-----" + msg);
-                            receiveMessage(sender, msg);
+                            receiveTextMessage(sender, msg);
                         } else if (element instanceof TIMSoundElem) {
-                            long duration = ((TIMSoundElem) element).getDuration();
+                            int duration = (int) ((TIMSoundElem) element).getDuration() / 1000;
                             Log.d("zzz", "TIMSoundElem sender is-----" + sender);
                             Log.d("zzz", "TIMSoundElem duration is-----" + duration);
+                            if (!AUDIO_DIR.exists()) {
+                                AUDIO_DIR.mkdir();
+                            }
+                            audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + ".amr");
+                            ((TIMSoundElem) element).getSoundToFile(audioFile.getAbsolutePath(), new TIMCallBack() {
+                                @Override
+                                public void onError(int i, String s) {
+                                    Log.d("zzz------getSoundToFile", i + "Error:" + s);
+                                }
+
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("zzz------getSoundToFile", "getSoundToFile is success");
+                                }
+                            });
+                            receiveSoundMessage(sender, audioFile.getAbsolutePath(), duration);
                         } else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
                             Log.d("zzz", "TIMProfileSystemElem content is-----" + name);
@@ -472,11 +493,57 @@ public class FriendService extends Service implements TIMMessageListener {
         return false;
     }
 
-    //显示获取的聊天信息
-    private void receiveMessage(final String sender, final String msg) {
+    //显示获取的文本聊天信息
+    private void receiveTextMessage(final String sender, final String msg) {
         if (msg != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, msg, ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
+            DbManager dbManager = DBHelper.getDbManager();
+            int chat_id = 0;
+            try {
+                //获取该好友的一些信息
+                //查询本登录用户的，已添加的，某个好友
+                Friend _friend = dbManager.selector(Friend.class)
+                        .where("friendid", "=", sender)
+                        .and("status", "=", 1)
+                        .and("userid", "=", mUser.getOpenFireUserName())
+                        .findFirst();
+                int _messagebox_id = 0;
+                if (sender != null && !sender.equals("")) {
+                    String friendId = sender + "@" + "TIMConversationType.C2C";
+                    String selfId = mUser.getOpenFireUserName();
+                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
+                            .and("self_id", "=", selfId).findFirst();
+                    if (messageBox == null) {
+                        String title = null;
+                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
+                            title = _friend.getPhone();
+                        } else {
+                            title = _friend.getNickname();
+                        }
+                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                        dbManager.saveBindingId(messageBox);//新增消息盒子
+                        _messagebox_id = messageBox.getId();
+                    } else {
+                        _messagebox_id = messageBox.getId();
+                    }
+                }
+                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+                dbManager.saveBindingId(_chat_bean);//新增消息
+                chat_id = _chat_bean.getId();
+                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //显示获取的语音聊天信息
+    private void receiveSoundMessage(final String sender, final String path, final int duration) {
+        if (path != null) {
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, duration, path, "[语音]");
             DbManager dbManager = DBHelper.getDbManager();
             int chat_id = 0;
             try {

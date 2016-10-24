@@ -98,6 +98,7 @@
         <activity android:name=".activity.UniversalityActivity" />
         <activity android:name=".activity.QRCodeActivity" />
         <activity android:name=".activity.ReviseAddressActivity" />
+        <activity android:name=".activity.AddGroupChatActivity" />
         <!--定位配置-->
         <service
             android:name="com.baidu.location.f"

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_item_chat_list_right_sound_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="23dp"
+        android:background="#D2D2D2"
+        android:gravity="center"
+        android:paddingBottom="6dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="6dp"
+        android:text="2016-09-01 16:00"
+        android:textColor="@color/common_white_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:paddingLeft="75dp"
+        android:paddingRight="15dp"
+        android:paddingTop="5dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_right_sound_user"
+                style="@style/common_text_username_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="用户2" />
+
+            <TextView
+                android:id="@+id/tv_right_say_duration"
+                style="@style/common_text_msg_content_white_28"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/chat_content_blue"
+                android:drawableRight="@drawable/voice_left"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="25dp"
+                android:paddingTop="10dp"
+                android:text="13'" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_item_chat_list_right_sound_headpic"
+            android:layout_width="@dimen/chat_list_left_headpic_width_or_height"
+            android:layout_height="@dimen/chat_list_left_headpic_width_or_height" />
+    </LinearLayout>
+</LinearLayout>

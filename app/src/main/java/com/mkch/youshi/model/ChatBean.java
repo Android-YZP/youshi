@@ -24,9 +24,8 @@ public class ChatBean {
     //消息的模式，文本、录音、图片等
     @Column(name = "msgmodel")
     private int msgModel;
-
     public static final int MESSAGE_MODEL_TEXT = 1;
-    public static final int MESSAGE_MODEL_AUDIO = 2;
+    public static final int MESSAGE_MODEL_SOUND = 2;
     public static final int MESSAGE_MODEL_PIC = 3;
     @Column(name = "duration")
     private int duration;//语音消息的时长
@@ -55,6 +54,7 @@ public class ChatBean {
         this.content = _msg;
         this.type = messageTypeOut;
         this.date = now;
+        this.msgModel = MESSAGE_MODEL_TEXT;
     }
 
     public ChatBean(String username, String content) {
@@ -94,14 +94,15 @@ public class ChatBean {
      * @param duration 时长
      * @param fileName 文件名
      */
-    public ChatBean(String username, String date, int type, int duration, String fileName) {
+    public ChatBean(String username, String date, int type, int duration, String fileName, String content) {
         this.username = username;
         this.date = date;
         this.type = type;
         this.duration = duration;
         this.fileName = fileName;
         this.content = (duration / 1000) + "\'" + (duration % 1000) + "\"语音消息";
-        this.msgModel = MESSAGE_MODEL_AUDIO;
+        this.msgModel = MESSAGE_MODEL_SOUND;
+        this.content = content;
     }
 
     public String getUsername() {
