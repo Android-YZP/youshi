@@ -511,7 +511,7 @@ public class UserRegPhoneActivity extends Activity {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_REG_CODE_SHOW);
                             } else if (_ErrorCode != null && _ErrorCode.equals("1008")) {
                                 handler.sendEmptyMessage(CommonConstants.FLAG_REG_PHONE_TOKENID_NO_EXIST);
-                            }else{
+                            } else {
                                 CommonUtil.sendErrorMessage(_Message, handler);
                             }
                         }

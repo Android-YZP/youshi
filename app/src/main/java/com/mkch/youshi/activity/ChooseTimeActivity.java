@@ -16,6 +16,7 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DialogFactory;
+import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.AddTimeListView;
 
 import java.text.ParseException;
@@ -46,8 +47,6 @@ public class ChooseTimeActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
-
         mLvChooseTime = (AddTimeListView) findViewById(R.id.lv_choose_time);
         mTvComplete = (TextView) findViewById(R.id.tv_add_event_complete);
     }
@@ -94,44 +93,22 @@ public class ChooseTimeActivity extends AppCompatActivity {
         });
     }
 
+
     //返回数据到启动界面
     public void sendResult() {
         Intent intent = getIntent();
         Gson gson = new Gson();
         String _listString = gson.toJson(mTimeSpanListBeans);
-        String _totalTime = totalTime(mTimeSpanListBeans);
+        String _totalTime = TimesUtils.totalTime(mTimeSpanListBeans);
+        int[] timeAndhour = TimesUtils.totalTimeAndhour(mTimeSpanListBeans);
         intent.putExtra("TimeSpanListBeanList", _listString);
         intent.putExtra("TotalTime", _totalTime);
-        intent.putExtra("TotalTimeHour", hours);
-        intent.putExtra("TotalTimeMints", minutes);
+        intent.putExtra("TotalTimeHour", timeAndhour[0]);
+        intent.putExtra("TotalTimeMints", timeAndhour[1]);
         ChooseTimeActivity.this.setResult(2, intent);
         ChooseTimeActivity.this.finish();
     }
 
-    /**
-     * 计算出所有时间段的总时间
-     * @return
-     */
-    private String totalTime(ArrayList<ViewModelBean.TimeSpanListBean> mTimeSpanListBeans) {
-        SimpleDateFormat _sdf = new SimpleDateFormat("HH:mm");
-        for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
-            try {
-                String _startTime = mTimeSpanListBeans.get(i).getStartTime();
-                String _endTime = mTimeSpanListBeans.get(i).getEndTime();
-                Date dStart = _sdf.parse(_startTime);
-                Date dEnd = _sdf.parse(_endTime);
-                long diff = dEnd.getTime() - dStart.getTime();//这样得到的差值是微秒级别
-                long days = diff / (1000 * 60 * 60 * 24);
-                long hour = (diff - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
-                long minute = (diff - days * (1000 * 60 * 60 * 24) - hour * (1000 * 60 * 60)) / (1000 * 60);
-                hours = (int) (hours + hour);
-                minutes = (int) (minutes + minute);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return hours + "小时" + minutes + "分钟";
-    }
 
     class chooseTimeAdapter extends BaseAdapter {
 
@@ -161,5 +138,4 @@ public class ChooseTimeActivity extends AppCompatActivity {
             return view;
         }
     }
-
 }

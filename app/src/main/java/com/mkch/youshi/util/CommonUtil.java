@@ -452,7 +452,9 @@ public class CommonUtil {
             return null;
         }
     }
-     /** 用日程id删除该日程的报送人
+
+    /**
+     * 用日程id删除该日程的报送人
      *
      * @param sid
      */
@@ -460,13 +462,15 @@ public class CommonUtil {
         try {
             DbManager mDbManager = DBHelper.getDbManager();
             WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("sid","=",sid+"");
-            mDbManager.delete(Schreport.class,whereBuilder);
+            whereBuilder.and("sid", "=", sid + "");
+            mDbManager.delete(Schreport.class, whereBuilder);
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
-     /** 用日程id删除该日程的时间段
+
+    /**
+     * 用日程id删除该日程的时间段
      *
      * @param sid
      */
@@ -474,8 +478,8 @@ public class CommonUtil {
         try {
             DbManager mDbManager = DBHelper.getDbManager();
             WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("sid","=",sid+"");
-            mDbManager.delete(Schtime.class,whereBuilder);
+            whereBuilder.and("sid", "=", sid + "");
+            mDbManager.delete(Schtime.class, whereBuilder);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -551,7 +555,8 @@ public class CommonUtil {
         String _week6 = _week5.replace("6", "周六 ");
         return _week6.replace("7", "周日");
     }
-  /**
+
+    /**
      * 将1,2,3,4,5,6,换成周一周二周三
      *
      * @return
