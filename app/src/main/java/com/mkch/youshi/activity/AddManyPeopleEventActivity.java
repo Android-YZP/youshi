@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,14 +72,14 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
     private int mCurrentDay;
     private int mCurrentHour;
     private int mCurrentMinute;
-    private List<String> mRepFriends;
-    private List<String> mJoinFriends;
-    private List<Friend> allChooseRepFriends;
-    private List<Friend> allChooseJoinFriends;
+    private List<String> mRepFriends = new ArrayList<>();
+    private List<String> mJoinFriends = new ArrayList<>();
+    private List<Friend> allChooseRepFriends = new ArrayList<>();
+    private List<Friend> allChooseJoinFriends = new ArrayList<>();
     private TextView mTvCancel;
     private TextView mTvComplete;
     private TextView mTvTitle;
-    private Schedule schedule;
+    private Schedule schedule = new Schedule();
     private int mRemindTime;
     private TextView mTvManyPeopleRemindBefore;
     private EditText mEtManyPeopleDesc;
@@ -89,6 +90,8 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
     private TextView mTvPlace;
     private TextView mTvSubmission;
     private TextView mTvJoinSubmission;
+    private int mEventID;
+    private ArrayList<Schedule> mScheduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +103,57 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
     }
 
     private void initData() {
-        allChooseRepFriends = new ArrayList<>();
-        allChooseJoinFriends = new ArrayList<>();
+        //得到一个从详情界面传过来的,已经存在日程
+        Intent intent = getIntent();
+        mEventID = intent.getIntExtra("eventID", -1);
+        if (mEventID != -1) {
+            mScheduleList = CommonUtil.findSch(mEventID + "");
+            schedule = mScheduleList.get(0);
+            mEtTheme.setText(schedule.getTitle());
+            //判断选择时间是不是全天
+            String begin_time = schedule.getBegin_time();
+            //根据时间的格式来判断日期的形式,(日期长度小于15为全天事件)
+            if (begin_time.length() < 15) {//全天事件的初始化
+                mCbAllDay.setChecked(true);
+                isAllDay = true;
+            }
+
+            mTvStartTime.setText(begin_time);
+            mTvEndTime.setText(schedule.getEnd_time());
+            mTvPlace.setText(schedule.getAddress());
+            mEtManyPeopleDesc.setText(schedule.getRemark());
+            setRBChecked(schedule.getLabel());//设置选择好的标签
+            //初始化标签
+            mLable = schedule.getLabel();
+            //提前提醒
+            mTvManyPeopleRemindBefore.setText(schedule.getAhead_warn() + "分钟前");
+            mRemindTime = schedule.getAhead_warn();
+
+            //好友的初始化显示
+            ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+            for (int i = 0; i < repPer.size(); i++) {
+                mRepFriends.add(repPer.get(i).getFriendid());
+            }
+            setRepFriends(mRepFriends);
+
+            //参与人好友的初始化显示
+            ArrayList<Schjoiner> joinPer = CommonUtil.findJoinPer(schedule.getId());
+            for (int i = 0; i < joinPer.size(); i++) {
+                mJoinFriends.add(joinPer.get(i).getJoiner_id());
+            }
+            setJoinFriends(mJoinFriends);
+
+        } else {
+
+            initTime();
+            mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
+            mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+            mTvTitle.setText("添加多人日程");
+        }
+
+    }
+
+    private void initTime() {
         Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
         t.setToNow(); // 取得系统时间。
         mCurrentYear = t.year;
@@ -109,9 +161,6 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         mCurrentDay = t.monthDay;
         mCurrentHour = t.hour;
         mCurrentMinute = t.minute;
-        mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
-        mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
-        mTvTitle.setText("添加多人日程");
     }
 
     private void initView() {
@@ -175,6 +224,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         mCbAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                initTime();
                 isAllDay = isChecked;
                 mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
                 mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
@@ -226,11 +276,15 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
 
             //后半部分的点击事件
             case R.id.rl_many_people_participant://参与人
+                if (mJoinFriends != null && allChooseJoinFriends != null) {
+                    mJoinFriends.clear();
+                    allChooseJoinFriends.clear();
+                }
                 startActivityForResult(new Intent(AddManyPeopleEventActivity.
                         this, ChooseSomeoneActivity.class), 7);
                 break;
-            case R.id.rl_many_people_submission://报送
 
+            case R.id.rl_many_people_submission://报送
                 if (mRepFriends != null && allChooseRepFriends != null) {
                     mRepFriends.clear();
                     allChooseRepFriends.clear();
@@ -261,6 +315,10 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
 //                    showTip("请选择参与人");
 //                    return;
 //                }
+                if (mEventID != -1) {//当该日程是传送过来的哪个的时候，删除原有的
+                    CommonUtil.DeleteRepPer(mEventID);
+                    CommonUtil.DeleteJoinPer(mEventID);
+                }
                 saveDataOfNet();
                 saveDataOfDb();
                 saveReporterToDb();
@@ -388,7 +446,6 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         try {
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
-            schedule = new Schedule();
             schedule.setAddress(mTvPlace.getText().toString());
             schedule.setType(3);//多人事件
             schedule.setSch_status(0);//自己是发起者状态
@@ -471,6 +528,33 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         }
     }
 
+    //初始化标签
+    private void setRBChecked(int lableNum) {
+        int LableID = 0;
+        switch (lableNum) {
+            case 0:
+                LableID = R.id.rb_person;
+                break;
+            case 1:
+                LableID = R.id.rb_work;
+                break;
+            case 2:
+                LableID = R.id.rb_entertainment;
+                break;
+            case 3:
+                LableID = R.id.rb_important;
+                break;
+            case 4:
+                LableID = R.id.rb_health;
+                break;
+            case 5:
+                LableID = R.id.rb_other;
+                break;
+        }
+
+        RadioButton RBCheck = (RadioButton) findViewById(LableID);
+        RBCheck.setChecked(true);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -489,31 +573,9 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
                     new TypeToken<List<String>>() {
                     }.getType());
 
-            for (int i = 0; i < mRepFriends.size(); i++) {
-                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
-                if (_user != null) {
-                    try {
-                        mDbManager = DBHelper.getDbManager();
-                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
-                                _user.getOpenFireUserName()).and("friendid", "=", mRepFriends.get(i)).findAll();
-                        allChooseRepFriends.add(all.get(0));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
 
-            mTvSubmission.setText("");
-            for (int i = 0; i < allChooseRepFriends.size(); i++) {
-                String nickname = allChooseRepFriends.get(i).getNickname();
-                if (!StringUtils.isEmpty(nickname)) {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
-                } else {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseRepFriends.get(i).getFriendid() + " ");
-                }
-            }
+            setRepFriends(mRepFriends);
         }
-
         //返回参与人
         if (resultCode == 5 && requestCode == 7 && data != null) {
             String chooseFriends = data.getStringExtra("ChooseFriends");
@@ -523,30 +585,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
                     new TypeToken<List<String>>() {
                     }.getType());
 
-            for (int i = 0; i < mJoinFriends.size(); i++) {
-                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
-                if (_user != null) {
-                    try {
-                        mDbManager = DBHelper.getDbManager();
-                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
-                                _user.getOpenFireUserName()).and("friendid", "=", mJoinFriends.get(i)).findAll();
-                        allChooseJoinFriends.add(all.get(0));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            mTvJoinSubmission.setText("");
-            UIUtils.showTip("返回参与人" + chooseFriends + allChooseJoinFriends.size());
-            for (int i = 0; i < allChooseJoinFriends.size(); i++) {
-                String nickname = allChooseJoinFriends.get(i).getNickname();
-                if (!StringUtils.isEmpty(nickname)) {
-                    mTvJoinSubmission.setText(mTvJoinSubmission.getText().toString() + nickname + " ");
-                } else {
-                    mTvJoinSubmission.setText(mTvJoinSubmission.getText().toString() + allChooseJoinFriends.get(i).getFriendid() + " ");
-                }
-            }
+            setJoinFriends(mJoinFriends);
         }
 
         //返回地址
@@ -556,6 +595,60 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             mLongitude = data.getDoubleExtra("longitude", 0);
             if (!TextUtils.isEmpty(address)) {
                 mTvPlace.setText(address);
+            }
+        }
+    }
+
+    //设置参与人
+    private void setJoinFriends(List<String> mJoinFriends) {
+        for (int i = 0; i < mJoinFriends.size(); i++) {
+            User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+            if (_user != null) {
+                try {
+                    mDbManager = DBHelper.getDbManager();
+                    List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                            _user.getOpenFireUserName()).and("friendid", "=", mJoinFriends.get(i)).findAll();
+                    allChooseJoinFriends.add(all.get(0));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        mTvJoinSubmission.setText("");
+        for (int i = 0; i < allChooseJoinFriends.size(); i++) {
+            String nickname = allChooseJoinFriends.get(i).getNickname();
+            if (!StringUtils.isEmpty(nickname)) {
+                mTvJoinSubmission.setText(mTvJoinSubmission.getText().toString() + nickname + " ");
+            } else {
+                mTvJoinSubmission.setText(mTvJoinSubmission.getText().toString() + allChooseJoinFriends.get(i).getFriendid() + " ");
+            }
+        }
+    }
+
+    //设置报送人
+    private void setRepFriends(List<String> mRepFriends) {
+        for (int i = 0; i < mRepFriends.size(); i++) {
+            User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+            if (_user != null) {
+                try {
+                    mDbManager = DBHelper.getDbManager();
+                    List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                            _user.getOpenFireUserName()).and("friendid", "=", mRepFriends.get(i)).findAll();
+                    allChooseRepFriends.add(all.get(0));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        mTvSubmission.setText("");
+        for (int i = 0; i < allChooseRepFriends.size(); i++) {
+            String nickname = allChooseRepFriends.get(i).getNickname();
+            if (!StringUtils.isEmpty(nickname)) {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+            } else {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseRepFriends.get(i).getFriendid() + " ");
             }
         }
     }

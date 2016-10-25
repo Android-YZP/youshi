@@ -117,7 +117,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             //判断选择时间是不是全天
             String begin_time = mScheduleList.get(0).getBegin_time();
             //根据时间的格式来判断日期的形式,(日期长度小于15为全天事件)
-            UIUtils.showTip(begin_time.length() + "日期时间的长度" + "");
             if (begin_time.length() < 15) {//全天事件的初始化
                 mCbAllDay.setChecked(true);
                 isAllDay = true;

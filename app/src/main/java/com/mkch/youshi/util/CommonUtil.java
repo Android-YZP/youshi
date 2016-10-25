@@ -31,6 +31,7 @@ import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
 
@@ -468,6 +469,21 @@ public class CommonUtil {
             e.printStackTrace();
         }
     }
+    /**
+     * 用日程id删除该日程的参与人
+     *
+     * @param sid
+     */
+    public static void DeleteJoinPer(int sid) {
+        try {
+            DbManager mDbManager = DBHelper.getDbManager();
+            WhereBuilder whereBuilder = WhereBuilder.b();
+            whereBuilder.and("sid", "=", sid + "");
+            mDbManager.delete(Schjoiner.class, whereBuilder);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 用日程id删除该日程的时间段
@@ -522,6 +538,22 @@ public class CommonUtil {
         } catch (DbException e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    /**
+     * 用日程id查找该日程的参与人
+     * @param sid
+     */
+    public static ArrayList<Schjoiner> findJoinPer(int sid) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schjoiner> schjoiners = (ArrayList<Schjoiner>) mDbManager.selector(Schjoiner.class).where("sid", "=",
+                    sid).findAll();
+            return schjoiners;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -586,5 +618,7 @@ public class CommonUtil {
         String _week6 = _week5.replace("6", "6,");
         return _week6.replace("7", "7,");
     }
+
+
 
 }
