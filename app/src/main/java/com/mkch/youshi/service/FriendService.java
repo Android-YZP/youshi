@@ -34,6 +34,8 @@ import com.tencent.TIMFriendGroup;
 import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMFriendshipProxyListener;
 import com.tencent.TIMFriendshipProxyStatus;
+import com.tencent.TIMImage;
+import com.tencent.TIMImageElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
@@ -49,6 +51,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
+import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
@@ -60,13 +63,17 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.mkch.youshi.view.RecordButton.generate;
+import static com.tencent.TIMImageType.Original;
+import static com.tencent.TIMImageType.Thumb;
 
 /**
  * Created by ZJ on 2016/10/13.
  */
 public class FriendService extends Service implements TIMMessageListener {
     public static final File AUDIO_DIR = new File(Environment.getExternalStorageDirectory(), "audio");
-    File audioFile;
+    public static final File PIC_DIR = new File(Environment.getExternalStorageDirectory(), "image");
+    private File audioFile, imageFile;
+    private TIMImage imageOriginal;
     private User mUser;
     private String identify, userSig;
     public static final int ACCOUNT_TYPE = 7882;
@@ -467,7 +474,7 @@ public class FriendService extends Service implements TIMMessageListener {
                             if (!AUDIO_DIR.exists()) {
                                 AUDIO_DIR.mkdir();
                             }
-                            audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + ".amr");
+                            audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + j + ".amr");
                             ((TIMSoundElem) element).getSoundToFile(audioFile.getAbsolutePath(), new TIMCallBack() {
                                 @Override
                                 public void onError(int i, String s) {
@@ -480,6 +487,37 @@ public class FriendService extends Service implements TIMMessageListener {
                                 }
                             });
                             receiveSoundMessage(sender, audioFile.getAbsolutePath(), duration);
+                        } else if (element instanceof TIMImageElem) {
+                            Log.d("zzz", "TIMImageElem sender is-----" + sender);
+                            //图片元素
+                            TIMImageElem e = (TIMImageElem) element;
+                            List<TIMImage> listImage = e.getImageList();
+                            for (TIMImage image : listImage) {
+                                Log.d("zzz", "listImage is-----" + image);
+                                Log.d("zzz", "listImage is-----" + image.getType());
+                                if (image.getType() == Thumb) {
+                                    Log.d("zzz", "listImage is-----" + "Thumb");
+                                    if (!PIC_DIR.exists()) {
+                                        PIC_DIR.mkdir();
+                                    }
+                                    imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + j + "Thumb" + ".jpg");
+                                    image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
+                                        @Override
+                                        public void onError(int i, String s) {
+                                            Log.d("zzz-----getImage Thumb", i + "Error:" + s);
+                                        }
+
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d("zzz-----getImage Thumb", "getImage is success");
+                                        }
+                                    });
+                                }
+                                if (image.getType() == Original) {
+                                    imageOriginal = image;
+                                }
+                            }
+                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal);
                         } else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
                             Log.d("zzz", "TIMProfileSystemElem content is-----" + name);
@@ -585,6 +623,77 @@ public class FriendService extends Service implements TIMMessageListener {
         }
     }
 
+    //显示获取的图片聊天信息
+    private void receivePicMessage(final String sender, final String path, final TIMImage image) {
+        if (path != null) {
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, path, "[图片]");
+            //下载原图
+            downloadOriginal(_chat_bean, image);
+            DbManager dbManager = DBHelper.getDbManager();
+            int chat_id = 0;
+            try {
+                //获取该好友的一些信息
+                //查询本登录用户的，已添加的，某个好友
+                Friend _friend = dbManager.selector(Friend.class)
+                        .where("friendid", "=", sender)
+                        .and("status", "=", 1)
+                        .and("userid", "=", mUser.getOpenFireUserName())
+                        .findFirst();
+                int _messagebox_id = 0;
+                if (sender != null && !sender.equals("")) {
+                    String friendId = sender + "@" + "TIMConversationType.C2C";
+                    String selfId = mUser.getOpenFireUserName();
+                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
+                            .and("self_id", "=", selfId).findFirst();
+                    if (messageBox == null) {
+                        String title = null;
+                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
+                            title = _friend.getPhone();
+                        } else {
+                            title = _friend.getNickname();
+                        }
+                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                        dbManager.saveBindingId(messageBox);//新增消息盒子
+                        _messagebox_id = messageBox.getId();
+                    } else {
+                        _messagebox_id = messageBox.getId();
+                    }
+                }
+                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+                dbManager.saveBindingId(_chat_bean);//新增消息
+                chat_id = _chat_bean.getId();
+                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //下载图片信息原图
+    private void downloadOriginal(final ChatBean chatbean, final TIMImage image) {
+        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + chatbean.getId() + ".jpg");
+        image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz---getImage Original", i + "Error:" + s);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d("zzz---getImage Original", "getImage is success");
+                try {
+                    chatbean.setFileOriginal(imageFile.getAbsolutePath());
+                    DbManager dbManager = DBHelper.getDbManager();
+                    dbManager.saveOrUpdate(chatbean);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     /**
      * 单聊-去通知界面采取相应的动作
      *
@@ -592,6 +701,7 @@ public class FriendService extends Service implements TIMMessageListener {
      * @param chat_id
      * @param _friend
      */
+
     private void actionToNotifyChatActivity(ChatBean _chat_bean, int chat_id, Friend _friend) {
         //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
         boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.ChatActivity");

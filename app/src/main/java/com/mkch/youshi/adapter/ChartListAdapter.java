@@ -1,6 +1,8 @@
 package com.mkch.youshi.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +29,11 @@ import java.util.List;
 public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static final int CHART_TYPE_REV_TEXT = 1;
-    public static final int CHART_TYPE_REV_SOUND = 2;
-    public static final int CHART_TYPE_SEND_TEXT = 3;
+    public static final int CHART_TYPE_SEND_TEXT = 2;
+    public static final int CHART_TYPE_REV_SOUND = 3;
     public static final int CHART_TYPE_SEND_SOUND = 4;
+    public static final int CHART_TYPE_REV_PIC = 5;
+    public static final int CHART_TYPE_SEND_PIC = 6;
     private List<ChatBean> mChatBeen;
     private String mSendNickname;//发送者昵称
     private String mFromNickname;//接受者昵称
@@ -79,12 +83,16 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ChatBean _chart_bean = mChatBeen.get(position);
         if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 1) {
             return CHART_TYPE_REV_TEXT;
-        } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 2) {
-            return CHART_TYPE_REV_SOUND;
         } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 1) {
             return CHART_TYPE_SEND_TEXT;
+        } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 2) {
+            return CHART_TYPE_REV_SOUND;
         } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 2) {
             return CHART_TYPE_SEND_SOUND;
+        } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 3) {
+            return CHART_TYPE_REV_PIC;
+        } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 3) {
+            return CHART_TYPE_SEND_PIC;
         } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 0) {
             return CHART_TYPE_REV_TEXT;
         } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 0) {
@@ -99,15 +107,21 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (viewType == CHART_TYPE_REV_TEXT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_left_txt, parent, false);
             return new FromTxtViewHolder(view);
-        } else if (viewType == CHART_TYPE_REV_SOUND) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_left_sound, parent, false);
-            return new FromSoundViewHolder(view);
         } else if (viewType == CHART_TYPE_SEND_TEXT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_right_txt, parent, false);
             return new SendTxtViewHolder(view);
+        } else if (viewType == CHART_TYPE_REV_SOUND) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_left_sound, parent, false);
+            return new FromSoundViewHolder(view);
         } else if (viewType == CHART_TYPE_SEND_SOUND) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_right_sound, parent, false);
             return new SendSoundViewHolder(view);
+        } else if (viewType == CHART_TYPE_REV_PIC) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_left_pic, parent, false);
+            return new FromPicViewHolder(view);
+        } else if (viewType == CHART_TYPE_SEND_PIC) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_right_pic, parent, false);
+            return new SendPicViewHolder(view);
         }
         return null;
     }
@@ -205,6 +219,51 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     x.image().bind(((SendSoundViewHolder) holder).iv_item_send_headpic, _headPic, _image_options);
                 } else {
                     ((SendSoundViewHolder) holder).iv_item_send_headpic.setImageResource(R.drawable.default_headpic);
+                }
+            } else if (holder instanceof FromPicViewHolder) {
+                //左侧-接受图片信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough) {
+                    ((FromPicViewHolder) holder).tv_item_from_time.setVisibility(View.GONE);
+                } else {
+                    ((FromPicViewHolder) holder).tv_item_from_time.setVisibility(View.VISIBLE);
+                    ((FromPicViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((FromPicViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                //显示内容
+                String path = _char_bean.getFileName();
+                Bitmap bm = BitmapFactory.decodeFile(path);
+                ((FromPicViewHolder) holder).iv_item_from_image.setImageBitmap(bm);
+                String _headPic = mFriend.getHead_pic();//头像地址
+                if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
+                    x.image().bind(((FromPicViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
+                } else {
+                    ((FromPicViewHolder) holder).iv_item_from_headpic.setImageResource(R.drawable.default_headpic);
+                }
+            } else if (holder instanceof SendPicViewHolder) {
+                //右侧-发送图片信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough) {
+                    ((SendPicViewHolder) holder).tv_item_send_time.setVisibility(View.GONE);
+                } else {
+                    ((SendPicViewHolder) holder).tv_item_send_time.setVisibility(View.VISIBLE);
+                    ((SendPicViewHolder) holder).tv_item_send_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((SendPicViewHolder) holder).tv_item_send_nickname.setText(mSendNickname);
+                //显示内容
+                String path = _char_bean.getFileName();
+                Bitmap bm = BitmapFactory.decodeFile(path);
+                ((SendPicViewHolder) holder).iv_item_send_image.setImageBitmap(bm);
+                //头像
+                String _headPic = mUser.getHeadPic();//头像地址
+                if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
+                    x.image().bind(((SendPicViewHolder) holder).iv_item_send_headpic, _headPic, _image_options);
+                } else {
+                    ((SendPicViewHolder) holder).iv_item_send_headpic.setImageResource(R.drawable.default_headpic);
                 }
             }
         }
@@ -342,6 +401,82 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tv_item_from_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_left_sound_time);
             tv_item_from_duration = (TextView) itemView.findViewById(R.id.tv_left_say_duration);
             iv_item_from_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_left_sound_headpic);
+            //设置根布局的点击监听事件
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myItemClickListener != null) {
+                        try {
+                            myItemClickListener.onItemClick(v, getAdapterPosition());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (myItemLongClickListener != null) {
+                        myItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    //发送图片适配器
+    class SendPicViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_item_send_nickname;//发送者昵称
+        private TextView tv_item_send_time;//发送时间
+        private ImageView iv_item_send_image;//发送的图片
+        private ImageView iv_item_send_headpic;//发送者头像
+
+        public SendPicViewHolder(View itemView) {
+            super(itemView);
+            tv_item_send_nickname = (TextView) itemView.findViewById(R.id.tv_right_pic_user);
+            tv_item_send_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_right_pic_time);
+            iv_item_send_image = (ImageView) itemView.findViewById(R.id.iv_right_pic);
+            iv_item_send_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_right_pic_headpic);
+            //设置根布局的点击监听事件
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myItemClickListener != null) {
+                        try {
+                            myItemClickListener.onItemClick(v, getAdapterPosition());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (myItemLongClickListener != null) {
+                        myItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    //接受图片适配器
+    class FromPicViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_item_from_nickname;//接受者昵称
+        private TextView tv_item_from_time;//接收时间
+        private ImageView iv_item_from_image;//接受的图片
+        private ImageView iv_item_from_headpic;//接受者头像
+
+        public FromPicViewHolder(View itemView) {
+            super(itemView);
+            tv_item_from_nickname = (TextView) itemView.findViewById(R.id.tv_left_pic_user);
+            tv_item_from_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_left_pic_time);
+            iv_item_from_image = (ImageView) itemView.findViewById(R.id.iv_left_pic);
+            iv_item_from_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_left_pic_headpic);
             //设置根布局的点击监听事件
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
