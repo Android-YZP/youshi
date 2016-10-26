@@ -64,7 +64,7 @@
         <TextView
             android:id="@+id/tv_Add_Affair_week"
             style="@style/lastOfAffairList"
-            android:text="周一周二周三周四周五周六周日" />
+            android:text="" />
     </RelativeLayout>
 
     <View
@@ -78,7 +78,7 @@
 
         <TextView
             style="@style/firstOfAffairList"
-            android:text="时间段选择" />
+            android:text="时间段" />
 
         <TextView
             android:id="@+id/tv_add_affair_is_choose"

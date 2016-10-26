@@ -17,6 +17,7 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
+import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.UIUtils;
 
@@ -103,8 +104,23 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
         mTvAffTime.setText(mSchedule.getBegin_time() + "至" + mSchedule.getEnd_time());
         mTvAffWhiceW.setText(CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).substring(0,
                 CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).length() - 1));
-//        mTvAffTimePice.setText(schedule.gett());//时间段
-        mTvAffTotalTime.setText(mSchedule.getTotal_time());
+
+        // 时间段的初始化
+        ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mSchedule.getId());
+        if (schTimes != null && schTimes.size() != 0 && !schTimes.isEmpty()) {
+            for (int i = 0; i < schTimes.size(); i++) {
+                if (i % 2 == 0) {
+                    mTvAffTimePice.setText(mTvAffTimePice.getText().toString() + " " +
+                            schTimes.get(i).getBegin_time() + "~" + schTimes.get(i).getEnd_time() + " ");
+                }else {
+                    mTvAffTimePice.setText(mTvAffTimePice.getText().toString() + " " +
+                            schTimes.get(i).getBegin_time() + "~" + schTimes.get(i).getEnd_time() + "\n ");
+                }
+            }
+        }
+
+
+        mTvAffTotalTime.setText(mSchedule.getTotal_time());//总时间
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
@@ -127,7 +143,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PersonalDetialsAffairActivity.this,
                         AddPersonalAffairActivity.class);
-                intent.putExtra("eventID",mSchedule.getId());
+                intent.putExtra("eventID", mSchedule.getId());
                 startActivity(intent);
             }
         });

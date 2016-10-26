@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baidu.platform.comapi.map.A;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
@@ -30,6 +32,7 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +41,7 @@ import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
+
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -66,16 +70,18 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     private TextView mTvHabitWeek;
     private TextView mTvHabitCircle;
     private DbManager mDbManager;
-    private Schedule schedule;
-    private ArrayList<NetScheduleModel.ViewModelBean.TimeSpanListBean> mTimeSpanListBeans;
+    private ArrayList<NetScheduleModel.ViewModelBean.TimeSpanListBean> mTimeSpanListBeans = new ArrayList<>();
     private TextView mTvHabitChooseTime;
     private ProgressDialog mProgressDialog;
     private double mLatitude;
     private double mLongitude;
     private TextView mTvPlace;
-    private List<String> mFriends;
-    private List<Friend> allChooseFriends;
+    private List<String> mFriends = new ArrayList<>();
+    private List<Friend> allChooseFriends = new ArrayList<>();
     private TextView mTvSubmission;
+    private int mEventID;
+    private Schedule schedule = new Schedule();
+    private ArrayList<Schedule> mScheduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +93,48 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
     }
 
     private void initData() {
-        allChooseFriends = new ArrayList<>();
+        //得到一个从详情界面传过来的,已经存在日程
+        Intent intent = getIntent();
+        mEventID = intent.getIntExtra("eventID", -1);
+        if (mEventID != -1) {
+            mScheduleList = CommonUtil.findSch(mEventID + "");
+            schedule = mScheduleList.get(0);
+            mEtTheme.setText(schedule.getTitle());
+            mTvPlace.setText(schedule.getAddress());
+            //周期
+            mTvHabitCircle.setText("一周" + schedule.getTimes_of_week() + "次");
+            mTvHabitWeek.setText(CommonUtil.replaceNumberWeek(schedule.getWhich_week()).substring(0, CommonUtil.
+                    replaceNumberWeek(schedule.getWhich_week()).length() - 1));
+            mTvPersonalEventDescription.setText(schedule.getRemark());
+
+            //时间段的选择
+            //时间段的设置
+            ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mEventID);
+            if (!schTimes.isEmpty()) {
+                for (int i = 0; i < schTimes.size(); i++) {
+                    NetScheduleModel.ViewModelBean.TimeSpanListBean timeSpanListBean =
+                            new NetScheduleModel.ViewModelBean.TimeSpanListBean();
+                    timeSpanListBean.setStartTime(schTimes.get(i).getBegin_time());
+                    timeSpanListBean.setEndTime(schTimes.get(i).getEnd_time());
+                    timeSpanListBean.setTdate(schTimes.get(i).getDate());
+                    timeSpanListBean.setRemindTime(schTimes.get(i).getWarning_time());
+                    timeSpanListBean.setStatus(schTimes.get(i).getStatus());
+                    mTimeSpanListBeans.add(timeSpanListBean);
+                }
+
+                //报送好友的初始化显示
+                ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+                if (repPer != null && !repPer.isEmpty()) {
+                    for (int i = 0; i < repPer.size(); i++) {
+                        mFriends.add(repPer.get(i).getFriendid());
+                    }
+                    setRepFriends(mFriends);
+                }
+
+            }
+        }
         mTvTitle.setText("添加个人习惯");
+
     }
 
     private void initView() {
@@ -204,6 +250,11 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                     showTip("请选择时间段");
                     return;
                 }
+                if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
+                    CommonUtil.DeleteRepPer(mEventID);
+                    CommonUtil.DeleteSchTime(mEventID);
+                }
+
                 saveDataOfNet();
                 saveDataOfDb();
                 saveReporterToDb();
@@ -337,6 +388,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             e.printStackTrace();
         }
     }
+
     /**
      * 将日程储存本地数据库
      * 数据库和网络数据的储存
@@ -347,7 +399,6 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         try {
             Log.d("yzp", "-----------saveDataOfDb");
             mDbManager = DBHelper.getDbManager();
-            schedule = new Schedule();
             schedule.setType(2);//日程类型//个人习惯
             schedule.setTitle(mEtTheme.getText().toString());//标题,主题
             schedule.setLabel(mLable);//标签
@@ -399,6 +450,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             if (mRemindTime != 0)
                 mTvRemindBefore.setText(mRemindTime + "分钟前");
         }
+
         //返回报送人
         if (resultCode == 5 && requestCode == 5 && data != null) {
             String chooseFriends = data.getStringExtra("ChooseFriends");
@@ -406,32 +458,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             mFriends = gson.fromJson(chooseFriends,//生成报送人上传对象
                     new TypeToken<List<String>>() {
                     }.getType());
-
-            for (int i = 0; i < mFriends.size(); i++) {
-                User _user = CommonUtil.getUserInfo(UIUtils.getContext());
-                if (_user != null) {
-                    try {
-                        mDbManager = DBHelper.getDbManager();
-                        List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
-                                _user.getOpenFireUserName()).and("friendid", "=", mFriends.get(i)).findAll();
-                        allChooseFriends.add(all.get(0));
-                    } catch (DbException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            mTvSubmission.setText("");
-            for (int i = 0; i < allChooseFriends.size(); i++) {
-                String nickname = allChooseFriends.get(i).getNickname();
-                if (!StringUtils.isEmpty(nickname)) {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
-                } else {
-                    mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
-                }
-            }
+            setRepFriends(mFriends);//设置朋友
         }
-
         //返回地址
         if (resultCode == 6 && requestCode == 6 && data != null) {
             String address = data.getStringExtra("address");
@@ -441,6 +469,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 mTvPlace.setText(address);
             }
         }
+
         //返回周
         if (resultCode == 1 && requestCode == 1 && data != null) {
             mWeek = data.getStringExtra("Week");
@@ -448,6 +477,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             mTvHabitWeek.setText(_week);
             mTvHabitCircle.setText("每周" + mWeek.length() + "次");
         }
+
         //时间段
         if (resultCode == 2 && requestCode == 2 && data != null) {//选择时间段
             String _timeSpanListBeanListString = data.getStringExtra("TimeSpanListBeanList");
@@ -461,8 +491,35 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             } else {
                 mTvHabitChooseTime.setText("未选择");
             }
-
         }
+    }
+
+
+    //设置报送人
+    private void setRepFriends(List<String> friends) {
+        for (int i = 0; i < friends.size(); i++) {
+            User _user = CommonUtil.getUserInfo(UIUtils.getContext());
+            if (_user != null) {
+                try {
+                    mDbManager = DBHelper.getDbManager();
+                    List<Friend> all = mDbManager.selector(Friend.class).where("userid", "=",
+                            _user.getOpenFireUserName()).and("friendid", "=", friends.get(i)).findAll();
+                    allChooseFriends.add(all.get(0));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        mTvSubmission.setText("");
+        for (int i = 0; i < allChooseFriends.size(); i++) {
+            String nickname = allChooseFriends.get(i).getNickname();
+            if (!StringUtils.isEmpty(nickname)) {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + nickname + " ");
+            } else {
+                mTvSubmission.setText(mTvSubmission.getText().toString() + allChooseFriends.get(i).getFriendid() + " ");
+            }
+        }
+
     }
 
     /**

@@ -2,7 +2,6 @@ package com.mkch.youshi.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,8 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.Schedule;
-import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
+import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.UIUtils;
 
@@ -84,6 +83,27 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
             }
         });
     }
+    // 时间段的初始化
+
+    private void setListener() {
+        mTvCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PersonalDetialHabitActivity.this,
+                        AddPersonalHabitActivity.class);
+                intent.putExtra("eventID", mSchedule.getId());
+                startActivity(intent);
+            }
+        });
+    }
+
+
     private void initData() {
         //解析传过来的数据
         Gson gson = new Gson();
@@ -98,9 +118,9 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
         mTvTheme.setText(mSchedule.getTitle());
         mTvlabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
         mTvLoc.setText(mSchedule.getAddress());
-        mTvWTimes.setText(CommonUtil.replaceNumberWeek(mSchedule.getTimes_of_week()+""));
-        mTvWWeeks.setText(mSchedule.getWhich_week());
-        mTvWWeeks.setText(mSchedule.getWhich_week());
+        mTvWTimes.setText("一周" + mSchedule.getTimes_of_week() + "次");
+        mTvWWeeks.setText(CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).substring(0,CommonUtil.
+                replaceNumberWeek(mSchedule.getWhich_week()).length()-1));
         mTvBeTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
@@ -109,23 +129,23 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
                         CommonUtil.findFriName(repPer.get(i).getFriendid()));
             }
         }
-    }
-    private void setListener() {
-        mTvCancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+
+
+        // 时间段的初始化
+        ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mSchedule.getId());
+        if (schTimes != null && schTimes.size() != 0 && !schTimes.isEmpty()) {
+            for (int i = 0; i < schTimes.size(); i++) {
+                if (i % 2 == 0) {
+                    mTvTimes.setText(mTvTimes.getText().toString() + " " +
+                            schTimes.get(i).getBegin_time() + "~" + schTimes.get(i).getEnd_time() + " ");
+                } else {
+                    mTvTimes.setText(mTvTimes.getText().toString() + " " +
+                            schTimes.get(i).getBegin_time() + "~" + schTimes.get(i).getEnd_time() + "\n ");
+                }
             }
-        });
-        mTvComp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PersonalDetialHabitActivity.this,
-                        AddPersonalEventActivity.class);
-                intent.putExtra("eventID",mSchedule.getId());
-                startActivity(intent);
-            }
-        });
+        }
+
+
     }
 
 

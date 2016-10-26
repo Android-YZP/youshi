@@ -113,34 +113,53 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mEventID = intent.getIntExtra("eventID", -1);
         if (mEventID != -1) {
             mScheduleList = CommonUtil.findSch(mEventID + "");
-            UIUtils.showTip(mScheduleList.get(0).getAddress());
             mEtTheme.setText(mScheduleList.get(0).getTitle());
-            mTvStartTime.setText(mScheduleList.get(0).getBegin_time());
+            //判断选择时间是不是全天
+            String begin_time = mScheduleList.get(0).getBegin_time();
+            //根据时间的格式来判断日期的形式,(日期长度小于15为全天事件)
+            UIUtils.showTip(begin_time.length() + "日期时间的长度" + "");
+            if (begin_time.length() < 15) {//全天事件的初始化
+                mCbAllDay.setChecked(true);
+                isAllDay = true;
+            }
+
+            mTvStartTime.setText(begin_time);
             mTvEndTime.setText(mScheduleList.get(0).getEnd_time());
             mTvPlace.setText(mScheduleList.get(0).getAddress());
             mTvPersonalEventDescription.setText(mScheduleList.get(0).getRemark());
             setRBChecked(mScheduleList.get(0).getLabel());//设置选择好的标签
+
+            //提前提醒
+            mTvRemindBefore.setText(mScheduleList.get(0).getAhead_warn() + "分钟前");
+            mRemindTime = mScheduleList.get(0).getAhead_warn();
+
             //好友的初始化显示
             ArrayList<Schreport> repPer = CommonUtil.findRepPer(mScheduleList.get(0).getId());
-            UIUtils.showTip(mScheduleList.get(0).getId()+"报送人");
-            UIUtils.showTip(repPer.size()+"报送人的数目");
+            UIUtils.showTip(mScheduleList.get(0).getId() + "报送人");
+            UIUtils.showTip(repPer.size() + "报送人的数目");
             for (int i = 0; i < repPer.size(); i++) {
                 mFriends.add(repPer.get(i).getFriendid());
             }
             setRepFriends(mFriends);
+
         } else {
-            //初始化开始时间和结束时间
-            Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
-            t.setToNow(); // 取得系统时间。
-            mCurrentYear = t.year;
-            mCurrentMonth = t.month + 1;
-            mCurrentDay = t.monthDay;
-            mCurrentHour = t.hour;
-            mCurrentMinute = t.minute;
+            initTime();
             mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
             mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
         }
         mTvTitle.setText("添加个人事件");//标题
+    }
+
+    //初始化时间
+    private void initTime() {
+        //初始化开始时间和结束时间
+        Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料
+        t.setToNow(); // 取得系统时间。
+        mCurrentYear = t.year;
+        mCurrentMonth = t.month + 1;
+        mCurrentDay = t.monthDay;
+        mCurrentHour = t.hour;
+        mCurrentMinute = t.minute;
     }
 
     private void initView() {
@@ -199,6 +218,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         mCbAllDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                initTime();//当变换是否为全天事件的时候,重新初始化时间
                 isAllDay = isChecked;
                 mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
                 mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
@@ -261,6 +281,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
 //                    showTip("请选择地址");
 //                    return;
 //                }
+                if (mEventID != -1)//当该日程是传送过来的哪个的时候，删除原有的
+                    CommonUtil.DeleteRepPer(mEventID);
                 saveDataOfDb();
                 saveReporterToDb();
                 saveDataOfNet();

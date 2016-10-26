@@ -113,7 +113,7 @@
                 <TextView
                     android:id="@+id/tv_affair_time_pice"
                     style="@style/detial_gray"
-                    android:text="09:00~10:00 10:00~11:00" />
+                    android:text=" " />
 
             </LinearLayout>
 

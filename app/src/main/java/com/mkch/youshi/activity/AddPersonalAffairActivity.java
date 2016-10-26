@@ -43,6 +43,7 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.DialogFactory;
 import com.mkch.youshi.util.StringUtils;
+import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.UIUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
@@ -196,21 +197,31 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     timeSpanListBean.setStatus(schTimes.get(i).getStatus());
                     mTimeSpanListBeans.add(timeSpanListBean);
                 }
+                int[] timeAndhour = TimesUtils.totalTimeAndhour(mTimeSpanListBeans);
+                mTotalTimeHour = timeAndhour[0];//初始化时间段参数
+                mTotalTimeMints = timeAndhour[1];
                 mAffairTimeISChoose.setText("已选择");
             }
+
+
             //设置总时间
             String totalTime = schedule.getTotal_time();
             if (!totalTime.equals("0")) {
                 mAffairTimeAllTime.setText(totalTime);
             }
 
+            //提前提醒时间
+            //提前提醒
+            mTvRemindBefore.setText(mScheduleList.get(0).getAhead_warn() + "分钟前");
+            mRemindTime = mScheduleList.get(0).getAhead_warn();
+
+
             //报送好友的初始化显示
             ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
-            UIUtils.showTip(schedule.getId() + "报送人");
-            UIUtils.showTip(repPer.size() + "报送人的数目");
+//            UIUtils.showTip(schedule.getId() + "报送人");
+//            UIUtils.showTip(repPer.size() + "报送人的数目");
             for (int i = 0; i < repPer.size(); i++) {
                 mFriends.add(repPer.get(i).getFriendid());
-
             }
             setRepFriends(mFriends);
         }
@@ -327,12 +338,12 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     return;
                 }
                 mProgressDialog = ProgressDialog.show(AddPersonalAffairActivity.this, "请稍等", "正在保存中...", true, true);
-                saveDataOfDb();
                 if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
                     CommonUtil.DeleteRepPer(mEventID);
                     CommonUtil.DeleteSchTime(mEventID);
                 }
-                saveReporterToDb();
+                saveDataOfDb();//保存了日程表和时间段
+                saveReporterToDb();//保存报送人到数据表
                 if (CommonUtil.isnetWorkAvilable(this)) {//判断有网络就上传网络,否则就只保存在本地
                     saveDataOfNet();
                 }
@@ -569,19 +580,18 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 mTvPlace.setText(address);
             }
         }
-        if (resultCode == 1 && requestCode == 1 && data != null) {//选择周几
+        //选择周几
+        if (resultCode == 1 && requestCode == 1 && data != null) {
             mWeek = data.getStringExtra("Week");
             String _week = CommonUtil.replaceNumberWeek(mWeek);//将1234567换成周一,周二,周三
             mTvAffairWeek.setText(_week);
 
             //计算有效时间天数
-            mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(), mTwoEndDate.getText().toString());
-            int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
-            int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
-            mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
+            setTotalTime();
         }
 
-        if (resultCode == 2 && requestCode == 2 && data != null) {//选择时间段
+        //选择时间段
+        if (resultCode == 2 && requestCode == 2 && data != null) {
             String _timeSpanListBeanListString = data.getStringExtra("TimeSpanListBeanList");
             //一天的总时长
             mOneDayTotalTimeString = data.getStringExtra("TotalTime");
@@ -598,12 +608,9 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 mAffairTimeISChoose.setText("未选择");
             }
 
+            UIUtils.showTip(mTotalTimeHour+""+mTotalTimeMints+"");
             //计算有效时间天数
-            mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(), mTwoEndDate.getText().toString());
-            int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
-            int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
-            Log.d("YZP_______", _totalHour + _totalMin + "PPP");
-            mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
+            setTotalTime();
         }
     }
 
@@ -688,7 +695,6 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         }
         return totlyTimes;
     }
-
 
     /**
      * 一起选择开始时间和结束时间
@@ -827,13 +833,8 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                     Toast.makeText(context, "开始时间应小于结束时间", Toast.LENGTH_SHORT).show();
                 }
 
+                setTotalTime();
 
-                //计算有效时间天数
-                mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(), mTwoEndDate.getText().toString());
-                int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
-                int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
-                Log.d("YZP_______", _totalHour + _totalMin + "PPP");
-                mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
             }
         });
         //选择事件监听
@@ -917,6 +918,19 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
         mChooseTimeDialog.show();
+    }
+
+    /**
+     * 计算出有效的时间总时长
+     */
+    private void setTotalTime() {
+        //计算有效时间天数
+        mAllDayChooseTimes = chooseTotalTimes(mTwoStartDate.getText().toString(),
+                mTwoEndDate.getText().toString());
+        int _totalHour = mTotalTimeHour * mAllDayChooseTimes;
+        int _totalMin = mTotalTimeMints * mAllDayChooseTimes;
+        Log.d("YZP_______", _totalHour + _totalMin + "PPP");
+        mAffairTimeAllTime.setText(_totalHour + "小时" + _totalMin + "分钟");//设置总时长
     }
 
 
