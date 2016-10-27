@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
+import com.mkch.youshi.adapter.ExpressionGridAdapter;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
@@ -41,9 +42,11 @@ import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.view.Expression;
 import com.mkch.youshi.view.RecordButton;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
 import com.tencent.TIMImageElem;
 import com.tencent.TIMManager;
@@ -99,6 +102,12 @@ public class ChatActivity extends BaseActivity {
     @ViewInject(R.id.iv_chat_go_expression)
     private ImageView mIvGoExpression;//表情
 
+    @ViewInject(R.id.line_chat_expression)
+    private LinearLayout mLineExpression;//表情面板
+
+    @ViewInject(R.id.gv_chat_expression)
+    private GridView mGvExpression;//表情视图
+
     @ViewInject(R.id.iv_chat_go_more_action)
     private ImageView mIvGoMoreAction;//更多操作
 
@@ -133,6 +142,7 @@ public class ChatActivity extends BaseActivity {
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private static final int FILE_CODE = 4;//选择文件
+    private String[] expressionMessages = new String[]{"[微笑]", "[抓狂]", "[大哭]", "[拜托]", "[鄙视]", "[委屈]", "[发呆]", "[晕]", "[傲慢]", "[色]", "[大笑]", "[偷笑]", "[可怜]", "[傻笑]", "[飞吻]", "[困]", "[难过]", "[咒骂]", "[亲亲]", "[流汗]", "[惊吓]", "[害羞]", "[快哭了]", "[流泪]", "[调皮]", "[闭嘴]", "[撇嘴]"};
 
     private Handler mHandler = new Handler() {
         @Override
@@ -277,9 +287,10 @@ public class ChatActivity extends BaseActivity {
         mEtChatInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                //当获取焦点时，只要有其他面板在打开状态，隐藏这些面板，差表情面板未设计
+                //当获取焦点时，只要有其他面板在打开状态，隐藏这些面板
                 if (hasFocus) {
                     mLineMoreAction.setVisibility(View.GONE);
+                    mLineExpression.setVisibility(View.GONE);
                 }
             }
         });
@@ -334,6 +345,12 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        mGvExpression.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                sendExpressionMsg(position);
+            }
+        });
     }
 
     private void initData() {
@@ -383,6 +400,9 @@ public class ChatActivity extends BaseActivity {
         _adapter = new SimpleAdapter(this, _maps, R.layout.gv_item_chat_more_action, new String[]{"pic_res", "str_name"}, new int[]{R.id.iv_item_chat_more_action, R.id.tv_item_chat_more_action});
         //设置适配器
         mGvMoreAction.setAdapter(_adapter);
+        //表情视图
+        ExpressionGridAdapter expressionGridAdapter = new ExpressionGridAdapter(this, Expression.expressions);
+        mGvExpression.setAdapter(expressionGridAdapter);
     }
 
     /**
@@ -541,16 +561,30 @@ public class ChatActivity extends BaseActivity {
                 }
                 break;
             case R.id.et_chat_input://点击输入框
-                mLineMoreAction.setVisibility(View.GONE);//隐藏面板-差表情面板
+                //隐藏面板
+                mLineMoreAction.setVisibility(View.GONE);
+                mLineExpression.setVisibility(View.GONE);
                 mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
                 break;
             case R.id.iv_chat_go_expression://弹出表情
+//                Toast.makeText(this, "zzz", Toast.LENGTH_SHORT).show();
+                if (mLineExpression.getVisibility() == View.VISIBLE) {
+                    mLineExpression.setVisibility(View.GONE);
+                } else {
+                    CommonUtil.hideInput(this, mEtChatInput);//隐藏输入法
+                    mLineMoreAction.setVisibility(View.GONE);
+                    mLineExpression.setVisibility(View.VISIBLE);
+                }
+                if (m_chart_list != null) {
+                    mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+                }
                 break;
             case R.id.iv_chat_go_more_action://切换弹出更多操作
                 if (mLineMoreAction.getVisibility() == View.VISIBLE) {
                     mLineMoreAction.setVisibility(View.GONE);
                 } else {
                     CommonUtil.hideInput(this, mEtChatInput);//隐藏输入法
+                    mLineExpression.setVisibility(View.GONE);
                     mLineMoreAction.setVisibility(View.VISIBLE);
                 }
                 if (m_chart_list != null) {
@@ -669,6 +703,33 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    //发送表情信息
+    private void sendExpressionMsg(final int position) {
+        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+        TIMMessage msg = new TIMMessage();
+        //添加表情index
+        TIMFaceElem elem = new TIMFaceElem();
+        elem.setIndex(position);
+        //将elem添加到消息
+        if (msg.addElement(elem) != 0) {
+            Log.d("zzz-------", "addFaceElement failed");
+            return;
+        }
+        //发送消息
+        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+            @Override
+            public void onError(int code, String desc) {
+                Log.d("zzz---sendMessage Face", code + "Error:" + desc);
+            }
+
+            @Override
+            public void onSuccess(TIMMessage msg) {
+                Log.d("zzz---sendMessage Face", "sendMessage is success");
+                addFaceMessageBox(position);
+            }
+        });
+    }
+
     //文本发送成功
     private void addTextMessageBox(final String msg) {
         try {
@@ -778,6 +839,33 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    //表情发送成功
+    private void addFaceMessageBox(final int position) {
+        try {
+            //localMessage
+            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, position, expressionMessages[position]);
+            m_chart_list.add(_local_message);
+            if (mMessageBoxId == 0) {
+                //新增该消息盒子
+                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                dbManager.saveBindingId(m_messageBox);
+                mMessageBoxId = m_messageBox.getId();
+            } else {
+                //更新消息盒子
+                m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                m_messageBox.setTitle(mFriend.getNickname());
+                m_messageBox.setInfo(_local_message.getContent());
+                m_messageBox.setLasttime(TimesUtils.getNow());
+                dbManager.saveOrUpdate(m_messageBox);
+            }
+            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
+            dbManager.save(_local_message);//保存一条消息到数据库
+            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 切换键盘和语音
      */
@@ -796,6 +884,8 @@ public class ChatActivity extends BaseActivity {
             mLineKeybordBlock.setVisibility(View.VISIBLE);
             mBtnUseVoice.setVisibility(View.GONE);
         }
-        mLineMoreAction.setVisibility(View.GONE);//隐藏面板-差表情面板
+        //隐藏面板
+        mLineMoreAction.setVisibility(View.GONE);
+        mLineExpression.setVisibility(View.GONE);
     }
 }

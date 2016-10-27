@@ -28,6 +28,7 @@ public class ChatBean {
     public static final int MESSAGE_MODEL_SOUND = 2;
     public static final int MESSAGE_MODEL_PIC = 3;
     public static final int MESSAGE_MODEL_FILE = 4;
+    public static final int MESSAGE_MODEL_FACE = 5;
     @Column(name = "duration")
     private int duration;//语音消息的时长
     @Column(name = "filename")
@@ -36,6 +37,8 @@ public class ChatBean {
     private String filePath;//文件的路径
     @Column(name = "file_original")
     private String fileOriginal;//图片原图
+    @Column(name = "exp_position")
+    private int expPosition;//表情index
     //消息状态,成功、失败、等待
     @Column(name = "status")
     private int status;
@@ -163,6 +166,23 @@ public class ChatBean {
         this.content = content;
     }
 
+    /**
+     * 图片消息
+     *
+     * @param username    发送者
+     * @param date        时间
+     * @param type        消息接收or发送
+     * @param expPosition 图片index
+     */
+    public ChatBean(String username, String date, int type, int expPosition, String content) {
+        this.username = username;
+        this.date = date;
+        this.type = type;
+        this.expPosition = expPosition;
+        this.msgModel = MESSAGE_MODEL_FACE;
+        this.content = content;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -257,6 +277,14 @@ public class ChatBean {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public int getExpPosition() {
+        return expPosition;
+    }
+
+    public void setExpPosition(int expPosition) {
+        this.expPosition = expPosition;
     }
 
     @Override

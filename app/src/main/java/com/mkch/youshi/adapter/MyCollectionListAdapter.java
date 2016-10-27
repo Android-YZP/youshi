@@ -13,7 +13,7 @@ import com.mkch.youshi.R;
 
 /**
  * 收藏文件列表
- * Created by SunnyJiang on 2016/8/18.
+ * Created by ZJ on 2016/8/18.
  */
 public class MyCollectionListAdapter extends BaseAdapter implements ListAdapter {
     private Integer[] collectionImg = new Integer[]{R.drawable.txt, R.drawable.doc, R.drawable.ppt, R.drawable.jpg, R.drawable.mp4};

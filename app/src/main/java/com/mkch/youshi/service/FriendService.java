@@ -26,15 +26,14 @@ import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.view.Expression;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.tencent.TIMCallBack;
 import com.tencent.TIMElem;
+import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
 import com.tencent.TIMFriendAllowType;
-import com.tencent.TIMFriendGroup;
 import com.tencent.TIMFriendshipManager;
-import com.tencent.TIMFriendshipProxyListener;
-import com.tencent.TIMFriendshipProxyStatus;
 import com.tencent.TIMImage;
 import com.tencent.TIMImageElem;
 import com.tencent.TIMManager;
@@ -46,7 +45,6 @@ import com.tencent.TIMSNSSystemElem;
 import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
-import com.tencent.TIMUserProfile;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
@@ -95,7 +93,6 @@ public class FriendService extends Service implements TIMMessageListener {
         super.onCreate();
         TIMManager.getInstance().init(getApplicationContext());
         mUser = CommonUtil.getUserInfo(this);
-        TIMManager.getInstance().setFriendshipProxyListener(mListener);
         TIMManager.getInstance().addMessageListener(this);
         //通知service
         mNotification_manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -134,52 +131,6 @@ public class FriendService extends Service implements TIMMessageListener {
             }
         });
     }
-
-    TIMFriendshipProxyListener mListener = new TIMFriendshipProxyListener() {
-        @Override
-        public void OnProxyStatusChange(TIMFriendshipProxyStatus timFriendshipProxyStatus) {
-            Log.d("zzz", "-------------------------OnProxyStatusChange");
-        }
-
-        @Override
-        public void OnAddFriends(List<TIMUserProfile> list) {
-            Log.d("zzz", "-------------------------OnAddFriends");
-        }
-
-        @Override
-        public void OnDelFriends(List<String> list) {
-            Log.d("zzz", "-------------------------OnDelFriends");
-        }
-
-        @Override
-        public void OnFriendProfileUpdate(List<TIMUserProfile> list) {
-            Log.d("zzz", "-------------------------OnFriendProfileUpdate");
-        }
-
-        @Override
-        public void OnAddFriendReqs(List<TIMSNSChangeInfo> list) {
-            Log.d("zzz", "-------------------------OnAddFriendReqs");
-            for (TIMSNSChangeInfo itemInfo : list) {
-                friendIdentify = itemInfo.getIdentifier();
-            }
-            saveFriendToDB(friendIdentify);
-        }
-
-        @Override
-        public void OnAddFriendGroups(List<TIMFriendGroup> list) {
-            Log.d("zzz", "-------------------------OnAddFriendGroups");
-        }
-
-        @Override
-        public void OnDelFriendGroups(List<String> list) {
-            Log.d("zzz", "-------------------------OnDelFriendGroups");
-        }
-
-        @Override
-        public void OnFriendGroupUpdate(List<TIMFriendGroup> list) {
-            Log.d("jlj", "-------------------------OnFriendGroupUpdate");
-        }
-    };
 
     private Handler mHandler = new Handler() {
         @Override
@@ -523,13 +474,19 @@ public class FriendService extends Service implements TIMMessageListener {
                                 }
                             }
                             receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal);
-                        } else if (element instanceof TIMFileElem) {
+                        }//接受到文件信息
+                        else if (element instanceof TIMFileElem) {
                             Log.d("zzz", "TIMFileElem sender is-----" + sender);
                             if (!FILE_DIR.exists()) {
                                 FILE_DIR.mkdir();
                             }
                             file = new File(FILE_DIR, generate() + TimesUtils.getNow() + j + "");
                             receiveFileMessage(sender, (TIMFileElem) element);
+                        }//接受到表情信息
+                        else if (element instanceof TIMFaceElem) {
+                            Log.d("zzz", "TIMFaceElem sender is-----" + sender);
+                            int position = ((TIMFaceElem) element).getIndex();
+                            receiveFaceMessage(sender, position);
                         }//接受到用户资料变更系统通知
                         else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
@@ -549,44 +506,7 @@ public class FriendService extends Service implements TIMMessageListener {
         if (msg != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, msg, ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
-            DbManager dbManager = DBHelper.getDbManager();
-            int chat_id = 0;
-            try {
-                //获取该好友的一些信息
-                //查询本登录用户的，已添加的，某个好友
-                Friend _friend = dbManager.selector(Friend.class)
-                        .where("friendid", "=", sender)
-                        .and("status", "=", 1)
-                        .and("userid", "=", mUser.getOpenFireUserName())
-                        .findFirst();
-                int _messagebox_id = 0;
-                if (sender != null && !sender.equals("")) {
-                    String friendId = sender + "@" + "TIMConversationType.C2C";
-                    String selfId = mUser.getOpenFireUserName();
-                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
-                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
-                            .and("self_id", "=", selfId).findFirst();
-                    if (messageBox == null) {
-                        String title = null;
-                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
-                            title = _friend.getPhone();
-                        } else {
-                            title = _friend.getNickname();
-                        }
-                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                        dbManager.saveBindingId(messageBox);//新增消息盒子
-                        _messagebox_id = messageBox.getId();
-                    } else {
-                        _messagebox_id = messageBox.getId();
-                    }
-                }
-                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
-                dbManager.saveBindingId(_chat_bean);//新增消息
-                chat_id = _chat_bean.getId();
-                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            saveChatBean(sender, _chat_bean);
         }
     }
 
@@ -595,44 +515,7 @@ public class FriendService extends Service implements TIMMessageListener {
         if (path != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, duration, path, "[语音]");
-            DbManager dbManager = DBHelper.getDbManager();
-            int chat_id = 0;
-            try {
-                //获取该好友的一些信息
-                //查询本登录用户的，已添加的，某个好友
-                Friend _friend = dbManager.selector(Friend.class)
-                        .where("friendid", "=", sender)
-                        .and("status", "=", 1)
-                        .and("userid", "=", mUser.getOpenFireUserName())
-                        .findFirst();
-                int _messagebox_id = 0;
-                if (sender != null && !sender.equals("")) {
-                    String friendId = sender + "@" + "TIMConversationType.C2C";
-                    String selfId = mUser.getOpenFireUserName();
-                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
-                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
-                            .and("self_id", "=", selfId).findFirst();
-                    if (messageBox == null) {
-                        String title = null;
-                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
-                            title = _friend.getPhone();
-                        } else {
-                            title = _friend.getNickname();
-                        }
-                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                        dbManager.saveBindingId(messageBox);//新增消息盒子
-                        _messagebox_id = messageBox.getId();
-                    } else {
-                        _messagebox_id = messageBox.getId();
-                    }
-                }
-                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
-                dbManager.saveBindingId(_chat_bean);//新增消息
-                chat_id = _chat_bean.getId();
-                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            saveChatBean(sender, _chat_bean);
         }
     }
 
@@ -643,44 +526,7 @@ public class FriendService extends Service implements TIMMessageListener {
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, path, "[图片]");
             //下载原图
             downloadOriginal(_chat_bean, image);
-            DbManager dbManager = DBHelper.getDbManager();
-            int chat_id = 0;
-            try {
-                //获取该好友的一些信息
-                //查询本登录用户的，已添加的，某个好友
-                Friend _friend = dbManager.selector(Friend.class)
-                        .where("friendid", "=", sender)
-                        .and("status", "=", 1)
-                        .and("userid", "=", mUser.getOpenFireUserName())
-                        .findFirst();
-                int _messagebox_id = 0;
-                if (sender != null && !sender.equals("")) {
-                    String friendId = sender + "@" + "TIMConversationType.C2C";
-                    String selfId = mUser.getOpenFireUserName();
-                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
-                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
-                            .and("self_id", "=", selfId).findFirst();
-                    if (messageBox == null) {
-                        String title = null;
-                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
-                            title = _friend.getPhone();
-                        } else {
-                            title = _friend.getNickname();
-                        }
-                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                        dbManager.saveBindingId(messageBox);//新增消息盒子
-                        _messagebox_id = messageBox.getId();
-                    } else {
-                        _messagebox_id = messageBox.getId();
-                    }
-                }
-                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
-                dbManager.saveBindingId(_chat_bean);//新增消息
-                chat_id = _chat_bean.getId();
-                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            saveChatBean(sender, _chat_bean);
         }
     }
 
@@ -715,44 +561,7 @@ public class FriendService extends Service implements TIMMessageListener {
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), fileName, "[文件]", ChatBean.MESSAGE_TYPE_IN);
             //下载文件信息
             downloadFile(_chat_bean, elemnet);
-            DbManager dbManager = DBHelper.getDbManager();
-            int chat_id = 0;
-            try {
-                //获取该好友的一些信息
-                //查询本登录用户的，已添加的，某个好友
-                Friend _friend = dbManager.selector(Friend.class)
-                        .where("friendid", "=", sender)
-                        .and("status", "=", 1)
-                        .and("userid", "=", mUser.getOpenFireUserName())
-                        .findFirst();
-                int _messagebox_id = 0;
-                if (sender != null && !sender.equals("")) {
-                    String friendId = sender + "@" + "TIMConversationType.C2C";
-                    String selfId = mUser.getOpenFireUserName();
-                    //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
-                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
-                            .and("self_id", "=", selfId).findFirst();
-                    if (messageBox == null) {
-                        String title = null;
-                        if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
-                            title = _friend.getPhone();
-                        } else {
-                            title = _friend.getNickname();
-                        }
-                        messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                        dbManager.saveBindingId(messageBox);//新增消息盒子
-                        _messagebox_id = messageBox.getId();
-                    } else {
-                        _messagebox_id = messageBox.getId();
-                    }
-                }
-                _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
-                dbManager.saveBindingId(_chat_bean);//新增消息
-                chat_id = _chat_bean.getId();
-                actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            saveChatBean(sender, _chat_bean);
         }
     }
 
@@ -777,6 +586,57 @@ public class FriendService extends Service implements TIMMessageListener {
                     }
                 }
             });
+        }
+    }
+
+    //显示获取的表情聊天信息
+    private void receiveFaceMessage(final String sender, final int position) {
+        if (sender != null) {
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, position, Expression.expressionMessages[position]);
+            saveChatBean(sender, _chat_bean);
+        }
+    }
+
+    //保存消息至数据库
+    private void saveChatBean(final String sender, final ChatBean _chat_bean) {
+        DbManager dbManager = DBHelper.getDbManager();
+        int chat_id = 0;
+        try {
+            //获取该好友的一些信息
+            //查询本登录用户的，已添加的，某个好友
+            Friend _friend = dbManager.selector(Friend.class)
+                    .where("friendid", "=", sender)
+                    .and("status", "=", 1)
+                    .and("userid", "=", mUser.getOpenFireUserName())
+                    .findFirst();
+            int _messagebox_id = 0;
+            if (sender != null && !sender.equals("")) {
+                String friendId = sender + "@" + "TIMConversationType.C2C";
+                String selfId = mUser.getOpenFireUserName();
+                //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
+                        .and("self_id", "=", selfId).findFirst();
+                if (messageBox == null) {
+                    String title = null;
+                    if (_friend.getNickname() == null || _friend.getNickname().equals("")) {
+                        title = _friend.getPhone();
+                    } else {
+                        title = _friend.getNickname();
+                    }
+                    messageBox = new MessageBox(_friend.getHead_pic(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                    dbManager.saveBindingId(messageBox);//新增消息盒子
+                    _messagebox_id = messageBox.getId();
+                } else {
+                    _messagebox_id = messageBox.getId();
+                }
+            }
+            _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+            dbManager.saveBindingId(_chat_bean);//新增消息
+            chat_id = _chat_bean.getId();
+            actionToNotifyChatActivity(_chat_bean, chat_id, _friend);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
