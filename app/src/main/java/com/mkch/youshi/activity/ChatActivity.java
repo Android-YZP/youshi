@@ -44,6 +44,7 @@ import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.RecordButton;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMFileElem;
 import com.tencent.TIMImageElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
@@ -131,6 +132,7 @@ public class ChatActivity extends BaseActivity {
     private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
+    private static final int FILE_CODE = 4;//选择文件
 
     private Handler mHandler = new Handler() {
         @Override
@@ -263,6 +265,12 @@ public class ChatActivity extends BaseActivity {
                         intent.putExtra("image", m_chart_list.get(position).getFileOriginal());
                         startActivity(intent);
                     }
+                } else if (m_chart_list.get(position).getMsgModel() == 4) {
+                    if (m_chart_list.get(position).getFilePath() == null) {
+                        Toast.makeText(ChatActivity.this, "正在下载文件...", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ChatActivity.this, "下载已完成", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -315,6 +323,11 @@ public class ChatActivity extends BaseActivity {
                         intent = new Intent("android.media.action.IMAGE_CAPTURE");
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
+                        break;
+                    case 3:
+                        intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("*/*");
+                        startActivityForResult(intent, FILE_CODE);
                         break;
                     default:
                         break;
@@ -393,6 +406,11 @@ public class ChatActivity extends BaseActivity {
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
+                }
+                break;
+            case FILE_CODE://选择文件后
+                if (resultCode == RESULT_OK) {
+                    sendFile(data.getData().getPath());
                 }
                 break;
         }
@@ -611,6 +629,46 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
+    //发送文件信息
+    private void sendFile(final String path) {
+        if (path == null) return;
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.length() > 1024 * 1024 * 10) {
+                Toast.makeText(this, "文件过大，发送失败！", Toast.LENGTH_SHORT).show();
+            } else {
+                //构造一条消息
+                TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+                TIMMessage msg = new TIMMessage();
+                //添加文件内容
+                TIMFileElem elem = new TIMFileElem();
+                elem.setPath(path); //设置文件路径
+                final String fileName = path.substring(path.lastIndexOf("/") + 1);
+                elem.setFileName(fileName); //设置消息展示用的文件名称
+                //将elem添加到消息
+                if (msg.addElement(elem) != 0) {
+                    Log.d("zzz-------", "addFileElem failed");
+                    return;
+                }
+                //发送消息
+                conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                    @Override
+                    public void onError(int code, String desc) {
+                        Log.d("zzz---sendMessage file", code + "Error:" + desc);
+                    }
+
+                    @Override
+                    public void onSuccess(TIMMessage msg) {//发送消息成功
+                        Log.d("zzz---sendMessage file", "sendMessage is success");
+                        addFileMessageBox(path, fileName);
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     //文本发送成功
     private void addTextMessageBox(final String msg) {
         try {
@@ -671,6 +729,33 @@ public class ChatActivity extends BaseActivity {
             //localMessage
             ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, file, "[图片]");
             _local_message.setFileOriginal(file);
+            m_chart_list.add(_local_message);
+            if (mMessageBoxId == 0) {
+                //新增该消息盒子
+                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                dbManager.saveBindingId(m_messageBox);
+                mMessageBoxId = m_messageBox.getId();
+            } else {
+                //更新消息盒子
+                m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                m_messageBox.setTitle(mFriend.getNickname());
+                m_messageBox.setInfo(_local_message.getContent());
+                m_messageBox.setLasttime(TimesUtils.getNow());
+                dbManager.saveOrUpdate(m_messageBox);
+            }
+            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
+            dbManager.save(_local_message);//保存一条消息到数据库
+            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //文件发送成功
+    private void addFileMessageBox(final String file, final String fileName) {
+        try {
+            //localMessage
+            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), file, fileName, "[文件]", ChatBean.MESSAGE_TYPE_OUT);
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子

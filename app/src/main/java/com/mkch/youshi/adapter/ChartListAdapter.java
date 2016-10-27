@@ -34,6 +34,8 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int CHART_TYPE_SEND_SOUND = 4;
     public static final int CHART_TYPE_REV_PIC = 5;
     public static final int CHART_TYPE_SEND_PIC = 6;
+    public static final int CHART_TYPE_REV_FILE = 7;
+    public static final int CHART_TYPE_SEND_FILE = 8;
     private List<ChatBean> mChatBeen;
     private String mSendNickname;//发送者昵称
     private String mFromNickname;//接受者昵称
@@ -93,6 +95,10 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return CHART_TYPE_REV_PIC;
         } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 3) {
             return CHART_TYPE_SEND_PIC;
+        } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 4) {
+            return CHART_TYPE_REV_FILE;
+        } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 4) {
+            return CHART_TYPE_SEND_FILE;
         } else if (_chart_bean.getType() == 0 && _chart_bean.getMsgModel() == 0) {
             return CHART_TYPE_REV_TEXT;
         } else if (_chart_bean.getType() == 1 && _chart_bean.getMsgModel() == 0) {
@@ -122,6 +128,12 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (viewType == CHART_TYPE_SEND_PIC) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_right_pic, parent, false);
             return new SendPicViewHolder(view);
+        } else if (viewType == CHART_TYPE_REV_FILE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_left_file, parent, false);
+            return new FromFileViewHolder(view);
+        } else if (viewType == CHART_TYPE_SEND_FILE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chart_list_right_file, parent, false);
+            return new SendFileViewHolder(view);
         }
         return null;
     }
@@ -264,6 +276,48 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     x.image().bind(((SendPicViewHolder) holder).iv_item_send_headpic, _headPic, _image_options);
                 } else {
                     ((SendPicViewHolder) holder).iv_item_send_headpic.setImageResource(R.drawable.default_headpic);
+                }
+            } else if (holder instanceof FromFileViewHolder) {
+                //左侧-接受文件信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough) {
+                    ((FromFileViewHolder) holder).tv_item_from_time.setVisibility(View.GONE);
+                } else {
+                    ((FromFileViewHolder) holder).tv_item_from_time.setVisibility(View.VISIBLE);
+                    ((FromFileViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((FromFileViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                //显示内容
+                ((FromFileViewHolder) holder).tv_item_from_file.setText(_char_bean.getFileName());
+                //头像
+                String _headPic = mFriend.getHead_pic();//头像地址
+                if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
+                    x.image().bind(((FromFileViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
+                } else {
+                    ((FromFileViewHolder) holder).iv_item_from_headpic.setImageResource(R.drawable.default_headpic);
+                }
+            } else if (holder instanceof SendFileViewHolder) {
+                //右侧-发送文件信息=========================================
+                //显示时间
+                //判断两个时间靠近则不显示
+                if (closeEnough) {
+                    ((SendFileViewHolder) holder).tv_item_send_time.setVisibility(View.GONE);
+                } else {
+                    ((SendFileViewHolder) holder).tv_item_send_time.setVisibility(View.VISIBLE);
+                    ((SendFileViewHolder) holder).tv_item_send_time.setText(_char_bean.getDate());
+                }
+                //显示昵称
+                ((SendFileViewHolder) holder).tv_item_send_nickname.setText(mSendNickname);
+                //显示内容
+                ((SendFileViewHolder) holder).tv_item_send_file.setText(_char_bean.getFileName());
+                //头像
+                String _headPic = mUser.getHeadPic();//头像地址
+                if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
+                    x.image().bind(((SendFileViewHolder) holder).iv_item_send_headpic, _headPic, _image_options);
+                } else {
+                    ((SendFileViewHolder) holder).iv_item_send_headpic.setImageResource(R.drawable.default_headpic);
                 }
             }
         }
@@ -477,6 +531,82 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tv_item_from_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_left_pic_time);
             iv_item_from_image = (ImageView) itemView.findViewById(R.id.iv_left_pic);
             iv_item_from_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_left_pic_headpic);
+            //设置根布局的点击监听事件
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myItemClickListener != null) {
+                        try {
+                            myItemClickListener.onItemClick(v, getAdapterPosition());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (myItemLongClickListener != null) {
+                        myItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    //发送文件适配器
+    class SendFileViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_item_send_nickname;//发送者昵称
+        private TextView tv_item_send_time;//发送时间
+        private TextView tv_item_send_file;//发送文件的名称
+        private ImageView iv_item_send_headpic;//发送者头像
+
+        public SendFileViewHolder(View itemView) {
+            super(itemView);
+            tv_item_send_nickname = (TextView) itemView.findViewById(R.id.tv_right_file_user);
+            tv_item_send_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_right_file_time);
+            tv_item_send_file = (TextView) itemView.findViewById(R.id.tv_right_file_name);
+            iv_item_send_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_right_file_headpic);
+            //设置根布局的点击监听事件
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myItemClickListener != null) {
+                        try {
+                            myItemClickListener.onItemClick(v, getAdapterPosition());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (myItemLongClickListener != null) {
+                        myItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+                    }
+                    return true;
+                }
+            });
+        }
+    }
+
+    //接受文件适配器
+    class FromFileViewHolder extends RecyclerView.ViewHolder {
+        private TextView tv_item_from_nickname;//接受者昵称
+        private TextView tv_item_from_time;//接收时间
+        private TextView tv_item_from_file;//接受文件的名称
+        private ImageView iv_item_from_headpic;//接受者头像
+
+        public FromFileViewHolder(View itemView) {
+            super(itemView);
+            tv_item_from_nickname = (TextView) itemView.findViewById(R.id.tv_left_file_user);
+            tv_item_from_time = (TextView) itemView.findViewById(R.id.tv_item_chat_list_left_file_time);
+            tv_item_from_file = (TextView) itemView.findViewById(R.id.tv_left_file_name);
+            iv_item_from_headpic = (ImageView) itemView.findViewById(R.id.iv_item_chat_list_left_file_headpic);
             //设置根布局的点击监听事件
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
