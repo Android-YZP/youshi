@@ -18,6 +18,7 @@ public class MyApplication extends Application {
     private static Context context;
     private static Handler handler;
     private static int mainThreadId;
+    public static String mNowAddress;
 
     @Override
     public void onCreate() {

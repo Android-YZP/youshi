@@ -42,6 +42,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
     private TextView mTvEventsRepPer;
     private TextView mTvEventsJoinPer;
     private TextView mTvEventsBeTime;
+    private Schedule mSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         initMap();
         initDelete();
         initTopBar();
+        initListener();
     }
     private void initDelete() {
         mBtDeleteSch = (Button) findViewById(R.id.Bt_delete_sch);
@@ -99,19 +101,19 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         Intent intent = getIntent();
         String s = intent.getStringExtra("mgonsn");
 
-        Schedule schedule = gson.fromJson(s,
+        mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
 
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
-        ArrayList<Schjoiner> joinPer = findJoinPer(schedule.getId());
+        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        ArrayList<Schjoiner> joinPer = CommonUtil.findJoinPer(mSchedule.getId());
         Log.e("传过来的数据2", joinPer.size() + "");
 
-        mTvEventsTheme.setText(schedule.getTitle());
-        mTvEventsLabel.setText(CommonUtil.getLabelName(schedule.getLabel()));
-        mTvEventLocation.setText(schedule.getAddress());
-        mTvEventsStTime.setText(schedule.getBegin_time());
-        mTvEventEndTime.setText(schedule.getEnd_time());
+        mTvEventsTheme.setText(mSchedule.getTitle());
+        mTvEventsLabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
+        mTvEventLocation.setText(mSchedule.getAddress());
+        mTvEventsStTime.setText(mSchedule.getBegin_time());
+        mTvEventEndTime.setText(mSchedule.getEnd_time());
         //报送人
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
@@ -119,6 +121,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
                         CommonUtil.findFriName(repPer.get(i).getFriendid()));
             }
         }
+
         //参与人
         if (joinPer != null && joinPer.size() != 0 && !joinPer.isEmpty()) {
             for (int i = 0; i < joinPer.size(); i++) {
@@ -126,26 +129,30 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
                         CommonUtil.findFriName(joinPer.get(i).getJoiner_id()));
             }
         }
+
         //提前提醒
-        mTvEventsBeTime.setText("提前" + schedule.getAhead_warn() + "分钟");
+        mTvEventsBeTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
     }
 
 
-    /**
-     * 用日程id查找该日程的报送人
-     * @param sid
-     */
-    private ArrayList<Schjoiner> findJoinPer(int sid) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        try {
-            ArrayList<Schjoiner> schjoiners = (ArrayList<Schjoiner>) mDbManager.selector(Schjoiner.class).where("sid", "=",
-                    sid).findAll();
-            Log.d("yzp", schjoiners.size() + "haha");
-            return schjoiners;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+
+    private void initListener() {
+        mTvCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        mTvComp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManyPeopleEventDetial.this,
+                        AddManyPeopleEventActivity.class);
+                intent.putExtra("eventID",mSchedule.getId());
+                startActivity(intent);
+            }
+        });
     }
 
 }

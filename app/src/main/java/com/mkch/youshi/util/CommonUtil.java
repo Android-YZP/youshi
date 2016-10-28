@@ -3,16 +3,20 @@ package com.mkch.youshi.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,8 +35,10 @@ import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
+import com.mkch.youshi.model.YoupanFile;
 
 import org.xutils.DbManager;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -468,6 +474,21 @@ public class CommonUtil {
             e.printStackTrace();
         }
     }
+    /**
+     * 用日程id删除该日程的参与人
+     *
+     * @param sid
+     */
+    public static void DeleteJoinPer(int sid) {
+        try {
+            DbManager mDbManager = DBHelper.getDbManager();
+            WhereBuilder whereBuilder = WhereBuilder.b();
+            whereBuilder.and("sid", "=", sid + "");
+            mDbManager.delete(Schjoiner.class, whereBuilder);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 用日程id删除该日程的时间段
@@ -526,6 +547,22 @@ public class CommonUtil {
     }
 
     /**
+     * 用日程id查找该日程的参与人
+     * @param sid
+     */
+    public static ArrayList<Schjoiner> findJoinPer(int sid) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            ArrayList<Schjoiner> schjoiners = (ArrayList<Schjoiner>) mDbManager.selector(Schjoiner.class).where("sid", "=",
+                    sid).findAll();
+            return schjoiners;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * 用id查找一个日程
      */
     public static ArrayList<Schedule> findSch(String SchId) {
@@ -540,7 +577,21 @@ public class CommonUtil {
             return Scheduls;
         }
     }
-
+    /**
+     * 用Type查找一个文件集合
+     */
+    public static ArrayList<YoupanFile> findYoupanFile(int type) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<YoupanFile> youpanFiles = null;
+        try {
+            youpanFiles = (ArrayList<YoupanFile>) mDbManager.selector(YoupanFile.class).where("type", "=",
+                    type).findAll();
+            return youpanFiles;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return youpanFiles;
+        }
+    }
     /**
      * 将123456换成周一周二周三
      *
@@ -585,6 +636,37 @@ public class CommonUtil {
         String _week5 = _week4.replace("5", "5,");
         String _week6 = _week5.replace("6", "6,");
         return _week6.replace("7", "7,");
+    }
+
+
+    /**
+     * Try to return the absolute file path from the given Uri
+     *
+     * @param context
+     * @param uri
+     * @return the file path or null
+     */
+    public static String getRealFilePath(final Context context, final Uri uri) {
+        if (null == uri) return null;
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null)
+            data = uri.getPath();
+        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return data;
     }
 
 }

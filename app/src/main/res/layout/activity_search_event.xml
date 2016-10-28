@@ -1,32 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/common_topbar_height"
-    android:background="@color/common_topbar_bg_color"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.mkch.youshi.activity.SearchEventActivity">
 
-    <EditText
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/bg_search_input"
-        android:drawableLeft="@drawable/icon_search"
-        android:drawablePadding="8dp"
-        android:hint="搜索日程"
-        android:textColorHint="#ffb5b5b5"
-        android:textColor="@color/common_black_color"
-        android:textSize="@dimen/common_topbar_text_font_size" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/common_topbar_bg_color">
 
-    <TextView
-        android:id="@+id/tv_add__event_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:gravity="center"
-        android:paddingRight="15dp"
-        android:text="取消"
-        android:textColor="@color/common_topbar_text_font_color"
-        android:textSize="@dimen/common_topbar_text_font_size" />
-</RelativeLayout>
+        <EditText
+            android:id="@+id/et_search_text"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_search_input"
+            android:drawableLeft="@drawable/icon_search"
+            android:drawablePadding="8dp"
+            android:hint="搜索日程"
+            android:maxLines="1"
+            android:textColor="@color/common_black_color"
+            android:textColorHint="#ffb5b5b5"
+            android:textSize="@dimen/common_topbar_text_font_size" />
+
+        <TextView
+            android:id="@+id/tv_search_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingRight="15dp"
+            android:text="取消"
+            android:textColor="@color/common_topbar_text_font_color"
+            android:textSize="@dimen/common_topbar_text_font_size" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_search_sch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
 

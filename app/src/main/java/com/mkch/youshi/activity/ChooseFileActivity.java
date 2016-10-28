@@ -175,16 +175,16 @@ public class ChooseFileActivity extends BaseActivity {
         @Override
         public Fragment getItem(int postion) {
             switch (postion) {
-                case FLAG_ITEM_0:
-                    return new ChooseDocumentFileFragment();
-                case FLAG_ITEM_1:
-                    return new ChoosePhotoFileFragment();
-                case FLAG_ITEM_2:
-                    return new ChooseVideoFileFragment();
-                case FLAG_ITEM_3:
-                    return new ChooseVoiceFileFragment();
-                case FLAG_ITEM_4:
-                    return new ChooseOtherFileFragment();
+//                case FLAG_ITEM_0:
+//                    return new ChooseDocumentFileFragment();
+//                case FLAG_ITEM_1:
+//                    return new ChoosePhotoFileFragment();
+//                case FLAG_ITEM_2:
+//                    return new ChooseVideoFileFragment();
+//                case FLAG_ITEM_3:
+//                    return new ChooseVoiceFileFragment();
+//                case FLAG_ITEM_4:
+//                    return new ChooseOtherFileFragment();
             }
             return null;
         }

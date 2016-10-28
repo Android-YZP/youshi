@@ -44,6 +44,7 @@ import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.AddressAdapter;
+import com.mkch.youshi.config.MyApplication;
 
 import java.util.ArrayList;
 import java.util.List;

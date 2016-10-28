@@ -12,12 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.baidu.platform.comapi.map.A;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mkch.youshi.R;
@@ -32,6 +31,7 @@ import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.util.WeekUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -101,10 +101,12 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             schedule = mScheduleList.get(0);
             mEtTheme.setText(schedule.getTitle());
             mTvPlace.setText(schedule.getAddress());
+            setRBChecked(schedule.getLabel());//设置选择好的标签
+
             //周期
             mTvHabitCircle.setText("一周" + schedule.getTimes_of_week() + "次");
-            mTvHabitWeek.setText(CommonUtil.replaceNumberWeek(schedule.getWhich_week()).substring(0, CommonUtil.
-                    replaceNumberWeek(schedule.getWhich_week()).length() - 1));
+            mWeek =WeekUtils.replaceWeek3(schedule.getWhich_week()) ;//1,2,3=>123
+            mTvHabitWeek.setText(WeekUtils.replaceWeek1(mWeek));//123=>周一 周二 周三
             mTvPersonalEventDescription.setText(schedule.getRemark());
 
             //时间段的选择
@@ -121,7 +123,12 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                     timeSpanListBean.setStatus(schTimes.get(i).getStatus());
                     mTimeSpanListBeans.add(timeSpanListBean);
                 }
-
+                if (mTimeSpanListBeans.size() > 0) {
+                    mTvHabitChooseTime.setText("已选择");
+                } else {
+                    mTvHabitChooseTime.setText("未选择");
+                }
+            }
                 //报送好友的初始化显示
                 ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
                 if (repPer != null && !repPer.isEmpty()) {
@@ -131,10 +138,11 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                     setRepFriends(mFriends);
                 }
 
-            }
+            //提前提醒
+            mTvRemindBefore.setText(mScheduleList.get(0).getAhead_warn() + "分钟前");
+            mRemindTime = mScheduleList.get(0).getAhead_warn();
         }
         mTvTitle.setText("添加个人习惯");
-
     }
 
     private void initView() {
@@ -226,6 +234,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 startActivityForResult(new Intent(AddPersonalHabitActivity.this,
                         ChooseTimeActivity.class), 2);
                 break;
+
             //后半部分的点击事件
             case R.id.rl_submission://报送
                 if (mFriends != null && allChooseFriends != null) {
@@ -235,6 +244,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 startActivityForResult(new Intent(AddPersonalHabitActivity.
                         this, ChooseSomeoneActivity.class), 5);
                 break;
+
             case R.id.tv_add_event_complete://完成
                 if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
                     showTip("请输入主题");
@@ -360,7 +370,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         viewModelBean.setLatitude(mLatitude + "");//维度
         viewModelBean.setLongitude(mLongitude + "");//精度
         viewModelBean.setWeekTimes(mWeek.length());//周期
-        viewModelBean.setWeeks(replaceWeek(mWeek));//周
+        viewModelBean.setWeeks(WeekUtils.replaceWeek2(mWeek)); //周
         viewModelBean.setTimeSpanList(mTimeSpanListBeans);//时间段集合
 //        viewModelBean.setSendOpenFireNameList(mTvEndTime.getText().toString());报送人
         viewModelBean.setRemindType(mRemindTime);//提前提醒
@@ -407,7 +417,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
             schedule.setLongitude(mLongitude + "");
             schedule.setSyc_status(0);//同步状态
             schedule.setTimes_of_week(mWeek.length());//周期
-            schedule.setWhich_week(replaceWeek(mWeek));//周
+            schedule.setWhich_week(WeekUtils.replaceWeek2(mWeek));//周
             //报送人
             schedule.setAhead_warn(mRemindTime);//提前提醒
             schedule.setRemark(mTvPersonalEventDescription.getText().toString());//备注
@@ -473,7 +483,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         //返回周
         if (resultCode == 1 && requestCode == 1 && data != null) {
             mWeek = data.getStringExtra("Week");
-            String _week = replaceWeek();//将1234567换成周一,周二,周三
+            UIUtils.showTip(mWeek + "Week");
+            String _week = WeekUtils.replaceWeek1(mWeek);//将1234567换成周一 周二 周三
             mTvHabitWeek.setText(_week);
             mTvHabitCircle.setText("每周" + mWeek.length() + "次");
         }
@@ -490,6 +501,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 mTvHabitChooseTime.setText("已选择");
             } else {
                 mTvHabitChooseTime.setText("未选择");
+
             }
         }
     }
@@ -522,34 +534,33 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
 
     }
 
-    /**
-     * 将123456换成周一周二周三
-     *
-     * @return
-     */
-    private String replaceWeek() {
-        String _week1 = mWeek.replace("1", "周一 ");
-        String _week2 = _week1.replace("2", "周二 ");
-        String _week3 = _week2.replace("3", "周三 ");
-        String _week4 = _week3.replace("4", "周四 ");
-        String _week5 = _week4.replace("5", "周五 ");
-        String _week6 = _week5.replace("6", "周六 ");
-        return _week6.replace("7", "周日");
-    }
 
-    /**
-     * 将123456换成周1.2.3.
-     *
-     * @return
-     */
-    private String replaceWeek(String week) {
-        String _week1 = week.replace("1", "1,");
-        String _week2 = _week1.replace("2", "2,");
-        String _week3 = _week2.replace("3", "3,");
-        String _week4 = _week3.replace("4", "4,");
-        String _week5 = _week4.replace("5", "5,");
-        String _week6 = _week5.replace("6", "6,");
-        return _week6.replace("7", "7,");
+    //初始化标签
+    private void setRBChecked(int lableNum) {
+        int LableID = 0;
+        switch (lableNum) {
+            case 0:
+                LableID = R.id.rb_person;
+                break;
+            case 1:
+                LableID = R.id.rb_work;
+                break;
+            case 2:
+                LableID = R.id.rb_entertainment;
+                break;
+            case 3:
+                LableID = R.id.rb_important;
+                break;
+            case 4:
+                LableID = R.id.rb_health;
+                break;
+            case 5:
+                LableID = R.id.rb_other;
+                break;
+        }
+
+        RadioButton RBCheck = (RadioButton) findViewById(LableID);
+        RBCheck.setChecked(true);
     }
 
 

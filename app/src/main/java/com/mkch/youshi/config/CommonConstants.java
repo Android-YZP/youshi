@@ -1,5 +1,7 @@
 package com.mkch.youshi.config;
 
+import android.os.Environment;
+
 public class CommonConstants {
     public static final String APP_PACKAGE_NAME = "com.mkch.youshi";
     /**
@@ -42,8 +44,11 @@ public class CommonConstants {
      * yaozhongping
      * 从100开始
      */
+    public static final String YOU_PAN_PIC_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
     public static final int FLAG_GET_ADD_PERSONER_EVENT_SUCCESS = 103;
     public static final int FLAG_GET_ADD_PERSONER_EVENT_FAIL = 104;
+    public static final int PHOTO_REQUEST_FILE = 105;// 从文件夹选择
+    public static final int PHOTO_REQUEST_GALLERY = 106;// 从相册中选择
 
     /**
      * jianglongjian
@@ -62,7 +67,11 @@ public class CommonConstants {
     /**
      * 测试地址
      */
-    public static final String TEST_ADDRESS = "http://192.168.3.8:1001/WebServices/YoShiServices/";
+    //文件的网络根地址
+    public static final String FILE_ROOT_ADDRESS = "http://192.168.3.8:1001";
+
+        public static final String TEST_ADDRESS = "http://192.168.3.8:1001/WebServices/YoShiServices/";
+//    public static final String TEST_ADDRESS = "http://192.168.2.96:8012/WebServices/YoShiServices/";
     //	public static final String TRUE_ADDRESS = "http://www.maikejia.com/WebServices/YoShiServices/";
     public static final String NOW_ADDRESS = TEST_ADDRESS;
 
@@ -131,8 +140,12 @@ public class CommonConstants {
 
     //yaozhongping-----------------------------------------------start
 
+    //获取文件
+    public static final String GetCloudFile = NOW_ADDRESS + "GetCloudFile";
     //通过忧时账号\手机号查询用户
     public static final String SAVESCHEDULE = NOW_ADDRESS + "SaveSchedule";
+    //上传文件
+    public static final String UploadFileAndroid = NOW_ADDRESS + "UploadFileAndroid";
     //参与人接受拒绝 sVerifyCode-登录认证码
     public static final String JoinUserResult = NOW_ADDRESS + "JoinUserResult";
     //删除日程
