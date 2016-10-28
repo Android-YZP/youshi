@@ -36,6 +36,7 @@ import com.tencent.TIMFriendAllowType;
 import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMImage;
 import com.tencent.TIMImageElem;
+import com.tencent.TIMLocationElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
@@ -487,6 +488,12 @@ public class FriendService extends Service implements TIMMessageListener {
                             Log.d("zzz", "TIMFaceElem sender is-----" + sender);
                             int position = ((TIMFaceElem) element).getIndex();
                             receiveFaceMessage(sender, position);
+                        }//接受到位置信息
+                        else if (element instanceof TIMLocationElem) {
+                            String msg = ((TIMLocationElem) element).getDesc();
+                            Log.d("zzz", "TIMLocationElem sender is-----" + sender);
+                            Log.d("zzz", "TIMLocationElem content is-----" + msg);
+                            receiveTextMessage(sender, msg);
                         }//接受到用户资料变更系统通知
                         else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();

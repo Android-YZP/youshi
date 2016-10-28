@@ -1,13 +1,17 @@
 package com.mkch.youshi.activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,6 +24,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +35,10 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
 import com.mkch.youshi.adapter.ExpressionGridAdapter;
@@ -42,6 +51,7 @@ import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.Expression;
 import com.mkch.youshi.view.RecordButton;
 import com.tencent.TIMConversation;
@@ -49,6 +59,7 @@ import com.tencent.TIMConversationType;
 import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
 import com.tencent.TIMImageElem;
+import com.tencent.TIMLocationElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
@@ -143,6 +154,11 @@ public class ChatActivity extends BaseActivity {
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private static final int FILE_CODE = 4;//选择文件
     private String[] expressionMessages = new String[]{"[微笑]", "[抓狂]", "[大哭]", "[拜托]", "[鄙视]", "[委屈]", "[发呆]", "[晕]", "[傲慢]", "[色]", "[大笑]", "[偷笑]", "[可怜]", "[傻笑]", "[飞吻]", "[困]", "[难过]", "[咒骂]", "[亲亲]", "[流汗]", "[惊吓]", "[害羞]", "[快哭了]", "[流泪]", "[调皮]", "[闭嘴]", "[撇嘴]"};
+    //定位
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    private final int SDK_PERMISSION_REQUEST = 127;
+    private String permissionInfo;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -201,7 +217,9 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dbManager = DBHelper.getDbManager();
+        getPersimmions();
         initData();
         setListener();
     }
@@ -209,6 +227,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mLocationClient.stop();
     }
 
     private void setListener() {
@@ -291,6 +310,7 @@ public class ChatActivity extends BaseActivity {
                 if (hasFocus) {
                     mLineMoreAction.setVisibility(View.GONE);
                     mLineExpression.setVisibility(View.GONE);
+                    mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
                 }
             }
         });
@@ -334,6 +354,9 @@ public class ChatActivity extends BaseActivity {
                         intent = new Intent("android.media.action.IMAGE_CAPTURE");
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                         startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
+                        break;
+                    case 2:
+                        mLocationClient.start();
                         break;
                     case 3:
                         intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -403,6 +426,108 @@ public class ChatActivity extends BaseActivity {
         //表情视图
         ExpressionGridAdapter expressionGridAdapter = new ExpressionGridAdapter(this, Expression.expressions);
         mGvExpression.setAdapter(expressionGridAdapter);
+        //定位初始化
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span = 1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+    }
+
+    @TargetApi(23)
+    private void getPersimmions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ArrayList<String> permissions = new ArrayList<String>();
+            /***
+             * 定位权限为必须权限，用户如果禁止，则每次进入都会申请
+             */
+            // 定位精确位置
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            /*
+             * 读写权限和电话状态权限非必要权限(建议授予)只会申请一次，用户同意或者禁止，只会弹一次
+			 */
+            // 读写权限
+            if (addPermission(permissions, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionInfo += "Manifest.permission.WRITE_EXTERNAL_STORAGE Deny \n";
+            }
+            // 读取电话状态权限
+            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
+                permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
+            }
+            if (permissions.size() > 0) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
+            }
+        }
+    }
+
+    @TargetApi(23)
+    private boolean addPermission(ArrayList<String> permissionsList, String permission) {
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+            if (shouldShowRequestPermissionRationale(permission)) {
+                return true;
+            } else {
+                permissionsList.add(permission);
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    /*****
+     * 定位结果回调，重写onReceiveLocation方法
+     */
+    public class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if (null != location && location.getLocType() != BDLocation.TypeServerError) {
+                StringBuffer sb = new StringBuffer(256);
+                if (location.getProvince() == null || location.getProvince().equals("") || location.getProvince().equals("null")) {
+                    sb = null;
+                    UIUtils.showTip("定位失败，请点击重新获取");
+                } else {
+                    sb.append("当前位置：" + location.getAddrStr());
+                    sb.append(",------" + location.getLocationDescribe());
+                    Log.d("zzz-------address", sb.toString());
+                }
+                if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
+                } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
+                } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
+                } else if (location.getLocType() == BDLocation.TypeServerError) {
+                    sb.append("服务端网络定位失败");
+                } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                    sb.append("网络不同导致定位失败，请检查网络是否通畅");
+                } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                    sb.append("无法获取有效定位依据，请重启手机");
+                }
+                if (sb != null) {
+                    sendAddressMsg(sb.toString());
+                }
+            }
+        }
     }
 
     /**
@@ -567,7 +692,6 @@ public class ChatActivity extends BaseActivity {
                 mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
                 break;
             case R.id.iv_chat_go_expression://弹出表情
-//                Toast.makeText(this, "zzz", Toast.LENGTH_SHORT).show();
                 if (mLineExpression.getVisibility() == View.VISIBLE) {
                     mLineExpression.setVisibility(View.GONE);
                 } else {
@@ -631,7 +755,8 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onSuccess(TIMMessage timMessage) {
                 Log.d("zzz----sendMessage text", "sendMessage is success");
-                addTextMessageBox(_msg);
+                ChatBean _local_message = new ChatBean(selfId, _msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+                saveChatBean(_local_message);
             }
         });
     }
@@ -730,11 +855,37 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
-    //文本发送成功
-    private void addTextMessageBox(final String msg) {
+    //发送位置信息
+    private void sendAddressMsg(final String _msg) {
+        mLocationClient.stop();
+        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+        TIMMessage msg = new TIMMessage();
+        //添加位置信息
+        TIMLocationElem elem = new TIMLocationElem();
+        elem.setDesc(_msg);
+        //将elem添加到消息
+        if (msg.addElement(elem) != 0) {
+            Log.d("zzz-------", "addLocationElement failed");
+            return;
+        }
+        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zz-sendMessage Location", i + "Error:" + s);
+            }
+
+            @Override
+            public void onSuccess(TIMMessage timMessage) {
+                Log.d("zz-sendMessage Location", "sendMessage is success");
+                ChatBean _local_message = new ChatBean(selfId, _msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+                saveChatBean(_local_message);
+            }
+        });
+    }
+
+    //保存已发送信息
+    private void saveChatBean(final ChatBean _local_message) {
         try {
-            //localMessage
-            ChatBean _local_message = new ChatBean(selfId, msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子
