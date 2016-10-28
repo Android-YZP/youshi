@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,11 +17,20 @@
         android:paddingRight="@dimen/new_friend_content_padding_left_or_right"
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
-        <CheckBox
-            android:id="@+id/cb_complete"
-            style="@style/remind_checkbox_style"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+        <LinearLayout
+            android:id="@+id/ll_cb_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <CheckBox
+                android:id="@+id/cb_complete"
+                style="@style/remind_checkbox_style"
+                android:layout_gravity="center_vertical"
+                android:clickable="false"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/iv_file_choose_image"

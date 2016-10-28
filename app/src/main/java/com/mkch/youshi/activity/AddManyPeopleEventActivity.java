@@ -296,7 +296,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
                 startActivityForResult(new Intent(AddManyPeopleEventActivity.
                         this, ChooseRemindBeforeActivity.class), 0);
                 break;
-            case R.id.rl_many_people_uploading://上传
+            case R.id.rl_many_people_uploading://上传文件
                 startActivityForResult(new Intent(AddManyPeopleEventActivity.
                         this, ChooseFileActivity.class), 4);
                 break;

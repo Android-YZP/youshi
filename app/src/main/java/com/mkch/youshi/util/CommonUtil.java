@@ -3,16 +3,20 @@ package com.mkch.youshi.util;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +38,7 @@ import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
+import com.mkch.youshi.model.YoupanFile;
 
 import org.xutils.DbManager;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -572,7 +577,21 @@ public class CommonUtil {
             return Scheduls;
         }
     }
-
+    /**
+     * 用Type查找一个文件集合
+     */
+    public static ArrayList<YoupanFile> findYoupanFile(int type) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<YoupanFile> youpanFiles = null;
+        try {
+            youpanFiles = (ArrayList<YoupanFile>) mDbManager.selector(YoupanFile.class).where("type", "=",
+                    type).findAll();
+            return youpanFiles;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return youpanFiles;
+        }
+    }
     /**
      * 将123456换成周一周二周三
      *
@@ -620,5 +639,34 @@ public class CommonUtil {
     }
 
 
+    /**
+     * Try to return the absolute file path from the given Uri
+     *
+     * @param context
+     * @param uri
+     * @return the file path or null
+     */
+    public static String getRealFilePath(final Context context, final Uri uri) {
+        if (null == uri) return null;
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null)
+            data = uri.getPath();
+        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return data;
+    }
 
 }

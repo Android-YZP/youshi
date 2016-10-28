@@ -27,6 +27,7 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.exception.ServiceException;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.NetWorkUtil;
+import com.mkch.youshi.util.UIUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -338,6 +339,7 @@ public class UserInformationActivity extends Activity {
                 alertDialog.dismiss();
             }
         });
+
         //取消事件
         _cancle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -509,7 +511,8 @@ public class UserInformationActivity extends Activity {
                 try {
                     File file = new File(mPicPath + mpicName);
                     String code = CommonUtil.getUserInfo(UserInformationActivity.this).getLoginCode();
-                    String _withPhoto = NetWorkUtil.getResultFromUrlConnectionWithPhoto(CommonConstants.UploadHeadPicAndroid, null, mpicName, code, file);
+                    String _withPhoto = NetWorkUtil.getResultFromUrlConnectionWithPhoto(
+                            CommonConstants.UploadHeadPicAndroid, null, mpicName, code, file);
                     //解析出上传图片的地址
                     JSONObject _result = new JSONObject(_withPhoto);
                     String _datas = _result.getString("Datas");
