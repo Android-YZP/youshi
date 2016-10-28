@@ -331,7 +331,6 @@ public class UserInformationActivity extends Activity {
             public void onClick(View v) {
                 mFile = new File(mPicPath, mpicName);
                 imageUri = Uri.fromFile(mFile);
-
                 Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -356,7 +355,6 @@ public class UserInformationActivity extends Activity {
     /**
      * 处理图片的剪辑
      */
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:// 当选择拍照时调用
@@ -403,13 +401,10 @@ public class UserInformationActivity extends Activity {
         saveBitmap(photo);  //保存BitMap到本地
         //上传图片到服务器
         sendPicToServer();
-
         ByteArrayOutputStream baos = null;
         try {
             baos = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] photodata = baos.toByteArray();
-            System.out.println(photodata.toString());
         } catch (Exception e) {
             e.getStackTrace();
         } finally {

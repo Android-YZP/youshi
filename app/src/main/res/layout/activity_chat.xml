@@ -134,7 +134,6 @@
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -155,5 +154,25 @@
             android:layout_marginRight="18dp"
             android:layout_marginTop="15dp"
             android:numColumns="4"></GridView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line_chat_expression"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View style="@style/commonLineInputStyle" />
+
+        <GridView
+            android:id="@+id/gv_chat_expression"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="15dp"
+            android:numColumns="7"></GridView>
     </LinearLayout>
 </LinearLayout>

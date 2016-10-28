@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.mkch.youshi.activity.BaseActivity;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.fragment.ContactsFragment;
@@ -185,7 +184,6 @@ public class MainActivity extends BaseActivity {
         });
         initServiceListener();//启动初始化需要监听的service
     }
-
 
     /**
      * 启动初始化需要监听的service
