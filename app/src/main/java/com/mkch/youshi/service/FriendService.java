@@ -474,7 +474,7 @@ public class FriendService extends Service implements TIMMessageListener {
                                     imageOriginal = image;
                                 }
                             }
-                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal);
+                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal, j);
                         }//接受到文件信息
                         else if (element instanceof TIMFileElem) {
                             Log.d("zzz", "TIMFileElem sender is-----" + sender);
@@ -527,19 +527,19 @@ public class FriendService extends Service implements TIMMessageListener {
     }
 
     //显示获取的图片聊天信息
-    private void receivePicMessage(final String sender, final String path, final TIMImage image) {
+    private void receivePicMessage(final String sender, final String path, final TIMImage image, final int j) {
         if (path != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, path, "[图片]");
             //下载原图
-            downloadOriginal(_chat_bean, image);
+            downloadOriginal(_chat_bean, image, j);
             saveChatBean(sender, _chat_bean);
         }
     }
 
     //下载图片信息原图
-    private void downloadOriginal(final ChatBean chatbean, final TIMImage image) {
-        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + chatbean.getId() + ".jpg");
+    private void downloadOriginal(final ChatBean chatbean, final TIMImage image, final int j) {
+        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + j + ".jpg");
         image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
             @Override
             public void onError(int i, String s) {
