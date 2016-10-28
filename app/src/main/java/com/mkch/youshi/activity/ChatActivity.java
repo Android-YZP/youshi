@@ -159,6 +159,8 @@ public class ChatActivity extends BaseActivity {
     public BDLocationListener myListener = new MyLocationListener();
     private final int SDK_PERMISSION_REQUEST = 127;
     private String permissionInfo;
+    TIMConversation conversation;
+    TIMMessage msg = new TIMMessage();
 
     private Handler mHandler = new Handler() {
         @Override
@@ -231,6 +233,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void setListener() {
+        //语音消息发送
         mBtnUseVoice.setOnRecordFinishedListener(new RecordButton.OnRecordFinishedListener() {
             @Override
             public void onFinished(File audioFile, int duration) {
@@ -258,11 +261,13 @@ public class ChatActivity extends BaseActivity {
                     @Override
                     public void onSuccess(TIMMessage msg) {//发送消息成功
                         Log.d("zzz---sendMessage sound", "sendMessage is success");
-                        addSoundMessageBox(soundFile, soundDuration);
+                        ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, soundDuration, soundFile, "[语音]");
+                        saveChatBean(_local_message);
                     }
                 });
             }
         });
+        //消息列表按类型的点击事件
         m_adapter.setOnItemClickListener(new ChartListAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) throws IOException {
@@ -303,6 +308,7 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        //输入框的点击操作
         mEtChatInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -314,6 +320,7 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        //输入框文字变化的监听器
         mEtChatInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -335,6 +342,7 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        //更多操作的选择监听器
         mGvMoreAction.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -368,6 +376,7 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         });
+        //表情消息发送
         mGvExpression.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -383,6 +392,7 @@ public class ChatActivity extends BaseActivity {
         Intent _intent = getIntent();
         if (_intent != null) {
             _openfirename = _intent.getStringExtra("_openfirename");
+            conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
             if (_openfirename != null && !_openfirename.equals("")) {
                 try {
                     mFriend = dbManager.selector(Friend.class)
@@ -562,6 +572,7 @@ public class ChatActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    //剪裁图片
     private void startPhotoZoom(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -736,8 +747,6 @@ public class ChatActivity extends BaseActivity {
 
     //发送文本信息
     private void sendTextMsg(final String _msg) {
-        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-        TIMMessage msg = new TIMMessage();
         //添加文本内容
         TIMTextElem elem = new TIMTextElem();
         elem.setText(_msg);
@@ -763,8 +772,6 @@ public class ChatActivity extends BaseActivity {
 
     //发送图片信息
     private void sendPicMsg(final String path) {
-        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-        TIMMessage msg = new TIMMessage();
         //添加图片
         TIMImageElem elem = new TIMImageElem();
         elem.setPath(path);
@@ -783,7 +790,9 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onSuccess(TIMMessage msg) {
                 Log.d("zzz---sendMessage image", "sendMessage is success");
-                addImageMessageBox(path);
+                ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, path, "[图片]");
+                _local_message.setFileOriginal(path);
+                saveChatBean(_local_message);
             }
         });
     }
@@ -796,9 +805,6 @@ public class ChatActivity extends BaseActivity {
             if (file.length() > 1024 * 1024 * 10) {
                 Toast.makeText(this, "文件过大，发送失败！", Toast.LENGTH_SHORT).show();
             } else {
-                //构造一条消息
-                TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-                TIMMessage msg = new TIMMessage();
                 //添加文件内容
                 TIMFileElem elem = new TIMFileElem();
                 elem.setPath(path); //设置文件路径
@@ -819,7 +825,8 @@ public class ChatActivity extends BaseActivity {
                     @Override
                     public void onSuccess(TIMMessage msg) {//发送消息成功
                         Log.d("zzz---sendMessage file", "sendMessage is success");
-                        addFileMessageBox(path, fileName);
+                        ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), path, fileName, "[文件]", ChatBean.MESSAGE_TYPE_OUT);
+                        saveChatBean(_local_message);
                     }
                 });
             }
@@ -830,8 +837,6 @@ public class ChatActivity extends BaseActivity {
 
     //发送表情信息
     private void sendExpressionMsg(final int position) {
-        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-        TIMMessage msg = new TIMMessage();
         //添加表情index
         TIMFaceElem elem = new TIMFaceElem();
         elem.setIndex(position);
@@ -850,7 +855,8 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onSuccess(TIMMessage msg) {
                 Log.d("zzz---sendMessage Face", "sendMessage is success");
-                addFaceMessageBox(position);
+                ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, position, expressionMessages[position]);
+                saveChatBean(_local_message);
             }
         });
     }
@@ -858,8 +864,6 @@ public class ChatActivity extends BaseActivity {
     //发送位置信息
     private void sendAddressMsg(final String _msg) {
         mLocationClient.stop();
-        TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-        TIMMessage msg = new TIMMessage();
         //添加位置信息
         TIMLocationElem elem = new TIMLocationElem();
         elem.setDesc(_msg);
@@ -886,115 +890,6 @@ public class ChatActivity extends BaseActivity {
     //保存已发送信息
     private void saveChatBean(final ChatBean _local_message) {
         try {
-            m_chart_list.add(_local_message);
-            if (mMessageBoxId == 0) {
-                //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                dbManager.saveBindingId(m_messageBox);
-                mMessageBoxId = m_messageBox.getId();
-            } else {
-                //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
-                m_messageBox.setInfo(_local_message.getContent());
-                m_messageBox.setLasttime(TimesUtils.getNow());
-                dbManager.saveOrUpdate(m_messageBox);
-            }
-            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-            dbManager.save(_local_message);//保存一条消息到数据库
-            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //语音发送成功
-    private void addSoundMessageBox(final String file, final int duration) {
-        try {
-            //localMessage
-            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, duration, file, "[语音]");
-            m_chart_list.add(_local_message);
-            if (mMessageBoxId == 0) {
-                //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                dbManager.saveBindingId(m_messageBox);
-                mMessageBoxId = m_messageBox.getId();
-            } else {
-                //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
-                m_messageBox.setInfo(_local_message.getContent());
-                m_messageBox.setLasttime(TimesUtils.getNow());
-                dbManager.saveOrUpdate(m_messageBox);
-            }
-            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-            dbManager.save(_local_message);//保存一条消息到数据库
-            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //图片发送成功
-    private void addImageMessageBox(final String file) {
-        try {
-            //localMessage
-            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, file, "[图片]");
-            _local_message.setFileOriginal(file);
-            m_chart_list.add(_local_message);
-            if (mMessageBoxId == 0) {
-                //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                dbManager.saveBindingId(m_messageBox);
-                mMessageBoxId = m_messageBox.getId();
-            } else {
-                //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
-                m_messageBox.setInfo(_local_message.getContent());
-                m_messageBox.setLasttime(TimesUtils.getNow());
-                dbManager.saveOrUpdate(m_messageBox);
-            }
-            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-            dbManager.save(_local_message);//保存一条消息到数据库
-            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //文件发送成功
-    private void addFileMessageBox(final String file, final String fileName) {
-        try {
-            //localMessage
-            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), file, fileName, "[文件]", ChatBean.MESSAGE_TYPE_OUT);
-            m_chart_list.add(_local_message);
-            if (mMessageBoxId == 0) {
-                //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
-                dbManager.saveBindingId(m_messageBox);
-                mMessageBoxId = m_messageBox.getId();
-            } else {
-                //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
-                m_messageBox.setInfo(_local_message.getContent());
-                m_messageBox.setLasttime(TimesUtils.getNow());
-                dbManager.saveOrUpdate(m_messageBox);
-            }
-            _local_message.setMsgboxid(mMessageBoxId);//設置消息盒子id
-            dbManager.save(_local_message);//保存一条消息到数据库
-            mHandler.sendEmptyMessage(CommonConstants.SEND_MSG_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //表情发送成功
-    private void addFaceMessageBox(final int position) {
-        try {
-            //localMessage
-            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, position, expressionMessages[position]);
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子
