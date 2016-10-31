@@ -34,6 +34,8 @@ import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
 import com.tencent.TIMFriendAllowType;
 import com.tencent.TIMFriendshipManager;
+import com.tencent.TIMGroupSystemElem;
+import com.tencent.TIMGroupSystemElemType;
 import com.tencent.TIMImage;
 import com.tencent.TIMImageElem;
 import com.tencent.TIMLocationElem;
@@ -63,6 +65,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.mkch.youshi.view.RecordButton.generate;
+import static com.tencent.TIMGroupSystemElemType.TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE;
 import static com.tencent.TIMImageType.Original;
 import static com.tencent.TIMImageType.Thumb;
 
@@ -494,6 +497,13 @@ public class FriendService extends Service implements TIMMessageListener {
                             Log.d("zzz", "TIMLocationElem sender is-----" + sender);
                             Log.d("zzz", "TIMLocationElem content is-----" + msg);
                             receiveTextMessage(sender, msg);
+                        }//接受到群系统信息
+                        else if (element instanceof TIMGroupSystemElem) {
+                            Log.d("zzz", "TIMGroupSystemElemType sender is-----" + sender);
+                            TIMGroupSystemElemType msg = ((TIMGroupSystemElem) element).getSubtype();
+                            Log.d("zzz", "TIMGroupSystemElemType is-----" + msg);
+                            if(msg == TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE){
+                            }
                         }//接受到用户资料变更系统通知
                         else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();

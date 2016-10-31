@@ -3,26 +3,40 @@ package com.mkch.youshi.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.GroupChatListAdapter;
+import com.mkch.youshi.model.Group;
+import com.tencent.TIMGroupBaseInfo;
+import com.tencent.TIMGroupManager;
+import com.tencent.TIMValueCallBack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupChatActivity extends Activity {
 
     private ImageView mIvBack, mAdd;
     private ListView mListView;
+    private List<Group> listGroups = new ArrayList<>();
+    private GroupChatListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
         initView();
-        initData();
         setListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     private void initView() {
@@ -32,8 +46,30 @@ public class GroupChatActivity extends Activity {
     }
 
     private void initData() {
-        ListAdapter mAdapter = new GroupChatListAdapter(GroupChatActivity.this);
-        mListView.setAdapter(mAdapter);
+        //获取群聊列表
+        TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz-------getGroupList", i + "Error:" + s);
+            }
+
+            @Override
+            public void onSuccess(List<TIMGroupBaseInfo> timGroupBaseInfos) {
+                Log.d("zzz-------getGroupList", "getGroupList is success");
+                for(TIMGroupBaseInfo info : timGroupBaseInfos) {
+                    Group group = new Group();
+                    String groupID = info.getGroupId();
+                    group.setGroupID(groupID);
+                    String groupName = info.getGroupName();
+                    group.setGroupName(groupName);
+                    String groupHead = info.getFaceUrl();
+                    group.setGroupHead(groupHead);
+                    listGroups.add(group);
+                }
+                mAdapter = new GroupChatListAdapter(GroupChatActivity.this,listGroups);
+                mListView.setAdapter(mAdapter);
+            }
+        });
     }
 
     private void setListener() {

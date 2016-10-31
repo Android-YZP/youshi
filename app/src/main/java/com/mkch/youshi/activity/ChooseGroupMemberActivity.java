@@ -1,43 +1,38 @@
-package com.mkch.youshi.fragment;
+package com.mkch.youshi.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.activity.AddFriendsActivity;
-import com.mkch.youshi.activity.FriendInformationActivity;
-import com.mkch.youshi.activity.GroupChatActivity;
-import com.mkch.youshi.activity.NewFriendActivity;
-import com.mkch.youshi.adapter.ContactAdapter;
+import com.mkch.youshi.adapter.ChooseGroupMemberAdapter;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.JsonUtils;
+import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.ContactListView;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
+import com.tencent.TIMGroupManager;
+import com.tencent.TIMValueCallBack;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.kymjs.kjframe.KJActivity;
 import org.kymjs.kjframe.ui.BindView;
 import org.xutils.DbManager;
 import org.xutils.common.Callback;
@@ -48,148 +43,92 @@ import org.xutils.x;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class ContactsFragment extends Fragment implements SideBar
+public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
-
-    private ImageView mIvAddFriend;
-    private LinearLayout mLayoutNewFriend, mLayoutGroupChat;
     private static ProgressDialog mProgressDialog = null;
-    @BindView(id = R.id.list_contacts)
+    @BindView(id = R.id.list_choose_group_member)
     private ContactListView mListView;
     private TextView mFooterView;
     private List<Friend> datas = new ArrayList<>();
-    private List<Friend> _friends;
-    private ContactAdapter mAdapter;
+    //创建待加入群组的用户列表
+    private ArrayList<String> listMembers = new ArrayList<String>();
+    private ChooseGroupMemberAdapter mAdapter;
     private SideBar mSideBar;
     private TextView mDialog;
     private EditText mSearchInput;
-    private TextView mTvNewFriendNum;//请求添加好友的用户数量
+    private ImageView mIvBack;
+    private TextView mTvConfirm;
     private DbManager dbManager;//数据库管理对象
+    private List<Friend> _friends;
     private User mUser;
-    private String _self_openfirename;
+    private String _self_openfirename, mGroupName, mMember;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void setRootView() {
+        setContentView(R.layout.activity_choose_group_member);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_contacts, container, false);
-        findView(view);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setListener();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    /**
-     * 查找所有view
-     *
-     * @param view
-     */
-    private void findView(View view) {
-        mIvAddFriend = (ImageView) view.findViewById(R.id.iv_contacts_topbar_add_friend);
-        mTvNewFriendNum = (TextView) view.findViewById(R.id.tv_contacts_new_friend_number);
-        mLayoutNewFriend = (LinearLayout) view.findViewById(R.id.layout_contacts_new_friend);
-        mLayoutGroupChat = (LinearLayout) view.findViewById(R.id.layout_contacts_group_chat);
-        mSideBar = (SideBar) view.findViewById(R.id.sidebar_contacts);
-        mDialog = (TextView) view.findViewById(R.id.tv_contacts_dialog);
-        mSearchInput = (EditText) view.findViewById(R.id.et_contacts_search);
-        mListView = (ContactListView) view.findViewById(R.id.list_contacts);
-        mSideBar.setTextView(mDialog);
-        mSideBar.setOnTouchingLetterChangedListener(this);
-        mSearchInput.addTextChangedListener(this);
-        // 给listView设置adapter
-        mFooterView = (TextView) View.inflate(getActivity(), R.layout.item_list_contact_count, null);
-        mListView.addFooterView(mFooterView);
-    }
-
-    /**
-     * 初始化界面数据
-     */
-    private void initData() {
-        if (getActivity() == null) {
-            return;
-        }
-        mUser = CommonUtil.getUserInfo(getActivity());
-        //更新好友请求数
-        updateNewFriendReqNum();
+    public void initData() {
+        super.initData();
+        mUser = CommonUtil.getUserInfo(this);
         dbManager = DBHelper.getDbManager();
+        _self_openfirename = mUser.getOpenFireUserName();
         try {
             _friends = dbManager.selector(Friend.class).where("status", "=", "1").and("userid", "=", _self_openfirename).findAll();
             if (_friends != null && _friends.size() > 0) {
-                mFooterView.setText(_friends.size() + "位联系人");
-                mAdapter = new ContactAdapter(mListView, _friends);
+                mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
                 mListView.setAdapter(mAdapter);
             }
         } catch (DbException e) {
             e.printStackTrace();
         }
+        Intent _intent = getIntent();
+        if (_intent != null) {
+            mGroupName = _intent.getStringExtra("groupName");
+        }
         //加载好友列表
         getFriendListFromNet();
     }
 
-    /**
-     * 更新好友请求数
-     */
-    private void updateNewFriendReqNum() {
-        _self_openfirename = mUser.getOpenFireUserName();
-        //从数据库获取请求好友的数量，并设置
-        String _req_friend_num = "0";
-        try {
-            dbManager = DBHelper.getDbManager();
-            //本登录用户的，待接受，并显示在新朋友的数量
-            long count = dbManager.selector(Friend.class)
-                    .where("status", "=", "2")
-                    .and("showinnewfriend", "=", "1")
-                    .and("userid", "=", _self_openfirename)
-                    .count();
-            _req_friend_num = String.valueOf(count);//请求好友的数量
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-        //待接受好友数量，显示在UI控件
-        if (_req_friend_num.equals("0")) {
-            mTvNewFriendNum.setVisibility(View.GONE);
-        } else {
-            mTvNewFriendNum.setVisibility(View.VISIBLE);
-            mTvNewFriendNum.setText(_req_friend_num);
-        }
-    }
-
-    /**
-     * 设置监听器
-     */
-    private void setListener() {
-        mIvAddFriend.setOnClickListener(new MyContactsOnClickListener());
-        mLayoutNewFriend.setOnClickListener(new MyContactsOnClickListener());
-        mLayoutGroupChat.setOnClickListener(new MyContactsOnClickListener());
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    public void initWidget() {
+        super.initWidget();
+        mIvBack = (ImageView) findViewById(R.id.iv_choose_group_member_back);
+        mTvConfirm = (TextView) findViewById(R.id.tv_choose_group_member_confirm);
+        mSideBar = (SideBar) findViewById(R.id.sidebar_choose_group_member);
+        mDialog = (TextView) findViewById(R.id.tv_choose_group_member_dialog);
+        mSearchInput = (EditText) findViewById(R.id.et_choose_group_member_search);
+        mListView = (ContactListView) findViewById(R.id.list_choose_group_member);
+        mSideBar.setTextView(mDialog);
+        mSideBar.setOnTouchingLetterChangedListener(this);
+        mSearchInput.addTextChangedListener(this);
+        // 给listView设置adapter
+        mFooterView = (TextView) View.inflate(this, R.layout.item_list_contact_count, null);
+        mListView.addFooterView(mFooterView);
+        mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent _intent = new Intent(getActivity(), FriendInformationActivity.class);
-                if (datas != null && datas.size() != 0 && position != datas.size()) {
-                    String contactID = datas.get(position).getFriendid();
-                    _intent.putExtra("_contactID", contactID);
-                    startActivity(_intent);
+            public void onClick(View view) {
+                ChooseGroupMemberActivity.this.finish();
+            }
+        });
+        mTvConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<Integer, Boolean> state = mAdapter.mState;
+                for (int j = 0; j < mAdapter.getCount(); j++) {
+                    if (state.get(j) != null) {
+                        Friend friend = mAdapter.getItem(j);
+                        mMember = friend.getFriendid();
+                        listMembers.add(mMember);
+                    }
+                }
+                if (listMembers != null && listMembers.size() != 0) {
+                    createGroup(mGroupName, listMembers);
+                } else {
+                    UIUtils.showTip("至少选择一个联系人");
                 }
             }
         });
@@ -205,28 +144,21 @@ public class ContactsFragment extends Fragment implements SideBar
             switch (flag) {
                 case 0:
                     //出现错误
-                    if (getActivity() != null) {
-                        String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
-                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
-                    }
+                    String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
+                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
                 case CommonConstants.FLAG_GET_FRIEND_LIST_SHOW:
                     //加载好友列表
                     showListVerfy();
                     break;
                 case CommonConstants.FLAG_CHANGE_ERROR1:
-                    //认证错误
-                    if (getActivity() != null) {
-                        String errorMsg1 = ("认证错误");
-                        Toast.makeText(getActivity(), errorMsg1, Toast.LENGTH_SHORT).show();
-                    }
+                    String errorMsg1 = ("认证错误");
+                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg1, Toast.LENGTH_SHORT).show();
                     break;
                 case CommonConstants.FLAG_CHANGE_ERROR3:
                     //请求失败
-                    if (getActivity() != null) {
-                        String errorMsg3 = ("请求失败");
-                        Toast.makeText(getActivity(), errorMsg3, Toast.LENGTH_SHORT).show();
-                    }
+                    String errorMsg3 = ("请求失败");
+                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg3, Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -239,39 +171,11 @@ public class ContactsFragment extends Fragment implements SideBar
      */
     private void showListVerfy() {
         mFooterView.setText(datas.size() + "位联系人");
-        mAdapter = new ContactAdapter(mListView, datas);
+        mAdapter = new ChooseGroupMemberAdapter(mListView, datas);
         mListView.setAdapter(mAdapter);
     }
 
     private MyHandler myHandler = new MyHandler();
-
-    /**
-     * 自定义点击监听类
-     */
-    private class MyContactsOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if (getActivity() != null) {
-                Intent _intent = null;
-                switch (v.getId()) {
-                    case R.id.iv_contacts_topbar_add_friend:
-                        _intent = new Intent(getActivity(), AddFriendsActivity.class);
-                        getActivity().startActivity(_intent);
-                        break;
-                    case R.id.layout_contacts_new_friend:
-                        _intent = new Intent(getActivity(), NewFriendActivity.class);
-                        getActivity().startActivity(_intent);
-                        break;
-                    case R.id.layout_contacts_group_chat:
-                        _intent = new Intent(getActivity(), GroupChatActivity.class);
-                        getActivity().startActivity(_intent);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
 
     /**
      * 获取好友列表
@@ -280,7 +184,7 @@ public class ContactsFragment extends Fragment implements SideBar
         //使用xutils3访问网络并获取返回值
         RequestParams requestParams = new RequestParams(CommonConstants.GetFriendList);
         //包装请求参数
-        String code = CommonUtil.getUserInfo(getActivity()).getLoginCode();
+        String code = CommonUtil.getUserInfo(this).getLoginCode();
         requestParams.addHeader("sVerifyCode", code);//头信息
         x.http().post(requestParams, new Callback.CommonCallback<String>() {
             @Override
@@ -328,7 +232,7 @@ public class ContactsFragment extends Fragment implements SideBar
                                 data.setFriendid(OpenFireUserName);
                                 datas.add(data);
                                 //存储所有的优时好友列表数据
-                                User _self_user = CommonUtil.getUserInfo(getActivity());
+                                User _self_user = CommonUtil.getUserInfo(ChooseGroupMemberActivity.this);
                                 int status = 1;//已添加好友
                                 String _self_userid = _self_user.getOpenFireUserName();
                                 try {
@@ -404,6 +308,29 @@ public class ContactsFragment extends Fragment implements SideBar
 
             @Override
             public void onFinished() {
+            }
+        });
+    }
+
+    private void createGroup(final String groupName, final ArrayList<String> members) {
+        TIMGroupManager.getInstance().createGroup("Private", members, groupName, new TIMValueCallBack<String>() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz-------createGroup", i + "Error:" + s);
+                if (i == 80001) {
+                    UIUtils.showTip("创建失败，群名含有敏感词");
+                } else {
+                    UIUtils.showTip("创建群失败");
+                }
+            }
+
+            @Override
+            public void onSuccess(String s) {
+                Log.d("zzz-------createGroup", "createGroup is success");
+                UIUtils.showTip("创建群成功");
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

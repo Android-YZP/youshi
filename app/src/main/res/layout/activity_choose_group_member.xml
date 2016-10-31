@@ -32,6 +32,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/creativedetail_topbar_margin_left"
             android:text="确定"
+            android:padding="5dp"
             android:textColor="@color/common_white_color"
             android:textSize="@dimen/friend_information_text_more_size" />
     </RelativeLayout>

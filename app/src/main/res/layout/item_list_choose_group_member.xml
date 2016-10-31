@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_list_choose_group_member"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tv_list_phone_contacts_catalog"
+        android:id="@+id/tv_list_choose_group_member_catalog"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#ebebeb"
@@ -16,7 +17,7 @@
         android:textColor="#A4A4A4" />
 
     <View
-        android:id="@+id/line_list_phone_contacts"
+        android:id="@+id/line_list_choose_group_member"
         style="@style/commonLineStyle" />
 
     <LinearLayout
@@ -30,7 +31,7 @@
         android:paddingTop="@dimen/new_friend_content_padding_top_or_bottom">
 
         <ImageView
-            android:id="@+id/iv_phone_contacts_head"
+            android:id="@+id/iv_choose_group_member_head"
             android:layout_width="@dimen/new_friend_content_head_width_or_height"
             android:layout_height="@dimen/new_friend_content_head_width_or_height"
             android:layout_gravity="center_vertical"
@@ -39,7 +40,7 @@
             android:src="@drawable/default_headpic" />
 
         <TextView
-            android:id="@+id/tv_phone_contacts_name"
+            android:id="@+id/tv_choose_group_member_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -51,8 +52,8 @@
             android:textSize="@dimen/friend_information_text_more_size" />
 
         <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_select_pressed"/>
+            android:id="@+id/cb_choose_group_member"
+            style="@style/remind_checkbox_style"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 </LinearLayout>
