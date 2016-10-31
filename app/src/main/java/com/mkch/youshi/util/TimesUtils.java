@@ -5,6 +5,7 @@ import com.mkch.youshi.bean.NetScheduleModel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -102,6 +103,21 @@ public class TimesUtils {
             }
         }
         return totaltimes;
+    }
+
+
+    /**
+     * 根据年 月 获取对应的月份 天数
+     * */
+    public static int getDaysByYearMonth(int year, int month) {
+
+        Calendar a = Calendar.getInstance();
+        a.set(Calendar.YEAR, year);
+        a.set(Calendar.MONTH, month - 1);
+        a.set(Calendar.DATE, 1);
+        a.roll(Calendar.DATE, -1);
+        int maxDate = a.get(Calendar.DATE);
+        return maxDate;
     }
 }
 

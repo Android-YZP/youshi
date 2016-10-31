@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <com.bruce.pickerview.LoopView
+        android:id="@+id/loop_view_year"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        app:canLoop="true"
+        app:centerTextColor="#ff000000"
+        app:drawItemCount="7"
+        app:initPosition="3"
+        app:lineColor="@android:color/transparent"
+        app:textSize="25sp"
+        app:topBottomTextColor="#ffafafaf" />
+
+    <com.bruce.pickerview.LoopView
+        android:id="@+id/loop_view_month"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        app:canLoop="true"
+        app:centerTextColor="#ff000000"
+        app:drawItemCount="7"
+        app:initPosition="3"
+        app:lineColor="@android:color/transparent"
+        app:textSize="25sp"
+        app:topBottomTextColor="#ffafafaf" />
+
+    <FrameLayout
+        android:id="@+id/ll_loop_view_day"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="1" />
+
+    <com.bruce.pickerview.LoopView
+        android:id="@+id/loop_view_hour"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        app:canLoop="true"
+        app:centerTextColor="#ff000000"
+        app:drawItemCount="7"
+        app:initPosition="3"
+        app:lineColor="@android:color/transparent"
+        app:textSize="25sp"
+        app:topBottomTextColor="#ffafafaf" />
+
+    <com.bruce.pickerview.LoopView
+        android:id="@+id/loop_view_min"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="1"
+        app:canLoop="true"
+        app:centerTextColor="#ff000000"
+        app:drawItemCount="7"
+        app:initPosition="3"
+        app:lineColor="@android:color/transparent"
+        app:textSize="25sp"
+        app:topBottomTextColor="#ffafafaf" />
+
+</LinearLayout>

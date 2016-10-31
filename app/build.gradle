@@ -57,4 +57,5 @@ dependencies {
     compile files('libs/imsdk.jar')
     compile files('libs/bugly_1.3.0_imsdk_release.jar')
     compile files('libs/baidumapapi_base_v4_0_0.jar')
+    compile 'com.brucetoo.pickview:library:1.2.2'
 }
