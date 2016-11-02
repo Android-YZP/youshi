@@ -5,15 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.GroupChatListAdapter;
 import com.mkch.youshi.model.Group;
+import com.mkch.youshi.util.DBHelper;
 import com.tencent.TIMGroupBaseInfo;
 import com.tencent.TIMGroupManager;
 import com.tencent.TIMValueCallBack;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,7 @@ public class GroupChatActivity extends Activity {
     private ListView mListView;
     private List<Group> listGroups = new ArrayList<>();
     private GroupChatListAdapter mAdapter;
+    private DbManager dbManager;//数据库管理对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,12 @@ public class GroupChatActivity extends Activity {
     }
 
     private void initData() {
+        dbManager = DBHelper.getDbManager();
+        listGroups.clear();
+        getGroupList();
+    }
+
+    private void getGroupList() {
         //获取群聊列表
         TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
             @Override
@@ -56,7 +68,7 @@ public class GroupChatActivity extends Activity {
             @Override
             public void onSuccess(List<TIMGroupBaseInfo> timGroupBaseInfos) {
                 Log.d("zzz-------getGroupList", "getGroupList is success");
-                for(TIMGroupBaseInfo info : timGroupBaseInfos) {
+                for (TIMGroupBaseInfo info : timGroupBaseInfos) {
                     Group group = new Group();
                     String groupID = info.getGroupId();
                     group.setGroupID(groupID);
@@ -65,8 +77,25 @@ public class GroupChatActivity extends Activity {
                     String groupHead = info.getFaceUrl();
                     group.setGroupHead(groupHead);
                     listGroups.add(group);
+                    //存储所有的群聊列表数据
+                    try {
+                        Group _group = dbManager.selector(Group.class).where("group_id", "=", groupID).findFirst();
+                        if (_group != null) {
+                            //有就更改他的字段
+                            _group.setGroupID(groupID);
+                            _group.setGroupName(groupName);
+                            _group.setGroupHead(groupHead);
+                            dbManager.saveOrUpdate(_group);
+                        } else {
+                            //没有就插入
+                            Group group1 = new Group(groupID, groupName, groupHead);
+                            dbManager.save(group1);
+                        }
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
                 }
-                mAdapter = new GroupChatListAdapter(GroupChatActivity.this,listGroups);
+                mAdapter = new GroupChatListAdapter(GroupChatActivity.this, listGroups);
                 mListView.setAdapter(mAdapter);
             }
         });
@@ -80,6 +109,18 @@ public class GroupChatActivity extends Activity {
             }
         });
         mAdd.setOnClickListener(new GroupChatOnClickListener());
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(GroupChatActivity.this, ChatActivity.class);
+                if (listGroups != null && listGroups.size() != 0) {
+                    String groupID = listGroups.get(position).getGroupID();
+                    intent.putExtra("chatType", "Group");
+                    intent.putExtra("groupID", groupID);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     /**

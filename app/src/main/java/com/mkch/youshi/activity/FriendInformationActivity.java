@@ -209,6 +209,7 @@ public class FriendInformationActivity extends Activity {
                     break;
                 case R.id.btn_friend_information_send_message:
                     _intent = new Intent(FriendInformationActivity.this, ChatActivity.class);
+                    _intent.putExtra("chatType", "C2C");
                     _intent.putExtra("_openfirename", contactID);
                     startActivity(_intent);
                     FriendInformationActivity.this.finish();

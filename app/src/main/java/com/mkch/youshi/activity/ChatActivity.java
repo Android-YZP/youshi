@@ -20,7 +20,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +41,7 @@ import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Group;
 import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
@@ -133,7 +133,7 @@ public class ChatActivity extends BaseActivity {
     //数据
     private List<ChatBean> m_chart_list;
     private ChartListAdapter m_adapter;
-    private String _openfirename;
+    private String _openfirename, _groupID;
     private static ProgressDialog mProgressDialog = null;//加载
     private ChatReceiver mChatReceiver;
     private User mUser;
@@ -198,6 +198,7 @@ public class ChatActivity extends BaseActivity {
     };
     private int mMessageBoxId;
     private Friend mFriend;
+    private Group mGroup;
     private MessageBox m_messageBox;
     private String friendId, selfId;
 
@@ -215,7 +216,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dbManager = DBHelper.getDbManager();
         initData();
         setListener();
@@ -383,28 +383,51 @@ public class ChatActivity extends BaseActivity {
         //获取会话
         Intent _intent = getIntent();
         if (_intent != null) {
-            _openfirename = _intent.getStringExtra("_openfirename");
-            conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-            if (_openfirename != null && !_openfirename.equals("")) {
-                try {
-                    mFriend = dbManager.selector(Friend.class)
-                            .where("friendid", "=", _openfirename)
-                            .and("status", "=", "1")
-                            .findFirst();
-                    //标题
-                    if (mFriend.getNickname() == null || mFriend.getNickname().equals("")) {
-                        mTvTitle.setText(mFriend.getPhone());
-                    } else {
-                        mTvTitle.setText(mFriend.getNickname());
+            if (_intent.getStringExtra("chatType").equals("C2C")) {
+                _openfirename = _intent.getStringExtra("_openfirename");
+                conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+                if (_openfirename != null && !_openfirename.equals("")) {
+                    try {
+                        mFriend = dbManager.selector(Friend.class)
+                                .where("friendid", "=", _openfirename)
+                                .and("status", "=", "1")
+                                .findFirst();
+                        //标题
+                        if (mFriend.getNickname() == null || mFriend.getNickname().equals("")) {
+                            mTvTitle.setText(mFriend.getPhone());
+                        } else {
+                            mTvTitle.setText(mFriend.getNickname());
+                        }
+                        mIvPsInfo.setImageResource(R.drawable.chat_ps);
+                        friendId = mFriend.getFriendid() + "@" + "TIMConversationType.C2C";
+                        queryChatsInfoFromDB(friendId, selfId);
+                        //注册聊天监听的Receiver
+                        mChatReceiver = new ChatReceiver(mHandler);
+                        IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
+                        registerReceiver(mChatReceiver, filter);
+                    } catch (DbException e) {
+                        e.printStackTrace();
                     }
-                    friendId = mFriend.getFriendid() + "@" + "TIMConversationType.C2C";
-                    queryChatsInfoFromDB(friendId, selfId);
-                    //注册聊天监听的Receiver
-                    mChatReceiver = new ChatReceiver(mHandler);
-                    IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
-                    registerReceiver(mChatReceiver, filter);
-                } catch (DbException e) {
-                    e.printStackTrace();
+                }
+            } else if (_intent.getStringExtra("chatType").equals("Group")) {
+                _groupID = _intent.getStringExtra("groupID");
+                conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, _groupID);
+                if (_groupID != null && !_groupID.equals("")) {
+                    try {
+                        mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).findFirst();
+                        if (mGroup.getGroupName() != null || !mGroup.getGroupName().equals("")) {
+                            mTvTitle.setText(mGroup.getGroupName());
+                        }
+                        mIvPsInfo.setImageResource(R.drawable.downmenu_group);
+                        friendId = mGroup.getGroupID() + "@" + "TIMConversationType.Group";
+                        queryChatsInfoFromDB(friendId, selfId);
+                        //注册聊天监听的Receiver
+                        mChatReceiver = new ChatReceiver(mHandler);
+                        IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
+                        registerReceiver(mChatReceiver, filter);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -604,9 +627,15 @@ public class ChatActivity extends BaseActivity {
             m_chart_list = new ArrayList<>();
         }
         //适配器
-        m_adapter = new ChartListAdapter(m_chart_list, mFriend, mUser, this);
-        mRvList.setAdapter(m_adapter);
-        mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        if (mFriend != null) {
+            m_adapter = new ChartListAdapter(m_chart_list, mFriend, mUser, this);
+            mRvList.setAdapter(m_adapter);
+            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        } else {
+            m_adapter = new ChartListAdapter(m_chart_list, mGroup, mUser, this);
+            mRvList.setAdapter(m_adapter);
+            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        }
     }
 
     @Event({R.id.iv_chat_topbar_back, R.id.iv_chat_topbar_ps, R.id.iv_chat_go_voice, R.id.iv_chat_go_keyboard, R.id.iv_chat_go_expression, R.id.iv_chat_go_more_action
@@ -620,6 +649,11 @@ public class ChatActivity extends BaseActivity {
                 this.finish();
                 break;
             case R.id.iv_chat_topbar_ps://查看用户
+                if (_groupID != null) {
+                    Intent intent = new Intent(ChatActivity.this, GroupDetailActivity.class);
+                    intent.putExtra("groupID", _groupID);
+                    startActivity(intent);
+                }
                 break;
             case R.id.iv_chat_go_voice://切换到语音
                 changeKeyboardAndVoice();
@@ -675,8 +709,8 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendInfoToFriend() {
         final String _msg = mEtChatInput.getText().toString();
-        if (TextUtils.isEmpty(_openfirename) || TextUtils.isEmpty(_msg)) {
-            Toast.makeText(getApplicationContext(), "接收方或内容不能为空", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(_msg)) {
+            Toast.makeText(getApplicationContext(), "内容不能为空", Toast.LENGTH_LONG).show();
             mEtChatInput.setText("");
             return;
         }
@@ -834,13 +868,22 @@ public class ChatActivity extends BaseActivity {
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                if (mFriend != null) {
+                    m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                } else {
+                    m_messageBox = new MessageBox(mGroup.getGroupHead(), mGroup.getGroupName(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_MUL_CHAT, friendId, selfId);
+                }
                 dbManager.saveBindingId(m_messageBox);
                 mMessageBoxId = m_messageBox.getId();
             } else {
                 //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
+                if (mFriend != null) {
+                    m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                    m_messageBox.setTitle(mFriend.getNickname());
+                } else {
+                    m_messageBox.setBoxLogo(mGroup.getGroupHead());
+                    m_messageBox.setTitle(mGroup.getGroupName());
+                }
                 m_messageBox.setInfo(_local_message.getContent());
                 m_messageBox.setLasttime(TimesUtils.getNow());
                 dbManager.saveOrUpdate(m_messageBox);

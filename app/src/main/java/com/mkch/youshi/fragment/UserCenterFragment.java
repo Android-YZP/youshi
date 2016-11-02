@@ -87,7 +87,6 @@ public class UserCenterFragment extends Fragment {
             }else{
                 mIvHead.setImageResource(R.drawable.default_headpic);
             }
-
             if (mUser.getNickName() == null ||mUser.getNickName().equals("")) {
                 mTvName.setText(mUser.getMobileNumber());
             } else {

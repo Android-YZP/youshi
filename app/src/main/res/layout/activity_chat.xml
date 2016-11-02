@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.mkch.youshi.activity.ChatActivity">
 
@@ -33,9 +33,7 @@
             android:layout_height="44dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="14dp"
-            android:src="@drawable/chat_ps" />
-
+            android:padding="14dp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

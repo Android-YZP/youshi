@@ -25,6 +25,8 @@ import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMFriendshipManager;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -55,6 +57,8 @@ public class UserLoginActivity extends Activity {
     private User mUser;//用户信息
     private String mPicUrl;//图片验证码地址
     private long exitTime = 0;
+    private String nickName;//昵称
+    private String headUrl;//头像地址
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,6 +273,32 @@ public class UserLoginActivity extends Activity {
         UserLoginActivity.this.finish();
         Intent _intent = new Intent(this, MainActivity.class);
         startActivity(_intent);
+        //上传昵称到腾讯云
+        TIMFriendshipManager.getInstance().setNickName(nickName, new TIMCallBack() {
+            @Override
+            public void onError(int code, String desc) {
+                Log.d("zzz-----setNickName", code + "Error:" + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d("zzz-----setNickName", "setNickName is success");
+            }
+        });
+        if (headUrl != null) {
+            //上传头像到腾讯云
+            TIMFriendshipManager.getInstance().setFaceUrl(headUrl, new TIMCallBack() {
+                @Override
+                public void onError(int i, String s) {
+                    Log.d("zzz-----setFaceUrl", i + "Error:" + s);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("zzz-----setFaceUrl", "setFaceUrl is success");
+                }
+            });
+        }
     }
 
     /**
@@ -423,10 +453,16 @@ public class UserLoginActivity extends Activity {
                             if (datas != null) {
                                 User user = new User();
                                 user.setMobileNumber(datas.getString("MobileNumber"));
+                                if (datas.getString("NickName") != null && !datas.getString("NickName").equals("")) {
+                                    nickName = datas.getString("NickName");
+                                } else {
+                                    nickName = datas.getString("OpenfireUserName");
+                                }
                                 user.setNickName(datas.getString("NickName"));
                                 user.setYoushiNumber(datas.getString("UserName"));
                                 if (datas.getString("HeadPic") != null && !datas.getString("HeadPic").equals("") && !datas.getString("HeadPic").equals("null")) {
-                                    user.setHeadPic(CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic"));
+                                    headUrl = CommonConstants.TEST_ADDRESS_PRE + datas.getString("HeadPic");
+                                    user.setHeadPic(headUrl);
                                 }
                                 user.setLoginCode(datas.getString("LoginCode"));
                                 if (datas.getString("UserName") != null && !datas.getString("UserName").equals("") && !datas.getString("UserName").equals("null")) {

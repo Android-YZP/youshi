@@ -5,7 +5,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 /**
- * Created by SunnyJiang on 2016/8/24.
+ * Created by ZJ on 2016/10/10.
  */
 @Table(name = "chat")
 public class ChatBean {
