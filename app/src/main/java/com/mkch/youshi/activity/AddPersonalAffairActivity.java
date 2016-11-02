@@ -107,19 +107,19 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private static int mEndMonth;
     private static int mEndDay;
     private static int mMinute;
-    private static NumberPicker mNpTwoOptionStartYear;
-    private static NumberPicker mNpTwoOptionStartMonth;
-    private static NumberPicker mNpTwoOptionStartDay;
-    private static TextView mTvChooseComplete;
-    private static TextView mTvTimeShow;
-    private static Button mBtnEndTime;
-    private static Button mBtnStartTime;
-    public static Dialog mChooseTimeDialog;
-    private static NumberPicker mNpTwoOptionEndYear;
-    private static NumberPicker mNpTwoOptionEndMonth;
-    private static NumberPicker mNpTwoOptionEndDay;
-    private static LinearLayout mLLTwoOptionStartRootView;
-    private static LinearLayout mLLTwoOptionEndRootView;
+    private  NumberPicker mNpTwoOptionStartYear;
+    private  NumberPicker mNpTwoOptionStartMonth;
+    private  NumberPicker mNpTwoOptionStartDay;
+    private  TextView mTvChooseComplete;
+    private  TextView mTvTimeShow;
+    private  Button mBtnEndTime;
+    private  Button mBtnStartTime;
+    public  Dialog mChooseTimeDialog;
+    private  NumberPicker mNpTwoOptionEndYear;
+    private  NumberPicker mNpTwoOptionEndMonth;
+    private  NumberPicker mNpTwoOptionEndDay;
+    private  LinearLayout mLLTwoOptionStartRootView;
+    private  LinearLayout mLLTwoOptionEndRootView;
     private DbManager mDbManager;
     private Schedule schedule = new Schedule();
     private ArrayList<TimeSpanListBean> mTimeSpanListBeans = new ArrayList<>();
@@ -608,7 +608,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 mAffairTimeISChoose.setText("未选择");
             }
 
-            UIUtils.showTip(mTotalTimeHour+""+mTotalTimeMints+"");
+            UIUtils.showTip(mTotalTimeHour + "" + mTotalTimeMints + "");
             //计算有效时间天数
             setTotalTime();
         }

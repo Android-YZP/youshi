@@ -46,10 +46,11 @@ public class DayCircleView extends View {
 
     }
 
-    public DayCircleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+//    public DayCircleView(Context context, AttributeSet attrs) {
+//        super(context, attrs);
+//
+//    }
 
-    }
 
 
     @Override
@@ -141,6 +142,7 @@ public class DayCircleView extends View {
      * @param canvas
      */
     private void drawAllArcs(Canvas canvas) {
+
         for (int i=0;i<mArcBeans.size();i++){
             ArcBean _arc_bean = mArcBeans.get(i);
 
@@ -170,6 +172,9 @@ public class DayCircleView extends View {
                     break;
                 case 6:
                     setPaintStyle(getResources().getColor(R.color.cycicle_color_6),STROKE_WIDTH);
+                    break;
+                case 7:
+                    setPaintStyle(getResources().getColor(R.color.cycicle_color_7),STROKE_WIDTH);
                     break;
                 default:
                     break;

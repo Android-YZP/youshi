@@ -34,6 +34,7 @@ import com.mkch.youshi.bean.AppVersion;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
@@ -474,6 +475,7 @@ public class CommonUtil {
             e.printStackTrace();
         }
     }
+
     /**
      * 用日程id删除该日程的参与人
      *
@@ -548,6 +550,7 @@ public class CommonUtil {
 
     /**
      * 用日程id查找该日程的参与人
+     *
      * @param sid
      */
     public static ArrayList<Schjoiner> findJoinPer(int sid) {
@@ -577,6 +580,24 @@ public class CommonUtil {
             return Scheduls;
         }
     }
+
+    /**
+     * 的到这个日期的所有时间段
+     */
+    public static ArrayList<SchEveDay> getTimeBucket(String date) {
+        ArrayList<SchEveDay> dates = null;
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            dates = (ArrayList<SchEveDay>) mDbManager.selector(SchEveDay.class).
+                    where("date", "=", date).findAll();
+            return dates;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return dates;
+        }
+
+    }
+
     /**
      * 用Type查找一个文件集合
      */
@@ -592,6 +613,7 @@ public class CommonUtil {
             return youpanFiles;
         }
     }
+
     /**
      * 将123456换成周一周二周三
      *

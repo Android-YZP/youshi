@@ -236,7 +236,11 @@ public class TimePickerView extends FrameLayout {
             lvDay.setInitPosition(daysByYearMonth - 1);
             day = daysByYearMonth;
         }
-        mChooseDay = day + "日";//年和月的变化会引起日的变化
+        if (day < 10) {
+            mChooseDay = "0" + day + "日";
+        } else {
+            mChooseDay = day + "日";//年和月的变化会引起日的变化
+        }
 
         lvDay.setCanLoop(true);
         lvDay.setLoopListener(new LoopScrollListener() {
@@ -282,11 +286,15 @@ public class TimePickerView extends FrameLayout {
      */
     private String getDateString() {
         if (isAllDay) {
-            return mChooseYear + mChooseMonth + mChooseDay + mChooseHour;
+            return mChooseYear + mChooseMonth + mChooseDay
+                    + TimesUtils.getWeekOfDate(mChooseYear + mChooseMonth + mChooseDay);
         } else {
-            return mChooseYear + mChooseMonth + mChooseDay + mChooseHour + ":" + mChooseMinute;
+            return mChooseYear + mChooseMonth + mChooseDay +
+                    TimesUtils.getWeekOfDate(mChooseYear + mChooseMonth + mChooseDay)
+                    + mChooseHour + ":" + mChooseMinute;
         }
     }
+
 
     public void setIsAllDay(boolean isAllDay) {
         this.isAllDay = isAllDay;

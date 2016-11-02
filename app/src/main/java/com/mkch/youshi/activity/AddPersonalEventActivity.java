@@ -5,12 +5,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
+import android.util.TimeUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -28,13 +35,16 @@ import com.mkch.youshi.bean.NetScheduleModel.ViewModelBean;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.DialogFactory;
 import com.mkch.youshi.util.StringUtils;
+import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.view.TimePickerView;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -48,7 +58,9 @@ import org.xutils.x;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AddPersonalEventActivity extends AppCompatActivity implements View.OnClickListener {
@@ -73,7 +85,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private TextView mTvCancel;
     private TextView mTvComplete;
     private TextView mTvTitle;
-    private int mRemindTime;
+    private int mRemindTime = 0;
     private TextView mTvRemindBefore;
     public static ProgressDialog mProgressDialog;
     private MyHandler handler = new MyHandler(this);
@@ -90,6 +102,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
     private double mLongitude;
     private int mEventID;
     private ArrayList<Schedule> mScheduleList;
+    private String chooseTime;
+    private AlertDialog mChooseTimeDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,8 +157,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
 
         } else {
             initTime();
-            mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
-            mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+            mTvStartTime.setText(TimesUtils.getNowTime(isAllDay));
+            mTvEndTime.setText(TimesUtils.getNowTime(isAllDay));
         }
         mTvTitle.setText("添加个人事件");//标题
     }
@@ -219,8 +233,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 initTime();//当变换是否为全天事件的时候,重新初始化时间
                 isAllDay = isChecked;
-                mTvStartTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour, mCurrentMinute, isAllDay));
-                mTvEndTime.setText(DialogFactory.getWeek(mCurrentYear, mCurrentMonth, mCurrentDay, mCurrentHour + 1, mCurrentMinute, isAllDay));
+                mTvStartTime.setText(TimesUtils.getNowTime(isAllDay));
+                mTvEndTime.setText(TimesUtils.getNowTime(isAllDay));
             }
         });
         mStartTime.setOnClickListener(this);
@@ -243,16 +257,18 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             //中间部分的点击事件
             case R.id.rl_start_time://开始时间
                 if (isAllDay) {
-                    DialogFactory.showAllDayOptionDialog(this, mTvStartTime, mTvEndTime);
+                    //全天的选择事件对话框
+                    allDayDialog(mTvStartTime, mTvEndTime, true);
                 } else {
-                    DialogFactory.showOptionDialog(this, mTvStartTime, mTvEndTime);
+//                    DialogFactory.showOptionDialog(this, mTvStartTime, mTvEndTime);
+                    allDayDialog(mTvStartTime, mTvEndTime, true);
                 }
                 break;
             case R.id.rl_end_time://结束时间
                 if (isAllDay) {
-                    DialogFactory.showAllDayOptionDialog(this, mTvEndTime, mTvStartTime);
+                    allDayDialog(mTvStartTime, mTvEndTime, false);
                 } else {
-                    DialogFactory.showOptionDialog(this, mTvEndTime, mTvStartTime);
+                    allDayDialog(mTvStartTime, mTvEndTime, false);
                 }
                 break;
             //后半部分的点击事件
@@ -285,6 +301,39 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 saveDataOfDb();
                 saveReporterToDb();
                 saveDataOfNet();
+                // 拿到二个时间段的中间的所有时间
+                //储存在一个表中
+                //得到开始和结束时间之间所有的所有日程
+
+
+                List<Date> datesBetweenTwoDate = TimesUtils.getDatesBetweenTwoDate(TimesUtils.getDate(isAllDay,
+                        mTvStartTime.getText().toString()), TimesUtils.getDate(isAllDay,
+                        mTvEndTime.getText().toString()));
+
+                //是否是全天
+                if (isAllDay) {//是全天
+                    saveEveDayData(mTvStartTime.getText().toString().substring(0, 11),
+                            null, "00:00");//添加开始日期
+                } else {
+                    saveEveDayData(mTvStartTime.getText().toString().substring(0, 11), null,
+                            mTvStartTime.getText().toString().substring(13, 18));
+                }
+
+                for (int i = 0; i < datesBetweenTwoDate.size(); i++) {
+                    UIUtils.LogUtils(datesBetweenTwoDate.get(i).toString());
+                    saveEveDayData(TimesUtils.getEveryDayTime(true, datesBetweenTwoDate.get(i)).substring(0, 11), null, null);
+                }
+
+                //是否是全天
+                if (isAllDay) {//是全天
+                    saveEveDayData(mTvEndTime.getText().toString().substring(0, 11),
+                            "23:59", null);//添加结束时间
+                } else {
+                    saveEveDayData(mTvEndTime.getText().toString().substring(0, 11),
+                            mTvEndTime.getText().toString().substring(13, 18), null);
+                }
+
+                //将每条数据插入到数据库中
                 break;
             case R.id.tv_add_event_cancel://取消
                 finish();
@@ -293,6 +342,122 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 break;
         }
     }
+
+    /**
+     * 储存时间段的子表
+     *
+     * @param date
+     */
+    private void saveEveDayData(String date, String endTime, String startTime) {
+        try {
+            DbManager dbManager = DBHelper.getDbManager();
+            SchEveDay schEveDay = new SchEveDay();
+            schEveDay.setSid(schedule.getId());
+            schEveDay.setDate(date);
+            schEveDay.setStatus(0);
+
+            if (startTime != null) {
+                schEveDay.setBegin_time(startTime);//是日期.开始时间和结束时间是没天的小时分钟时间片段
+            } else {
+                schEveDay.setBegin_time("00:00");//是日期.开始时间和结束时间是没天的小时分钟时间片段
+            }
+
+
+            if (endTime != null) {
+                schEveDay.setEnd_time(endTime);
+            } else {
+                schEveDay.setEnd_time("23:59");
+            }
+
+            if (startTime != null) {
+                if (isAllDay) {
+                    schEveDay.setWarning_time(TimesUtils.addDateMinut(isAllDay,
+                            mTvStartTime.getText().toString() + "08:00", mRemindTime));
+                } else {
+                    schEveDay.setWarning_time(TimesUtils.addDateMinut(isAllDay,
+                            mTvStartTime.getText().toString(), mRemindTime));
+                }
+            }
+
+            dbManager.saveOrUpdate(schEveDay);
+
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 个人事件的对话框
+     */
+    private void allDayDialog(final TextView StartTime, final TextView EndTime, final boolean isStartTime) {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View _OptionView = layoutInflater.inflate(R.layout.person_event_dialog, null);
+        TimePickerView timePickerView = (TimePickerView) _OptionView.findViewById(R.id.tpv_allday);
+        final TextView tvChooseTime = (TextView) _OptionView.findViewById(R.id.tv_dialog_time_show);
+        final TextView tvComplete = (TextView) _OptionView.findViewById(R.id.tv_dialog_choose_complete);
+        final TextView tvShow = (TextView) _OptionView.findViewById(R.id.tv_dialog_show);
+        if (isStartTime) {
+            tvShow.setText("开始时间");
+        } else {
+            tvShow.setText("结束时间");
+        }
+        tvChooseTime.setText(TimesUtils.getNowTime(isAllDay));//初始化时间
+        timePickerView.setIsAllDay(isAllDay);
+        timePickerView.setOnItemSelectedListener(new TimePickerView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(String date) {
+                chooseTime = date;
+                tvChooseTime.setText(date);
+            }
+        });
+
+        //完成的点击事件
+        tvComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isStartTime) {//选择的是开始时间
+                    //判断选择的时间与结束时间的大小
+                    int i = TimesUtils.compare_date(tvChooseTime.getText().toString(),
+                            EndTime.getText().toString(), isAllDay);
+                    if (i < 0) {//开始时间小于结束时间zhengque
+                        StartTime.setText(chooseTime);
+                    } else {//开始时间>结束时间//将结束时间设置成和开始时间一样
+                        StartTime.setText(chooseTime);
+                        EndTime.setText(chooseTime);
+                    }
+                    UIUtils.showTip(i + "");
+                } else {//选择的是结束时间
+                    //判断选择的时间与开始时间的大小
+                    int i = TimesUtils.compare_date(tvChooseTime.getText().toString(),
+                            StartTime.getText().toString(), isAllDay);
+                    if (i < 0) {//开始时间>结束时间//将结束时间设置成和开始时间一样
+                        EndTime.setText(chooseTime);
+                        StartTime.setText(chooseTime);
+                    } else {//结束时间小于开始时间
+                        EndTime.setText(chooseTime);
+                    }
+                    UIUtils.showTip(i + "");
+                }
+                mChooseTimeDialog.dismiss();
+            }
+        });
+
+        mChooseTimeDialog = new AlertDialog.Builder(this, R.style.style_dialog).
+                setView(_OptionView).
+                create();
+        Window window = mChooseTimeDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
+        window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        mChooseTimeDialog.show();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -324,6 +489,8 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             setRepFriends(mFriends);//设置报送人
         }
     }
+
+
 
     /**
      * 将日程储存网络
