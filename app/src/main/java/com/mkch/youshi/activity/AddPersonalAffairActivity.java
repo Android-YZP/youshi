@@ -36,6 +36,7 @@ import com.mkch.youshi.bean.NetScheduleModel.ViewModelBean.TimeSpanListBean;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
@@ -45,6 +46,7 @@ import com.mkch.youshi.util.DialogFactory;
 import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.view.TimePickerView;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -99,27 +101,27 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
     private List<String> mFriends = new ArrayList<>();
     private List<Friend> allChooseFriends = new ArrayList<>();
     private double mLongitude;
-    private static int mYear;
-    private static int mMonth;
-    private static int mDay;
-    private static int mHour;
-    private static int mEndYear;
-    private static int mEndMonth;
-    private static int mEndDay;
-    private static int mMinute;
-    private static NumberPicker mNpTwoOptionStartYear;
-    private static NumberPicker mNpTwoOptionStartMonth;
-    private static NumberPicker mNpTwoOptionStartDay;
-    private static TextView mTvChooseComplete;
-    private static TextView mTvTimeShow;
-    private static Button mBtnEndTime;
-    private static Button mBtnStartTime;
-    public static Dialog mChooseTimeDialog;
-    private static NumberPicker mNpTwoOptionEndYear;
-    private static NumberPicker mNpTwoOptionEndMonth;
-    private static NumberPicker mNpTwoOptionEndDay;
-    private static LinearLayout mLLTwoOptionStartRootView;
-    private static LinearLayout mLLTwoOptionEndRootView;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private int mHour;
+    private int mEndYear;
+    private int mEndMonth;
+    private int mEndDay;
+    private int mMinute;
+    private NumberPicker mNpTwoOptionStartYear;
+    private NumberPicker mNpTwoOptionStartMonth;
+    private NumberPicker mNpTwoOptionStartDay;
+    private TextView mTvChooseComplete;
+    private TextView mTvTimeShow;
+    private Button mBtnEndTime;
+    private Button mBtnStartTime;
+    private Dialog mChooseTimeDialog;
+    private NumberPicker mNpTwoOptionEndYear;
+    private NumberPicker mNpTwoOptionEndMonth;
+    private NumberPicker mNpTwoOptionEndDay;
+    private LinearLayout mLLTwoOptionStartRootView;
+    private LinearLayout mLLTwoOptionEndRootView;
     private DbManager mDbManager;
     private Schedule schedule = new Schedule();
     private ArrayList<TimeSpanListBean> mTimeSpanListBeans = new ArrayList<>();
@@ -289,8 +291,10 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                         this, ChooseAddressActivity.class), 6);
                 break;
             case R.id.rl_affair_date://日期
-                showTwoDayOptionDialog(this, mTwoStartDate, mTwoEndDate);
+//                showTwoDayOptionDialog(this, mTwoStartDate, mTwoEndDate);
+                ChooseDialog(mTwoStartDate, mTwoEndDate);
                 break;
+
             case R.id.rl_affair_week://周
                 startActivityForResult(new Intent(AddPersonalAffairActivity.this,
                         ChooseWeekActivity.class), 1);
@@ -300,8 +304,8 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                         ChooseTimeActivity.class);
                 intent.putExtra("eventID", mEventID);
                 startActivityForResult(intent, 2);
-
                 break;
+
             case R.id.rl_affair_all_time://总时长
                 Toast.makeText(AddPersonalAffairActivity.this, "4",
                         Toast.LENGTH_SHORT).show();
@@ -323,33 +327,198 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 finish();
                 break;
             case R.id.tv_add_event_complete://完成
-                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
-                    showTip("请输入主题");
-                    return;
-                }
-                //备注不为空
-                if (TextUtils.isEmpty(mEtPersonalEventDescription.getText().toString())) {
-                    showTip("请输入备注");
-                    return;
-                }
-                //时间段不为空
-                if (mTimeSpanListBeans == null) {
-                    showTip("请选择时间段");
-                    return;
-                }
-                mProgressDialog = ProgressDialog.show(AddPersonalAffairActivity.this, "请稍等", "正在保存中...", true, true);
-                if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
-                    CommonUtil.DeleteRepPer(mEventID);
-                    CommonUtil.DeleteSchTime(mEventID);
-                }
+//                if (TextUtils.isEmpty(mEtTheme.getText().toString())) {
+//                    showTip("请输入主题");
+//                    return;
+//                }
+//                //备注不为空
+//                if (TextUtils.isEmpty(mEtPersonalEventDescription.getText().toString())) {
+//                    showTip("请输入备注");
+//                    return;
+//                }
+//                //时间段不为空
+//                if (mTimeSpanListBeans == null) {
+//                    showTip("请选择时间段");
+//                    return;
+//                }
+//                mProgressDialog = ProgressDialog.show(AddPersonalAffairActivity.this, "请稍等", "正在保存中...", true, true);
+//                if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
+//                    CommonUtil.DeleteRepPer(mEventID);
+//                    CommonUtil.DeleteSchTime(mEventID);
+//                }
+                //加入结束时间到数据库
+
+
                 saveDataOfDb();//保存了日程表和时间段
                 saveReporterToDb();//保存报送人到数据表
+                //保存
                 if (CommonUtil.isnetWorkAvilable(this)) {//判断有网络就上传网络,否则就只保存在本地
                     saveDataOfNet();
+                }
+
+
+                List<Date> datesBetweenTwoDate = TimesUtils.getDatesBetweenTwoDate(TimesUtils.getDate(true,
+                        mTwoStartDate.getText().toString()), TimesUtils.getDate(true,
+                        mTwoEndDate.getText().toString()));
+                //添加所选时间段的第一天的时间到数据库
+                //判断第一天是不是在所选周之内
+                boolean contains = mTvAffairWeek.getText().toString().contains(mTwoStartDate.getText().toString().substring(12, 13));
+                if (contains) {//第一天在所选星期之内
+                    //拿到时间段,每个时间段都形成一条数据插入到数据库中
+                    for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
+                        saveEveDayData(mTwoStartDate.getText().toString(),
+                                mTimeSpanListBeans.get(i).getStartTime(),
+                                mTimeSpanListBeans.get(i).getEndTime());
+                    }
+                }
+
+                //中间的时间段，数据插入数据库
+                for (int i = 0; i < datesBetweenTwoDate.size(); i++) {
+                    for (int j = 0; j < mTimeSpanListBeans.size(); j++) {
+                        //判断所选的时间在不在所选的周内
+                        boolean contains2 = mTvAffairWeek.getText().toString().contains(TimesUtils.getEveryDayTime(true, datesBetweenTwoDate.get(i)).substring(12, 13));
+                        if (contains2) {
+                            saveEveDayData(TimesUtils.getEveryDayTime(true, datesBetweenTwoDate.get(i)),
+                                    mTimeSpanListBeans.get(j).getStartTime(),
+                                    mTimeSpanListBeans.get(j).getEndTime());
+                        }
+                    }
+                }
+
+                boolean contains3 = mTvAffairWeek.getText().toString().contains(mTwoEndDate.getText().toString().substring(12, 13));
+                if (contains3) {//第一天在所选星期之内
+                    //拿到时间段,每个时间段都形成一条数据插入到数据库中
+                    for (int i = 0; i < mTimeSpanListBeans.size(); i++) {
+                        saveEveDayData(mTwoEndDate.getText().toString(),
+                                mTimeSpanListBeans.get(i).getStartTime(),
+                                mTimeSpanListBeans.get(i).getEndTime());
+                    }
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 个人事务的对话框
+     */
+    private void ChooseDialog(final TextView StartTime, final TextView EndTime) {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View _OptionView = layoutInflater.inflate(R.layout.person_affair_dialog, null);
+        final TimePickerView startTimePV = (TimePickerView) _OptionView.findViewById(R.id.tpv_start_choose_day);
+        final TimePickerView endTimePV = (TimePickerView) _OptionView.findViewById(R.id.tpv_end_choose_day);
+        final TextView tvStart = (TextView) _OptionView.findViewById(R.id.tv_start);
+        final TextView tvEnd = (TextView) _OptionView.findViewById(R.id.tv_end);
+        final TextView tvComplete = (TextView) _OptionView.findViewById(R.id.tv_dialog_choose_complete);
+        final TextView tvStartShow = (TextView) _OptionView.findViewById(R.id.tv_start_time_show);
+        final TextView tvEndShow = (TextView) _OptionView.findViewById(R.id.tv_end_time_show);
+        startTimePV.setIsAllDay(true);
+        endTimePV.setIsAllDay(true);
+        endTimePV.setVisibility(View.INVISIBLE);
+        tvEndShow.setVisibility(View.INVISIBLE);
+        tvStart.setBackgroundColor(UIUtils.getColor(R.color.grgray));
+        //点击开始事件
+        tvStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimePV.setVisibility(View.VISIBLE);
+                endTimePV.setVisibility(View.INVISIBLE);
+                tvStartShow.setVisibility(View.VISIBLE);
+                tvEndShow.setVisibility(View.INVISIBLE);
+                tvStart.setBackgroundColor(UIUtils.getColor(R.color.grgray));
+                tvEnd.setBackgroundColor(UIUtils.getColor(R.color.common_white_color));
+
+            }
+        });
+
+        //点击结束事件
+        tvEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTimePV.setVisibility(View.INVISIBLE);
+                endTimePV.setVisibility(View.VISIBLE);
+                tvStartShow.setVisibility(View.INVISIBLE);
+                tvEndShow.setVisibility(View.VISIBLE);
+                tvStart.setBackgroundColor(UIUtils.getColor(R.color.common_white_color));
+                tvEnd.setBackgroundColor(UIUtils.getColor(R.color.grgray));
+            }
+        });
+
+
+        tvStartShow.setText(TimesUtils.getNowTime(true));//初始化时间
+        tvEndShow.setText(TimesUtils.getNowTime(true));//初始化时间
+
+        startTimePV.setOnItemSelectedListener(new TimePickerView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(String date) {
+                tvStartShow.setText(date);
+            }
+        });
+        endTimePV.setOnItemSelectedListener(new TimePickerView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(String date) {
+                tvEndShow.setText(date);
+            }
+        });
+
+        //完成的点击事件
+        tvComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //判断选择的时间与结束时间的大小
+                int i = TimesUtils.compare_date(tvStartShow.getText().toString(),
+                        tvEndShow.getText().toString(), true);
+                if (i < 0) {//开始时间小于结束时间zhengque
+                    StartTime.setText(tvStartShow.getText().toString());
+                    EndTime.setText(tvEndShow.getText().toString());
+                } else {//开始时间>结束时间//将结束时间设置成和开始时间一样
+                    StartTime.setText(tvStartShow.getText().toString());
+                    EndTime.setText(tvStartShow.getText().toString());
+                    UIUtils.showTip("开始时间应小于结束时间");
+                }
+                mChooseTimeDialog.dismiss();
+            }
+
+        });
+
+        mChooseTimeDialog = new AlertDialog.Builder(this, R.style.style_dialog).
+                setView(_OptionView).
+                create();
+        Window window = mChooseTimeDialog.getWindow();
+        window.setGravity(Gravity.BOTTOM);  //此处可以设置dialog显示的位置
+        window.setWindowAnimations(R.style.dialog_style);  //添加动画
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        mChooseTimeDialog.show();
+    }
+
+    /**
+     * 储存时间段的子表
+     *
+     * @param date
+     */
+    private void saveEveDayData(String date, String endTime, String startTime) {
+        try {
+            DbManager dbManager = DBHelper.getDbManager();
+            SchEveDay schEveDay = new SchEveDay();
+            schEveDay.setSid(schedule.getId());
+            schEveDay.setDate(date.substring(0, 11));
+            schEveDay.setStatus(0);
+            schEveDay.setBegin_time(startTime);//是日期.开始时间和结束时间是没天的小时分钟时间片段
+            schEveDay.setEnd_time(endTime);
+
+            schEveDay.setWarning_time(TimesUtils.addDateMinut(true,
+                    date + startTime, mRemindTime));
+
+            dbManager.saveOrUpdate(schEveDay);
+
+        } catch (DbException e) {
+            e.printStackTrace();
         }
     }
 
@@ -608,7 +777,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
                 mAffairTimeISChoose.setText("未选择");
             }
 
-            UIUtils.showTip(mTotalTimeHour+""+mTotalTimeMints+"");
+            UIUtils.showTip(mTotalTimeHour + "" + mTotalTimeMints + "");
             //计算有效时间天数
             setTotalTime();
         }

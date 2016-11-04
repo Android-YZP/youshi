@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.util.UIUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,6 +56,7 @@ public class CalendarAdapter extends BaseAdapter {
     private String sys_year = "";
     private String sys_month = "";
     private String sys_day = "";
+
     public CalendarAdapter() {
         Date date = new Date();
         sysDate = sdf.format(date); // 当期日期
@@ -152,11 +157,19 @@ public class CalendarAdapter extends BaseAdapter {
         if (position < daysOfMonth + dayOfWeek && position >= dayOfWeek) {
 
             // 当前月具体日期,测试显示大圆圈控件
-            Log.d("YZP---------",showYear + "-" + showMonth + "-" + sp);
-            String mCurrentDay = showYear + "-" + showMonth + "-" + sp;
+
+            String mCurrentDay = TimesUtils.formatDate(Integer.parseInt(showYear),
+                    Integer.parseInt(showMonth),
+                    sp + "");
+
+            Log.d("YZP---------", mCurrentDay);
+            if (CommonUtil.isTodaySch(mCurrentDay)) {
+                IvView.setBackground(UIUtils.getDrawable(R.drawable.content_dial));
+            } else {
+                IvView.setBackground(UIUtils.getDrawable(R.drawable.content_dial_grey));
+            }
 
             textView.setTextColor(Color.rgb(31, 31, 31));// 当月字体设黑
-
             IvView.setVisibility(View.VISIBLE);//当月图标直接显示
 
 //			drawable = res.getDrawable(R.drawable.calendar_item_selected_bg);
@@ -309,7 +322,7 @@ public class CalendarAdapter extends BaseAdapter {
 
     public void setCyclical(String cyclical) {
         this.cyclical = cyclical;
-}
+    }
 
 
 }

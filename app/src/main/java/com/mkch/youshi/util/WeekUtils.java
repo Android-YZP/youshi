@@ -11,13 +11,13 @@ public class WeekUtils {
      * @return
      */
     public static String replaceWeek1(String week) {
-        String _week1 = week.replace("1", "周一 ");
-        String _week2 = _week1.replace("2", "周二 ");
-        String _week3 = _week2.replace("3", "周三 ");
-        String _week4 = _week3.replace("4", "周四 ");
-        String _week5 = _week4.replace("5", "周五 ");
-        String _week6 = _week5.replace("6", "周六 ");
-        String _week7 = _week6.replace("7", "周日 ");
+        String _week1 = week.replace("1", "周一");
+        String _week2 = _week1.replace("2", "周二");
+        String _week3 = _week2.replace("3", "周三");
+        String _week4 = _week3.replace("4", "周四");
+        String _week5 = _week4.replace("5", "周五");
+        String _week6 = _week5.replace("6", "周六");
+        String _week7 = _week6.replace("7", "周日");
         return _week7;
     }
 

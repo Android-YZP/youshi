@@ -34,13 +34,23 @@ import com.mkch.youshi.bean.ArcBean;
 import com.mkch.youshi.fragment.month.MonthActivity;
 import com.mkch.youshi.fragment.week.DateAdapter;
 import com.mkch.youshi.fragment.week.SpecialCalendar;
+import com.mkch.youshi.model.SchEveDay;
+import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schtime;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.util.WeekUtils;
 import com.mkch.youshi.view.DayCircleView;
 import com.mkch.youshi.view.DayLineView;
 
 import org.xutils.common.util.LogUtil;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -85,12 +95,14 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     private int mHeight;
     private PopupWindow popupWindow;
 
+
     /**
      * 圆盘与直线时间轴
      */
     private LinearLayout mLine1;
     private LinearLayout mHsvLine2;
     private String mMonthChooseDate;
+    private int mLapLine = 1;
 
     public TodayFragment() {
     }
@@ -114,19 +126,30 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         findView(view);
         setListener();
         initCalView();
-        initCircleAndLineTime();//初始化圆盘和直线时间轴
+//        initCircleAndLineTime();//初始化圆盘和直线时间轴
         return view;
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mMonthChooseDate = ((MainActivity)getActivity()).getmMonthChooseDate();
+        mMonthChooseDate = ((MainActivity) getActivity()).getmMonthChooseDate();
         if (mMonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
+            mLapLine = 1;//初始化行数
+            initData();
+            updateUI(); //刷新界面
+            //更新圆盘界面
+            String chooseDate = TimesUtils.formatDate(currentYear, currentMonth, currentDay + "");
+            initCircleAndLineTime(chooseDate);//初始化圆盘和直线时间轴
+        }else {
+            mLapLine = 1;//初始化行数
+            initCircleAndLineTime(TimesUtils.getTime());//初始化圆盘和直线时间轴
             initData();
             updateUI(); //刷新界面
         }
+
     }
 
 
@@ -162,6 +185,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         currentYear = year_c;
         currentMonth = month_c;
         currentDay = day_c;
+
+
         sc = new SpecialCalendar();
         getCalendar(year_c, month_c);
         week_num = getWeeksOfMonth();
@@ -404,9 +429,15 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 selectPostion = position;
                 dateAdapter.setSeclection(position);
                 dateAdapter.notifyDataSetChanged();
-                Toast.makeText(getActivity(), dateAdapter.getCurrentYear(selectPostion) + "年"
-                        + dateAdapter.getCurrentMonth(selectPostion) + "月"
-                        + dayNumbers[position] + "日", Toast.LENGTH_SHORT).show();
+                int Year = dateAdapter.getCurrentYear(selectPostion);
+                int Month = dateAdapter.getCurrentMonth(selectPostion);
+                String day = dayNumbers[position];
+                String chooseDate = TimesUtils.formatDate(Year, Month, day);
+                UIUtils.showTip(chooseDate);
+
+                mLapLine = 1;//初始化行数
+                initCircleAndLineTime(chooseDate);
+
             }
         });
         gridView.setLayoutParams(params);
@@ -545,44 +576,155 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     /**
      * 初始化圆盘和直线时间轴
      */
-    private void initCircleAndLineTime() {
-        if (getActivity() != null) {
-            try {
-                //圆盘控件
-                //数据集合
-                List<ArcBean> _arc_beans = new ArrayList<>();
-                ArcBean _bean1 = new ArcBean("13:30", "14:00", 1, 3, 1);
-                ArcBean _bean2 = new ArcBean("15:00", "16:00", 2, 4, 1);
-                ArcBean _bean3 = new ArcBean("17:00", "18:00", 3, 5, 1);
-                ArcBean _bean4 = new ArcBean("17:30", "20:00", 4, 6, 2);
-                ArcBean _bean8 = new ArcBean("17:50", "20:00", 1, 7, 3);
-                ArcBean _bean5 = new ArcBean("21:00", "22:00", 5, 8, 1);
-                ArcBean _bean6 = new ArcBean("0:00", "01:00", 6, 1, 1);
-                ArcBean _bean7 = new ArcBean("11:00", "13:00", 4, 2, 1);
+    private void initCircleAndLineTime(String Date) {
+        ArrayList<SchEveDay> TodaytimeBucket = CommonUtil.getTimeBucket(Date);
+        if (TodaytimeBucket == null) TodaytimeBucket = new ArrayList<>();//防止今天没有其他日程报空异常
+        //添加个人习惯到TodaytimeBucket中,让大圆盘显示.
+        ArrayList<Schedule> habitSchs = CommonUtil.findHabitSch();
+        if (habitSchs != null) {
+            //遍历所有今天的习惯中的周有没有今天的日程
+            for (int i = 0; i < habitSchs.size(); i++) {
+                Schedule habitSch = habitSchs.get(i);
+                String weeks = WeekUtils.replaceWeek1(WeekUtils.replaceWeek3(habitSch.getWhich_week()));
+                //得到今天是周几
+                String weekOfToday = TimesUtils.getWeekOfDate(Date);
+                if (weeks.contains(weekOfToday)) {
+                    //今日有习惯，添加到TodaytimeBucket中，让大圆盘显示。
+                    ArrayList<Schtime> schTime = CommonUtil.findSchTime(habitSch.getId());
+                    for (int j = 0; j < schTime.size(); j++) {
+                        SchEveDay schEveDay = new SchEveDay();
+                        schEveDay.setSid(habitSch.getId());
+                        schEveDay.setBegin_time(schTime.get(j).getBegin_time());
+                        schEveDay.setEnd_time(schTime.get(j).getEnd_time());
+                        schEveDay.setDate(TimesUtils.getNowTime(true).substring(0, 11));
+                        TodaytimeBucket.add(schEveDay);
+                    }
 
-                _arc_beans.add(_bean1);
-                _arc_beans.add(_bean2);
-                _arc_beans.add(_bean3);
-                _arc_beans.add(_bean4);
-                _arc_beans.add(_bean5);
-                _arc_beans.add(_bean6);
-                _arc_beans.add(_bean7);
-                _arc_beans.add(_bean8);
-
-                //自定义圆盘
-                DayCircleView _day_circle_view = new DayCircleView(getActivity(), _arc_beans);
-//            _day_circle_view.setLayoutParams(new LinearLayout.LayoutParams(1000,1000));
-                mLine1.addView(_day_circle_view);
-
-
-                //自定义直线时间轴控件
-                DayLineView _day_line_view = new DayLineView(getActivity(), _arc_beans);
-                _day_line_view.setLayoutParams(new LinearLayout.LayoutParams(1480, ViewGroup.LayoutParams.MATCH_PARENT));
-                mHsvLine2.addView(_day_line_view);
-            } catch (Exception e) {
-                e.printStackTrace();
+                }
             }
         }
 
+        //根据集合中的时间日期来把集合重新排序
+        if (TodaytimeBucket != null && TodaytimeBucket.size() != 0) {//今天没有日程
+            Collections.sort(TodaytimeBucket, new Comparator<SchEveDay>() {
+                @Override
+                public int compare(SchEveDay lhs, SchEveDay rhs) {
+                    String _datetime_1 = lhs.getBegin_time();
+                    String _datetime_2 = rhs.getBegin_time();
+                    SimpleDateFormat _sdf = new SimpleDateFormat("HH:mm");
+                    Date _date_1 = null;
+                    Date _date_2 = null;
+                    try {
+                        _date_1 = _sdf.parse(_datetime_1);
+                        _date_2 = _sdf.parse(_datetime_2);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    return _date_1.compareTo(_date_2);
+                }
+            });
+
+
+            //封装大圆盘初步数据
+            List<ArcBean> _arc_beans2 = new ArrayList<>();
+            for (int i = 0; i < TodaytimeBucket.size(); i++) {
+                UIUtils.LogUtils("排序之后" + TodaytimeBucket.get(i).getBegin_time());
+                ArcBean _bean1 = new ArcBean(TodaytimeBucket.get(i).getBegin_time()
+                        , TodaytimeBucket.get(i).getEnd_time(),
+                        CommonUtil.findSch(TodaytimeBucket.get(i).getSid() + "").get(0).getLabel() + 1,
+                        i + 1,
+                        0);
+                _arc_beans2.add(_bean1);
+            }
+
+            //只要判断一个时间段比前一个时间段是否有重叠部分,有则在前一个基础上加一,
+            // 先将数据封装成一个集合,再来处理这个数据判断和前一个数据是否有重叠部分,遍历所有数据
+            _arc_beans2.get(0).setOverlap_line(1);//一天的第一个时间段默认在第一行
+            for (int i = 0; i < _arc_beans2.size() - 1; i++) {
+                String startTime = _arc_beans2.get(i + 1).getStarttime();//开始时间(拿到前个数据的开始时间和后一个数据的结束时间做比较)
+                String endTime = _arc_beans2.get(i).getEndtime();
+
+                if (TimesUtils.compareHourmin(startTime, endTime) < 0) {//开始时间 <上一个结束时间
+                    _arc_beans2.get(i + 1).setOverlap_line(++mLapLine);
+                } else {
+                    _arc_beans2.get(i + 1).setOverlap_line(1);
+                }
+            }
+
+            for (int i = 0; i < _arc_beans2.size(); i++) {
+                UIUtils.LogUtils("排列之后的行数" + _arc_beans2.get(i).getStarttime() +
+                        "==>" + _arc_beans2.get(i).getOverlap_line() + "");
+            }
+
+            //自定义圆盘
+            DayCircleView _day_circle_view = new DayCircleView(getActivity(), _arc_beans2);
+//            _day_circle_view.setLayoutParams(new LinearLayout.LayoutParams(1000,1000));
+            mLine1.removeAllViews();
+            mLine1.addView(_day_circle_view);
+
+
+            //自定义直线时间轴控件
+            DayLineView _day_line_view = new DayLineView(getActivity(), _arc_beans2);
+            _day_line_view.setLayoutParams(new LinearLayout.LayoutParams(1480, ViewGroup.LayoutParams.MATCH_PARENT));
+            mHsvLine2.removeAllViews();
+            mHsvLine2.addView(_day_line_view);
+
+        } else {
+            List<ArcBean> _arc_beans = new ArrayList<>();
+            ArcBean _bean1 = new ArcBean("12:00", "12:00", 7, 3, 1);
+            _arc_beans.add(_bean1);
+            //自定义圆盘
+
+            DayCircleView _day_circle_view = new DayCircleView(UIUtils.getContext(), _arc_beans);
+//            _day_circle_view.setLayoutParams(new LinearLayout.LayoutParams(1000,1000));
+            mLine1.removeAllViews();
+            mLine1.addView(_day_circle_view);
+
+
+            //自定义直线时间轴控件
+            DayLineView _day_line_view = new DayLineView(getActivity(), _arc_beans);
+            _day_line_view.setLayoutParams(new LinearLayout.LayoutParams(1480, ViewGroup.LayoutParams.MATCH_PARENT));
+            mHsvLine2.removeAllViews();
+            mHsvLine2.addView(_day_line_view);
+        }
+
+
+//        if (getActivity() != null) {
+//            try {
+//                //圆盘控件
+//                //数据集合
+//                List<ArcBean> _arc_beans = new ArrayList<>();
+//                ArcBean _bean1 = new ArcBean("13:30", "14:00", 1, 3, 1);
+//                ArcBean _bean2 = new ArcBean("15:00", "16:00", 2, 4, 1);
+//                ArcBean _bean3 = new ArcBean("17:00", "18:00", 3, 5, 1);
+//                ArcBean _bean4 = new ArcBean("17:30", "20:00", 4, 6, 2);
+//                ArcBean _bean8 = new ArcBean("17:50", "20:00", 1, 7, 3);
+//                ArcBean _bean5 = new ArcBean("21:00", "22:00", 5, 8, 1);
+//                ArcBean _bean6 = new ArcBean("00:00", "01:00", 6, 1, 1);
+//                ArcBean _bean7 = new ArcBean("11:00", "13:00", 4, 2, 1);
+//
+//                _arc_beans.add(_bean1);
+//                _arc_beans.add(_bean2);
+//                _arc_beans.add(_bean3);
+//                _arc_beans.add(_bean4);
+//                _arc_beans.add(_bean5);
+//                _arc_beans.add(_bean6);
+//                _arc_beans.add(_bean7);
+//                _arc_beans.add(_bean8);
+//
+//                //自定义圆盘
+//                DayCircleView _day_circle_view = new DayCircleView(getActivity(), _arc_beans);
+////            _day_circle_view.setLayoutParams(new LinearLayout.LayoutParams(1000,1000));
+//                mLine1.addView(_day_circle_view);
+//
+//
+//                //自定义直线时间轴控件
+//                DayLineView _day_line_view = new DayLineView(getActivity(), _arc_beans);
+//                _day_line_view.setLayoutParams(new LinearLayout.LayoutParams(1480, ViewGroup.LayoutParams.MATCH_PARENT));
+//                mHsvLine2.addView(_day_line_view);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

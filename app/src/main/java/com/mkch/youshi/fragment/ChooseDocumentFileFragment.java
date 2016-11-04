@@ -61,18 +61,23 @@ public class ChooseDocumentFileFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
         setListener();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
 
     private void initData() {
         //文档类型
         mYoupanFiles = CommonUtil.findYoupanFile(mType);
-        DropBoxFileActivity activity = (DropBoxFileActivity) getActivity();
-        mAdapter = new YoupanFileAdapter(mYoupanFiles,activity);//拿到activity
-        mListView.setAdapter(mAdapter);
-
+        if (mYoupanFiles != null && getActivity() != null) {
+            DropBoxFileActivity activity = (DropBoxFileActivity) getActivity();
+            mAdapter = new YoupanFileAdapter(mYoupanFiles, activity);//拿到activity
+            mListView.setAdapter(mAdapter);
+        }
     }
 
     private void setListener() {
@@ -91,7 +96,6 @@ public class ChooseDocumentFileFragment extends Fragment {
                 }
             }
         });
-
     }
 
 
