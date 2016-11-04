@@ -135,6 +135,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     @Override
     public void onResume() {
         super.onResume();
+        mMonthChooseDate = ((MainActivity) getActivity()).getmMonthChooseDate();
+
         if (mMonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
             mLapLine = 1;//初始化行数
             initData();
@@ -145,7 +147,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         }else {
             mLapLine = 1;//初始化行数
             initCircleAndLineTime(TimesUtils.getTime());//初始化圆盘和直线时间轴
-            mMonthChooseDate = ((MainActivity) getActivity()).getmMonthChooseDate();
             initData();
             updateUI(); //刷新界面
         }
