@@ -106,14 +106,13 @@ public class MonthActivity extends AppCompatActivity {
             month_c = Integer.parseInt(currentDate.split("-")[1]);
             day_c = Integer.parseInt(currentDate.split("-")[2]);
         }
-        //初始化6个页面
-        GridView[] views = new GridView[6];//初始化数据
-        for (int i = 0; i < 6; i++) {
+        //初始化3个页面////////优化跳转显示//////////////////////////////////////////////////////////
+        GridView[] views = new GridView[3];//初始化数据
+        for (int i = 0; i < 3; i++) {
             GridView gridView = addGridView2();
-            calV = new CalendarAdapter(this, getResources(), jumpMonth + i, jumpYear, year_c, month_c, day_c);
+            calV = new CalendarAdapter(this, getResources(), jumpMonth , jumpYear, year_c, month_c, day_c);
             gridView.setAdapter(calV);
             views[i] = gridView;
-            LogUtil.d(i + "YZP");
         }
         gridViewPagerAdapter = new PagerAdapter<>(views);
         viewPager.setAdapter(gridViewPagerAdapter);
@@ -140,8 +139,7 @@ public class MonthActivity extends AppCompatActivity {
                 GridView[] allItems = gridViewPagerAdapter.getAllItems();
                 allItem = allItems[pos % allItems.length];
                 calV = new CalendarAdapter(MonthActivity.this, getResources(), year, month, 4);
-//                mHandler.sendEmptyMessage(SUCCESS);
-                mHandler.sendEmptyMessageDelayed(SUCCESS, 200);
+                mHandler.sendEmptyMessageDelayed(SUCCESS, 150);
             }
         }).start();
     }
@@ -175,7 +173,6 @@ public class MonthActivity extends AppCompatActivity {
 
     /**
      * 添加头部的年份 闰哪月等信息
-     *
      * @param view
      */
     public void addTextToTopTextView(TextView view) {
@@ -183,7 +180,6 @@ public class MonthActivity extends AppCompatActivity {
         // draw = getResources().getDrawable(R.drawable.top_day);
         // view.setBackgroundDrawable(draw);
         textDate.append(calV.getShowYear()).append("年").append(calV.getShowMonth()).append("月").append("\t");
-        LogUtil.d(calV.getShowMonth() + "----------------");
         view.setText(textDate);
     }
 
@@ -246,7 +242,7 @@ public class MonthActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
                 jumpMonth = 0;
-             
+
             }
         });
 

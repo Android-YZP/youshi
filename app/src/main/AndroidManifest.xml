@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mkch.youshi">
-    <!--xutils3网络图片和缓存-->
+
+    <!-- xutils3网络图片和缓存 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!--登录时查看UUID-->
+    <!-- 登录时查看UUID -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!--读取手机联系人-->
+    <!-- 读取手机联系人 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!--检查Activity是否显示-->
+    <!-- 检查Activity是否显示 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!--调用照相机扫描二维码-->
+    <!-- 调用照相机扫描二维码 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <!-- 定位-->
+    <!-- 定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -29,9 +30,9 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!-- 振动-->
+    <!-- 振动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- IM即时通讯-->
+    <!-- IM即时通讯 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -47,7 +48,7 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <!-- 联系人 -->
         <activity android:name=".activity.AddFriendsActivity" />
         <activity
@@ -63,10 +64,11 @@
         <activity
             android:name=".activity.SearchResultActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <!--我的-->
-        <activity android:name=".activity.UserLoginActivity">
+        <!-- 我的 -->
+        <activity android:name=".activity.UserLoginActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -100,7 +102,7 @@
         <activity android:name=".activity.ReviseAddressActivity" />
         <activity android:name=".activity.AddGroupChatActivity" />
         <activity android:name=".activity.ChatPicShowActivity" />
-        <!--定位配置-->
+        <!-- 定位配置 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -109,38 +111,49 @@
                 <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="zrFiBx8eYGwjw3Iy635GG0vMPniPt6uV" />
-        <!--今日-->
+        <!-- 今日 -->
         <activity
             android:name=".fragment.month.MonthActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.ChooseAddressActivity" />
         <activity android:name=".activity.ChooseSomeoneActivity" />
         <activity android:name=".activity.ChooseRemindBeforeActivity" />
-        <activity android:name=".activity.CalendarActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".activity.CalendarActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".activity.ChooseTimeActivity" />
         <activity android:name=".activity.ChooseWeekActivity" />
-        <activity android:name=".activity.ManyPeopleEventDetial"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.PersonalDetialEventActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.PersonalDetialsAffairActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.PersonalDetialHabitActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.AddPersonalActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.AddManyPeopleEventActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.AddPersonalAffairActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.AddPersonalEventActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.AddPersonalHabitActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".activity.ManyPeopleEventDetial"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.PersonalDetialEventActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.PersonalDetialsAffairActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.PersonalDetialHabitActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AddPersonalActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AddManyPeopleEventActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AddPersonalAffairActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AddPersonalEventActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.AddPersonalHabitActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".activity.SearchEventActivity" />
         <activity android:name=".activity.ChooseFileActivity" />
 
@@ -151,22 +164,22 @@
             android:name=".activity.ChatActivity"
             android:launchMode="singleTop" />
         <activity android:name=".activity.GroupChatActivity" />
-        <!--  IM相关service -->
+        <!-- IM相关service -->
         <service android:name=".service.FriendService" />
-        <!--  IM相关receiver -->
+        <!-- IM相关receiver -->
         <receiver android:name=".receiver.ChatReceiver" />
         <receiver android:name=".receiver.FriendsReceiver" />
-        <!--  消息收发service -->
+        <!-- 消息收发service -->
         <service
             android:name="com.tencent.qalsdk.service.QalService"
             android:exported="false"
-            android:process=":QALSERVICE"></service>
-        <!--  消息收发辅助service -->
+            android:process=":QALSERVICE" />
+        <!-- 消息收发辅助service -->
         <service
             android:name="com.tencent.qalsdk.service.QalAssistService"
             android:exported="false"
-            android:process=":QALSERVICE"></service>
-        <!--  离线消息广播接收器 -->
+            android:process=":QALSERVICE" />
+        <!-- 离线消息广播接收器 -->
         <receiver
             android:name="com.tencent.qalsdk.QALBroadcastReceiver"
             android:exported="false">
@@ -174,7 +187,7 @@
                 <action android:name="com.tencent.qalsdk.broadcast.qal" />
             </intent-filter>
         </receiver>
-        <!--  系统消息广播接收器 -->
+        <!-- 系统消息广播接收器 -->
         <receiver
             android:name="com.tencent.qalsdk.core.NetConnInfoCenter"
             android:process=":QALSERVICE">
@@ -191,6 +204,8 @@
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activity.GuideActivity"></activity>
     </application>
 
 </manifest>

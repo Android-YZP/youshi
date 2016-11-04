@@ -305,12 +305,11 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                 //储存在一个表中
                 //得到开始和结束时间之间所有的所有日程
 
-
                 List<Date> datesBetweenTwoDate = TimesUtils.getDatesBetweenTwoDate(TimesUtils.getDate(isAllDay,
                         mTvStartTime.getText().toString()), TimesUtils.getDate(isAllDay,
                         mTvEndTime.getText().toString()));
 
-                //是否是全天
+                //是否是全天//添加第一天的数据
                 if (isAllDay) {//是全天
                     saveEveDayData(mTvStartTime.getText().toString().substring(0, 11),
                             null, "00:00");//添加开始日期
@@ -324,7 +323,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                     saveEveDayData(TimesUtils.getEveryDayTime(true, datesBetweenTwoDate.get(i)).substring(0, 11), null, null);
                 }
 
-                //是否是全天
+                //是否是全天//添加最后一天的数据
                 if (isAllDay) {//是全天
                     saveEveDayData(mTvEndTime.getText().toString().substring(0, 11),
                             "23:59", null);//添加结束时间

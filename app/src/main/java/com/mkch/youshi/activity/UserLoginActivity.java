@@ -25,6 +25,7 @@ import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.PrefUtils;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -56,9 +57,17 @@ public class UserLoginActivity extends Activity {
     private String mPicUrl;//图片验证码地址
     private long exitTime = 0;
 
+    public UserLoginActivity() {
+//        PrefUtils.setBoolean(UserLoginActivity.this,
+//                "is_user_guide_showed", true);
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //当前app的真实版本号
         int currentCode = CommonUtil.getAppVersion(this).getVersionCode();
         UnLoginedUser unLoginedUser = CommonUtil.getUnLoginedUser(this);
@@ -69,6 +78,14 @@ public class UserLoginActivity extends Activity {
             CommonUtil.saveUnLoginedUser(unLoginedUser, this);
 //            //创建launch图标
 //            CommonUtil.createShortCut(this);
+
+
+            //第一次进入activity进入引导页面
+            if (!PrefUtils.getBoolean(this, "is_user_guide_showed", false)) {
+                startActivity(new Intent(UserLoginActivity.this, GuideActivity.class));
+                finish();
+            }
+
         } else {
             boolean isCoverInstallNewApp = false;//是否覆盖安装新版本的app
             //当前是最新版，就不用清除数据

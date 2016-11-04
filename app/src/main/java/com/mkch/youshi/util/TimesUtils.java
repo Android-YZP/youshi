@@ -318,8 +318,6 @@ public class TimesUtils {
     /**
      * 得到Date对象
      *
-     * @param isAllDay
-     * @param text
      * @return
      */
     public static String getEveryDayTime(boolean isAllDay, Date date) {
@@ -389,5 +387,32 @@ public class TimesUtils {
         return format.format(date);
 
     }
+    /**
+     * 格式化数据用于查询
+     *
+     * @param year
+     * @param month
+     * @param day
+     */
+    public static String formatDate(int year, int month, String day) {
+        String chooseMonth, chooseDay;
+
+
+        if (month < 10) {//格式化数据
+            chooseMonth = "0" + month + "月";
+        } else {
+            chooseMonth = month + "月";
+        }
+        if (Integer.parseInt(day) < 10) {//格式化数据
+            chooseDay = "0" + day + "日";
+        } else {
+            chooseDay = day + "日";
+        }
+
+        return year + "年" + chooseMonth + chooseDay;
+    }
+
+
+
 }
 

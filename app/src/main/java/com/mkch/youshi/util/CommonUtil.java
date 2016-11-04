@@ -133,7 +133,6 @@ public class CommonUtil {
             User user = gson.fromJson(jsonUser, User.class);
             return user;
         }
-
     }
 
     /**
@@ -532,7 +531,7 @@ public class CommonUtil {
      */
     public static String findFriName(String friendId) {
         DbManager mDbManager = DBHelper.getDbManager();
-        ArrayList<Friend> friends = null;
+        ArrayList<Friend> friends;
         try {
             friends = (ArrayList<Friend>) mDbManager.selector(Friend.class).where("friendid", "=",
                     friendId).findAll();
@@ -551,7 +550,6 @@ public class CommonUtil {
     /**
      * 用日程id查找该日程的参与人
      *
-     * @param sid
      */
     public static ArrayList<Schjoiner> findJoinPer(int sid) {
         DbManager mDbManager = DBHelper.getDbManager();
@@ -582,10 +580,26 @@ public class CommonUtil {
     }
 
     /**
+     * 用id查找一个日程
+     */
+    public static ArrayList<Schedule> findHabitSch() {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<Schedule> Scheduls = null;
+        try {
+            Scheduls = (ArrayList<Schedule>) mDbManager.selector(Schedule.class).where("type", "=",
+                    2).findAll();
+            return Scheduls;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return Scheduls;
+        }
+    }
+
+    /**
      * 的到这个日期的所有时间段
      */
     public static ArrayList<SchEveDay> getTimeBucket(String date) {
-        ArrayList<SchEveDay> dates = null;
+        ArrayList<SchEveDay> dates = new ArrayList<>();
         DbManager mDbManager = DBHelper.getDbManager();
         try {
             dates = (ArrayList<SchEveDay>) mDbManager.selector(SchEveDay.class).
@@ -595,8 +609,38 @@ public class CommonUtil {
             e.printStackTrace();
             return dates;
         }
-
     }
+
+    /**
+     * 的到这个日期的所有时间段
+     */
+    public static boolean isTodaySch(String date) {
+        ArrayList<Schedule> habitSchs = findHabitSch();
+        if (habitSchs != null) {
+            //遍历所有今天的习惯中的周有没有今天的日程
+            for (int i = 0; i < habitSchs.size(); i++) {
+                Schedule habitSch = habitSchs.get(i);
+                String weeks = WeekUtils.replaceWeek1(WeekUtils.replaceWeek3(habitSch.getWhich_week()));
+                //得到今天是周几
+                String weekOfToday = TimesUtils.getWeekOfDate(date);
+                if (weeks.contains(weekOfToday)) {//今日已经有了习惯日程
+                    return true;
+                }
+            }
+        }
+
+        ArrayList<SchEveDay> dates;
+        DbManager mDbManager = DBHelper.getDbManager();
+        try {
+            dates = (ArrayList<SchEveDay>) mDbManager.selector(SchEveDay.class).
+                    where("date", "=", date).findAll();
+            return dates != null && dates.size() > 0;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * 用Type查找一个文件集合

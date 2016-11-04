@@ -44,6 +44,7 @@ public class TimePickerView extends FrameLayout {
     private Context context;
 
     private boolean isAllDay = false;//是否是全天
+    private boolean isSpanTime;
 
     public TimePickerView(Context context) {
         super(context);
@@ -285,6 +286,10 @@ public class TimePickerView extends FrameLayout {
      * 用于得到当前的时间字符串
      */
     private String getDateString() {
+        if (isSpanTime){
+            return  mChooseHour + ":" + mChooseMinute;
+        }
+
         if (isAllDay) {
             return mChooseYear + mChooseMonth + mChooseDay
                     + TimesUtils.getWeekOfDate(mChooseYear + mChooseMonth + mChooseDay);
@@ -312,6 +317,8 @@ public class TimePickerView extends FrameLayout {
      * 设置只有小时和分钟的选择
      */
     public void setSpanTime(boolean isSpanTime) {
+        this.isSpanTime = isSpanTime;
+
         if (isSpanTime) {
             mLvYear.setVisibility(GONE);
             mLvMonth.setVisibility(GONE);

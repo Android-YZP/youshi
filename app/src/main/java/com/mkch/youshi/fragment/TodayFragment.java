@@ -35,9 +35,12 @@ import com.mkch.youshi.fragment.month.MonthActivity;
 import com.mkch.youshi.fragment.week.DateAdapter;
 import com.mkch.youshi.fragment.week.SpecialCalendar;
 import com.mkch.youshi.model.SchEveDay;
+import com.mkch.youshi.model.Schedule;
+import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.util.WeekUtils;
 import com.mkch.youshi.view.DayCircleView;
 import com.mkch.youshi.view.DayLineView;
 
@@ -92,6 +95,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
     private int mHeight;
     private PopupWindow popupWindow;
 
+
     /**
      * 圆盘与直线时间轴
      */
@@ -132,11 +136,13 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         super.onResume();
         mLapLine = 1;//初始化行数
         initCircleAndLineTime(TimesUtils.getTime());//初始化圆盘和直线时间轴
-        UIUtils.showTip("回来了");
         mMonthChooseDate = ((MainActivity) getActivity()).getmMonthChooseDate();
         if (mMonthChooseDate != null) {//当有从日历月视图传过来数据时,重新初始化数据,并更新界面
             initData();
             updateUI(); //刷新界面
+            //更新圆盘界面
+            String chooseDate = TimesUtils.formatDate(currentYear, currentMonth, currentDay + "");
+            initCircleAndLineTime(chooseDate);//初始化圆盘和直线时间轴
         }
 
     }
@@ -174,6 +180,8 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         currentYear = year_c;
         currentMonth = month_c;
         currentDay = day_c;
+
+
         sc = new SpecialCalendar();
         getCalendar(year_c, month_c);
         week_num = getWeeksOfMonth();
@@ -419,7 +427,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 int Year = dateAdapter.getCurrentYear(selectPostion);
                 int Month = dateAdapter.getCurrentMonth(selectPostion);
                 String day = dayNumbers[position];
-                String chooseDate = formatDate(Year, Month, day);
+                String chooseDate = TimesUtils.formatDate(Year, Month, day);
                 UIUtils.showTip(chooseDate);
 
                 mLapLine = 1;//初始化行数
@@ -428,31 +436,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             }
         });
         gridView.setLayoutParams(params);
-    }
-
-    /**
-     * 格式化数据用于查询
-     *
-     * @param year
-     * @param month
-     * @param day
-     */
-    private String formatDate(int year, int month, String day) {
-        String chooseMonth, chooseDay;
-
-
-        if (month < 10) {//格式化数据
-            chooseMonth = "0" + month + "月";
-        } else {
-            chooseMonth = month + "月";
-        }
-        if (Integer.parseInt(day) < 10) {//格式化数据
-            chooseDay = "0" + day + "日";
-        } else {
-            chooseDay = day + "日";
-        }
-
-        return year + "年" + chooseMonth + chooseDay;
     }
 
 
@@ -590,6 +573,32 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
      */
     private void initCircleAndLineTime(String Date) {
         ArrayList<SchEveDay> TodaytimeBucket = CommonUtil.getTimeBucket(Date);
+        if (TodaytimeBucket == null) TodaytimeBucket = new ArrayList<>();//防止今天没有其他日程报空异常
+        //添加个人习惯到TodaytimeBucket中,让大圆盘显示.
+        ArrayList<Schedule> habitSchs = CommonUtil.findHabitSch();
+        if (habitSchs != null) {
+            //遍历所有今天的习惯中的周有没有今天的日程
+            for (int i = 0; i < habitSchs.size(); i++) {
+                Schedule habitSch = habitSchs.get(i);
+                String weeks = WeekUtils.replaceWeek1(WeekUtils.replaceWeek3(habitSch.getWhich_week()));
+                //得到今天是周几
+                String weekOfToday = TimesUtils.getWeekOfDate(Date);
+                if (weeks.contains(weekOfToday)) {
+                    //今日有习惯，添加到TodaytimeBucket中，让大圆盘显示。
+                    ArrayList<Schtime> schTime = CommonUtil.findSchTime(habitSch.getId());
+                    for (int j = 0; j < schTime.size(); j++) {
+                        SchEveDay schEveDay = new SchEveDay();
+                        schEveDay.setSid(habitSch.getId());
+                        schEveDay.setBegin_time(schTime.get(j).getBegin_time());
+                        schEveDay.setEnd_time(schTime.get(j).getEnd_time());
+                        schEveDay.setDate(TimesUtils.getNowTime(true).substring(0, 11));
+                        TodaytimeBucket.add(schEveDay);
+                    }
+
+                }
+            }
+        }
+
         //根据集合中的时间日期来把集合重新排序
         if (TodaytimeBucket != null && TodaytimeBucket.size() != 0) {//今天没有日程
             Collections.sort(TodaytimeBucket, new Comparator<SchEveDay>() {
@@ -655,9 +664,9 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             mHsvLine2.removeAllViews();
             mHsvLine2.addView(_day_line_view);
 
-        }else {
+        } else {
             List<ArcBean> _arc_beans = new ArrayList<>();
-            ArcBean _bean1 = new ArcBean("13:30", "14:00", 7, 3, 1);
+            ArcBean _bean1 = new ArcBean("12:00", "12:00", 7, 3, 1);
             _arc_beans.add(_bean1);
             //自定义圆盘
 
