@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.adapter.ChooseGroupMemberAdapter;
 
 public class AddGroupChatActivity extends Activity {
 
@@ -20,6 +19,7 @@ public class AddGroupChatActivity extends Activity {
     private EditText mEtGroupName;
     private String groupName;
     private Button mBtnConfirm;
+    private final int CHOOSE_MEM_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +56,19 @@ public class AddGroupChatActivity extends Activity {
                     Toast.makeText(AddGroupChatActivity.this, "您未填写群名称", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(AddGroupChatActivity.this, ChooseGroupMemberAdapter.class);
+                Intent intent = new Intent(AddGroupChatActivity.this, ChooseGroupMemberActivity.class);
                 intent.putExtra("groupName", groupName);
-                startActivity(intent);
+                startActivityForResult(intent, CHOOSE_MEM_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if(CHOOSE_MEM_CODE == requestCode){
+           if(resultCode == RESULT_OK){
+               finish();
+           }
+       }
     }
 }

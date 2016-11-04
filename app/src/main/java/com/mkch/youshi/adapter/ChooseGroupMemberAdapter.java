@@ -1,22 +1,16 @@
 package com.mkch.youshi.adapter;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
-import com.mkch.youshi.model.ContactEntity;
-import com.tencent.TIMAddFriendRequest;
-import com.tencent.TIMFriendResult;
-import com.tencent.TIMFriendshipManager;
-import com.tencent.TIMValueCallBack;
+import com.mkch.youshi.model.Friend;
 
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
@@ -26,41 +20,42 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * 选择群成员列表适配器
  */
-public class ChooseGroupMemberAdapter extends KJAdapter<ContactEntity> implements SectionIndexer {
+public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements SectionIndexer {
 
     private KJBitmap kjb = new KJBitmap();
-    private List<ContactEntity> datas;
-    private Context mContext;//上下文
+    private List<Friend> datas;
+    //记录checkbox的状态
+    public HashMap<Integer, Boolean> mState = new HashMap<Integer, Boolean>();
 
-    public ChooseGroupMemberAdapter(AbsListView view, List<ContactEntity> mDatas, Context mContext) {
+    public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas) {
         super(view, mDatas, R.layout.item_list_choose_group_member);
         datas = mDatas;
         if (datas == null) {
             datas = new ArrayList<>();
         }
         Collections.sort(datas);
-        this.mContext = mContext;
     }
 
     @Override
-    public void convert(AdapterHolder helper, ContactEntity item, boolean isScrolling) {
+    public void convert(AdapterHolder helper, Friend item, boolean isScrolling) {
     }
 
     @Override
-    public void convert(AdapterHolder holder, ContactEntity item, boolean isScrolling, final int position) {
+    public void convert(AdapterHolder holder, Friend item, boolean isScrolling, final int position) {
 
-        holder.setText(R.id.tv_phone_contacts_name, item.getName());
-        ImageView headImg = holder.getView(R.id.iv_phone_contacts_head);
+        holder.setText(R.id.tv_choose_group_member_name, item.getNickname());
+        ImageView headImg = holder.getView(R.id.iv_choose_group_member_head);
         ImageOptions _image_options = new ImageOptions.Builder()
                 .setCircular(true)
                 .build();
-        if (item.getHeadPic() != null && !item.getHeadPic().equals("") && !item.getHeadPic().equals("null")) {
-            x.image().bind(headImg, item.getHeadPic(), _image_options);
+        if (item.getHead_pic() != null && !item.getHead_pic().equals("") && !item.getHead_pic().equals("null")) {
+            x.image().bind(headImg, item.getHead_pic(), _image_options);
         } else {
             headImg.setImageResource(R.drawable.default_headpic);
         }
@@ -69,63 +64,27 @@ public class ChooseGroupMemberAdapter extends KJAdapter<ContactEntity> implement
 //        } else {
 //            kjb.displayWithLoadBitmap(headImg, item.getHeadPic(), R.drawable.default_headpic);
 //        }
-        TextView tvLetter = holder.getView(R.id.tv_list_phone_contacts_catalog);
-        TextView tvAdded = holder.getView(R.id.tv_phone_contacts_added);
-        View tvLine = holder.getView(R.id.line_list_phone_contacts);
-        Button btnAdd = holder.getView(R.id.btn_phone_contacts_add);
-        if (item.getStatus() == 1) {
-            btnAdd.setVisibility(View.GONE);
-            tvAdded.setVisibility(View.VISIBLE);
-        } else {
-            btnAdd.setVisibility(View.VISIBLE);
-            tvAdded.setVisibility(View.GONE);
-            //点击了某个手机联系人的添加按钮
-            btnAdd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ContactEntity _contactEntiy = datas.get(position);
-                    if (_contactEntiy != null) {
-                        //创建请求列表
-                        final String _name = _contactEntiy.getName();
-                        final List<TIMAddFriendRequest> reqList = new ArrayList<>();
-                        //添加好友请求
-                        TIMAddFriendRequest req = new TIMAddFriendRequest();
-                        req.setIdentifier(_contactEntiy.getContactID());
-                        reqList.add(req);
-                        //申请添加好友
-                        AlertDialog.Builder _builder = new AlertDialog.Builder(mContext);
-                        _builder.setTitle("添加好友");
-                        _builder.setMessage("确定添加" + _name + "为好友吗？");
-                        _builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                TIMFriendshipManager.getInstance().addFriend(reqList, new TIMValueCallBack<List<TIMFriendResult>>() {
-                                    @Override
-                                    public void onError(int code, String desc) {
-                                        Log.d("zzz--addFriend failed: ", code + "Error:" + desc);
-                                    }
-
-                                    @Override
-                                    public void onSuccess(List<TIMFriendResult> result) {
-                                        Log.d("zzz----------addFriend", "addFriend is success");
-                                        for (TIMFriendResult res : result) {
-                                            Log.d("zzz----------addFriend", "identifier: " + res.getIdentifer() + " status: " + res.getStatus());
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                        _builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        _builder.show();
-                    }
+        TextView tvLetter = holder.getView(R.id.tv_list_choose_group_member_catalog);
+        View tvLine = holder.getView(R.id.line_list_choose_group_member);
+        final CheckBox cbChoose = holder.getView(R.id.cb_choose_group_member);
+        LinearLayout layout = holder.getView(R.id.layout_list_choose_group_member);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbChoose.setChecked(!cbChoose.isChecked());
+            }
+        });
+        cbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mState.put(position, isChecked);
+                } else {
+                    mState.remove(position);
                 }
-            });
-        }
+            }
+        });
+        cbChoose.setChecked((mState.get(position) == null ? false : true));
         //如果是第0个
         if (position == 0) {
             tvLetter.setVisibility(View.VISIBLE);
@@ -133,7 +92,7 @@ public class ChooseGroupMemberAdapter extends KJAdapter<ContactEntity> implement
             tvLine.setVisibility(View.VISIBLE);
         } else {
             //如果和上一个item的首字母不同，则认为是新分类的开始
-            ContactEntity prevData = datas.get(position - 1);
+            Friend prevData = datas.get(position - 1);
             if (item.getFirstChar() != prevData.getFirstChar()) {
                 tvLetter.setVisibility(View.VISIBLE);
                 tvLetter.setText("" + item.getFirstChar());
@@ -149,7 +108,7 @@ public class ChooseGroupMemberAdapter extends KJAdapter<ContactEntity> implement
      * 根据ListView的当前位置获取分类的首字母的Char ascii值
      */
     public int getSectionForPosition(int position) {
-        ContactEntity item = datas.get(position);
+        Friend item = datas.get(position);
         return item.getFirstChar();
     }
 

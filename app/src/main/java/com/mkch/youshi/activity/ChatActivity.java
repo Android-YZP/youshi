@@ -1,17 +1,13 @@
 package com.mkch.youshi.activity;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,7 +20,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +41,7 @@ import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Group;
 import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.receiver.ChatReceiver;
 import com.mkch.youshi.util.CommonUtil;
@@ -137,7 +133,7 @@ public class ChatActivity extends BaseActivity {
     //数据
     private List<ChatBean> m_chart_list;
     private ChartListAdapter m_adapter;
-    private String _openfirename;
+    private String _openfirename, _groupID;
     private static ProgressDialog mProgressDialog = null;//加载
     private ChatReceiver mChatReceiver;
     private User mUser;
@@ -158,6 +154,7 @@ public class ChatActivity extends BaseActivity {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private final int SDK_PERMISSION_REQUEST = 127;
+    private final int CHOOSE_MEM_CODE = 100;
     private String permissionInfo;
     TIMConversation conversation;
     TIMMessage msg = new TIMMessage();
@@ -202,6 +199,7 @@ public class ChatActivity extends BaseActivity {
     };
     private int mMessageBoxId;
     private Friend mFriend;
+    private Group mGroup;
     private MessageBox m_messageBox;
     private String friendId, selfId;
 
@@ -219,11 +217,15 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         dbManager = DBHelper.getDbManager();
-        getPersimmions();
         initData();
         setListener();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateData();
     }
 
     @Override
@@ -232,14 +234,22 @@ public class ChatActivity extends BaseActivity {
         mLocationClient.stop();
     }
 
+    private void updateData() {
+        try {
+            mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+            if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
+                mTvTitle.setText(mGroup.getGroupName());
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setListener() {
         //语音消息发送
         mBtnUseVoice.setOnRecordFinishedListener(new RecordButton.OnRecordFinishedListener() {
             @Override
             public void onFinished(File audioFile, int duration) {
-                TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-                //构造一条消息
-                TIMMessage msg = new TIMMessage();
                 //添加语音
                 TIMSoundElem elem = new TIMSoundElem();
                 final String soundFile = audioFile.getAbsolutePath();
@@ -391,28 +401,51 @@ public class ChatActivity extends BaseActivity {
         //获取会话
         Intent _intent = getIntent();
         if (_intent != null) {
-            _openfirename = _intent.getStringExtra("_openfirename");
-            conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
-            if (_openfirename != null && !_openfirename.equals("")) {
-                try {
-                    mFriend = dbManager.selector(Friend.class)
-                            .where("friendid", "=", _openfirename)
-                            .and("status", "=", "1")
-                            .findFirst();
-                    //标题
-                    if (mFriend.getNickname() == null || mFriend.getNickname().equals("")) {
-                        mTvTitle.setText(mFriend.getPhone());
-                    } else {
-                        mTvTitle.setText(mFriend.getNickname());
+            if (_intent.getStringExtra("chatType").equals("C2C")) {
+                _openfirename = _intent.getStringExtra("_openfirename");
+                conversation = TIMManager.getInstance().getConversation(TIMConversationType.C2C, _openfirename);
+                if (_openfirename != null && !_openfirename.equals("")) {
+                    try {
+                        mFriend = dbManager.selector(Friend.class)
+                                .where("friendid", "=", _openfirename)
+                                .and("status", "=", "1")
+                                .findFirst();
+                        //标题
+                        if (mFriend.getNickname() == null || mFriend.getNickname().equals("")) {
+                            mTvTitle.setText(mFriend.getPhone());
+                        } else {
+                            mTvTitle.setText(mFriend.getNickname());
+                        }
+                        mIvPsInfo.setImageResource(R.drawable.chat_ps);
+                        friendId = mFriend.getFriendid() + "@" + "TIMConversationType.C2C";
+                        queryChatsInfoFromDB(friendId, selfId);
+                        //注册聊天监听的Receiver
+                        mChatReceiver = new ChatReceiver(mHandler);
+                        IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
+                        registerReceiver(mChatReceiver, filter);
+                    } catch (DbException e) {
+                        e.printStackTrace();
                     }
-                    friendId = mFriend.getFriendid() + "@" + "TIMConversationType.C2C";
-                    queryChatsInfoFromDB(friendId, selfId);
-                    //注册聊天监听的Receiver
-                    mChatReceiver = new ChatReceiver(mHandler);
-                    IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
-                    registerReceiver(mChatReceiver, filter);
-                } catch (DbException e) {
-                    e.printStackTrace();
+                }
+            } else if (_intent.getStringExtra("chatType").equals("Group")) {
+                _groupID = _intent.getStringExtra("groupID");
+                conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, _groupID);
+                if (_groupID != null && !_groupID.equals("")) {
+                    try {
+                        mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+                        if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
+                            mTvTitle.setText(mGroup.getGroupName());
+                        }
+                        mIvPsInfo.setImageResource(R.drawable.downmenu_group);
+                        friendId = mGroup.getGroupID() + "@" + "TIMConversationType.Group";
+                        queryChatsInfoFromDB(friendId, selfId);
+                        //注册聊天监听的Receiver
+                        mChatReceiver = new ChatReceiver(mHandler);
+                        IntentFilter filter = new IntentFilter("yoshi.action.chatsbroadcast");
+                        registerReceiver(mChatReceiver, filter);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -454,57 +487,6 @@ public class ChatActivity extends BaseActivity {
         option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         mLocationClient.setLocOption(option);
-    }
-
-    @TargetApi(23)
-    private void getPersimmions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ArrayList<String> permissions = new ArrayList<String>();
-            /***
-             * 定位权限为必须权限，用户如果禁止，则每次进入都会申请
-             */
-            // 定位精确位置
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            }
-            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-            /*
-             * 读写权限和电话状态权限非必要权限(建议授予)只会申请一次，用户同意或者禁止，只会弹一次
-			 */
-            // 读写权限
-            if (addPermission(permissions, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                permissionInfo += "Manifest.permission.WRITE_EXTERNAL_STORAGE Deny \n";
-            }
-            // 读取电话状态权限
-            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
-                permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
-            }
-            if (permissions.size() > 0) {
-                requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
-            }
-        }
-    }
-
-    @TargetApi(23)
-    private boolean addPermission(ArrayList<String> permissionsList, String permission) {
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
-            if (shouldShowRequestPermissionRationale(permission)) {
-                return true;
-            } else {
-                permissionsList.add(permission);
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    @TargetApi(23)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /*****
@@ -566,6 +548,11 @@ public class ChatActivity extends BaseActivity {
             case FILE_CODE://选择文件后
                 if (resultCode == RESULT_OK) {
                     sendFile(data.getData().getPath());
+                }
+                break;
+            case CHOOSE_MEM_CODE://删除群聊
+                if (resultCode == RESULT_OK) {
+                    finish();
                 }
                 break;
         }
@@ -663,9 +650,15 @@ public class ChatActivity extends BaseActivity {
             m_chart_list = new ArrayList<>();
         }
         //适配器
-        m_adapter = new ChartListAdapter(m_chart_list, mFriend, mUser, this);
-        mRvList.setAdapter(m_adapter);
-        mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        if (mFriend != null) {
+            m_adapter = new ChartListAdapter(m_chart_list, mFriend, mUser, this);
+            mRvList.setAdapter(m_adapter);
+            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        } else {
+            m_adapter = new ChartListAdapter(m_chart_list, mGroup, mUser, this);
+            mRvList.setAdapter(m_adapter);
+            mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
+        }
     }
 
     @Event({R.id.iv_chat_topbar_back, R.id.iv_chat_topbar_ps, R.id.iv_chat_go_voice, R.id.iv_chat_go_keyboard, R.id.iv_chat_go_expression, R.id.iv_chat_go_more_action
@@ -679,6 +672,11 @@ public class ChatActivity extends BaseActivity {
                 this.finish();
                 break;
             case R.id.iv_chat_topbar_ps://查看用户
+                if (_groupID != null) {
+                    Intent intent = new Intent(ChatActivity.this, GroupDetailActivity.class);
+                    intent.putExtra("groupID", _groupID);
+                    startActivityForResult(intent, CHOOSE_MEM_CODE);
+                }
                 break;
             case R.id.iv_chat_go_voice://切换到语音
                 changeKeyboardAndVoice();
@@ -734,8 +732,8 @@ public class ChatActivity extends BaseActivity {
      */
     private void sendInfoToFriend() {
         final String _msg = mEtChatInput.getText().toString();
-        if (TextUtils.isEmpty(_openfirename) || TextUtils.isEmpty(_msg)) {
-            Toast.makeText(getApplicationContext(), "接收方或内容不能为空", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(_msg)) {
+            Toast.makeText(getApplicationContext(), "内容不能为空", Toast.LENGTH_LONG).show();
             mEtChatInput.setText("");
             return;
         }
@@ -893,13 +891,22 @@ public class ChatActivity extends BaseActivity {
             m_chart_list.add(_local_message);
             if (mMessageBoxId == 0) {
                 //新增该消息盒子
-                m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                if (mFriend != null) {
+                    m_messageBox = new MessageBox(mFriend.getHead_pic(), mFriend.getNickname(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_CHAT, friendId, selfId);
+                } else {
+                    m_messageBox = new MessageBox(mGroup.getGroupHead(), mGroup.getGroupName(), _local_message.getContent(), 0, TimesUtils.getNow(), 0, MessageBox.MB_TYPE_MUL_CHAT, friendId, selfId);
+                }
                 dbManager.saveBindingId(m_messageBox);
                 mMessageBoxId = m_messageBox.getId();
             } else {
                 //更新消息盒子
-                m_messageBox.setBoxLogo(mFriend.getHead_pic());
-                m_messageBox.setTitle(mFriend.getNickname());
+                if (mFriend != null) {
+                    m_messageBox.setBoxLogo(mFriend.getHead_pic());
+                    m_messageBox.setTitle(mFriend.getNickname());
+                } else {
+                    m_messageBox.setBoxLogo(mGroup.getGroupHead());
+                    m_messageBox.setTitle(mGroup.getGroupName());
+                }
                 m_messageBox.setInfo(_local_message.getContent());
                 m_messageBox.setLasttime(TimesUtils.getNow());
                 dbManager.saveOrUpdate(m_messageBox);

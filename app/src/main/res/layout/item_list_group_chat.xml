@@ -22,7 +22,7 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@null"
             android:scaleType="fitXY"
-            android:src="@drawable/default_head_rect" />
+            android:src="@drawable/groupchat" />
 
         <TextView
             android:id="@+id/tv_group_chat_name"

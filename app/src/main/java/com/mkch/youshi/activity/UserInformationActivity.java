@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +28,8 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.exception.ServiceException;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.NetWorkUtil;
-import com.mkch.youshi.util.UIUtils;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMFriendshipManager;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -69,6 +71,7 @@ public class UserInformationActivity extends Activity {
     //保存选择的性别
     private String[] sex_list = {"男", "女"};
     private int checkedItem = 0;
+    private String headUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -494,6 +497,17 @@ public class UserInformationActivity extends Activity {
         } else {
             mIvHead.setImageResource(R.drawable.default_headpic);
         }
+        TIMFriendshipManager.getInstance().setFaceUrl(headUrl, new TIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+                Log.d("zzz-----setFaceUrl", i + "Error:" + s);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d("zzz-----setFaceUrl", "setFaceUrl is success");
+            }
+        });
     }
 
     /**
@@ -511,7 +525,8 @@ public class UserInformationActivity extends Activity {
                     //解析出上传图片的地址
                     JSONObject _result = new JSONObject(_withPhoto);
                     String _datas = _result.getString("Datas");
-                    mUser.setHeadPic("http://192.168.3.8:1001" + _datas.toString());
+                    headUrl = "http://192.168.3.8:1001" + _datas.toString();
+                    mUser.setHeadPic(headUrl);
                     CommonUtil.saveUserInfo(mUser, UserInformationActivity.this);
                     myHandler.sendEmptyMessage(CommonConstants.FLAG_UPLOAD_SUCCESS);
                 } catch (ServiceException e) {

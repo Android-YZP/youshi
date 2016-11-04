@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mkch.youshi">
-
-    <!-- xutils3网络图片和缓存 -->
+    <!--xutils3网络图片和缓存-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 登录时查看UUID -->
+    <!--登录时查看UUID-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 读取手机联系人 -->
+    <!--读取手机联系人-->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <!-- 拨打电话权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <!-- 检查Activity是否显示 -->
+    <!--检查Activity是否显示-->
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!-- 调用照相机扫描二维码 -->
+    <!--调用照相机扫描二维码-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <!-- 定位 -->
+    <!-- 定位-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -68,7 +67,6 @@
         <activity android:name=".activity.UserLoginActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -102,7 +100,8 @@
         <activity android:name=".activity.ReviseAddressActivity" />
         <activity android:name=".activity.AddGroupChatActivity" />
         <activity android:name=".activity.ChatPicShowActivity" />
-        <!-- 定位配置 -->
+        <activity android:name=".activity.ChooseGroupMemberActivity" />
+        <!--定位配置-->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

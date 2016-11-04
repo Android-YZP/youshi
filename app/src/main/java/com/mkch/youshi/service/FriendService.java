@@ -34,6 +34,8 @@ import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
 import com.tencent.TIMFriendAllowType;
 import com.tencent.TIMFriendshipManager;
+import com.tencent.TIMGroupSystemElem;
+import com.tencent.TIMGroupSystemElemType;
 import com.tencent.TIMImage;
 import com.tencent.TIMImageElem;
 import com.tencent.TIMLocationElem;
@@ -63,6 +65,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.mkch.youshi.view.RecordButton.generate;
+import static com.tencent.TIMGroupSystemElemType.TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE;
 import static com.tencent.TIMImageType.Original;
 import static com.tencent.TIMImageType.Thumb;
 
@@ -474,7 +477,7 @@ public class FriendService extends Service implements TIMMessageListener {
                                     imageOriginal = image;
                                 }
                             }
-                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal);
+                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal, j);
                         }//接受到文件信息
                         else if (element instanceof TIMFileElem) {
                             Log.d("zzz", "TIMFileElem sender is-----" + sender);
@@ -494,6 +497,13 @@ public class FriendService extends Service implements TIMMessageListener {
                             Log.d("zzz", "TIMLocationElem sender is-----" + sender);
                             Log.d("zzz", "TIMLocationElem content is-----" + msg);
                             receiveTextMessage(sender, msg);
+                        }//接受到群系统信息
+                        else if (element instanceof TIMGroupSystemElem) {
+                            Log.d("zzz", "TIMGroupSystemElemType sender is-----" + sender);
+                            TIMGroupSystemElemType msg = ((TIMGroupSystemElem) element).getSubtype();
+                            Log.d("zzz", "TIMGroupSystemElemType is-----" + msg);
+                            if(msg == TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE){
+                            }
                         }//接受到用户资料变更系统通知
                         else if (element instanceof TIMProfileSystemElem) {
                             String name = ((TIMProfileSystemElem) element).getNickName();
@@ -527,19 +537,19 @@ public class FriendService extends Service implements TIMMessageListener {
     }
 
     //显示获取的图片聊天信息
-    private void receivePicMessage(final String sender, final String path, final TIMImage image) {
+    private void receivePicMessage(final String sender, final String path, final TIMImage image, final int j) {
         if (path != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, path, "[图片]");
             //下载原图
-            downloadOriginal(_chat_bean, image);
+            downloadOriginal(_chat_bean, image, j);
             saveChatBean(sender, _chat_bean);
         }
     }
 
     //下载图片信息原图
-    private void downloadOriginal(final ChatBean chatbean, final TIMImage image) {
-        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + chatbean.getId() + ".jpg");
+    private void downloadOriginal(final ChatBean chatbean, final TIMImage image, final int j) {
+        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + j + ".jpg");
         image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
             @Override
             public void onError(int i, String s) {

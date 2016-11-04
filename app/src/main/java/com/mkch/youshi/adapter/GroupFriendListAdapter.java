@@ -1,6 +1,7 @@
 package com.mkch.youshi.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,37 +50,47 @@ public class GroupFriendListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         GroupFriendViewHolder groupFriendViewHolder = null;
-        if (convertView==null){
-            convertView = mLayoutInflater.inflate(R.layout.gv_item_group_friend_one_friend,null);
+        if (convertView == null) {
+            convertView = mLayoutInflater.inflate(R.layout.gv_item_group_friend_one_friend, null);
             groupFriendViewHolder = new GroupFriendViewHolder();
-            x.view().inject(groupFriendViewHolder,convertView);
+            x.view().inject(groupFriendViewHolder, convertView);
             convertView.setTag(groupFriendViewHolder);
-        }else{
+        } else {
             groupFriendViewHolder = (GroupFriendViewHolder) convertView.getTag();
         }
-        if (mGroupFriends!=null){
+        if (mGroupFriends != null) {
+            Log.d("zzz-----mGroupFriends", String.valueOf(mGroupFriends.size()));
             GroupFriend groupFriend = mGroupFriends.get(position);
-            if (groupFriend!=null){
-                if (position==mGroupFriends.size()-1){
-                    //若是gridview最后一个，则直接展示默认图片
+            if (groupFriend != null) {
+                if (position == mGroupFriends.size() - 2) {
+                    //若是gridview最后第二个，则直接展示默认添加图片
                     groupFriendViewHolder.iv_group_friend_headpic.setBackgroundResource(R.drawable.group_detail_add);
-                }else{
+                } else if (position == mGroupFriends.size() - 1) {
+                    //若是gridview最后一个，则直接展示默认删除图片
+                    groupFriendViewHolder.iv_group_friend_headpic.setBackgroundResource(R.drawable.group_detail_min);
+                } else {
                     //设置头像
                     ImageOptions _image_options = new ImageOptions.Builder()
                             .setCircular(true)
                             .build();
-                    x.image().bind(groupFriendViewHolder.iv_group_friend_headpic,groupFriend.getHeadpic(),_image_options);
+                    if (groupFriend.getMemberHead() != null && !groupFriend.getMemberHead().equals("")) {
+                        x.image().bind(groupFriendViewHolder.iv_group_friend_headpic, groupFriend.getMemberHead(), _image_options);
+                    } else {
+                        groupFriendViewHolder.iv_group_friend_headpic.setImageResource(R.drawable.default_headpic);
+                    }
                     //设置名称
-                    groupFriendViewHolder.tv_group_friend_nickname.setText(groupFriend.getNickname());
+                    if (groupFriend.getMemberCard() != null && !groupFriend.getMemberCard().equals("")) {
+                        groupFriendViewHolder.tv_group_friend_nickname.setText(groupFriend.getMemberCard());
+                    } else {
+                        groupFriendViewHolder.tv_group_friend_nickname.setText(groupFriend.getMemberName());
+                    }
                 }
             }
         }
-
-
         return convertView;
     }
 
-    private class GroupFriendViewHolder{
+    private class GroupFriendViewHolder {
         @ViewInject(R.id.iv_item_one_friend_headpic)
         private ImageView iv_group_friend_headpic;
         @ViewInject(R.id.tv_item_one_friend_nickname)

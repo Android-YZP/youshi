@@ -14,6 +14,7 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Group;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.Expression;
 
@@ -43,8 +44,10 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private String mSendNickname;//发送者昵称
     private String mFromNickname;//接受者昵称
     private Friend mFriend;
+    private Group mGroup;
     private User mUser;
     private Context mContext;
+    private String _headPic;
 
     public ChartListAdapter(List<ChatBean> mChatBeen, Friend mFriend, User mUser, Context mContext) {
         this.mChatBeen = mChatBeen;
@@ -54,21 +57,44 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         fullNicname();//填充两个昵称
     }
 
+    public ChartListAdapter(List<ChatBean> mChatBeen, Group mGroup, User mUser, Context mContext) {
+        this.mChatBeen = mChatBeen;
+        this.mGroup = mGroup;
+        this.mUser = mUser;
+        this.mContext = mContext;
+        fullNicname();//填充两个昵称
+    }
+
     /**
      * 填充两个昵称
      */
     private void fullNicname() {
-        String _fromNickname = mFriend.getNickname();
-        String _senderNickname = mUser.getNickName();
-        if (_fromNickname != null && !_fromNickname.equals("") && !_fromNickname.equals("null")) {
-            this.mFromNickname = _fromNickname;
-        } else {
-            this.mFromNickname = mFriend.getFriendid();
-        }
-        if (_senderNickname != null && !_senderNickname.equals("") && !_senderNickname.equals("null")) {
-            this.mSendNickname = _senderNickname;
-        } else {
-            this.mSendNickname = mUser.getOpenFireUserName();
+        if (mFriend != null) {
+            String _fromNickname = mFriend.getNickname();
+            String _senderNickname = mUser.getNickName();
+            if (_fromNickname != null && !_fromNickname.equals("") && !_fromNickname.equals("null")) {
+                this.mFromNickname = _fromNickname;
+            } else {
+                this.mFromNickname = mFriend.getFriendid();
+            }
+            if (_senderNickname != null && !_senderNickname.equals("") && !_senderNickname.equals("null")) {
+                this.mSendNickname = _senderNickname;
+            } else {
+                this.mSendNickname = mUser.getOpenFireUserName();
+            }
+        } else if (mGroup != null) {
+            String _fromNickname = mGroup.getGroupName();
+            String _senderNickname = mUser.getNickName();
+            if (_fromNickname != null && !_fromNickname.equals("") && !_fromNickname.equals("null")) {
+                this.mFromNickname = _fromNickname;
+            } else {
+                this.mFromNickname = mGroup.getGroupID();
+            }
+            if (_senderNickname != null && !_senderNickname.equals("") && !_senderNickname.equals("null")) {
+                this.mSendNickname = _senderNickname;
+            } else {
+                this.mSendNickname = mUser.getOpenFireUserName();
+            }
         }
     }
 
@@ -177,7 +203,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 ((FromTxtViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
                 //显示内容
                 ((FromTxtViewHolder) holder).tv_item_from_txt.setText(_char_bean.getContent());
-                String _headPic = mFriend.getHead_pic();//头像地址
+                if (mFriend != null) {
+                    _headPic = mFriend.getHead_pic();//头像地址
+                } else {
+                    _headPic = mGroup.getGroupHead();
+                }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromTxtViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
                 } else {
@@ -218,7 +248,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 ((FromSoundViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
                 //显示内容
                 ((FromSoundViewHolder) holder).tv_item_from_duration.setText(_char_bean.getDuration() + "'");
-                String _headPic = mFriend.getHead_pic();//头像地址
+                if (mFriend != null) {
+                    _headPic = mFriend.getHead_pic();//头像地址
+                } else {
+                    _headPic = mGroup.getGroupHead();
+                }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromSoundViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
                 } else {
@@ -261,7 +295,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 String path = _char_bean.getFileName();
                 Bitmap bm = BitmapFactory.decodeFile(path);
                 ((FromPicViewHolder) holder).iv_item_from_image.setImageBitmap(bm);
-                String _headPic = mFriend.getHead_pic();//头像地址
+                if (mFriend != null) {
+                    _headPic = mFriend.getHead_pic();//头像地址
+                } else {
+                    _headPic = mGroup.getGroupHead();
+                }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromPicViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
                 } else {
@@ -305,7 +343,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 //显示内容
                 ((FromFileViewHolder) holder).tv_item_from_file.setText(_char_bean.getFileName());
                 //头像
-                String _headPic = mFriend.getHead_pic();//头像地址
+                if (mFriend != null) {
+                    _headPic = mFriend.getHead_pic();//头像地址
+                } else {
+                    _headPic = mGroup.getGroupHead();
+                }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromFileViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
                 } else {
@@ -347,7 +389,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 //显示内容
                 ((FromFaceViewHolder) holder).iv_item_from_face.setImageResource(Expression.expressions[_char_bean.getExpPosition()]);
                 //头像
-                String _headPic = mFriend.getHead_pic();//头像地址
+                if (mFriend != null) {
+                    _headPic = mFriend.getHead_pic();//头像地址
+                } else {
+                    _headPic = mGroup.getGroupHead();
+                }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromFaceViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
                 } else {

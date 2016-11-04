@@ -220,7 +220,7 @@ public class InformationSettingActivity extends Activity {
                         JSONObject _json_result = new JSONObject(result);
                         Boolean _success = (Boolean) _json_result.get("Success");
                         if (_success) {
-                            //清除本地数据库该条好友信息，清除本地该条数据
+                            //清除本地数据库该条好友信息
                             try {
                                 //本登录用户的，已添加状态的，好友
                                 Friend first = dbManager.selector(Friend.class)

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,8 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.util.CommonUtil;
+import com.tencent.TIMCallBack;
+import com.tencent.TIMFriendshipManager;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
@@ -129,6 +132,18 @@ public class ReviseNameActivity extends Activity {
         CommonUtil.saveUserInfo(mUser, ReviseNameActivity.this);
         Toast.makeText(this, "已修改", Toast.LENGTH_LONG).show();
         ReviseNameActivity.this.finish();
+        //上传昵称到腾讯云
+        TIMFriendshipManager.getInstance().setNickName(name, new TIMCallBack() {
+            @Override
+            public void onError(int code, String desc) {
+                Log.d("zzz-----setNickName", code + "Error:" + desc);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d("zzz-----setNickName", "setNickName is success");
+            }
+        });
     }
 
     /**

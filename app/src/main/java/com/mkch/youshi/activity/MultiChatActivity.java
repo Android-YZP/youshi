@@ -86,15 +86,6 @@ public class MultiChatActivity extends BaseActivity {
             }
         });
 
-        //群组
-        _line_group.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MultiChatActivity.this, GroupDetailActivity.class));
-                popupWindow.dismiss();
-            }
-        });
-
         popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
