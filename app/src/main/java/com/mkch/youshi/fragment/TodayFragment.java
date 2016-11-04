@@ -149,7 +149,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             initData();
             updateUI(); //刷新界面
         }
-
     }
 
 
