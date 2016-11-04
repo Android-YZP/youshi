@@ -128,6 +128,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         initCalView();
 //        initCircleAndLineTime();//初始化圆盘和直线时间轴
         return view;
+
     }
 
 
