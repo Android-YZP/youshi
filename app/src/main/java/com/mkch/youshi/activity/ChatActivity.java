@@ -235,13 +235,15 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void updateData() {
-        try {
-            mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
-            if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
-                mTvTitle.setText(mGroup.getGroupName());
+        if (_groupID != null) {
+            try {
+                mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+                if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
+                    mTvTitle.setText(mGroup.getGroupName());
+                }
+            } catch (DbException e) {
+                e.printStackTrace();
             }
-        } catch (DbException e) {
-            e.printStackTrace();
         }
     }
 

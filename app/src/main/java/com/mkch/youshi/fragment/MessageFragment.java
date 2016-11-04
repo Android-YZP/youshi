@@ -14,8 +14,13 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.activity.MultiChatActivity;
 import com.mkch.youshi.adapter.MessageBoxListAdapter;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.MessageBox;
+import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -34,9 +39,11 @@ public class MessageFragment extends Fragment {
 
     @ViewInject(R.id.lv_message_msgs)
     private ListView mLvMsgs;//消息盒子列表
-
-    private List<MessageBox> mMsgBoxes;
+    private DbManager dbManager;//数据库管理对象
+    private List<MessageBox> mMsgBoxes = new ArrayList<>();
     private MessageBoxListAdapter mAdapter;
+    private User mUser;
+    private String mUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,7 @@ public class MessageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = x.view().inject(this,inflater,container);
+        View view = x.view().inject(this, inflater, container);
         return view;
     }
 
@@ -68,21 +75,19 @@ public class MessageFragment extends Fragment {
      * 初始化数据
      */
     private void initData() {
-        //数据源
-        mMsgBoxes = new ArrayList<>();
-        MessageBox _msg_box_1 = new MessageBox("http://cdn.duitang.com/uploads/item/201502/04/20150204000709_QCzwf.thumb.224_0.jpeg",
-                "张三","好的",8,"今天 9:00");
-        MessageBox _msg_box_2 = new MessageBox("http://p6.qhimg.com/t0126e0bed7fa0741a1.jpg",
-                "李四、王五、老李","老李：OK,明白",24,"今天 8:00");
-        mMsgBoxes.add(_msg_box_1);
-        mMsgBoxes.add(_msg_box_2);
-        mMsgBoxes.add(_msg_box_1);
-        mMsgBoxes.add(_msg_box_2);
-        //适配器
-        mAdapter = new MessageBoxListAdapter(getActivity(),mMsgBoxes);
-        //设置适配器
-        mLvMsgs.setAdapter(mAdapter);
-
+        mUser = CommonUtil.getUserInfo(getActivity());
+        mUserId = mUser.getOpenFireUserName();
+        dbManager = DBHelper.getDbManager();
+        try {
+            mMsgBoxes = dbManager.selector(MessageBox.class).where("self_id", "=", mUserId).findAll();
+            if (mMsgBoxes != null && mMsgBoxes.size() != 0) {
+                //设置适配器
+                mAdapter = new MessageBoxListAdapter(getActivity(), mMsgBoxes);
+                mLvMsgs.setAdapter(mAdapter);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setListener() {
@@ -92,7 +97,7 @@ public class MessageFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //暂时用switch代替
                 Intent _intent = null;
-                switch (position){
+                switch (position) {
                     case 0:
                         _intent = new Intent(getActivity(), ChatActivity.class);
                         startActivity(_intent);
