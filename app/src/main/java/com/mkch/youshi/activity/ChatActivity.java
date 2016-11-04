@@ -154,6 +154,7 @@ public class ChatActivity extends BaseActivity {
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
     private final int SDK_PERMISSION_REQUEST = 127;
+    private final int CHOOSE_MEM_CODE = 100;
     private String permissionInfo;
     TIMConversation conversation;
     TIMMessage msg = new TIMMessage();
@@ -222,9 +223,26 @@ public class ChatActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        updateData();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mLocationClient.stop();
+    }
+
+    private void updateData() {
+        try {
+            mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+            if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
+                mTvTitle.setText(mGroup.getGroupName());
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setListener() {
@@ -414,8 +432,8 @@ public class ChatActivity extends BaseActivity {
                 conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, _groupID);
                 if (_groupID != null && !_groupID.equals("")) {
                     try {
-                        mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).findFirst();
-                        if (mGroup.getGroupName() != null || !mGroup.getGroupName().equals("")) {
+                        mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+                        if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
                             mTvTitle.setText(mGroup.getGroupName());
                         }
                         mIvPsInfo.setImageResource(R.drawable.downmenu_group);
@@ -530,6 +548,11 @@ public class ChatActivity extends BaseActivity {
             case FILE_CODE://选择文件后
                 if (resultCode == RESULT_OK) {
                     sendFile(data.getData().getPath());
+                }
+                break;
+            case CHOOSE_MEM_CODE://删除群聊
+                if (resultCode == RESULT_OK) {
+                    finish();
                 }
                 break;
         }
@@ -652,7 +675,7 @@ public class ChatActivity extends BaseActivity {
                 if (_groupID != null) {
                     Intent intent = new Intent(ChatActivity.this, GroupDetailActivity.class);
                     intent.putExtra("groupID", _groupID);
-                    startActivity(intent);
+                    startActivityForResult(intent, CHOOSE_MEM_CODE);
                 }
                 break;
             case R.id.iv_chat_go_voice://切换到语音

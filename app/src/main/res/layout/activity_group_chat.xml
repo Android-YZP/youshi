@@ -51,7 +51,9 @@
                 style="@style/commonEditTextStyle" />
         </LinearLayout>
 
-        <View style="@style/commonLineStyle" />
+        <View
+            android:id="@+id/line1_group_chat"
+            style="@style/commonLineStyle" />
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -69,7 +71,9 @@
                 android:scrollbars="none" />
         </FrameLayout>
 
-        <View style="@style/commonLineStyle" />
+        <View
+            android:id="@+id/line2_group_chat"
+            style="@style/commonLineStyle" />
 
         <TextView
             android:id="@+id/tv_group_chat_dialog"

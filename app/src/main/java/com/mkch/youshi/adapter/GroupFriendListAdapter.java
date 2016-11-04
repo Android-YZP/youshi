@@ -62,9 +62,12 @@ public class GroupFriendListAdapter extends BaseAdapter {
             Log.d("zzz-----mGroupFriends", String.valueOf(mGroupFriends.size()));
             GroupFriend groupFriend = mGroupFriends.get(position);
             if (groupFriend != null) {
-                if (position == mGroupFriends.size() - 1) {
-                    //若是gridview最后一个，则直接展示默认图片
+                if (position == mGroupFriends.size() - 2) {
+                    //若是gridview最后第二个，则直接展示默认添加图片
                     groupFriendViewHolder.iv_group_friend_headpic.setBackgroundResource(R.drawable.group_detail_add);
+                } else if (position == mGroupFriends.size() - 1) {
+                    //若是gridview最后一个，则直接展示默认删除图片
+                    groupFriendViewHolder.iv_group_friend_headpic.setBackgroundResource(R.drawable.group_detail_min);
                 } else {
                     //设置头像
                     ImageOptions _image_options = new ImageOptions.Builder()

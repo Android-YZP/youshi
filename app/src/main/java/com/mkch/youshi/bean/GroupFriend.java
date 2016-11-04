@@ -13,6 +13,12 @@ import org.xutils.db.annotation.Table;
 public class GroupFriend {
     @Column(name = "id", isId = true, autoGen = true)
     private int id;
+    //群ID（groupID）
+    @Column(name = "group_id")
+    private String groupID;//群ID
+    //群成员账号（memberIdentifier）
+    @Column(name = "member_identifier")
+    private String memberIdentifier;//账号
     //群成员头像（memberHead）
     @Column(name = "member_head")
     private String memberHead;//头像
@@ -31,11 +37,37 @@ public class GroupFriend {
     public GroupFriend() {
     }
 
-    public GroupFriend(String memberName,String memberCard, String memberHead, TIMGroupMemberRoleType memberRole) {
+    public GroupFriend(String groupID, String memberIdentifier, String memberName, String memberCard, String memberHead, TIMGroupMemberRoleType memberRole) {
+        this.groupID = groupID;
+        this.memberIdentifier = memberIdentifier;
         this.memberName = memberName;
         this.memberCard = memberCard;
         this.memberHead = memberHead;
         this.memberRole = memberRole;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public String getMemberIdentifier() {
+        return memberIdentifier;
+    }
+
+    public void setMemberIdentifier(String memberIdentifier) {
+        this.memberIdentifier = memberIdentifier;
     }
 
     public String getMemberHead() {
@@ -74,6 +106,8 @@ public class GroupFriend {
     public String toString() {
         return "GroupFriend{" +
                 "id=" + id +
+                ", groupID='" + groupID + '\'' +
+                ", memberIdentifier='" + memberIdentifier + '\'' +
                 ", memberHead='" + memberHead + '\'' +
                 ", memberName='" + memberName + '\'' +
                 ", memberCard='" + memberCard + '\'' +

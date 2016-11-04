@@ -11,7 +11,9 @@ import android.widget.ListView;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.GroupChatListAdapter;
+import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.Group;
+import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.tencent.TIMGroupBaseInfo;
 import com.tencent.TIMGroupManager;
@@ -26,10 +28,13 @@ import java.util.List;
 public class GroupChatActivity extends Activity {
 
     private ImageView mIvBack, mAdd;
+    private View mLine1, mLine2;
     private ListView mListView;
-    private List<Group> listGroups = new ArrayList<>();
+    private List<Group> datas = new ArrayList<>();
     private GroupChatListAdapter mAdapter;
     private DbManager dbManager;//数据库管理对象
+    private User mUser;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +53,35 @@ public class GroupChatActivity extends Activity {
     private void initView() {
         mIvBack = (ImageView) findViewById(R.id.iv_group_chat_back);
         mAdd = (ImageView) findViewById(R.id.iv_group_chat_add);
+        mLine1 = (View) findViewById(R.id.line1_group_chat);
+        mLine2 = (View) findViewById(R.id.line2_group_chat);
         mListView = (ListView) findViewById(R.id.list_group_chat);
     }
 
     private void initData() {
+        mLine1.setVisibility(View.GONE);
+        mLine2.setVisibility(View.GONE);
+        mUser = CommonUtil.getUserInfo(this);
+        userId = mUser.getOpenFireUserName();
         dbManager = DBHelper.getDbManager();
-        listGroups.clear();
+        try {
+            datas = dbManager.selector(Group.class).where("user_id", "=", userId).findAll();
+            if (datas != null && datas.size() != 0) {
+                mLine1.setVisibility(View.VISIBLE);
+                mLine2.setVisibility(View.VISIBLE);
+                mAdapter = new GroupChatListAdapter(GroupChatActivity.this, datas);
+                mListView.setAdapter(mAdapter);
+            } else {
+                mListView.setAdapter(null);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
         getGroupList();
     }
 
+    //获取群聊列表
     private void getGroupList() {
-        //获取群聊列表
         TIMGroupManager.getInstance().getGroupList(new TIMValueCallBack<List<TIMGroupBaseInfo>>() {
             @Override
             public void onError(int i, String s) {
@@ -76,27 +99,37 @@ public class GroupChatActivity extends Activity {
                     group.setGroupName(groupName);
                     String groupHead = info.getFaceUrl();
                     group.setGroupHead(groupHead);
-                    listGroups.add(group);
                     //存储所有的群聊列表数据
                     try {
-                        Group _group = dbManager.selector(Group.class).where("group_id", "=", groupID).findFirst();
+                        Group _group = dbManager.selector(Group.class).where("group_id", "=", groupID).and("user_id", "=", userId).findFirst();
                         if (_group != null) {
                             //有就更改他的字段
                             _group.setGroupID(groupID);
                             _group.setGroupName(groupName);
                             _group.setGroupHead(groupHead);
+                            _group.setGroupNotification("");
+                            _group.setUserId(userId);
                             dbManager.saveOrUpdate(_group);
                         } else {
                             //没有就插入
-                            Group group1 = new Group(groupID, groupName, groupHead);
-                            dbManager.save(group1);
+                            Group group1 = new Group(groupID, groupName, groupHead, "", userId);
+                            dbManager.saveBindingId(group1);
                         }
                     } catch (DbException e) {
                         e.printStackTrace();
                     }
                 }
-                mAdapter = new GroupChatListAdapter(GroupChatActivity.this, listGroups);
-                mListView.setAdapter(mAdapter);
+                try {
+                    datas = dbManager.selector(Group.class).where("user_id", "=", userId).findAll();
+                    if (datas != null && datas.size() != 0) {
+                        mLine1.setVisibility(View.VISIBLE);
+                        mLine2.setVisibility(View.VISIBLE);
+                        mAdapter = new GroupChatListAdapter(GroupChatActivity.this, datas);
+                        mListView.setAdapter(mAdapter);
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -113,8 +146,8 @@ public class GroupChatActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(GroupChatActivity.this, ChatActivity.class);
-                if (listGroups != null && listGroups.size() != 0) {
-                    String groupID = listGroups.get(position).getGroupID();
+                if (datas != null && datas.size() != 0) {
+                    String groupID = datas.get(position).getGroupID();
                     intent.putExtra("chatType", "Group");
                     intent.putExtra("groupID", groupID);
                     startActivity(intent);
