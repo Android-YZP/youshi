@@ -185,7 +185,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         currentMonth = month_c;
         currentDay = day_c;
 
-
         sc = new SpecialCalendar();
         getCalendar(year_c, month_c);
         week_num = getWeeksOfMonth();

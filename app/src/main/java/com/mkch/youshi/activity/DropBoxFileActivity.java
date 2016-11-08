@@ -86,6 +86,7 @@ public class DropBoxFileActivity extends BaseActivity {
     private Button mTvChooDelete;
     private Button mTvChooTransmit;
     private FileFragmentPagerAdapter mFileFragmetAdapter;
+    private int mCurrentItem;//记录viewPager被滑动到那一页了
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,6 @@ public class DropBoxFileActivity extends BaseActivity {
     }
 
     private void initData() {
-        getFile2Net();
         mFileFragmetAdapter = new FileFragmentPagerAdapter(this.getSupportFragmentManager());
         mViewPagerDropBox.setAdapter(mFileFragmetAdapter);
     }
@@ -144,18 +144,23 @@ public class DropBoxFileActivity extends BaseActivity {
                 switch (id) {
                     case R.id.tv_file_item0:
                         mViewPagerDropBox.setCurrentItem(FLAG_ITEM_0);//点击后设置当前页是显示页
+                        mCurrentItem = 0;
                         break;
                     case R.id.tv_file_item1:
                         mViewPagerDropBox.setCurrentItem(FLAG_ITEM_1);
+                        mCurrentItem = 1;
                         break;
                     case R.id.tv_file_item2:
                         mViewPagerDropBox.setCurrentItem(FLAG_ITEM_2);
+                        mCurrentItem = 2;
                         break;
                     case R.id.tv_file_item3:
                         mViewPagerDropBox.setCurrentItem(FLAG_ITEM_3);
+                        mCurrentItem = 3;
                         break;
                     case R.id.tv_file_item4:
                         mViewPagerDropBox.setCurrentItem(FLAG_ITEM_4);
+                        mCurrentItem = 4;
                         break;
                 }
             }
@@ -170,6 +175,7 @@ public class DropBoxFileActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mCurrentItem = position;
                 //从左到右
                 if (currentIndex == position) {
                     LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
@@ -252,7 +258,7 @@ public class DropBoxFileActivity extends BaseActivity {
         }
     }
 
-    
+
     //上传图片
     private void UploadChoosePic() {
 //        mFile = new File(mPicPath, mpicName);
@@ -266,21 +272,22 @@ public class DropBoxFileActivity extends BaseActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mProgressDialog = ProgressDialog.show(this, "请稍等", "正在上传中...", true, true);
+
         switch (requestCode) {
             case CommonConstants.PHOTO_REQUEST_GALLERY:// 当选择从本地获取图片时
                 // 做非空判断，当我们觉得不满意想重新剪裁的时候便不会报异常，下同
                 if (data != null) {
+                    mProgressDialog = ProgressDialog.show(this, "请稍等", "正在上传中...", true, true);
                     Uri uri = data.getData();
                     String realFilePath = CommonUtil.getRealFilePath(this, uri);
                     File file = new File(realFilePath);//拿到了一个File文件对象
                     //存在本地数据库一份,上传网络一份,
                     save2Net(file, realFilePath);
-
                 }
                 break;
             case FILE_SELECT_CODE:
                 if (data != null) {
+                    mProgressDialog = ProgressDialog.show(this, "请稍等", "正在上传中...", true, true);
                     Uri uri = data.getData();
                     String realFilePath = CommonUtil.getRealFilePath(this, uri);
                     File file = new File(realFilePath);//拿到了一个File文件对象
@@ -306,7 +313,10 @@ public class DropBoxFileActivity extends BaseActivity {
                 if (analysis.isSuccess()) {//返回成功
                     UIUtils.showTip("上传成功");
                     save2DB(analysis, localpath);
-                }else {
+                    initData();
+                    mViewPagerDropBox.setCurrentItem(mCurrentItem, false);
+
+                } else {
                     UIUtils.showTip(analysis.getMessage());
                 }
             }
@@ -340,6 +350,7 @@ public class DropBoxFileActivity extends BaseActivity {
             youpanFile.setServer_address(CommonConstants.FILE_ROOT_ADDRESS + analysis.getDatas().getUrl());
             youpanFile.setName(analysis.getDatas().getFileName());
             youpanFile.setSuf(analysis.getDatas().getFileSuf());
+            youpanFile.setFile_id(analysis.getDatas().getFileID()+"");
             youpanFile.setType(analysis.getDatas().getType());//文件类型（1：文档，2：相册，3：视频，4：音频，5：其他）
             mDbManager.saveOrUpdate(youpanFile);
         } catch (DbException e) {
@@ -356,30 +367,10 @@ public class DropBoxFileActivity extends BaseActivity {
         return upLoadFileResultBean;
     }
 
-    //下载文件图片到网络
-    private void getFile2Net() {
-//        图片上传地址
-        String url = "http://192.168.3.8:1001/CloudDisk/2016-10-27/5292abb3-6f1e-42c5-a75c-836fa54faa9f.txt";
-        XUtil.DownLoadFile(url, CommonConstants.YOU_PAN_PIC_PATH, new MyCallBack<Object>() {
-            @Override
-            public void onSuccess(Object result) {
-                super.onSuccess(result);
-                UIUtils.showTip("下载成功");
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                super.onError(ex, isOnCallback);
-                UIUtils.showTip("上传失败");
-            }
-        });
-
-    }
-
-
 
     /**
      * 自定义ViewPager的适配器
+     *
      * @author JLJ
      */
     private class FileFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -391,15 +382,15 @@ public class DropBoxFileActivity extends BaseActivity {
         public Fragment getItem(int postion) {
             switch (postion) {
                 case FLAG_ITEM_0:
-                    return new ChooseDocumentFileFragment(postion+1);
+                    return new ChooseDocumentFileFragment(postion + 1);
                 case FLAG_ITEM_1:
-                    return new ChooseDocumentFileFragment(postion+1);
+                    return new ChooseDocumentFileFragment(postion + 1);
                 case FLAG_ITEM_2:
-                    return new ChooseDocumentFileFragment(postion+1);
+                    return new ChooseDocumentFileFragment(postion + 1);
                 case FLAG_ITEM_3:
-                    return new ChooseDocumentFileFragment(postion+1);
+                    return new ChooseDocumentFileFragment(postion + 1);
                 case FLAG_ITEM_4:
-                    return new ChooseDocumentFileFragment(postion+1);
+                    return new ChooseDocumentFileFragment(postion + 1);
             }
             return null;
         }
