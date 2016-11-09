@@ -22,6 +22,7 @@ import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Group;
 import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
@@ -29,6 +30,8 @@ import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.Expression;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.tencent.TIMCallBack;
+import com.tencent.TIMConversation;
+import com.tencent.TIMConversationType;
 import com.tencent.TIMElem;
 import com.tencent.TIMFaceElem;
 import com.tencent.TIMFileElem;
@@ -408,108 +411,221 @@ public class FriendService extends Service implements TIMMessageListener {
             for (TIMMessage timMessage : list) {
                 long elementCount = timMessage.getElementCount();
                 String sender = timMessage.getSender();
-                Log.d("zzz", "-----------------------elementCount=" + elementCount);
-                if (elementCount > 0) {
-                    for (int j = 0; j < elementCount; j++) {
-                        TIMElem element = timMessage.getElement(j);
-                        if (element instanceof TIMSNSSystemElem) {
-                            List<TIMSNSChangeInfo> changeInfoList = ((TIMSNSSystemElem) element).getChangeInfoList();
-                            for (TIMSNSChangeInfo timsnsChangeInfo : changeInfoList) {
-                                friendIdentify = timsnsChangeInfo.getIdentifier();
-                                Log.d("zzz", "changeInfoList one is-----" + friendIdentify);
-                                saveFriendToDB(friendIdentify);
-                            }
-                        }//接受到文本信息
-                        else if (element instanceof TIMTextElem) {
-                            String msg = ((TIMTextElem) element).getText();
-                            Log.d("zzz", "TIMTextElem sender is-----" + sender);
-                            Log.d("zzz", "TIMTextElem content is-----" + msg);
-                            receiveTextMessage(sender, msg);
-                        }//接受到语音信息
-                        else if (element instanceof TIMSoundElem) {
-                            int duration = (int) ((TIMSoundElem) element).getDuration() / 1000;
-                            Log.d("zzz", "TIMSoundElem sender is-----" + sender);
-                            Log.d("zzz", "TIMSoundElem duration is-----" + duration);
-                            if (!AUDIO_DIR.exists()) {
-                                AUDIO_DIR.mkdir();
-                            }
-                            audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + j + ".amr");
-                            ((TIMSoundElem) element).getSoundToFile(audioFile.getAbsolutePath(), new TIMCallBack() {
-                                @Override
-                                public void onError(int i, String s) {
-                                    Log.d("zzz------getSoundToFile", i + "Error:" + s);
+                TIMConversation conversation = timMessage.getConversation();
+                TIMConversationType conversationType = conversation.getType();
+                String peer = conversation.getPeer();
+                //接收到系统消息
+                if (conversationType == TIMConversationType.System) {
+                    Log.d("zzz", "---System--------elementCount=" + elementCount);
+                    if (elementCount > 0) {
+                        for (int j = 0; j < elementCount; j++) {
+                            TIMElem element = timMessage.getElement(j);
+                            if (element instanceof TIMSNSSystemElem) {
+                                List<TIMSNSChangeInfo> changeInfoList = ((TIMSNSSystemElem) element).getChangeInfoList();
+                                for (TIMSNSChangeInfo timsnsChangeInfo : changeInfoList) {
+                                    friendIdentify = timsnsChangeInfo.getIdentifier();
+                                    Log.d("zzz", "changeInfoList one is-----" + friendIdentify);
+                                    saveFriendToDB(friendIdentify);
                                 }
-
-                                @Override
-                                public void onSuccess() {
-                                    Log.d("zzz------getSoundToFile", "getSoundToFile is success");
+                            }//接受到群系统信息
+                            else if (element instanceof TIMGroupSystemElem) {
+                                Log.d("zzz", "TIMGroupSystemElemType sender is-----" + sender);
+                                TIMGroupSystemElemType msg = ((TIMGroupSystemElem) element).getSubtype();
+                                Log.d("zzz", "TIMGroupSystemElemType is-----" + msg);
+                                if (msg == TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE) {
                                 }
-                            });
-                            receiveSoundMessage(sender, audioFile.getAbsolutePath(), duration);
-                        }//接受到图片信息
-                        else if (element instanceof TIMImageElem) {
-                            Log.d("zzz", "TIMImageElem sender is-----" + sender);
-                            //图片元素
-                            TIMImageElem e = (TIMImageElem) element;
-                            List<TIMImage> listImage = e.getImageList();
-                            for (TIMImage image : listImage) {
-                                Log.d("zzz", "listImage is-----" + image);
-                                Log.d("zzz", "listImage is-----" + image.getType());
-                                if (image.getType() == Thumb) {
-                                    Log.d("zzz", "listImage is-----" + "Thumb");
-                                    if (!PIC_DIR.exists()) {
-                                        PIC_DIR.mkdir();
+                            }//接受到用户资料变更系统通知
+                            else if (element instanceof TIMProfileSystemElem) {
+                                String name = ((TIMProfileSystemElem) element).getNickName();
+                                Log.d("zzz", "TIMProfileSystemElem content is-----" + name);
+                            } else {
+                                Log.d("zzz", "-----------------------" + element.getType());
+                            }
+                        }
+                    }
+                } else if (conversationType == TIMConversationType.C2C) {
+                    Log.d("zzz", "---C2C-----------------elementCount=" + elementCount);
+                    if (elementCount > 0) {
+                        for (int j = 0; j < elementCount; j++) {
+                            TIMElem element = timMessage.getElement(j);
+                            if (element instanceof TIMSNSSystemElem) {
+                                List<TIMSNSChangeInfo> changeInfoList = ((TIMSNSSystemElem) element).getChangeInfoList();
+                                for (TIMSNSChangeInfo timsnsChangeInfo : changeInfoList) {
+                                    friendIdentify = timsnsChangeInfo.getIdentifier();
+                                    Log.d("zzz", "changeInfoList one is-----" + friendIdentify);
+                                    saveFriendToDB(friendIdentify);
+                                }
+                            }//接受到文本信息
+                            else if (element instanceof TIMTextElem) {
+                                String msg = ((TIMTextElem) element).getText();
+                                Log.d("zzz", "TIMTextElem sender is-----" + sender);
+                                Log.d("zzz", "TIMTextElem content is-----" + msg);
+                                receiveTextMessage(sender, msg);
+                            }//接受到语音信息
+                            else if (element instanceof TIMSoundElem) {
+                                int duration = (int) ((TIMSoundElem) element).getDuration() / 1000;
+                                Log.d("zzz", "TIMSoundElem sender is-----" + sender);
+                                Log.d("zzz", "TIMSoundElem duration is-----" + duration);
+                                if (!AUDIO_DIR.exists()) {
+                                    AUDIO_DIR.mkdir();
+                                }
+                                audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + j + ".amr");
+                                ((TIMSoundElem) element).getSoundToFile(audioFile.getAbsolutePath(), new TIMCallBack() {
+                                    @Override
+                                    public void onError(int i, String s) {
+                                        Log.d("zzz------getSoundToFile", i + "Error:" + s);
                                     }
-                                    imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + j + "Thumb" + ".jpg");
-                                    image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
-                                        @Override
-                                        public void onError(int i, String s) {
-                                            Log.d("zzz-----getImage Thumb", i + "Error:" + s);
-                                        }
 
-                                        @Override
-                                        public void onSuccess() {
-                                            Log.d("zzz-----getImage Thumb", "getImage is success");
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.d("zzz------getSoundToFile", "getSoundToFile is success");
+                                    }
+                                });
+                                receiveSoundMessage(sender, audioFile.getAbsolutePath(), duration);
+                            }//接受到图片信息
+                            else if (element instanceof TIMImageElem) {
+                                Log.d("zzz", "TIMImageElem sender is-----" + sender);
+                                //图片元素
+                                TIMImageElem e = (TIMImageElem) element;
+                                List<TIMImage> listImage = e.getImageList();
+                                String uuid = "";
+                                for (TIMImage image : listImage) {
+                                    Log.d("zzz", "listImage is-----" + image);
+                                    Log.d("zzz", "listImage is-----" + image.getType());
+                                    uuid = image.getUuid();
+                                    if (image.getType() == Thumb) {
+                                        Log.d("zzz", "listImage is-----" + "Thumb");
+                                        if (!PIC_DIR.exists()) {
+                                            PIC_DIR.mkdir();
                                         }
-                                    });
+                                        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + uuid + "Thumb" + ".jpg");
+                                        image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
+                                            @Override
+                                            public void onError(int i, String s) {
+                                                Log.d("zzz-----getImage Thumb", i + "Error:" + s);
+                                            }
+
+                                            @Override
+                                            public void onSuccess() {
+                                                Log.d("zzz-----getImage Thumb", "getImage is success");
+                                            }
+                                        });
+                                    }
+                                    if (image.getType() == Original) {
+                                        imageOriginal = image;
+                                    }
                                 }
-                                if (image.getType() == Original) {
-                                    imageOriginal = image;
+                                receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal, uuid);
+                            }//接受到文件信息
+                            else if (element instanceof TIMFileElem) {
+                                Log.d("zzz", "TIMFileElem sender is-----" + sender);
+                                if (!FILE_DIR.exists()) {
+                                    FILE_DIR.mkdir();
                                 }
+                                String uuid = ((TIMFileElem) element).getUuid();
+                                file = new File(FILE_DIR, generate() + TimesUtils.getNow() + uuid + "");
+                                receiveFileMessage(sender, (TIMFileElem) element);
+                            }//接受到表情信息
+                            else if (element instanceof TIMFaceElem) {
+                                Log.d("zzz", "TIMFaceElem sender is-----" + sender);
+                                int position = ((TIMFaceElem) element).getIndex();
+                                receiveFaceMessage(sender, position);
+                            }//接受到位置信息
+                            else if (element instanceof TIMLocationElem) {
+                                String msg = ((TIMLocationElem) element).getDesc();
+                                Log.d("zzz", "TIMLocationElem sender is-----" + sender);
+                                Log.d("zzz", "TIMLocationElem content is-----" + msg);
+                                receiveTextMessage(sender, msg);
                             }
-                            receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal, j);
-                        }//接受到文件信息
-                        else if (element instanceof TIMFileElem) {
-                            Log.d("zzz", "TIMFileElem sender is-----" + sender);
-                            if (!FILE_DIR.exists()) {
-                                FILE_DIR.mkdir();
+                        }
+                    }
+                } else if (conversationType == TIMConversationType.Group) {
+                    Log.d("zzz", "---Group---------------elementCount=" + elementCount);
+                    if (elementCount > 0) {
+                        for (int j = 0; j < elementCount; j++) {
+                            TIMElem element = timMessage.getElement(j);
+                            //接受到信息
+                            if (element instanceof TIMTextElem) {
+                                String msg = ((TIMTextElem) element).getText();
+                                Log.d("zzz", "Group TIMTextElem group is-----" + peer);
+                                Log.d("zzz", "Group TIMTextElem sender is-----" + sender);
+                                Log.d("zzz", "Group TIMTextElem content is-----" + msg);
+                                receiveGroupTextMessage(peer, sender, msg);
+                            }//接受到语音信息
+                            else if (element instanceof TIMSoundElem) {
+                                int duration = (int) ((TIMSoundElem) element).getDuration() / 1000;
+                                Log.d("zzz", "TIMSoundElem sender is-----" + sender);
+                                Log.d("zzz", "TIMSoundElem duration is-----" + duration);
+                                if (!AUDIO_DIR.exists()) {
+                                    AUDIO_DIR.mkdir();
+                                }
+                                audioFile = new File(AUDIO_DIR, generate() + TimesUtils.getNow() + j + ".amr");
+                                ((TIMSoundElem) element).getSoundToFile(audioFile.getAbsolutePath(), new TIMCallBack() {
+                                    @Override
+                                    public void onError(int i, String s) {
+                                        Log.d("zzz------getSoundToFile", i + "Error:" + s);
+                                    }
+
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.d("zzz------getSoundToFile", "getSoundToFile is success");
+                                    }
+                                });
+                                receiveSoundMessage(sender, audioFile.getAbsolutePath(), duration);
+                            }//接受到图片信息
+                            else if (element instanceof TIMImageElem) {
+                                Log.d("zzz", "TIMImageElem sender is-----" + sender);
+                                //图片元素
+                                TIMImageElem e = (TIMImageElem) element;
+                                List<TIMImage> listImage = e.getImageList();
+                                String uuid = "";
+                                for (TIMImage image : listImage) {
+                                    Log.d("zzz", "listImage is-----" + image);
+                                    Log.d("zzz", "listImage is-----" + image.getType());
+                                    uuid = image.getUuid();
+                                    if (image.getType() == Thumb) {
+                                        Log.d("zzz", "listImage is-----" + "Thumb");
+                                        if (!PIC_DIR.exists()) {
+                                            PIC_DIR.mkdir();
+                                        }
+                                        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + uuid + "Thumb" + ".jpg");
+                                        image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
+                                            @Override
+                                            public void onError(int i, String s) {
+                                                Log.d("zzz-----getImage Thumb", i + "Error:" + s);
+                                            }
+
+                                            @Override
+                                            public void onSuccess() {
+                                                Log.d("zzz-----getImage Thumb", "getImage is success");
+                                            }
+                                        });
+                                    }
+                                    if (image.getType() == Original) {
+                                        imageOriginal = image;
+                                    }
+                                }
+                                receivePicMessage(sender, imageFile.getAbsolutePath(), imageOriginal, uuid);
+                            }//接受到文件信息
+                            else if (element instanceof TIMFileElem) {
+                                Log.d("zzz", "TIMFileElem sender is-----" + sender);
+                                if (!FILE_DIR.exists()) {
+                                    FILE_DIR.mkdir();
+                                }
+                                file = new File(FILE_DIR, generate() + TimesUtils.getNow() + j + "");
+                                receiveFileMessage(sender, (TIMFileElem) element);
+                            }//接受到表情信息
+                            else if (element instanceof TIMFaceElem) {
+                                Log.d("zzz", "TIMFaceElem sender is-----" + sender);
+                                int position = ((TIMFaceElem) element).getIndex();
+                                receiveFaceMessage(sender, position);
+                            }//接受到位置信息
+                            else if (element instanceof TIMLocationElem) {
+                                String msg = ((TIMLocationElem) element).getDesc();
+                                Log.d("zzz", "TIMLocationElem sender is-----" + sender);
+                                Log.d("zzz", "TIMLocationElem content is-----" + msg);
+                                receiveTextMessage(sender, msg);
                             }
-                            file = new File(FILE_DIR, generate() + TimesUtils.getNow() + j + "");
-                            receiveFileMessage(sender, (TIMFileElem) element);
-                        }//接受到表情信息
-                        else if (element instanceof TIMFaceElem) {
-                            Log.d("zzz", "TIMFaceElem sender is-----" + sender);
-                            int position = ((TIMFaceElem) element).getIndex();
-                            receiveFaceMessage(sender, position);
-                        }//接受到位置信息
-                        else if (element instanceof TIMLocationElem) {
-                            String msg = ((TIMLocationElem) element).getDesc();
-                            Log.d("zzz", "TIMLocationElem sender is-----" + sender);
-                            Log.d("zzz", "TIMLocationElem content is-----" + msg);
-                            receiveTextMessage(sender, msg);
-                        }//接受到群系统信息
-                        else if (element instanceof TIMGroupSystemElem) {
-                            Log.d("zzz", "TIMGroupSystemElemType sender is-----" + sender);
-                            TIMGroupSystemElemType msg = ((TIMGroupSystemElem) element).getSubtype();
-                            Log.d("zzz", "TIMGroupSystemElemType is-----" + msg);
-                            if(msg == TIM_GROUP_SYSTEM_CREATE_GROUP_TYPE){
-                            }
-                        }//接受到用户资料变更系统通知
-                        else if (element instanceof TIMProfileSystemElem) {
-                            String name = ((TIMProfileSystemElem) element).getNickName();
-                            Log.d("zzz", "TIMProfileSystemElem content is-----" + name);
-                        } else {
-                            Log.d("zzz", "-----------------------" + element.getType());
                         }
                     }
                 }
@@ -527,6 +643,15 @@ public class FriendService extends Service implements TIMMessageListener {
         }
     }
 
+    //显示获取的群组文本聊天信息
+    private void receiveGroupTextMessage(final String peer, final String sender, final String msg) {
+        if (msg != null) {
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(peer, sender, msg, ChatBean.MESSAGE_TYPE_IN, TimesUtils.getNow());
+            saveGroupChatBean(peer, sender, _chat_bean);
+        }
+    }
+
     //显示获取的语音聊天信息
     private void receiveSoundMessage(final String sender, final String path, final int duration) {
         if (path != null) {
@@ -537,19 +662,19 @@ public class FriendService extends Service implements TIMMessageListener {
     }
 
     //显示获取的图片聊天信息
-    private void receivePicMessage(final String sender, final String path, final TIMImage image, final int j) {
+    private void receivePicMessage(final String sender, final String path, final TIMImage image, final String uuid) {
         if (path != null) {
             //保存消息至数据库
             ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_IN, path, "[图片]");
             //下载原图
-            downloadOriginal(_chat_bean, image, j);
+            downloadOriginal(_chat_bean, image, uuid);
             saveChatBean(sender, _chat_bean);
         }
     }
 
     //下载图片信息原图
-    private void downloadOriginal(final ChatBean chatbean, final TIMImage image, final int j) {
-        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + j + ".jpg");
+    private void downloadOriginal(final ChatBean chatbean, final TIMImage image, final String uuid) {
+        imageFile = new File(PIC_DIR, generate() + TimesUtils.getNow() + "Original" + uuid + ".jpg");
         image.getImage(imageFile.getAbsolutePath(), new TIMCallBack() {
             @Override
             public void onError(int i, String s) {
@@ -657,6 +782,41 @@ public class FriendService extends Service implements TIMMessageListener {
         }
     }
 
+    //保存群聊消息至数据库
+    private void saveGroupChatBean(final String peer, final String sender, final ChatBean _chat_bean) {
+        DbManager dbManager = DBHelper.getDbManager();
+        int chat_id = 0;
+        try {
+            //获取该群组和该好友的一些信息
+            Group _group = dbManager.selector(Group.class).where("group_id", "=", peer).and("user_id", "=", mUser.getOpenFireUserName()).findFirst();
+            int _messagebox_id = 0;
+            if (peer != null && !peer.equals("")) {
+                String friendId = peer + "@" + "TIMConversationType.Group";
+                String selfId = mUser.getOpenFireUserName();
+                //查找消息盒子中：该friendId和selfId是否存在，若不存在，新建消息盒子并返回消息盒子的ID；若存在，获取该消息盒子的ID
+                MessageBox messageBox = dbManager.selector(MessageBox.class).where("friend_id", "=", friendId)
+                        .and("self_id", "=", selfId).findFirst();
+                if (messageBox == null) {
+                    String title = null;
+                    if (_group.getGroupName() != null && !_group.getGroupName().equals("")) {
+                        title = _group.getGroupName();
+                    }
+                    messageBox = new MessageBox(_group.getGroupHead(), title, _chat_bean.getContent(), 1, TimesUtils.getNow(), 1, MessageBox.MB_TYPE_MUL_CHAT, friendId, selfId);
+                    dbManager.saveBindingId(messageBox);//新增消息盒子
+                    _messagebox_id = messageBox.getId();
+                } else {
+                    _messagebox_id = messageBox.getId();
+                }
+            }
+            _chat_bean.setMsgboxid(_messagebox_id);//关联消息盒子
+            dbManager.saveBindingId(_chat_bean);//新增消息
+            chat_id = _chat_bean.getId();
+            actionToNotifyGroupChatActivity(_chat_bean, chat_id, _group, sender);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 单聊-去通知界面采取相应的动作
      *
@@ -679,12 +839,34 @@ public class FriendService extends Service implements TIMMessageListener {
     }
 
     /**
-     * 通知有消息
+     * 群聊-去通知界面采取相应的动作
+     *
+     * @param _chat_bean
+     * @param chat_id
+     * @param sender
+     */
+    private void actionToNotifyGroupChatActivity(ChatBean _chat_bean, int chat_id, Group group, String sender) {
+        //发送广播：若UI处于显示状态，则通知界面更新UI；若UI不处于显示状态，弹出通知栏，显示信息条数和最新的信息。
+        boolean isForeground = CommonUtil.isForeground(FriendService.this, "com.mkch.youshi.activity.ChatActivity");
+        if (isForeground) {
+            Intent intent = new Intent();
+            intent.putExtra("chat_id", chat_id);
+            intent.setAction("yoshi.action.chatsbroadcast");
+            sendBroadcast(intent);
+        } else {
+            //通知
+            notifyInfoFromGroupChat(_chat_bean, group, sender);
+        }
+    }
+
+    /**
+     * 单聊通知有消息
      */
     private void notifyInfoFromChat(ChatBean chatBean, Friend friend) {
         Notification.Builder _builder = new Notification.Builder(this);
         //intent
         Intent _intent = new Intent(this, ChatActivity.class);
+        _intent.putExtra("chatType", "C2C");
         _intent.putExtra("_openfirename", friend.getFriendid());
         //头像
         final Bitmap[] bitmaps = new Bitmap[1];
@@ -728,6 +910,71 @@ public class FriendService extends Service implements TIMMessageListener {
             _content_title = _nickname;
         } else {
             _content_title = friend.getFriendid();
+        }
+        //builder设置一些参数
+        _builder.setSmallIcon(R.mipmap.ic_launcher)//app的logo
+                .setLargeIcon(bitmaps[0])//用户头像
+                .setContentTitle(_content_title)//昵称
+                .setContentText(chatBean.getContent())//消息内容
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent);
+//                .setFullScreenIntent(pendingIntent,true);
+        mNotification = _builder.build();
+        mNotification.flags = Notification.FLAG_AUTO_CANCEL;
+        //通知
+        mNotification_manager.notify(0, mNotification);
+    }
+
+    /**
+     * 群聊通知有消息
+     */
+    private void notifyInfoFromGroupChat(ChatBean chatBean, Group group, String sender) {
+        Notification.Builder _builder = new Notification.Builder(this);
+        //intent
+        Intent _intent = new Intent(this, ChatActivity.class);
+        _intent.putExtra("chatType", "Group");
+        _intent.putExtra("groupID", group.getGroupID());
+        _intent.putExtra("_openfirename", sender);
+        //头像
+        final Bitmap[] bitmaps = new Bitmap[1];
+        String _head_pic_url = group.getGroupHead();
+        if (_head_pic_url != null && !_head_pic_url.equals("") && !_head_pic_url.equals("null")) {
+            //圆形图片
+            ImageOptions _image_options = new ImageOptions.Builder()
+                    .setCircular(true)
+                    .setUseMemCache(false)
+                    .build();
+            //加载网络头像
+            x.image().loadDrawable(group.getGroupHead(), _image_options, new Callback.CommonCallback<Drawable>() {
+                @Override
+                public void onSuccess(Drawable result) {
+                    Bitmap _bitmap = ((BitmapDrawable) result).getBitmap();
+                    bitmaps[0] = _bitmap;
+                }
+
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+                }
+
+                @Override
+                public void onFinished() {
+                }
+            });
+        } else {
+            Bitmap _bitmap = ((BitmapDrawable) (getResources().getDrawable(R.drawable.groupchat))).getBitmap();
+            bitmaps[0] = _bitmap;
+        }
+        //pendingIntent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, _intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //昵称
+        String _nickname = group.getGroupName();
+        String _content_title = null;
+        if (_nickname != null && !_nickname.equals("") && !_nickname.equals("null")) {
+            _content_title = _nickname;
         }
         //builder设置一些参数
         _builder.setSmallIcon(R.mipmap.ic_launcher)//app的logo
