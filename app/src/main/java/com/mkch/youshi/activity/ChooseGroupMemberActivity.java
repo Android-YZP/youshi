@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,6 +66,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
     private List<Friend> _friends;
     private User mUser;
     private String _self_openfirename, mGroupName, mMember;
+    private boolean isSendFile;
 
     @Override
     public void setRootView() {
@@ -79,7 +81,15 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         try {
             _friends = dbManager.selector(Friend.class).where("status", "=", "1").and("userid", "=", _self_openfirename).findAll();
             if (_friends != null && _friends.size() > 0) {
-                mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
+                isSendFile = getIntent().getBooleanExtra("isSendFile", false);
+                if (isSendFile) {//从发送人界面传递过来的
+                    mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
+                    UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
+
+                } else {
+                    mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
+                    UIUtils.LogUtils("走到这里了222222222222" + isSendFile);
+                }
                 mListView.setAdapter(mAdapter);
             }
         } catch (DbException e) {
@@ -98,6 +108,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         super.initWidget();
         mIvBack = (ImageView) findViewById(R.id.iv_choose_group_member_back);
         mTvConfirm = (TextView) findViewById(R.id.tv_choose_group_member_confirm);
+        if (isSendFile) mTvConfirm.setVisibility(View.INVISIBLE);//转发文件隐藏联系人
         mSideBar = (SideBar) findViewById(R.id.sidebar_choose_group_member);
         mDialog = (TextView) findViewById(R.id.tv_choose_group_member_dialog);
         mSearchInput = (EditText) findViewById(R.id.et_choose_group_member_search);
@@ -132,6 +143,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 }
             }
         });
+
     }
 
     private class MyHandler extends Handler {
@@ -171,7 +183,13 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
      */
     private void showListVerfy() {
         mFooterView.setText(datas.size() + "位联系人");
-        mAdapter = new ChooseGroupMemberAdapter(mListView, datas);
+        if (isSendFile) {//从发送人界面传递过来的
+            mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
+            UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
+        } else {
+            mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
+            UIUtils.LogUtils("走到这里了222222222222" + isSendFile);
+        }
         mListView.setAdapter(mAdapter);
     }
 

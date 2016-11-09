@@ -148,6 +148,8 @@ public class CommonConstants {
 
     //通过忧时账号\手机号查询用户
     public static final String GetCloudFile = NOW_ADDRESS + "GetCloudFile";
+    //删除优盘文件
+    public static final String DeleteCloudFile = NOW_ADDRESS + "DeleteCloudFile";
     //上传文件
     public static final String UploadFileAndroid = NOW_ADDRESS + "UploadFileAndroid";
     //参与人接受拒绝 sVerifyCode-登录认证码

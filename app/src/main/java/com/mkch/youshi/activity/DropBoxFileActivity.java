@@ -19,15 +19,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.baidu.mapapi.http.HttpClient;
 import com.google.gson.Gson;
-import com.mkch.youshi.MainActivity;
 import com.mkch.youshi.R;
+import com.mkch.youshi.adapter.YoupanFileAdapter;
+import com.mkch.youshi.bean.DeleteFileBean;
 import com.mkch.youshi.bean.UpLoadFileResultBean;
 import com.mkch.youshi.config.CommonConstants;
-import com.mkch.youshi.config.MyApplication;
 import com.mkch.youshi.fragment.ChooseDocumentFileFragment;
 import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
@@ -37,21 +35,21 @@ import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.util.XUtil;
 import com.mkch.youshi.view.FileTabBarLayout;
 
-import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.kymjs.kjframe.http.HttpParams;
 import org.xutils.DbManager;
+import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
-import org.xutils.http.annotation.HttpResponse;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DropBoxFileActivity extends BaseActivity {
 
@@ -77,16 +75,18 @@ public class DropBoxFileActivity extends BaseActivity {
     //设置预加载界面数量
     private int CACHE_PAGES = 4;
     private TextView mTvUpload;
-    private File mFile;
     private Uri imageUri;
     private String mpicName = "touxiang.jpg";
     private String mPicPath = Environment.getExternalStorageDirectory().getPath() + "/";
     private ProgressDialog mProgressDialog;
+
     private TextView mTvChoofileNum;
+
     private Button mTvChooDelete;
     private Button mTvChooTransmit;
     private FileFragmentPagerAdapter mFileFragmetAdapter;
-    private int mCurrentItem;//记录viewPager被滑动到那一页了
+    private static int mCurrentItem;//记录viewPager被滑动到那一页了
+    public static boolean isCancle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,7 @@ public class DropBoxFileActivity extends BaseActivity {
         initView();
         initData();
         setListener();
+
     }
 
     private void initView() {
@@ -120,12 +121,26 @@ public class DropBoxFileActivity extends BaseActivity {
         mViewPagerDropBox.setAdapter(mFileFragmetAdapter);
     }
 
-
     private void setListener() {
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DropBoxFileActivity.this.finish();
+            }
+        });
+
+        //转发
+        mTvChooTransmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (YoupanFileAdapter.mChooseFile.size() > 0) {
+                    //选择联系人
+                    Intent intent = new Intent(DropBoxFileActivity.this, ChooseGroupMemberActivity.class);
+                    intent.putExtra("isSendFile", true);
+                    startActivity(intent);
+                } else {
+                    UIUtils.showTip("请先选择文件");
+                }
             }
         });
 
@@ -135,6 +150,17 @@ public class DropBoxFileActivity extends BaseActivity {
             public void onClick(View v) {
                 //弹出对话框，选择图片，还是本地文件？
                 showOptionDialog();
+            }
+        });
+
+        mTvChooDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (YoupanFileAdapter.mChooseFile.size() > 0) {
+                    showDeleteDialog();
+                } else {
+                    UIUtils.showTip("请先选择文件");
+                }
             }
         });
 
@@ -176,6 +202,7 @@ public class DropBoxFileActivity extends BaseActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 mCurrentItem = position;
+                UIUtils.LogUtils(mCurrentItem + "");
                 //从左到右
                 if (currentIndex == position) {
                     LinearLayout.LayoutParams layoutParam = (LinearLayout.LayoutParams) tabUnderLine
@@ -194,35 +221,15 @@ public class DropBoxFileActivity extends BaseActivity {
 
             @Override
             public void onPageScrollStateChanged(int position) {
+
             }
         });
     }
 
-    /**
-     * 更新按钮数据,
-     *
-     * @param isAdd 是添加还是减少
-     * @return 是否添加成功, 保证界面和数据的同一性
-     */
-    public boolean addChoosedNumber(boolean isAdd) {
-        if (isAdd) {
-            mChooseNumber++;
-        } else {
-            mChooseNumber--;
-        }
 
-        if (mChooseNumber <= 5) {
-            mTvChoofileNum.setText("已经选择:" + mChooseNumber + "/5");
-            UIUtils.LogUtils(mChooseNumber + "1");
-            return true;
-        } else {
-            mChooseNumber = 5;
-            Toast.makeText(this, "最多可以选择5个文件奥..", Toast.LENGTH_SHORT).show();
-            UIUtils.LogUtils(mChooseNumber + "2");
-            return false;
-        }
+    public TextView getmTvChoofileNum() {
+        return mTvChoofileNum;
     }
-
 
     //上传文件的选择对话框
     private void showOptionDialog() {
@@ -237,12 +244,116 @@ public class DropBoxFileActivity extends BaseActivity {
                 } else if (which == 1) {
                     UploadChooseFile();
                 }
-
             }
         });
         listDialog.show();
     }
 
+    /**
+     * 显示删除对话框
+     */
+    private void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("确认删除所选文件?");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //从云端删除文件,从本地删除文件
+                deleteFile2Net();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    /**
+     * 从云端删除文件
+     */
+    private void deleteFile2Net() {
+        //弹出加载进度条
+        mProgressDialog = ProgressDialog.show(this, null, "正在删除....", true, true);
+        //使用xutils3访问网络并获取返回值
+        RequestParams requestParams = new RequestParams(CommonConstants.DeleteCloudFile);
+        //包装请求参数
+        String _personEventJson = createDeleteFileJson();
+        Log.d("YZP", "---------------------_personEventJson = " + _personEventJson);
+
+        requestParams.addBodyParameter("", _personEventJson);//用户名
+        String loginCode = CommonUtil.getUserInfo(UIUtils.getContext()).getLoginCode();
+        requestParams.addHeader("sVerifyCode", loginCode);//头信息
+        x.http().post(requestParams, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                UIUtils.LogUtils(result);
+                if (!result.isEmpty()) {
+                    JSONObject _json_result = null;
+                    try {
+                        _json_result = new JSONObject(result);
+                        String message = (String) _json_result.get("Message");
+                        UIUtils.showTip(message);
+                        Boolean success = (Boolean) _json_result.get("Success");
+                        if (success) {// 网络端删除成功
+                            CommonUtil.deleteFile(YoupanFileAdapter.mChooseFile);
+                            updateUI();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.d("jlj", "-------onError = " + ex.getMessage());
+                //使用handler通知UI提示用户错误信息
+                if (ex instanceof ConnectException) {
+                    UIUtils.showTip(CommonConstants.MSG_CONNECT_ERROR);
+                } else if (ex instanceof ConnectTimeoutException) {
+                    UIUtils.showTip(CommonConstants.MSG_CONNECT_TIMEOUT);
+                } else if (ex instanceof SocketTimeoutException) {
+                    UIUtils.showTip(CommonConstants.MSG_SERVER_TIMEOUT);
+                } else {
+                    UIUtils.showTip(CommonConstants.MSG_DATA_EXCEPTION);
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.d("userLogin", "----onCancelled");
+            }
+
+            @Override
+            public void onFinished() {
+                Log.d("userLogin", "----onFinished");
+                mProgressDialog.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 刷新界面
+     */
+    private void updateUI() {
+        initData();
+        mViewPagerDropBox.setCurrentItem(mCurrentItem, false);
+    }
+
+    private String createDeleteFileJson() {
+        List<Integer> chooseFile = new ArrayList<>();
+        for (int i = 0; i < YoupanFileAdapter.mChooseFile.size(); i++) {
+            int fileID = Integer.parseInt(YoupanFileAdapter.mChooseFile.get(i).getFile_id());
+            chooseFile.add(fileID);
+        }
+        DeleteFileBean deleteFileBean = new DeleteFileBean();
+        deleteFileBean.setFileID(chooseFile);
+        return new Gson().toJson(deleteFileBean);
+    }
 
     //上传本地文件
     private void UploadChooseFile() {
@@ -313,9 +424,7 @@ public class DropBoxFileActivity extends BaseActivity {
                 if (analysis.isSuccess()) {//返回成功
                     UIUtils.showTip("上传成功");
                     save2DB(analysis, localpath);
-                    initData();
-                    mViewPagerDropBox.setCurrentItem(mCurrentItem, false);
-
+                    updateUI();
                 } else {
                     UIUtils.showTip(analysis.getMessage());
                 }
@@ -350,7 +459,7 @@ public class DropBoxFileActivity extends BaseActivity {
             youpanFile.setServer_address(CommonConstants.FILE_ROOT_ADDRESS + analysis.getDatas().getUrl());
             youpanFile.setName(analysis.getDatas().getFileName());
             youpanFile.setSuf(analysis.getDatas().getFileSuf());
-            youpanFile.setFile_id(analysis.getDatas().getFileID()+"");
+            youpanFile.setFile_id(analysis.getDatas().getFileID() + "");
             youpanFile.setType(analysis.getDatas().getType());//文件类型（1：文档，2：相册，3：视频，4：音频，5：其他）
             mDbManager.saveOrUpdate(youpanFile);
         } catch (DbException e) {

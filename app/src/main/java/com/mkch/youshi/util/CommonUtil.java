@@ -638,14 +638,21 @@ public class CommonUtil {
     /**
      * 用日程FileID删除该文件
      */
-    public static void deleteFile(int fileID) {
-        try {
-            DbManager mDbManager = DBHelper.getDbManager();
-            WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("file_id", "=", fileID + "");
-            mDbManager.delete(YoupanFile.class, whereBuilder);
-        } catch (DbException e) {
-            e.printStackTrace();
+    public static void deleteFile(ArrayList<YoupanFile> youpanFiles) {
+        for (int i = 0; i < youpanFiles.size(); i++) {
+            try {
+                DbManager mDbManager = DBHelper.getDbManager();
+                WhereBuilder whereBuilder = WhereBuilder.b();
+                whereBuilder.and("file_id", "=", youpanFiles.get(i).getFile_id() + "");
+                mDbManager.delete(YoupanFile.class, whereBuilder);
+                //本地有文件就删除本地文件
+                File file = new File(youpanFiles.get(i).getLocal_address());
+                if (file.exists())
+                    file.delete();
+                UIUtils.LogUtils(youpanFiles.get(i).getLocal_address() + file.exists() + "");
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -794,7 +801,7 @@ public class CommonUtil {
      * 创建文件夹
      */
     public static void makeDri() {
-        File dirFirstFolder = new File(CommonConstants.YOU_PAN_PIC_PATH );// 方法一：直接使用字符串，如果是安装在存储卡上面，则需要使用sdcard2，但是需要确认是否有存储卡
+        File dirFirstFolder = new File(CommonConstants.YOU_PAN_PIC_PATH);// 方法一：直接使用字符串，如果是安装在存储卡上面，则需要使用sdcard2，但是需要确认是否有存储卡
         if (!dirFirstFolder.exists()) { //如果该文件夹不存在，则进行创建
             dirFirstFolder.mkdirs();//创建文件夹
         }

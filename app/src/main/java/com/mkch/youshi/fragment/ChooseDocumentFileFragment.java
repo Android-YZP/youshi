@@ -48,12 +48,8 @@ public class ChooseDocumentFileFragment extends Fragment {
     private SwipeRefreshLayout mSRLayout;
     private ListView mListView;
     private int mType;
-    private int mLastItem;
     private int mPageIndex = 0;
     private ProgressDialog mProgressDialog;
-    public int progressNumber = 1;
-    private boolean isCancle = false;
-
 
     public ChooseDocumentFileFragment(int mType) {
         this.mType = mType;
@@ -83,6 +79,10 @@ public class ChooseDocumentFileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        YoupanFileAdapter.mChooseFile.clear();
+        YoupanFileAdapter.mChooseNum = 0;
+        DropBoxFileActivity activity = (DropBoxFileActivity) getActivity();
+        activity.getmTvChoofileNum().setText("已选择");
         initData();
     }
 
@@ -91,7 +91,7 @@ public class ChooseDocumentFileFragment extends Fragment {
         mYoupanFiles = CommonUtil.findYoupanFile(mType);
         if (mYoupanFiles != null && getActivity() != null) {
             DropBoxFileActivity activity = (DropBoxFileActivity) getActivity();
-            mAdapter = new YoupanFileAdapter(mYoupanFiles, activity);//拿到activity
+            mAdapter = new YoupanFileAdapter(mYoupanFiles, activity.getmTvChoofileNum());//拿到activity
             mListView.setAdapter(mAdapter);
         }
     }
@@ -100,6 +100,9 @@ public class ChooseDocumentFileFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (YoupanFileAdapter.mChooseNum!=0){//当有选择的时候,屏蔽listView的选择事件
+                    return;
+                }
                 mYoupanFiles = CommonUtil.findYoupanFile(mType);//更新数据
                 YoupanFile youpanFile = mYoupanFiles.get(position);
                 String local_address = youpanFile.getLocal_address();
@@ -130,7 +133,6 @@ public class ChooseDocumentFileFragment extends Fragment {
             }
         });
     }
-
 
     /**
      * 从网络端获取文件
@@ -192,8 +194,6 @@ public class ChooseDocumentFileFragment extends Fragment {
             @Override
             public void onFinished() {
                 Log.d("userLogin", "----onFinished");
-//                if (mProgressDialog != null)
-//                    mProgressDialog.dismiss();
                 mSRLayout.setRefreshing(false);
                 initData();
             }
@@ -225,7 +225,6 @@ public class ChooseDocumentFileFragment extends Fragment {
         return cloudFileBean;
     }
 
-
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("确认下载?");
@@ -244,7 +243,6 @@ public class ChooseDocumentFileFragment extends Fragment {
         builder.create().show();
     }
 
-
     /**
      * 进度对话框
      */
@@ -253,10 +251,9 @@ public class ChooseDocumentFileFragment extends Fragment {
         mProgressDialog.setMessage("正在下载...........");
         /**进度条样式 */
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+        mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "后台下载", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                isCancle = true;//取消下载
                 mProgressDialog.dismiss();
             }
         });
@@ -265,31 +262,4 @@ public class ChooseDocumentFileFragment extends Fragment {
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
     }
-
-
-    /**
-     * 每隔0.3秒更新一次进度
-     */
-    public void updateProgress() {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    while (progressNumber <= 100 && !isCancle) {
-                        mProgressDialog.setProgress(progressNumber++);
-                        Thread.sleep(300);
-                        super.run();
-                    }
-                    /**下载完后，关闭下载框 */
-                    mProgressDialog.cancel();
-                    progressNumber = 0;
-                    isCancle = false;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
-    }
-
-
 }
