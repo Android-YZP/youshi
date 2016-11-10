@@ -1,5 +1,9 @@
 package com.mkch.youshi.adapter;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.CheckBox;
@@ -9,8 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChooseGroupMemberActivity;
 import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.util.UIUtils;
+import com.tencent.TIMConversation;
+import com.tencent.TIMConversationType;
+import com.tencent.TIMManager;
+import com.tencent.TIMMessage;
+import com.tencent.TIMTextElem;
+import com.tencent.TIMValueCallBack;
 
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
@@ -32,9 +45,25 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
     private List<Friend> datas;
     //记录checkbox的状态
     public HashMap<Integer, Boolean> mState = new HashMap<Integer, Boolean>();
+    private static boolean isSendFile = false;
+    private static ChooseGroupMemberActivity activity;
+    private ProgressDialog mProgressDialog;
+
 
     public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas) {
         super(view, mDatas, R.layout.item_list_choose_group_member);
+        isSendFile = false;
+        datas = mDatas;
+        if (datas == null) {
+            datas = new ArrayList<>();
+        }
+        Collections.sort(datas);
+    }
+
+    public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas, ChooseGroupMemberActivity activity) {
+        super(view, mDatas, R.layout.item_list_choose_group_member);
+        this.activity = activity;
+        isSendFile = true;
         datas = mDatas;
         if (datas == null) {
             datas = new ArrayList<>();
@@ -68,10 +97,15 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
         View tvLine = holder.getView(R.id.line_list_choose_group_member);
         final CheckBox cbChoose = holder.getView(R.id.cb_choose_group_member);
         LinearLayout layout = holder.getView(R.id.layout_list_choose_group_member);
+        if (isSendFile) cbChoose.setClickable(false);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbChoose.setChecked(!cbChoose.isChecked());
+                if (isSendFile) {//转发文件
+                    showDiaLog(cbChoose);
+                } else {
+                    cbChoose.setChecked(!cbChoose.isChecked());
+                }
             }
         });
         cbChoose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -102,6 +136,86 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
                 tvLine.setVisibility(View.GONE);
             }
         }
+    }
+
+    //是否转发该联系人
+    private void showDiaLog(final CheckBox cbChoose) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage("确认发送文件给联系人?");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //从云端删除文件,从本地删除文件
+                cbChoose.setChecked(!cbChoose.isChecked());
+                sendFile2SomeOne();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+    }
+
+    //发送文件给某人
+    private void sendFile2SomeOne() {
+        mProgressDialog = ProgressDialog.show(activity, null, "正在发送....", true, true);
+        String friendid = "";
+        HashMap<Integer, Boolean> state = mState;
+        for (int j = 0; j < getCount(); j++) {
+            if (state.get(j) != null) {
+                Friend friend = getItem(j);
+                friendid = friend.getFriendid();
+            }
+        }
+        if (friendid.isEmpty()) {
+            UIUtils.showTip("请选择联系人");
+            return;
+        }
+
+        //把文件一个一个的发送出去
+        for (int i = 0; i <  YoupanFileAdapter.mChooseFile.size(); i++) {
+            String sendfile = new Gson().toJson(YoupanFileAdapter.mChooseFile.get(i));
+            UIUtils.LogUtils(sendfile);
+
+            String peer = friendid;  //获取与用户 "sample_user_1" 的会话
+            TIMConversation conversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C,    //会话类型：单聊
+                    peer);                      //会话对方用户帐号//对方id
+
+            //构造一条消息
+            TIMMessage msg = new TIMMessage();
+            //添加文本内容
+            TIMTextElem elem = new TIMTextElem();
+            elem.setText("thisSendFile" + sendfile);
+            //将elem添加到消息
+            if (msg.addElement(elem) != 0) {
+                // Log.d(tag, "addElement failed");
+                return;
+            }
+            //发送消息
+            conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                @Override
+                public void onError(int code, String desc) {//发送消息失败
+                    UIUtils.showTip("发送失败");
+                    mProgressDialog.dismiss();
+                    activity.finish();
+                }
+
+                @Override
+                public void onSuccess(TIMMessage msg) {//发送消息成功
+                    UIUtils.showTip("发送成功");
+                    mProgressDialog.dismiss();
+                    activity.finish();
+                }
+            });
+        }
+
+
     }
 
     /**

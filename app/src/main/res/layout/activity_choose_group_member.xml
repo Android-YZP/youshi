@@ -85,7 +85,7 @@
                             android:dividerHeight="1px"
                             android:fadingEdge="none"
                             android:listSelector="@android:color/transparent"
-                            android:scrollbars="none"></com.mkch.youshi.view.ContactListView>
+                            android:scrollbars="none"/>
 
                         <TextView
                             android:id="@+id/tv_choose_group_member_dialog"

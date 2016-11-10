@@ -377,7 +377,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
                             mTvStartTime.getText().toString(), mRemindTime));
                 }
             }
-
             dbManager.saveOrUpdate(schEveDay);
 
         } catch (DbException e) {
@@ -488,7 +487,6 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             setRepFriends(mFriends);//设置报送人
         }
     }
-
 
 
     /**

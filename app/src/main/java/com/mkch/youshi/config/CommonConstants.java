@@ -44,7 +44,8 @@ public class CommonConstants {
      * yaozhongping
      * 从100开始
      */
-    public static final String YOU_PAN_PIC_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+    public static final String YOU_PAN_PIC_PATH = Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + "/couldFile/";
     public static final int FLAG_GET_ADD_PERSONER_EVENT_SUCCESS = 103;
     public static final int FLAG_GET_ADD_PERSONER_EVENT_FAIL = 104;
     public static final int PHOTO_REQUEST_FILE = 105;// 从文件夹选择
@@ -141,9 +142,14 @@ public class CommonConstants {
     //yaozhongping-----------------------------------------------start
 
     //获取文件
-    public static final String GetCloudFile = NOW_ADDRESS + "GetCloudFile";
+//    public static final String GetCloudFile = NOW_ADDRESS + "GetCloudFile";
     //通过忧时账号\手机号查询用户
     public static final String SAVESCHEDULE = NOW_ADDRESS + "SaveSchedule";
+
+    //通过忧时账号\手机号查询用户
+    public static final String GetCloudFile = NOW_ADDRESS + "GetCloudFile";
+    //删除优盘文件
+    public static final String DeleteCloudFile = NOW_ADDRESS + "DeleteCloudFile";
     //上传文件
     public static final String UploadFileAndroid = NOW_ADDRESS + "UploadFileAndroid";
     //参与人接受拒绝 sVerifyCode-登录认证码

@@ -46,6 +46,12 @@ public class YoupanFile {
     private String create_time;
 
     /**
+     * 创建的时间
+     */
+    @Column(name = "file_id")
+    private String file_id;
+
+    /**
      * 服务器的文件下载地址
      */
     @Column(name = "server_address")
@@ -62,6 +68,14 @@ public class YoupanFile {
                 ", create_time=" + create_time +
                 ", server_address=" + server_address +
                 '}';
+    }
+
+    public String getFile_id() {
+        return file_id;
+    }
+
+    public void setFile_id(String file_id) {
+        this.file_id = file_id;
     }
 
     public int getId() {

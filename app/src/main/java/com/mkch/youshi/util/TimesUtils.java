@@ -306,7 +306,8 @@ public class TimesUtils {
             if (isAllDay) {
                 format = new SimpleDateFormat("yyyy年MM月dd日E");//yyyy年M月d日E
             } else {
-                format = new SimpleDateFormat("yyyy年MM月dd日EHH:mm");//yyyy年M月d日E
+                Date.substring(0, 12);
+                format = new SimpleDateFormat("yyyy年MM月dd日E");//yyyy年M月d日E
             }
             time = format.parse(Date);
         } catch (ParseException e) {

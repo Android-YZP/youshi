@@ -31,8 +31,10 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.bean.AppVersion;
+import com.mkch.youshi.bean.CloudFileBean;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
+import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
@@ -45,6 +47,7 @@ import org.xutils.DbManager;
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -549,7 +552,6 @@ public class CommonUtil {
 
     /**
      * 用日程id查找该日程的参与人
-     *
      */
     public static ArrayList<Schjoiner> findJoinPer(int sid) {
         DbManager mDbManager = DBHelper.getDbManager();
@@ -594,6 +596,66 @@ public class CommonUtil {
             return Scheduls;
         }
     }
+
+    /**
+     * 用Fileid查找一个文件
+     */
+    public static ArrayList<YoupanFile> findFile(String fileID) {
+        DbManager mDbManager = DBHelper.getDbManager();
+        ArrayList<YoupanFile> Scheduls = null;
+        try {
+            Scheduls = (ArrayList<YoupanFile>) mDbManager.selector(YoupanFile.class).where("file_id", "=",
+                    fileID).findAll();
+            return Scheduls;
+        } catch (DbException e) {
+            e.printStackTrace();
+            return Scheduls;
+        }
+    }
+
+    /**
+     * 添加一个File文件
+     */
+    public static void saveFile(CloudFileBean.DatasBean file) {
+        try {
+            DbManager mDbManager = DBHelper.getDbManager();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String date = sdf.format(new java.util.Date());
+            YoupanFile youpanFile = new YoupanFile();
+            youpanFile.setCreate_time(date);
+            youpanFile.setLocal_address("");
+            youpanFile.setServer_address(CommonConstants.FILE_ROOT_ADDRESS + file.getUrl());
+            youpanFile.setName(file.getFileName());
+            youpanFile.setSuf(file.getFileSuf());
+            youpanFile.setFile_id(file.getFileID() + "");
+            youpanFile.setType(file.getType());//文件类型（1：文档，2：相册，3：视频，4：音频，5：其他）
+            mDbManager.saveOrUpdate(youpanFile);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用日程FileID删除该文件
+     */
+    public static void deleteFile(ArrayList<YoupanFile> youpanFiles) {
+        for (int i = 0; i < youpanFiles.size(); i++) {
+            try {
+                DbManager mDbManager = DBHelper.getDbManager();
+                WhereBuilder whereBuilder = WhereBuilder.b();
+                whereBuilder.and("file_id", "=", youpanFiles.get(i).getFile_id() + "");
+                mDbManager.delete(YoupanFile.class, whereBuilder);
+                //本地有文件就删除本地文件
+                File file = new File(youpanFiles.get(i).getLocal_address());
+                if (file.exists())
+                    file.delete();
+                UIUtils.LogUtils(youpanFiles.get(i).getLocal_address() + file.exists() + "");
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      * 的到这个日期的所有时间段
@@ -733,6 +795,16 @@ public class CommonUtil {
             }
         }
         return data;
+    }
+
+    /**
+     * 创建文件夹
+     */
+    public static void makeDri() {
+        File dirFirstFolder = new File(CommonConstants.YOU_PAN_PIC_PATH);// 方法一：直接使用字符串，如果是安装在存储卡上面，则需要使用sdcard2，但是需要确认是否有存储卡
+        if (!dirFirstFolder.exists()) { //如果该文件夹不存在，则进行创建
+            dirFirstFolder.mkdirs();//创建文件夹
+        }
     }
 
 }

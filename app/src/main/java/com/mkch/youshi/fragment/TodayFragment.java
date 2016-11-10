@@ -149,7 +149,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
             initData();
             updateUI(); //刷新界面
         }
-
     }
 
 
@@ -185,7 +184,6 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         currentYear = year_c;
         currentMonth = month_c;
         currentDay = day_c;
-
 
         sc = new SpecialCalendar();
         getCalendar(year_c, month_c);

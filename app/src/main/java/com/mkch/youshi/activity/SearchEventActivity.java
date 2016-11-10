@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.model.Schedule;
@@ -20,8 +21,10 @@ import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.ManyPeopleItemView;
 import com.mkch.youshi.view.PersonalItemView;
+
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +36,11 @@ public class SearchEventActivity extends AppCompatActivity {
     private ListView mLvSearchSch;
     private List<Schedule> mSchList = new ArrayList<>();
     private MySchAdapter mSchAdapter;
-    public final  int PERSONAL_EVENT = 0;
-    public final  int PERSONAL_AFFAIR = 1;
-    public final  int PERSONAL_HABIT = 2;
-    public final  int MANY_PEOPLE_EVENT = 3;
+    public final int PERSONAL_EVENT = 0;
+    public final int PERSONAL_AFFAIR = 1;
+    public final int PERSONAL_HABIT = 2;
+    public final int MANY_PEOPLE_EVENT = 3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,11 +84,11 @@ public class SearchEventActivity extends AppCompatActivity {
                 } else if (kind == PERSONAL_HABIT) {
                     intent = new Intent(UIUtils.getContext(),
                             PersonalDetialHabitActivity.class);
-                }else if (kind == MANY_PEOPLE_EVENT) {
+                } else if (kind == MANY_PEOPLE_EVENT) {
                     intent = new Intent(UIUtils.getContext(),
                             ManyPeopleEventDetial.class);
                 }
-                if (intent!=null){
+                if (intent != null) {
                     Gson gson = new Gson();
                     Schedule schedule = mSchList.get(position);
                     int serverid = mSchList.get(position).getServerid();
@@ -109,7 +113,8 @@ public class SearchEventActivity extends AppCompatActivity {
             //文本在变化是调用
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 findSchFormDb(s + "");//模糊查询查找数据库的数据
-                mSchAdapter.notifyDataSetChanged();
+                if (mSchList != null)
+                    mSchAdapter.notifyDataSetChanged();
             }
 
             //文本变化之后
@@ -121,6 +126,7 @@ public class SearchEventActivity extends AppCompatActivity {
 
     /**
      * 从数据库查询数据
+     *
      * @param title
      */
     private void findSchFormDb(String title) {

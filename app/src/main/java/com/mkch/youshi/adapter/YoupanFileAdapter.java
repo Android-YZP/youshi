@@ -14,8 +14,10 @@ import com.mkch.youshi.activity.DropBoxFileActivity;
 import com.mkch.youshi.config.MyApplication;
 import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.UIUtils;
+import com.mkch.youshi.view.TestView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Smith on 2016/10/27
@@ -23,15 +25,21 @@ import java.util.ArrayList;
 
 public class YoupanFileAdapter extends BaseAdapter {
     private ArrayList<YoupanFile> youpanFiles;
-    private DropBoxFileActivity activity;
+    private TextView mTvChooseNum;
     private int[] fileImg = new int[]{R.drawable.txt, R.drawable.jpg,
             R.drawable.doc, R.drawable.ppt,
-            R.drawable.mp4,R.drawable.defaultx};
+            R.drawable.mp4, R.drawable.defaultx};
+    private HashMap<Integer, Boolean> mCheckedData = new HashMap<>();
+    public static int mChooseNum;
+    public static ArrayList<YoupanFile> mChooseFile = new ArrayList<>();
 
-
-    public YoupanFileAdapter(ArrayList<YoupanFile> youpanFiles, DropBoxFileActivity activity) {
+    public YoupanFileAdapter(ArrayList<YoupanFile> youpanFiles, TextView mTvChooseNum) {
         this.youpanFiles = youpanFiles;
-        this.activity = activity;
+        this.mTvChooseNum = mTvChooseNum;
+        //初始化点击事件的值
+        for (int i = 0; i < youpanFiles.size(); i++) {
+            mCheckedData.put(i, false);
+        }
     }
 
     @Override
@@ -50,9 +58,9 @@ public class YoupanFileAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = UIUtils.inflate(R.layout.item_list_choose_file);
-        YoupanFile youpanFile = youpanFiles.get(position);
+        final YoupanFile youpanFile = youpanFiles.get(position);
         ImageView ivFileImageItem = (ImageView) convertView.findViewById(R.id.iv_file_choose_image);
         //设置图标
         if (youpanFile.getSuf().equalsIgnoreCase("txt")) {//txt文档
@@ -75,14 +83,29 @@ public class YoupanFileAdapter extends BaseAdapter {
         tvFileTimeItem.setText(youpanFile.getCreate_time());
         final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.cb_complete);
         final LinearLayout llcheckBox = (LinearLayout) convertView.findViewById(R.id.ll_cb_complete);
+        checkBox.setChecked(mCheckedData.get(position));
 
+        //cheBox的点击事件
         llcheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkBox.setChecked(!checkBox.isChecked());
-                boolean isChoosed = activity.addChoosedNumber(checkBox.isChecked());
-                if (!isChoosed){
-                    checkBox.setChecked(!checkBox.isChecked());
+                checkBox.setChecked(!checkBox.isChecked());//变换状态
+                if (checkBox.isChecked()) {//选中
+                    mCheckedData.put(position, true);
+                    mChooseNum++;
+                    notifyDataSetChanged();
+                    mChooseFile.add(youpanFile);//添加进集合,
+                } else {
+                    mCheckedData.put(position, false);
+                    mChooseNum--;
+                    notifyDataSetChanged();
+                    mChooseFile.remove(youpanFile);//从集中删除
+                }
+
+                if (mChooseNum == 0){
+                    mTvChooseNum.setText("已选择");
+                }else {
+                    mTvChooseNum.setText("已选择" + mChooseNum + "个文件");
                 }
                 //将选中的数据添加到数据集合中,这个集合需要放在Application中;
 
