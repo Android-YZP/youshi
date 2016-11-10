@@ -69,7 +69,7 @@ public class MessageBoxListAdapter extends BaseAdapter {
             x.image().bind(_msgBoxViewHolder.ivBoxLogo, _msg_box.getBoxLogo(), _image_options);
         } else if (_msg_box.getType() == MB_TYPE_CHAT) {
             _msgBoxViewHolder.ivBoxLogo.setImageResource(R.drawable.default_headpic);
-        } else {
+        } else if (_msg_box.getType() == MB_TYPE_MUL_CHAT) {
             _msgBoxViewHolder.ivBoxLogo.setImageResource(R.drawable.groupchat);
         }
         _msgBoxViewHolder.tvTitle.setText(_msg_box.getTitle());//标题

@@ -24,6 +24,7 @@ import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.Group;
 import com.mkch.youshi.model.MessageBox;
+import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
@@ -460,7 +461,17 @@ public class FriendService extends Service implements TIMMessageListener {
                                 String msg = ((TIMTextElem) element).getText();
                                 Log.d("zzz", "TIMTextElem sender is-----" + sender);
                                 Log.d("zzz", "TIMTextElem content is-----" + msg);
-                                receiveTextMessage(sender, msg);
+                                if (msg.length() > 12) {
+                                    if (msg.substring(0, 11).equals("thisSendFile")) {
+                                        String youpanFile = msg.substring(12, msg.length() - 1);
+                                        Gson gson = new Gson();
+                                        YoupanFile youpanFile1 = gson.fromJson(youpanFile, YoupanFile.class);
+                                    } else {
+                                        receiveTextMessage(sender, msg);
+                                    }
+                                } else {
+                                    receiveTextMessage(sender, msg);
+                                }
                             }//接受到语音信息
                             else if (element instanceof TIMSoundElem) {
                                 int duration = (int) ((TIMSoundElem) element).getDuration() / 1000;
@@ -787,7 +798,7 @@ public class FriendService extends Service implements TIMMessageListener {
         DbManager dbManager = DBHelper.getDbManager();
         int chat_id = 0;
         try {
-            //获取该群组和该好友的一些信息
+            //获取该群组和该成员的一些信息
             Group _group = dbManager.selector(Group.class).where("group_id", "=", peer).and("user_id", "=", mUser.getOpenFireUserName()).findFirst();
             int _messagebox_id = 0;
             if (peer != null && !peer.equals("")) {
