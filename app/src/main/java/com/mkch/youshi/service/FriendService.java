@@ -3,7 +3,9 @@ package com.mkch.youshi.service;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +30,7 @@ import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
+import com.mkch.youshi.util.XUtil;
 import com.mkch.youshi.view.Expression;
 import com.mkch.youshi.view.HanziToPinyin;
 import com.tencent.TIMCallBack;
@@ -90,6 +93,7 @@ public class FriendService extends Service implements TIMMessageListener {
     private NotificationManager mNotification_manager;
     private Notification mNotification;
     private String friendIdentify;
+    private ProgressDialog mProgressDialog;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -462,10 +466,12 @@ public class FriendService extends Service implements TIMMessageListener {
                                 Log.d("zzz", "TIMTextElem sender is-----" + sender);
                                 Log.d("zzz", "TIMTextElem content is-----" + msg);
                                 if (msg.length() > 12) {
-                                    if (msg.substring(0, 11).equals("thisSendFile")) {
-                                        String youpanFile = msg.substring(12, msg.length() - 1);
+                                    if (msg.substring(0, 12).equals("thisSendFile")) {
+                                        String youpanFile = msg.substring(12, msg.length());
                                         Gson gson = new Gson();
                                         YoupanFile youpanFile1 = gson.fromJson(youpanFile, YoupanFile.class);
+                                        file = new File(FILE_DIR, generate() + TimesUtils.getNow() + youpanFile1.getFile_id() + "");
+                                        receiveSendFileMessage(sender, youpanFile1);
                                     } else {
                                         receiveTextMessage(sender, msg);
                                     }
@@ -620,10 +626,12 @@ public class FriendService extends Service implements TIMMessageListener {
                             }//接受到文件信息
                             else if (element instanceof TIMFileElem) {
                                 Log.d("zzz", "TIMFileElem sender is-----" + sender);
+                                TIMFileElem e = (TIMFileElem) element;
+                                String uuid = e.getUuid();
                                 if (!FILE_DIR.exists()) {
                                     FILE_DIR.mkdir();
                                 }
-                                file = new File(FILE_DIR, generate() + TimesUtils.getNow() + j + "");
+                                file = new File(FILE_DIR, generate() + TimesUtils.getNow() + uuid + "");
                                 receiveFileMessage(sender, (TIMFileElem) element);
                             }//接受到表情信息
                             else if (element instanceof TIMFaceElem) {
@@ -704,6 +712,54 @@ public class FriendService extends Service implements TIMMessageListener {
                 }
             }
         });
+    }
+
+    //显示获取的分享文件信息
+    private void receiveSendFileMessage(final String sender, final YoupanFile youpanFile) {
+        if (youpanFile != null) {
+            String fileName = youpanFile.getName();
+            //保存消息至数据库
+            ChatBean _chat_bean = new ChatBean(sender, TimesUtils.getNow(), fileName, "[文件]", ChatBean.MESSAGE_TYPE_IN);
+            //下载文件信息
+            downloadSendFile(_chat_bean, youpanFile);
+            saveChatBean(sender, _chat_bean);
+        }
+    }
+
+    //下载分享文件信息
+    private void downloadSendFile(final ChatBean chatbean, final YoupanFile youpanFile) {
+        if (file != null) {
+            buildAlertDialog_progress();
+            XUtil.downLoadFile(youpanFile, CommonConstants.YOU_PAN_PIC_PATH +
+                    youpanFile.getName(), mProgressDialog,false);
+            try {
+                chatbean.setFilePath(file.getAbsolutePath());
+                DbManager dbManager = DBHelper.getDbManager();
+                dbManager.saveOrUpdate(chatbean);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 进度对话框
+     */
+    private void buildAlertDialog_progress() {
+        mProgressDialog = new ProgressDialog(getApplicationContext());
+        mProgressDialog.setMessage("正在下载...........");
+        /**进度条样式 */
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "后台下载", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mProgressDialog.dismiss();
+            }
+        });
+        /**模糊效果 */
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
     }
 
     //显示获取的文件聊天信息

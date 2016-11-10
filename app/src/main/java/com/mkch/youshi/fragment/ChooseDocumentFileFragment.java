@@ -23,7 +23,6 @@ import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.IntentUtil;
-import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.util.XUtil;
 
@@ -37,7 +36,6 @@ import org.xutils.x;
 import java.io.File;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +48,9 @@ public class ChooseDocumentFileFragment extends Fragment {
     private int mType;
     private int mPageIndex = 0;
     private ProgressDialog mProgressDialog;
+
+    public ChooseDocumentFileFragment() {
+    }
 
     public ChooseDocumentFileFragment(int mType) {
         this.mType = mType;
@@ -100,14 +101,14 @@ public class ChooseDocumentFileFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (YoupanFileAdapter.mChooseNum!=0){//当有选择的时候,屏蔽listView的选择事件
+                if (YoupanFileAdapter.mChooseNum != 0) {//当有选择的时候,屏蔽listView的选择事件
                     return;
                 }
                 mYoupanFiles = CommonUtil.findYoupanFile(mType);//更新数据
                 YoupanFile youpanFile = mYoupanFiles.get(position);
                 String local_address = youpanFile.getLocal_address();
                 //判断本地文件是否存在
-                if (new File(local_address).exists()){//存在此文件直接打开
+                if (new File(local_address).exists()) {//存在此文件直接打开
                     UIUtils.showTip(local_address);
                     Intent intent = null;
                     intent = IntentUtil.getRightIntent(youpanFile.getSuf(), local_address);
@@ -116,11 +117,11 @@ public class ChooseDocumentFileFragment extends Fragment {
                     } catch (Exception e) {
                         UIUtils.showTip("暂不支持打开此类型文件");
                     }
-                }else { //下载文件,并更新数据库的地址
+                } else { //下载文件,并更新数据库的地址
                     buildAlertDialog_progress();//下载对话框
                     CommonUtil.makeDri();//创建文件夹,保存用户下载的文件
-                    XUtil.downLoadFile(youpanFile,CommonConstants.YOU_PAN_PIC_PATH +
-                            youpanFile.getName(), mProgressDialog);
+                    XUtil.downLoadFile(youpanFile, CommonConstants.YOU_PAN_PIC_PATH +
+                            youpanFile.getName(), mProgressDialog,true);
                 }
             }
         });
