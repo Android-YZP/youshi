@@ -37,6 +37,7 @@ import com.baidu.location.LocationClientOption;
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChartListAdapter;
 import com.mkch.youshi.adapter.ExpressionGridAdapter;
+import com.mkch.youshi.bean.GroupFriend;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.ChatBean;
@@ -157,7 +158,6 @@ public class ChatActivity extends BaseActivity {
     private final int CHOOSE_MEM_CODE = 100;
     private String permissionInfo;
     TIMConversation conversation;
-    TIMMessage msg = new TIMMessage();
 
     private Handler mHandler = new Handler() {
         @Override
@@ -200,6 +200,8 @@ public class ChatActivity extends BaseActivity {
     private int mMessageBoxId;
     private Friend mFriend;
     private Group mGroup;
+    private List<GroupFriend> mGroupFriends = new ArrayList<>();
+    private GroupFriend mGroupFriend;
     private MessageBox m_messageBox;
     private String friendId, selfId;
 
@@ -252,6 +254,7 @@ public class ChatActivity extends BaseActivity {
         mBtnUseVoice.setOnRecordFinishedListener(new RecordButton.OnRecordFinishedListener() {
             @Override
             public void onFinished(File audioFile, int duration) {
+                TIMMessage msg = new TIMMessage();
                 //添加语音
                 TIMSoundElem elem = new TIMSoundElem();
                 final String soundFile = audioFile.getAbsolutePath();
@@ -431,10 +434,12 @@ public class ChatActivity extends BaseActivity {
                 }
             } else if (_intent.getStringExtra("chatType").equals("Group")) {
                 _groupID = _intent.getStringExtra("groupID");
+//                _openfirename = _intent.getStringExtra("_openfirename");
                 conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, _groupID);
                 if (_groupID != null && !_groupID.equals("")) {
                     try {
                         mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
+                        mGroupFriends = dbManager.selector(GroupFriend.class).where("group_id", "=", _groupID).findAll();
                         if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
                             mTvTitle.setText(mGroup.getGroupName());
                         }
@@ -747,6 +752,7 @@ public class ChatActivity extends BaseActivity {
 
     //发送文本信息
     private void sendTextMsg(final String _msg) {
+        TIMMessage msg = new TIMMessage();
         //添加文本内容
         TIMTextElem elem = new TIMTextElem();
         elem.setText(_msg);
@@ -772,6 +778,7 @@ public class ChatActivity extends BaseActivity {
 
     //发送图片信息
     private void sendPicMsg(final String path) {
+        TIMMessage msg = new TIMMessage();
         //添加图片
         TIMImageElem elem = new TIMImageElem();
         elem.setPath(path);
@@ -805,6 +812,7 @@ public class ChatActivity extends BaseActivity {
             if (file.length() > 1024 * 1024 * 10) {
                 Toast.makeText(this, "文件过大，发送失败！", Toast.LENGTH_SHORT).show();
             } else {
+                TIMMessage msg = new TIMMessage();
                 //添加文件内容
                 TIMFileElem elem = new TIMFileElem();
                 elem.setPath(path); //设置文件路径
@@ -837,6 +845,7 @@ public class ChatActivity extends BaseActivity {
 
     //发送表情信息
     private void sendExpressionMsg(final int position) {
+        TIMMessage msg = new TIMMessage();
         //添加表情index
         TIMFaceElem elem = new TIMFaceElem();
         elem.setIndex(position);
@@ -864,6 +873,7 @@ public class ChatActivity extends BaseActivity {
     //发送位置信息
     private void sendAddressMsg(final String _msg) {
         mLocationClient.stop();
+        TIMMessage msg = new TIMMessage();
         //添加位置信息
         TIMLocationElem elem = new TIMLocationElem();
         elem.setDesc(_msg);

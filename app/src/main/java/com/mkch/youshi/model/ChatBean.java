@@ -13,6 +13,8 @@ public class ChatBean {
     private int id;
     @Column(name = "username")
     private String username;//消息的发送者
+    @Column(name = "groupname")
+    private String groupName;//群组Id
     @Column(name = "content")
     private String content;//消息的内容
     @Column(name = "type")
@@ -58,6 +60,15 @@ public class ChatBean {
     }
 
     public ChatBean(String _openfirename, String _msg, int messageTypeOut, String now) {
+        this.username = _openfirename;
+        this.content = _msg;
+        this.type = messageTypeOut;
+        this.date = now;
+        this.msgModel = MESSAGE_MODEL_TEXT;
+    }
+
+    public ChatBean(String peer, String _openfirename, String _msg, int messageTypeOut, String now) {
+        this.groupName = peer;
         this.username = _openfirename;
         this.content = _msg;
         this.type = messageTypeOut;
@@ -191,6 +202,14 @@ public class ChatBean {
         this.username = username;
     }
 
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
     public String getContent() {
         return content;
     }
@@ -292,12 +311,16 @@ public class ChatBean {
         return "ChatBean{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
+                ", groupName='" + groupName + '\'' +
                 ", content='" + content + '\'' +
                 ", type=" + type +
                 ", date='" + date + '\'' +
                 ", msgModel=" + msgModel +
                 ", duration=" + duration +
                 ", fileName='" + fileName + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", fileOriginal='" + fileOriginal + '\'' +
+                ", expPosition=" + expPosition +
                 ", status=" + status +
                 ", msgboxid=" + msgboxid +
                 '}';
