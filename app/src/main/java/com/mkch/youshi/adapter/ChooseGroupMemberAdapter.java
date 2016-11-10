@@ -177,38 +177,45 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
             return;
         }
 
-        String sendFile = new Gson().toJson(YoupanFileAdapter.mChooseFile);
-        String peer = friendid;  //获取与用户 "sample_user_1" 的会话
-        TIMConversation conversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.C2C,    //会话类型：单聊
-                peer);                      //会话对方用户帐号//对方id
+        //把文件一个一个的发送出去
+        for (int i = 0; i <  YoupanFileAdapter.mChooseFile.size(); i++) {
+            String sendfile = new Gson().toJson(YoupanFileAdapter.mChooseFile.get(i));
+            UIUtils.LogUtils(sendfile);
 
-        //构造一条消息
-        TIMMessage msg = new TIMMessage();
-        //添加文本内容
-        TIMTextElem elem = new TIMTextElem();
-        elem.setText("thisSendFile" + sendFile);
-        //将elem添加到消息
-        if (msg.addElement(elem) != 0) {
-            // Log.d(tag, "addElement failed");
-            return;
+            String peer = friendid;  //获取与用户 "sample_user_1" 的会话
+            TIMConversation conversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C,    //会话类型：单聊
+                    peer);                      //会话对方用户帐号//对方id
+
+            //构造一条消息
+            TIMMessage msg = new TIMMessage();
+            //添加文本内容
+            TIMTextElem elem = new TIMTextElem();
+            elem.setText("thisSendFile" + sendfile);
+            //将elem添加到消息
+            if (msg.addElement(elem) != 0) {
+                // Log.d(tag, "addElement failed");
+                return;
+            }
+            //发送消息
+            conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                @Override
+                public void onError(int code, String desc) {//发送消息失败
+                    UIUtils.showTip("发送失败");
+                    mProgressDialog.dismiss();
+                    activity.finish();
+                }
+
+                @Override
+                public void onSuccess(TIMMessage msg) {//发送消息成功
+                    UIUtils.showTip("发送成功");
+                    mProgressDialog.dismiss();
+                    activity.finish();
+                }
+            });
         }
-        //发送消息
-        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
-            @Override
-            public void onError(int code, String desc) {//发送消息失败
-                UIUtils.showTip("发送失败");
-                mProgressDialog.dismiss();
-                activity.finish();
-            }
 
-            @Override
-            public void onSuccess(TIMMessage msg) {//发送消息成功
-                UIUtils.showTip("发送成功");
-                mProgressDialog.dismiss();
-                activity.finish();
-            }
-        });
+
     }
 
     /**

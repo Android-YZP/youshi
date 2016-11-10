@@ -283,7 +283,6 @@ public class DropBoxFileActivity extends BaseActivity {
         //包装请求参数
         String _personEventJson = createDeleteFileJson();
         Log.d("YZP", "---------------------_personEventJson = " + _personEventJson);
-
         requestParams.addBodyParameter("", _personEventJson);//用户名
         String loginCode = CommonUtil.getUserInfo(UIUtils.getContext()).getLoginCode();
         requestParams.addHeader("sVerifyCode", loginCode);//头信息
@@ -364,7 +363,6 @@ public class DropBoxFileActivity extends BaseActivity {
             startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的文件"),
                     FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
             UIUtils.showTip("请先安装文件夹管理软件");
         }
     }

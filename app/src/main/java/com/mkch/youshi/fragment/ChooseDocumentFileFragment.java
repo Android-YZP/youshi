@@ -119,7 +119,8 @@ public class ChooseDocumentFileFragment extends Fragment {
                 }else { //下载文件,并更新数据库的地址
                     buildAlertDialog_progress();//下载对话框
                     CommonUtil.makeDri();//创建文件夹,保存用户下载的文件
-                    XUtil.downLoadFile(youpanFile, mProgressDialog);
+                    XUtil.downLoadFile(youpanFile,CommonConstants.YOU_PAN_PIC_PATH +
+                            youpanFile.getName(), mProgressDialog);
                 }
             }
         });

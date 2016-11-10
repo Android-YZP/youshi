@@ -101,9 +101,8 @@ public class XUtil {
     /**
      * 利用Xutils进行下载文件
      */
-    public static void downLoadFile(final YoupanFile youpanFile, final ProgressDialog progressDialog) {
-        XUtil.DownLoadFile(youpanFile.getServer_address(), CommonConstants.YOU_PAN_PIC_PATH +
-                        youpanFile.getName()
+    public static void downLoadFile(final YoupanFile youpanFile, String filePath, final ProgressDialog progressDialog) {
+        XUtil.DownLoadFile(youpanFile.getServer_address(), filePath
                 , new Callback.ProgressCallback<File>() {
                     @Override
                     public void onSuccess(File result) {
@@ -114,6 +113,7 @@ public class XUtil {
                             YoupanFile file = files.get(0);
                             file.setLocal_address(CommonConstants.YOU_PAN_PIC_PATH + youpanFile.getName());
                             mDbManager.saveOrUpdate(file);
+                            UIUtils.showTip("下载完成");
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
