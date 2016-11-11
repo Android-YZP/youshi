@@ -97,7 +97,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
         Intent intent = getIntent();
         mEventID = intent.getIntExtra("eventID", -1);
         if (mEventID != -1) {
-            mScheduleList = CommonUtil.findSch(mEventID + "");
+            mScheduleList = DBHelper.findSch(mEventID + "");
             schedule = mScheduleList.get(0);
             mEtTheme.setText(schedule.getTitle());
             mTvPlace.setText(schedule.getAddress());
@@ -111,7 +111,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
 
             //时间段的选择
             //时间段的设置
-            ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mEventID);
+            ArrayList<Schtime> schTimes = DBHelper.findSchTime(mEventID);
             if (!schTimes.isEmpty()) {
                 for (int i = 0; i < schTimes.size(); i++) {
                     NetScheduleModel.ViewModelBean.TimeSpanListBean timeSpanListBean =
@@ -130,7 +130,7 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                 }
             }
                 //报送好友的初始化显示
-                ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+                ArrayList<Schreport> repPer = DBHelper.findRepPer(schedule.getId());
                 if (repPer != null && !repPer.isEmpty()) {
                     for (int i = 0; i < repPer.size(); i++) {
                         mFriends.add(repPer.get(i).getFriendid());
@@ -261,8 +261,8 @@ public class AddPersonalHabitActivity extends AppCompatActivity implements View.
                     return;
                 }
                 if (mEventID != -1) {//重新编辑储存的时候,先删除联系人,时间段在添加联系人时间段
-                    CommonUtil.DeleteRepPer(mEventID);
-                    CommonUtil.DeleteSchTime(mEventID);
+                    DBHelper.DeleteRepPer(mEventID);
+                    DBHelper.DeleteSchTime(mEventID);
                 }
 
                 saveDataOfNet();

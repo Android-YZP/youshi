@@ -22,6 +22,7 @@ import com.mkch.youshi.bean.CloudFileBean;
 import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.IntentUtil;
 import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
@@ -34,7 +35,13 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
@@ -88,7 +95,7 @@ public class ChooseDocumentFileFragment extends Fragment {
 
     private void initData() {
         //文档类型
-        mYoupanFiles = CommonUtil.findYoupanFile(mType);
+        mYoupanFiles = DBHelper.findYoupanFile(mType);
         if (mYoupanFiles != null && getActivity() != null) {
             DropBoxFileActivity activity = (DropBoxFileActivity) getActivity();
             mAdapter = new YoupanFileAdapter(mYoupanFiles, activity.getmTvChoofileNum());//拿到activity
@@ -100,14 +107,14 @@ public class ChooseDocumentFileFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (YoupanFileAdapter.mChooseNum!=0){//当有选择的时候,屏蔽listView的选择事件
+                if (YoupanFileAdapter.mChooseNum != 0) {//当有选择的时候,屏蔽listView的选择事件
                     return;
                 }
-                mYoupanFiles = CommonUtil.findYoupanFile(mType);//更新数据
+                mYoupanFiles = DBHelper.findYoupanFile(mType);//更新数据
                 YoupanFile youpanFile = mYoupanFiles.get(position);
                 String local_address = youpanFile.getLocal_address();
                 //判断本地文件是否存在
-                if (new File(local_address).exists()){//存在此文件直接打开
+                if (new File(local_address).exists()) {//存在此文件直接打开
                     UIUtils.showTip(local_address);
                     Intent intent = null;
                     intent = IntentUtil.getRightIntent(youpanFile.getSuf(), local_address);
@@ -116,12 +123,24 @@ public class ChooseDocumentFileFragment extends Fragment {
                     } catch (Exception e) {
                         UIUtils.showTip("暂不支持打开此类型文件");
                     }
-                }else { //下载文件,并更新数据库的地址
+                } else { //下载文件,并更新数据库的地址
                     buildAlertDialog_progress();//下载对话框
                     CommonUtil.makeDri();//创建文件夹,保存用户下载的文件
-                    XUtil.downLoadFile(youpanFile,CommonConstants.YOU_PAN_PIC_PATH +
+                    XUtil.downLoadFile(youpanFile, CommonConstants.YOU_PAN_PIC_PATH +
                             youpanFile.getName(), mProgressDialog);
                 }
+            }
+        });
+
+        //长点击收藏
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (YoupanFileAdapter.mChooseNum != 0) {//当有选择的时候,屏蔽listView的选择事件
+                    return true;
+                }
+                showOptionDialog(position);
+                return true;
             }
         });
 
@@ -133,6 +152,57 @@ public class ChooseDocumentFileFragment extends Fragment {
                 getFileFormNET();
             }
         });
+    }
+
+    //将一个文件复制到另外一个文件夹中
+    private void copyFile(String file1, String file2) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file1);
+            BufferedInputStream bufis = new BufferedInputStream(fis);
+            FileOutputStream fos = new FileOutputStream(file2);
+            BufferedOutputStream bufos = new BufferedOutputStream(fos);
+            int len = 0;
+            while ((len = bufis.read()) != -1) {
+                bufos.write(len);
+            }
+            bufis.close();
+            bufos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //收藏文件的选择对话框
+    private void showOptionDialog(final int position) {
+        final String[] items = {"收    藏"};
+        AlertDialog.Builder listDialog =
+                new AlertDialog.Builder(getActivity());
+        listDialog.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    mYoupanFiles = DBHelper.findYoupanFile(mType);//更新数据
+                    YoupanFile youpanFile = mYoupanFiles.get(position);
+                    String local_address = youpanFile.getLocal_address();
+                    //判断本地文件是否存在
+                    if (new File(local_address).exists() && !new File(CommonConstants.COLLECT_PATH + youpanFile.getName()).exists()) {//存在此文件直接收藏
+                        DBHelper.saveCollectFile(youpanFile, CommonConstants.COLLECT_PATH + youpanFile.getName());
+                        //储存一个文件到指定文件夹
+                        CommonUtil.makeCollectDri();
+                        copyFile(local_address, CommonConstants.COLLECT_PATH + youpanFile.getName());
+                        UIUtils.showTip("已收藏该文件");
+                    } else if (!new File(local_address).exists() && !new File(CommonConstants.COLLECT_PATH + youpanFile.getName()).exists()) {
+                        UIUtils.showTip("请先下载该文件");
+                    } else if (new File(CommonConstants.COLLECT_PATH + youpanFile.getName()).exists()) {
+                        UIUtils.showTip("该文件已经收藏");
+                    }
+                }
+            }
+        });
+        listDialog.show();
     }
 
     /**
@@ -161,12 +231,12 @@ public class ChooseDocumentFileFragment extends Fragment {
                     List<CloudFileBean.DatasBean> fileDatas = cloudFileBean.getDatas();
                     for (int i = 0; i < fileDatas.size(); i++) {
                         //拿到fileID去查找数据库里面的数据,没有则进行添加
-                        ArrayList<YoupanFile> files = CommonUtil.findFile(fileDatas.get(i).getFileID() + "");
+                        ArrayList<YoupanFile> files = DBHelper.findFile(fileDatas.get(i).getFileID() + "");
                         if (files != null && files.size() != 0) {
                             UIUtils.LogUtils("跳过了这个");
                         } else {//没有此文件则添加此文件
                             UIUtils.LogUtils("添加了这个文件");
-                            CommonUtil.saveFile(fileDatas.get(i));
+                            DBHelper.saveFile(fileDatas.get(i));
                         }
                     }
                 }

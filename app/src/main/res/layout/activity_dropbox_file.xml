@@ -16,6 +16,7 @@
             android:src="@drawable/nav_back" />
 
         <TextView
+            android:id="@+id/tv_file_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -40,7 +41,7 @@
     <com.mkch.youshi.view.FileTabBarLayout
         android:id="@+id/custom_dropbox_file_tabbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_topbar_height"></com.mkch.youshi.view.FileTabBarLayout>
+        android:layout_height="@dimen/common_topbar_height"/>
 
     <View style="@style/commonLineStyle" />
 
@@ -55,6 +56,7 @@
         android:layout_weight="1"/>
 
     <RelativeLayout
+        android:id="@+id/rl_choose_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"

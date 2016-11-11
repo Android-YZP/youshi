@@ -46,6 +46,8 @@ public class CommonConstants {
      */
     public static final String YOU_PAN_PIC_PATH = Environment.getExternalStorageDirectory()
             .getAbsolutePath() + "/couldFile/";
+    public static final String COLLECT_PATH = Environment.getExternalStorageDirectory()
+            .getAbsolutePath() + "/collectFile/";
     public static final int FLAG_GET_ADD_PERSONER_EVENT_SUCCESS = 103;
     public static final int FLAG_GET_ADD_PERSONER_EVENT_FAIL = 104;
     public static final int PHOTO_REQUEST_FILE = 105;// 从文件夹选择

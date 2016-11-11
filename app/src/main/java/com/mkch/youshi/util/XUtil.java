@@ -87,7 +87,7 @@ public class XUtil {
      *
      * @param <T>
      */
-    public static <T> Callback.Cancelable DownLoadFile(String url, String filepath, Callback.CommonCallback<T> callback) {
+    private static <T> Callback.Cancelable DownLoadFile(String url, String filepath, Callback.CommonCallback<T> callback) {
         RequestParams params = new RequestParams(url);
         //设置断点续传
         String loginCode = CommonUtil.getUserInfo(UIUtils.getContext()).getLoginCode();
@@ -109,7 +109,7 @@ public class XUtil {
                         //下载成功之后,更新本地的储存地址
                         try {
                             DbManager mDbManager = DBHelper.getDbManager();
-                            ArrayList<YoupanFile> files = CommonUtil.findFile(youpanFile.getFile_id() + "");
+                            ArrayList<YoupanFile> files = DBHelper.findFile(youpanFile.getFile_id() + "");
                             YoupanFile file = files.get(0);
                             file.setLocal_address(CommonConstants.YOU_PAN_PIC_PATH + youpanFile.getName());
                             mDbManager.saveOrUpdate(file);

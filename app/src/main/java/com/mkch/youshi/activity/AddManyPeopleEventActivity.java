@@ -107,7 +107,7 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
         Intent intent = getIntent();
         mEventID = intent.getIntExtra("eventID", -1);
         if (mEventID != -1) {
-            mScheduleList = CommonUtil.findSch(mEventID + "");
+            mScheduleList = DBHelper.findSch(mEventID + "");
             schedule = mScheduleList.get(0);
             mEtTheme.setText(schedule.getTitle());
             //判断选择时间是不是全天
@@ -130,14 +130,14 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
             mRemindTime = schedule.getAhead_warn();
 
             //好友的初始化显示
-            ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+            ArrayList<Schreport> repPer = DBHelper.findRepPer(schedule.getId());
             for (int i = 0; i < repPer.size(); i++) {
                 mRepFriends.add(repPer.get(i).getFriendid());
             }
             setRepFriends(mRepFriends);
 
             //参与人好友的初始化显示
-            ArrayList<Schjoiner> joinPer = CommonUtil.findJoinPer(schedule.getId());
+            ArrayList<Schjoiner> joinPer = DBHelper.findJoinPer(schedule.getId());
             for (int i = 0; i < joinPer.size(); i++) {
                 mJoinFriends.add(joinPer.get(i).getJoiner_id());
             }
@@ -316,8 +316,8 @@ public class AddManyPeopleEventActivity extends AppCompatActivity implements Vie
 //                    return;
 //                }
                 if (mEventID != -1) {//当该日程是传送过来的哪个的时候，删除原有的
-                    CommonUtil.DeleteRepPer(mEventID);
-                    CommonUtil.DeleteJoinPer(mEventID);
+                    DBHelper.DeleteRepPer(mEventID);
+                    DBHelper.DeleteJoinPer(mEventID);
                 }
                 saveDataOfNet();
                 saveDataOfDb();

@@ -176,7 +176,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
         Intent intent = getIntent();
         mEventID = intent.getIntExtra("eventID", -1);
         if (mEventID != -1) {
-            mScheduleList = CommonUtil.findSch(mEventID + "");
+            mScheduleList = DBHelper.findSch(mEventID + "");
             schedule = mScheduleList.get(0);
             mEtTheme.setText(schedule.getTitle());
             mTwoStartDate.setText(schedule.getBegin_time());
@@ -188,7 +188,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
             mEtPersonalEventDescription.setText(schedule.getRemark());
             setRBChecked(schedule.getLabel());//设置选择好的标签
             //时间段的设置
-            ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mEventID);
+            ArrayList<Schtime> schTimes = DBHelper.findSchTime(mEventID);
             if (!schTimes.isEmpty()) {
                 for (int i = 0; i < schTimes.size(); i++) {
                     TimeSpanListBean timeSpanListBean = new TimeSpanListBean();
@@ -219,7 +219,7 @@ public class AddPersonalAffairActivity extends AppCompatActivity implements View
 
 
             //报送好友的初始化显示
-            ArrayList<Schreport> repPer = CommonUtil.findRepPer(schedule.getId());
+            ArrayList<Schreport> repPer = DBHelper.findRepPer(schedule.getId());
 //            UIUtils.showTip(schedule.getId() + "报送人");
 //            UIUtils.showTip(repPer.size() + "报送人的数目");
             for (int i = 0; i < repPer.size(); i++) {

@@ -16,6 +16,7 @@ import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
         mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        ArrayList<Schreport> repPer = DBHelper.findRepPer(mSchedule.getId());
 
         mTvTheme.setText(mSchedule.getTitle());
         mTvlabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
@@ -126,13 +127,13 @@ public class PersonalDetialHabitActivity extends BaseDetailActivity {
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
                 mTvRepPer.setText(mTvRepPer.getText().toString() +
-                        CommonUtil.findFriName(repPer.get(i).getFriendid()));
+                        DBHelper.findFriName(repPer.get(i).getFriendid()));
             }
         }
 
 
         // 时间段的初始化
-        ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mSchedule.getId());
+        ArrayList<Schtime> schTimes = DBHelper.findSchTime(mSchedule.getId());
         if (schTimes != null && schTimes.size() != 0 && !schTimes.isEmpty()) {
             for (int i = 0; i < schTimes.size(); i++) {
                 if (i % 2 == 0) {
