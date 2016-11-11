@@ -568,7 +568,7 @@ public class FriendService extends Service implements TIMMessageListener {
                     //获取该群成员资料
                     List<String> identifiers = new ArrayList<>();
                     identifiers.add(sender);
-                    getGroupMember(peer, identifiers, elementCount, timMessage);
+//                    getGroupMember(peer, identifiers, elementCount, timMessage);
                 }
             }
         }

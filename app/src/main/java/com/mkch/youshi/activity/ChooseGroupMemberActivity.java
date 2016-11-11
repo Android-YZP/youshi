@@ -44,7 +44,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
     private ImageView mIvBack;
     private TextView mTvConfirm;
     private DbManager dbManager;//数据库管理对象
-    private List<Friend> _friends;
+    private List<Friend> _friends = new ArrayList<>();
     private User mUser;
     private String _self_openfirename, mGroupName, mMember;
     private boolean isSendFile;
@@ -68,7 +68,6 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 if (isSendFile) {//从发送人界面传递过来的
                     mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
                     UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
-
                 } else {
                     mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
                     UIUtils.LogUtils("走到这里了222222222222" + isSendFile);
@@ -89,6 +88,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         super.initWidget();
         mIvBack = (ImageView) findViewById(R.id.iv_choose_group_member_back);
         mTvConfirm = (TextView) findViewById(R.id.tv_choose_group_member_confirm);
+        mTvConfirm.setClickable(true);
         if (isSendFile) mTvConfirm.setVisibility(View.INVISIBLE);//转发文件隐藏联系人
         mSideBar = (SideBar) findViewById(R.id.sidebar_choose_group_member);
         mDialog = (TextView) findViewById(R.id.tv_choose_group_member_dialog);
@@ -108,6 +108,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mTvConfirm.setClickable(false);
                 HashMap<Integer, Boolean> state = mAdapter.mState;
                 for (int j = 0; j < mAdapter.getCount(); j++) {
                     if (state.get(j) != null) {
@@ -123,6 +124,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 }
             }
         });
+
     }
 
     private void createGroup(final String groupName, final ArrayList<String> members) {

@@ -46,7 +46,7 @@ public class DBHelper {
 
                         }
                     })
-                    .setDbVersion(75)
+                    .setDbVersion(77)
                     .setTableCreateListener(new DbManager.TableCreateListener() {
                         @Override
                         public void onTableCreated(DbManager db, TableEntity<?> table) {

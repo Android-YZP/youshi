@@ -44,6 +44,8 @@ public class GroupDetailActivity extends BaseActivity {
     private GridView mGvFriendHeadpics;//参与聊天的好友列表
     @ViewInject(R.id.iv_common_topbar_back)
     private ImageView mIvBack;
+    @ViewInject(R.id.tv_common_topbar_title)
+    private TextView mTvTitle;//标题
     @ViewInject(R.id.line_group_detail_groupname)
     private LinearLayout mLayoutGroupName;//群名称
     @ViewInject(R.id.tv_group_detail_groupname)
@@ -99,6 +101,7 @@ public class GroupDetailActivity extends BaseActivity {
                 mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", mUserId).findFirst();
                 if (mGroup != null) {
                     if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
+                        mTvTitle.setText(mGroup.getGroupName());
                         mTvGroupName.setText(mGroup.getGroupName());
                     }
                     if (mGroup.getGroupNotification() != null && !mGroup.getGroupNotification().equals("")) {
@@ -325,6 +328,7 @@ public class GroupDetailActivity extends BaseActivity {
             @Override
             public void onSuccess() {
                 Log.d("zzz-----modifyGroupName", "modifyGroupName is success");
+                mTvTitle.setText(newGroupName);
                 mTvGroupName.setText(newGroupName);
                 //更新数据库
                 try {
