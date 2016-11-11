@@ -198,10 +198,6 @@ public class UserLoginActivity extends Activity {
                     String errorMsg1 = ("认证错误");
                     ((UserLoginActivity) mActivity.get()).showTip(errorMsg1);
                     break;
-                case CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS:
-                    //登录成功
-                    ((UserLoginActivity) mActivity.get()).goMain();
-                    break;
                 case CommonConstants.FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW:
                     //图片验证码出现
                     ((UserLoginActivity) mActivity.get()).showImgVerfy();
@@ -490,7 +486,7 @@ public class UserLoginActivity extends Activity {
                                 CommonUtil.saveUserInfo(user, UserLoginActivity.this);
                             }
                             //提醒登录成功
-                            handler.sendEmptyMessage(CommonConstants.FLAG_GET_REG_USER_LOGIN_SUCCESS);
+                            goMain();
                         } else {
                             String _Message = _json_result.getString("Message");
                             String _ErrorCode = _json_result.getString("ErrorCode");

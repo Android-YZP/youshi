@@ -125,6 +125,27 @@ public class ChatBean {
     }
 
     /**
+     * 语音消息
+     *
+     * @param username 发送者
+     * @param date     时间
+     * @param type     消息接收or发送
+     * @param duration 时长
+     * @param fileName 文件名
+     */
+    public ChatBean(String peer, String username, String date, int type, int duration, String fileName, String content) {
+        this.groupName = peer;
+        this.username = username;
+        this.date = date;
+        this.type = type;
+        this.duration = duration;
+        this.fileName = fileName;
+        this.content = (duration / 1000) + "\'" + (duration % 1000) + "\"语音消息";
+        this.msgModel = MESSAGE_MODEL_SOUND;
+        this.content = content;
+    }
+
+    /**
      * 图片消息
      *
      * @param username 发送者
@@ -133,6 +154,24 @@ public class ChatBean {
      * @param fileName 文件名
      */
     public ChatBean(String username, String date, int type, String fileName, String content) {
+        this.username = username;
+        this.date = date;
+        this.type = type;
+        this.fileName = fileName;
+        this.msgModel = MESSAGE_MODEL_PIC;
+        this.content = content;
+    }
+
+    /**
+     * 图片消息
+     *
+     * @param username 发送者
+     * @param date     时间
+     * @param type     消息接收or发送
+     * @param fileName 文件名
+     */
+    public ChatBean(String peer, String username, String date, int type, String fileName, String content) {
+        this.groupName = peer;
         this.username = username;
         this.date = date;
         this.type = type;

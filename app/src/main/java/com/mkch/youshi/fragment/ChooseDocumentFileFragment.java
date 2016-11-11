@@ -58,6 +58,9 @@ public class ChooseDocumentFileFragment extends Fragment {
     private int mPageIndex = 0;
     private ProgressDialog mProgressDialog;
 
+    public ChooseDocumentFileFragment() {
+    }
+
     public ChooseDocumentFileFragment(int mType) {
         this.mType = mType;
     }
@@ -127,7 +130,7 @@ public class ChooseDocumentFileFragment extends Fragment {
                     buildAlertDialog_progress();//下载对话框
                     CommonUtil.makeDri();//创建文件夹,保存用户下载的文件
                     XUtil.downLoadFile(youpanFile, CommonConstants.YOU_PAN_PIC_PATH +
-                            youpanFile.getName(), mProgressDialog);
+                            youpanFile.getName(), mProgressDialog,true);
                 }
             }
         });

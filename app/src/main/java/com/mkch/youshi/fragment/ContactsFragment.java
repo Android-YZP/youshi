@@ -424,7 +424,6 @@ public class ContactsFragment extends Fragment implements SideBar
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override

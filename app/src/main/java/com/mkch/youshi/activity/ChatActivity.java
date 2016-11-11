@@ -173,13 +173,16 @@ public class ChatActivity extends BaseActivity {
                     Toast.makeText(ChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                     break;
                 case ChatReceiver.RECEIVE_CHAT_MSG:
-                    int _chat_id = (int) msg.obj;//最新的一条消息-写在广播接收处
+                    Bundle b = msg.getData();
+                    int _chat_id = b.getInt("chat_id");
+                    int _member_id = b.getInt("member_id");//最新的一条消息-写在广播接收处
                     Log.d("zzz----RECEIVE_CHAT_MSG", String.valueOf(_chat_id));
                     //查询该消息内容并刷新到UI
                     try {
                         ChatBean _chat_bean = dbManager.findById(ChatBean.class, _chat_id);
+                        GroupFriend _group_friend = dbManager.findById(GroupFriend.class, _member_id);
                         //更新UI界面，获取最新的用户列表
-                        updateUIfromReceiver(_chat_bean);
+                        updateUIfromReceiver(_chat_bean, _group_friend);
                     } catch (DbException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
@@ -201,7 +204,6 @@ public class ChatActivity extends BaseActivity {
     private Friend mFriend;
     private Group mGroup;
     private List<GroupFriend> mGroupFriends = new ArrayList<>();
-    private GroupFriend mGroupFriend;
     private MessageBox m_messageBox;
     private String friendId, selfId;
 
@@ -210,8 +212,9 @@ public class ChatActivity extends BaseActivity {
      *
      * @param _chat_bean
      */
-    private void updateUIfromReceiver(ChatBean _chat_bean) {
+    private void updateUIfromReceiver(ChatBean _chat_bean, GroupFriend _group_friend) {
         m_chart_list.add(_chat_bean);
+        mGroupFriends.add(_group_friend);
         m_adapter.notifyDataSetChanged();
         mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
     }
@@ -439,12 +442,11 @@ public class ChatActivity extends BaseActivity {
                 if (_groupID != null && !_groupID.equals("")) {
                     try {
                         mGroup = dbManager.selector(Group.class).where("group_id", "=", _groupID).and("user_id", "=", selfId).findFirst();
-                        mGroupFriends = dbManager.selector(GroupFriend.class).where("group_id", "=", _groupID).findAll();
                         if (mGroup.getGroupName() != null && !mGroup.getGroupName().equals("")) {
                             mTvTitle.setText(mGroup.getGroupName());
                         }
                         mIvPsInfo.setImageResource(R.drawable.downmenu_group);
-                        friendId = mGroup.getGroupID() + "@" + "TIMConversationType.Group";
+                        friendId = _groupID + "@" + "TIMConversationType.Group";
                         queryChatsInfoFromDB(friendId, selfId);
                         //注册聊天监听的Receiver
                         mChatReceiver = new ChatReceiver(mHandler);
@@ -647,6 +649,16 @@ public class ChatActivity extends BaseActivity {
             if (m_messageBox != null) {
                 mMessageBoxId = m_messageBox.getId();
                 m_chart_list = m_messageBox.getChatBeans(dbManager);
+                //判断该消息盒子是否属于群聊，是则插入消息的所发群成员
+                if (m_messageBox.getType() == 2) {
+                    for (int i = 0; i < m_chart_list.size(); i++) {
+                        String memberId = m_chart_list.get(i).getUsername();
+                        GroupFriend _groupFriend = dbManager.selector(GroupFriend.class).where("group_id", "=", _groupID).and("member_identifier", "=", memberId).findFirst();
+                        if (_groupFriend != null) {
+                            mGroupFriends.add(_groupFriend);
+                        }
+                    }
+                }
             }
         } catch (DbException e) {
             e.printStackTrace();
@@ -662,7 +674,7 @@ public class ChatActivity extends BaseActivity {
             mRvList.setAdapter(m_adapter);
             mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
         } else {
-            m_adapter = new ChartListAdapter(m_chart_list, mGroup, mUser, this);
+            m_adapter = new ChartListAdapter(m_chart_list, mGroupFriends, mUser, this);
             mRvList.setAdapter(m_adapter);
             mRvList.smoothScrollToPosition(m_chart_list.size());//滚动到最下面
         }
@@ -770,8 +782,13 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onSuccess(TIMMessage timMessage) {
                 Log.d("zzz----sendMessage text", "sendMessage is success");
-                ChatBean _local_message = new ChatBean(selfId, _msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
-                saveChatBean(_local_message);
+                if (mFriend != null) {
+                    ChatBean _local_message = new ChatBean(selfId, _msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+                    saveChatBean(_local_message);
+                } else if (mGroup != null) {
+                    ChatBean _local_message = new ChatBean(mGroup.getGroupID(), selfId, _msg, ChatBean.MESSAGE_TYPE_OUT, TimesUtils.getNow());
+                    saveChatBean(_local_message);
+                }
             }
         });
     }
@@ -797,9 +814,15 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onSuccess(TIMMessage msg) {
                 Log.d("zzz---sendMessage image", "sendMessage is success");
-                ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, path, "[图片]");
-                _local_message.setFileOriginal(path);
-                saveChatBean(_local_message);
+                if (mFriend != null) {
+                    ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, path, "[图片]");
+                    _local_message.setFileOriginal(path);
+                    saveChatBean(_local_message);
+                } else if (mGroup != null) {
+                    ChatBean _local_message = new ChatBean(mGroup.getGroupID(), selfId, TimesUtils.getNow(), ChatBean.MESSAGE_TYPE_OUT, path, "[图片]");
+                    _local_message.setFileOriginal(path);
+                    saveChatBean(_local_message);
+                }
             }
         });
     }

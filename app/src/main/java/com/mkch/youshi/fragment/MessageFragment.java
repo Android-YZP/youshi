@@ -1,5 +1,6 @@
 package com.mkch.youshi.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,8 +11,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChatActivity;
 import com.mkch.youshi.adapter.MessageBoxListAdapter;
 import com.mkch.youshi.bean.User;
+import com.mkch.youshi.model.Friend;
+import com.mkch.youshi.model.Group;
 import com.mkch.youshi.model.MessageBox;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
@@ -41,6 +45,8 @@ public class MessageFragment extends Fragment {
     private MessageBoxListAdapter mAdapter;
     private User mUser;
     private String mUserId;
+    public static int MB_TYPE_CHAT = 1;
+    public static int MB_TYPE_MUL_CHAT = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,37 @@ public class MessageFragment extends Fragment {
         mLvMsgs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               //未读消息数置为0
+                try {
+                    MessageBox messageBox = dbManager.selector(MessageBox.class).where("title", "=", mMsgBoxes.get(position).getTitle()).findFirst();
+                    messageBox.setNums(0);
+                    dbManager.saveOrUpdate(mMsgBoxes.get(position));
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                //跳转到该消息的聊天界面
+                Intent _intent = new Intent(getActivity(), ChatActivity.class);
+                if (mMsgBoxes.get(position).getType() == MB_TYPE_CHAT) {
+                    try {
+                        Friend friend = dbManager.selector(Friend.class).where("nickname", "=", mMsgBoxes.get(position).getTitle()).findFirst();
+                        String contactID = friend.getFriendid();
+                        _intent.putExtra("chatType", "C2C");
+                        _intent.putExtra("_openfirename", contactID);
+                        startActivity(_intent);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                } else if (mMsgBoxes.get(position).getType() == MB_TYPE_MUL_CHAT) {
+                    try {
+                        Group group = dbManager.selector(Group.class).where("group_name", "=", mMsgBoxes.get(position).getTitle()).findFirst();
+                        String groupID = group.getGroupID();
+                        _intent.putExtra("chatType", "Group");
+                        _intent.putExtra("groupID", groupID);
+                        startActivity(_intent);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
