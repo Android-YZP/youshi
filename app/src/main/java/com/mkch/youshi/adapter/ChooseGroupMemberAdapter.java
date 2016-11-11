@@ -1,7 +1,5 @@
 package com.mkch.youshi.adapter;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.mkch.youshi.R;
 import com.mkch.youshi.activity.ChooseGroupMemberActivity;
@@ -20,17 +17,17 @@ import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.UIUtils;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMFileElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMValueCallBack;
-
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.widget.AdapterHolder;
 import org.kymjs.kjframe.widget.KJAdapter;
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,9 +42,10 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
     private List<Friend> datas;
     //记录checkbox的状态
     public HashMap<Integer, Boolean> mState = new HashMap<Integer, Boolean>();
-    private static boolean isSendFile = false;
-    private static ChooseGroupMemberActivity activity;
-    private ProgressDialog mProgressDialog;
+    private boolean isSendFile = false;
+    private boolean isCollectFile = false;
+    private String mFilePath;
+    private ChooseGroupMemberActivity activity;
 
 
     public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas) {
@@ -63,6 +61,22 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
     public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas, ChooseGroupMemberActivity activity) {
         super(view, mDatas, R.layout.item_list_choose_group_member);
         this.activity = activity;
+        isSendFile = true;
+
+        datas = mDatas;
+        if (datas == null) {
+            datas = new ArrayList<>();
+        }
+        Collections.sort(datas);
+    }
+
+    public ChooseGroupMemberAdapter(AbsListView view, List<Friend> mDatas,
+                                    ChooseGroupMemberActivity activity,
+                                    boolean isCollectFile, String filePath) {
+        super(view, mDatas, R.layout.item_list_choose_group_member);
+        this.activity = activity;
+        this.isCollectFile = isCollectFile;
+        this.mFilePath = filePath;
         isSendFile = true;
         datas = mDatas;
         if (datas == null) {
@@ -102,7 +116,11 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
             @Override
             public void onClick(View v) {
                 if (isSendFile) {//转发文件
-                    showDiaLog(cbChoose);
+                    if (isCollectFile) {//转发收藏文件
+                        showColFileDiaLog(cbChoose);
+                    } else {//转发优盘文件
+                        showYPFileDiaLog(cbChoose);
+                    }
                 } else {
                     cbChoose.setChecked(!cbChoose.isChecked());
                 }
@@ -139,16 +157,16 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
     }
 
     //是否转发该联系人
-    private void showDiaLog(final CheckBox cbChoose) {
+    private void showYPFileDiaLog(final CheckBox cbChoose) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage("确认发送文件给联系人?");
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //从云端删除文件,从本地删除文件
                 cbChoose.setChecked(!cbChoose.isChecked());
                 sendFile2SomeOne();
                 dialog.dismiss();
+                activity.finish();
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -161,9 +179,87 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
 
     }
 
+    //收藏文件的转发
+    private void showColFileDiaLog(final CheckBox cbChoose) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage("确认发送文件给联系人?");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cbChoose.setChecked(!cbChoose.isChecked());
+                sendcollectFile(mFilePath);
+                dialog.dismiss();
+                activity.finish();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    //发送收藏文件
+    private void sendcollectFile(final String path) {
+        HashMap<Integer, Boolean> state = mState;
+        String friendid = "";
+        for (int j = 0; j < getCount(); j++) {
+            if (state.get(j) != null) {
+                Friend friend = getItem(j);
+                friendid = friend.getFriendid();
+            }
+        }
+        if (friendid.isEmpty()) {
+            UIUtils.showTip("请选择联系人");
+            return;
+        }
+        String peer = friendid;  //获取与用户 "sample_user_1" 的会话
+        TIMConversation conversation = TIMManager.getInstance().getConversation(
+                TIMConversationType.C2C,    //会话类型：单聊
+                peer);                      //会话对方用户帐号//对方id
+
+        //发送文件信息
+        if (path == null) return;
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.length() > 1024 * 1024 * 10) {
+                UIUtils.showTip("文件过大，发送失败！");
+            } else {
+                TIMMessage msg = new TIMMessage();
+                //添加文件内容
+                TIMFileElem elem = new TIMFileElem();
+                elem.setPath(path); //设置文件路径
+                final String fileName = path.substring(path.lastIndexOf("/") + 1);
+                elem.setFileName(fileName); //设置消息展示用的文件名称
+                //将elem添加到消息
+                if (msg.addElement(elem) != 0) {
+                    return;
+                }
+                //发送消息
+                conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                    @Override
+                    public void onError(int code, String desc) {
+                        UIUtils.showTip("发送失败");
+                    }
+
+                    @Override
+                    public void onSuccess(TIMMessage msg) {//发送消息成功
+//                        ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), path, fileName, "[文件]", ChatBean.MESSAGE_TYPE_OUT);
+//                        saveChatBean(_local_message);
+                        UIUtils.showTip("发送成功");
+                    }
+                });
+            }
+        } else {
+            UIUtils.showTip("文件不存在");
+        }
+
+    }
+
     //发送文件给某人
     private void sendFile2SomeOne() {
-        mProgressDialog = ProgressDialog.show(activity, null, "正在发送....", true, true);
         String friendid = "";
         HashMap<Integer, Boolean> state = mState;
         for (int j = 0; j < getCount(); j++) {
@@ -178,7 +274,7 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
         }
 
         //把文件一个一个的发送出去
-        for (int i = 0; i <  YoupanFileAdapter.mChooseFile.size(); i++) {
+        for (int i = 0; i < YoupanFileAdapter.mChooseFile.size(); i++) {
             String sendfile = new Gson().toJson(YoupanFileAdapter.mChooseFile.get(i));
             UIUtils.LogUtils(sendfile);
 
@@ -197,24 +293,30 @@ public class ChooseGroupMemberAdapter extends KJAdapter<Friend> implements Secti
                 // Log.d(tag, "addElement failed");
                 return;
             }
-            //发送消息
-            conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
-                @Override
-                public void onError(int code, String desc) {//发送消息失败
-                    UIUtils.showTip("发送失败");
-                    mProgressDialog.dismiss();
-                    activity.finish();
-                }
+            if (i == YoupanFileAdapter.mChooseFile.size() - 1) {
+                //发送消息
+                conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                    @Override
+                    public void onError(int code, String desc) {//发送消息失败
+                    }
+                    @Override
+                    public void onSuccess(TIMMessage msg) {//发送消息成功
+                        UIUtils.showTip("发送成功");
+                    }
+                });
+            } else {
+                //发送消息
+                conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+                    @Override
+                    public void onError(int code, String desc) {//发送消息失败
+                    }
 
-                @Override
-                public void onSuccess(TIMMessage msg) {//发送消息成功
-                    UIUtils.showTip("发送成功");
-                    mProgressDialog.dismiss();
-                    activity.finish();
-                }
-            });
+                    @Override
+                    public void onSuccess(TIMMessage msg) {//发送消息成功
+                    }
+                });
+            }
         }
-
 
     }
 

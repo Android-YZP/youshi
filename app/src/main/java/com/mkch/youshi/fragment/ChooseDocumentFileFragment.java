@@ -128,7 +128,7 @@ public class ChooseDocumentFileFragment extends Fragment {
                     buildAlertDialog_progress();//下载对话框
                     CommonUtil.makeDri();//创建文件夹,保存用户下载的文件
                     XUtil.downLoadFile(youpanFile, CommonConstants.YOU_PAN_PIC_PATH +
-                            youpanFile.getName(), mProgressDialog,true);
+                            youpanFile.getName(), mProgressDialog, true);
                 }
             }
         });
@@ -156,34 +156,41 @@ public class ChooseDocumentFileFragment extends Fragment {
     }
 
     //将一个文件复制到另外一个文件夹中
-    private void copyFile(String file1, String file2) {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file1);
-            BufferedInputStream bufis = new BufferedInputStream(fis);
-            FileOutputStream fos = new FileOutputStream(file2);
-            BufferedOutputStream bufos = new BufferedOutputStream(fos);
-            int len = 0;
-            while ((len = bufis.read()) != -1) {
-                bufos.write(len);
+    private void copyFile(final String file1, final String file2) {
+        new Thread(new Runnable() {//子线程拷贝大文件
+            @Override
+            public void run() {
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(file1);
+                    BufferedInputStream bufis = new BufferedInputStream(fis);
+                    FileOutputStream fos = new FileOutputStream(file2);
+                    BufferedOutputStream bufos = new BufferedOutputStream(fos);
+                    int len = 0;
+                    while ((len = bufis.read()) != -1) {
+                        bufos.write(len);
+                    }
+                    bufis.close();
+                    bufos.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            bufis.close();
-            bufos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).run();
+
     }
 
     //收藏文件的选择对话框
     private void showOptionDialog(final int position) {
         final String[] items = {"收    藏"};
-        AlertDialog.Builder listDialog =
+        final AlertDialog.Builder listDialog =
                 new AlertDialog.Builder(getActivity());
         listDialog.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 if (which == 0) {
                     mYoupanFiles = DBHelper.findYoupanFile(mType);//更新数据
                     YoupanFile youpanFile = mYoupanFiles.get(position);
@@ -194,11 +201,11 @@ public class ChooseDocumentFileFragment extends Fragment {
                         //储存一个文件到指定文件夹
                         CommonUtil.makeCollectDri();
                         copyFile(local_address, CommonConstants.COLLECT_PATH + youpanFile.getName());
-                        UIUtils.showTip("已收藏该文件");
+                        UIUtils.showTip("收藏成功");
                     } else if (!new File(local_address).exists() && !new File(CommonConstants.COLLECT_PATH + youpanFile.getName()).exists()) {
-                        UIUtils.showTip("请先下载该文件");
+                        UIUtils.showTip("请先下载文件");
                     } else if (new File(CommonConstants.COLLECT_PATH + youpanFile.getName()).exists()) {
-                        UIUtils.showTip("该文件已经收藏");
+                        UIUtils.showTip("文件已经收藏");
                     }
                 }
             }

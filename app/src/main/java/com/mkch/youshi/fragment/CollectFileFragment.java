@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.ChooseGroupMemberActivity;
 import com.mkch.youshi.activity.DropBoxFileActivity;
 import com.mkch.youshi.adapter.CollectFileAdapter;
 import com.mkch.youshi.adapter.YoupanFileAdapter;
@@ -130,7 +131,7 @@ public class CollectFileFragment extends Fragment {
                 if (which == 0) {
                     checkFile(position);
                 } else if (which == 1) {
-                    sendFile();
+                    sendFile(position);
                 } else if (which == 2) {
                     deleteFile(position);
                 }
@@ -154,56 +155,20 @@ public class CollectFileFragment extends Fragment {
     /**
      * 发送文件
      */
-    private void sendFile() {
-
-
-//        //发送文件信息
-//        private void sendFile(final String path) {
-//            if (path == null) return;
-//            File file = new File(path);
-//            if (file.exists()) {
-//                if (file.length() > 1024 * 1024 * 10) {
-//                    Toast.makeText(this, "文件过大，发送失败！", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    TIMMessage msg = new TIMMessage();
-//                    //添加文件内容
-//                    TIMFileElem elem = new TIMFileElem();
-//                    elem.setPath(path); //设置文件路径
-//                    final String fileName = path.substring(path.lastIndexOf("/") + 1);
-//                    elem.setFileName(fileName); //设置消息展示用的文件名称
-//                    //将elem添加到消息
-//                    if (msg.addElement(elem) != 0) {
-//                        Log.d("zzz-------", "addFileElem failed");
-//                        return;
-//                    }
-//                    //发送消息
-//                    conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
-//                        @Override
-//                        public void onError(int code, String desc) {
-//                            Log.d("zzz---sendMessage file", code + "Error:" + desc);
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(TIMMessage msg) {//发送消息成功
-//                            Log.d("zzz---sendMessage file", "sendMessage is success");
-//                            ChatBean _local_message = new ChatBean(selfId, TimesUtils.getNow(), path, fileName, "[文件]", ChatBean.MESSAGE_TYPE_OUT);
-//                            saveChatBean(_local_message);
-//                        }
-//                    });
-//                }
-//            } else {
-//                Toast.makeText(this, "文件不存在", Toast.LENGTH_SHORT).show();
-//            }
-//        }
+    private void sendFile(int position) {
+        CollectFile collectFile = mCollectFiles.get(position);
+        String local_address = collectFile.getLocal_address();
+        Intent intent = new Intent(getActivity(), ChooseGroupMemberActivity.class);
+        intent.putExtra("isSendFile", true);
+        intent.putExtra("isCollectFile", true);
+        intent.putExtra("localAddress", local_address);
+        startActivity(intent);
     }
 
     /**
      * 查看文件
      */
     private void checkFile(int position) {
-        if (YoupanFileAdapter.mChooseNum != 0) {//当有选择的时候,屏蔽listView的选择事件
-            return;
-        }
         mCollectFiles = DBHelper.findCollectFile(mType);//更新数据
         CollectFile collectFile = mCollectFiles.get(position);
         String local_address = collectFile.getLocal_address();
