@@ -19,6 +19,7 @@ import com.mkch.youshi.model.Schjoiner;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
                 new TypeToken<Schedule>() {
                 }.getType());
 
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        ArrayList<Schreport> repPer = DBHelper.findRepPer(mSchedule.getId());
         mTvAffTheme.setText(mSchedule.getTitle());
         mTvAffLab.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
         mTvAffloca.setText(mSchedule.getAddress());
@@ -106,7 +107,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
                 CommonUtil.replaceNumberWeek(mSchedule.getWhich_week()).length() - 1));
 
         // 时间段的初始化
-        ArrayList<Schtime> schTimes = CommonUtil.findSchTime(mSchedule.getId());
+        ArrayList<Schtime> schTimes = DBHelper.findSchTime(mSchedule.getId());
         if (schTimes != null && schTimes.size() != 0 && !schTimes.isEmpty()) {
             for (int i = 0; i < schTimes.size(); i++) {
                 if (i % 2 == 0) {
@@ -125,7 +126,7 @@ public class PersonalDetialsAffairActivity extends BaseDetailActivity {
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
                 mTvAffRepP.setText(mTvAffRepP.getText().toString() +
-                        CommonUtil.findFriName(repPer.get(i).getFriendid()));
+                        DBHelper.findFriName(repPer.get(i).getFriendid()));
             }
         }
         mTvAffBefTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");

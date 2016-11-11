@@ -38,6 +38,7 @@ import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schtime;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.util.WeekUtils;
@@ -578,7 +579,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
         ArrayList<SchEveDay> TodaytimeBucket = CommonUtil.getTimeBucket(Date);
         if (TodaytimeBucket == null) TodaytimeBucket = new ArrayList<>();//防止今天没有其他日程报空异常
         //添加个人习惯到TodaytimeBucket中,让大圆盘显示.
-        ArrayList<Schedule> habitSchs = CommonUtil.findHabitSch();
+        ArrayList<Schedule> habitSchs = DBHelper.findHabitSch();
         if (habitSchs != null) {
             //遍历所有今天的习惯中的周有没有今天的日程
             for (int i = 0; i < habitSchs.size(); i++) {
@@ -588,7 +589,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 String weekOfToday = TimesUtils.getWeekOfDate(Date);
                 if (weeks.contains(weekOfToday)) {
                     //今日有习惯，添加到TodaytimeBucket中，让大圆盘显示。
-                    ArrayList<Schtime> schTime = CommonUtil.findSchTime(habitSch.getId());
+                    ArrayList<Schtime> schTime = DBHelper.findSchTime(habitSch.getId());
                     for (int j = 0; j < schTime.size(); j++) {
                         SchEveDay schEveDay = new SchEveDay();
                         schEveDay.setSid(habitSch.getId());
@@ -629,7 +630,7 @@ public class TodayFragment extends Fragment implements GestureDetector.OnGesture
                 UIUtils.LogUtils("排序之后" + TodaytimeBucket.get(i).getBegin_time());
                 ArcBean _bean1 = new ArcBean(TodaytimeBucket.get(i).getBegin_time()
                         , TodaytimeBucket.get(i).getEnd_time(),
-                        CommonUtil.findSch(TodaytimeBucket.get(i).getSid() + "").get(0).getLabel() + 1,
+                        DBHelper.findSch(TodaytimeBucket.get(i).getSid() + "").get(0).getLabel() + 1,
                         i + 1,
                         0);
                 _arc_beans2.add(_bean1);

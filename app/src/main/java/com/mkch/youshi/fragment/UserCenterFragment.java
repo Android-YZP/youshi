@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.activity.CollectActivity;
 import com.mkch.youshi.activity.MyCollectionActivity;
 import com.mkch.youshi.activity.MyFileActivity;
 import com.mkch.youshi.activity.SettingActivity;
@@ -128,7 +129,7 @@ public class UserCenterFragment extends Fragment {
                         getActivity().startActivity(_intent);
                         break;
                     case R.id.layout_user_center_my_collection:
-                        _intent = new Intent(getActivity(), MyCollectionActivity.class);
+                        _intent = new Intent(getActivity(), CollectActivity.class);
                         getActivity().startActivity(_intent);
                         break;
                     case R.id.layout_user_center_setting:

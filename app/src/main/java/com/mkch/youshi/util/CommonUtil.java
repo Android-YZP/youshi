@@ -35,6 +35,7 @@ import com.mkch.youshi.bean.CloudFileBean;
 import com.mkch.youshi.bean.UnLoginedUser;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.config.CommonConstants;
+import com.mkch.youshi.model.CollectFile;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.model.SchEveDay;
 import com.mkch.youshi.model.Schedule;
@@ -445,141 +446,8 @@ public class CommonUtil {
         return "";
     }
 
-    /**
-     * 用日程id查找该日程的报送人
-     *
-     * @param sid
-     */
-    public static ArrayList<Schreport> findRepPer(int sid) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        try {
-            ArrayList<Schreport> schreports = (ArrayList<Schreport>) mDbManager.selector(Schreport.class).where("sid", "=",
-                    sid).findAll();
-            return schreports;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
-    /**
-     * 用日程id删除该日程的报送人
-     *
-     * @param sid
-     */
-    public static void DeleteRepPer(int sid) {
-        try {
-            DbManager mDbManager = DBHelper.getDbManager();
-            WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("sid", "=", sid + "");
-            mDbManager.delete(Schreport.class, whereBuilder);
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
 
-    /**
-     * 用日程id删除该日程的参与人
-     *
-     * @param sid
-     */
-    public static void DeleteJoinPer(int sid) {
-        try {
-            DbManager mDbManager = DBHelper.getDbManager();
-            WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("sid", "=", sid + "");
-            mDbManager.delete(Schjoiner.class, whereBuilder);
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 用日程id删除该日程的时间段
-     *
-     * @param sid
-     */
-    public static void DeleteSchTime(int sid) {
-        try {
-            DbManager mDbManager = DBHelper.getDbManager();
-            WhereBuilder whereBuilder = WhereBuilder.b();
-            whereBuilder.and("sid", "=", sid + "");
-            mDbManager.delete(Schtime.class, whereBuilder);
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 用日程id查找该日程的时间段
-     *
-     * @param sid
-     */
-    public static ArrayList<Schtime> findSchTime(int sid) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        try {
-            ArrayList<Schtime> schreports = (ArrayList<Schtime>) mDbManager.selector(Schtime.class).where("sid", "=",
-                    sid).findAll();
-            return schreports;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 用报送人id查找该报送人的姓名
-     * 有设置昵称返回昵称
-     * 没有设置昵称返回friendID
-     */
-    public static String findFriName(String friendId) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        ArrayList<Friend> friends;
-        try {
-            friends = (ArrayList<Friend>) mDbManager.selector(Friend.class).where("friendid", "=",
-                    friendId).findAll();
-            Log.d("haha5", friends.size() + "");
-            if (!TextUtils.isEmpty(friends.get(0).getNickname() + "")) {
-                return friends.get(0).getNickname() + " ";
-            } else {
-                return friends.get(0).getPhone() + " ";
-            }
-        } catch (DbException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    /**
-     * 用日程id查找该日程的参与人
-     */
-    public static ArrayList<Schjoiner> findJoinPer(int sid) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        try {
-            ArrayList<Schjoiner> schjoiners = (ArrayList<Schjoiner>) mDbManager.selector(Schjoiner.class).where("sid", "=",
-                    sid).findAll();
-            return schjoiners;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 用id查找一个日程
-     */
-    public static ArrayList<Schedule> findSch(String SchId) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        ArrayList<Schedule> Scheduls = null;
-        try {
-            Scheduls = (ArrayList<Schedule>) mDbManager.selector(Schedule.class).where("id", "=",
-                    SchId).findAll();
-            return Scheduls;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return Scheduls;
-        }
-    }
 
     /**
      * 用id查找一个日程
@@ -597,64 +465,9 @@ public class CommonUtil {
         }
     }
 
-    /**
-     * 用Fileid查找一个文件
-     */
-    public static ArrayList<YoupanFile> findFile(String fileID) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        ArrayList<YoupanFile> Scheduls = null;
-        try {
-            Scheduls = (ArrayList<YoupanFile>) mDbManager.selector(YoupanFile.class).where("file_id", "=",
-                    fileID).findAll();
-            return Scheduls;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return Scheduls;
-        }
-    }
 
-    /**
-     * 添加一个File文件
-     */
-    public static void saveFile(CloudFileBean.DatasBean file) {
-        try {
-            DbManager mDbManager = DBHelper.getDbManager();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String date = sdf.format(new java.util.Date());
-            YoupanFile youpanFile = new YoupanFile();
-            youpanFile.setCreate_time(date);
-            youpanFile.setLocal_address("");
-            youpanFile.setServer_address(CommonConstants.FILE_ROOT_ADDRESS + file.getUrl());
-            youpanFile.setName(file.getFileName());
-            youpanFile.setSuf(file.getFileSuf());
-            youpanFile.setFile_id(file.getFileID() + "");
-            youpanFile.setType(file.getType());//文件类型（1：文档，2：相册，3：视频，4：音频，5：其他）
-            mDbManager.saveOrUpdate(youpanFile);
-        } catch (DbException e) {
-            e.printStackTrace();
-        }
-    }
 
-    /**
-     * 用日程FileID删除该文件
-     */
-    public static void deleteFile(ArrayList<YoupanFile> youpanFiles) {
-        for (int i = 0; i < youpanFiles.size(); i++) {
-            try {
-                DbManager mDbManager = DBHelper.getDbManager();
-                WhereBuilder whereBuilder = WhereBuilder.b();
-                whereBuilder.and("file_id", "=", youpanFiles.get(i).getFile_id() + "");
-                mDbManager.delete(YoupanFile.class, whereBuilder);
-                //本地有文件就删除本地文件
-                File file = new File(youpanFiles.get(i).getLocal_address());
-                if (file.exists())
-                    file.delete();
-                UIUtils.LogUtils(youpanFiles.get(i).getLocal_address() + file.exists() + "");
-            } catch (DbException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
 
     /**
@@ -704,21 +517,8 @@ public class CommonUtil {
     }
 
 
-    /**
-     * 用Type查找一个文件集合
-     */
-    public static ArrayList<YoupanFile> findYoupanFile(int type) {
-        DbManager mDbManager = DBHelper.getDbManager();
-        ArrayList<YoupanFile> youpanFiles = null;
-        try {
-            youpanFiles = (ArrayList<YoupanFile>) mDbManager.selector(YoupanFile.class).where("type", "=",
-                    type).findAll();
-            return youpanFiles;
-        } catch (DbException e) {
-            e.printStackTrace();
-            return youpanFiles;
-        }
-    }
+
+
 
     /**
      * 将123456换成周一周二周三
@@ -802,6 +602,15 @@ public class CommonUtil {
      */
     public static void makeDri() {
         File dirFirstFolder = new File(CommonConstants.YOU_PAN_PIC_PATH);// 方法一：直接使用字符串，如果是安装在存储卡上面，则需要使用sdcard2，但是需要确认是否有存储卡
+        if (!dirFirstFolder.exists()) { //如果该文件夹不存在，则进行创建
+            dirFirstFolder.mkdirs();//创建文件夹
+        }
+    }
+    /**
+     * 创建文件夹
+     */
+    public static void makeCollectDri() {
+        File dirFirstFolder = new File(CommonConstants.COLLECT_PATH);// 方法一：直接使用字符串，如果是安装在存储卡上面，则需要使用sdcard2，但是需要确认是否有存储卡
         if (!dirFirstFolder.exists()) { //如果该文件夹不存在，则进行创建
             dirFirstFolder.mkdirs();//创建文件夹
         }

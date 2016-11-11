@@ -105,8 +105,8 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
                 new TypeToken<Schedule>() {
                 }.getType());
 
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
-        ArrayList<Schjoiner> joinPer = CommonUtil.findJoinPer(mSchedule.getId());
+        ArrayList<Schreport> repPer = DBHelper.findRepPer(mSchedule.getId());
+        ArrayList<Schjoiner> joinPer = DBHelper.findJoinPer(mSchedule.getId());
         Log.e("传过来的数据2", joinPer.size() + "");
 
         mTvEventsTheme.setText(mSchedule.getTitle());
@@ -118,7 +118,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
                 mTvEventsRepPer.setText(mTvEventsRepPer.getText().toString() +
-                        CommonUtil.findFriName(repPer.get(i).getFriendid()));
+                        DBHelper.findFriName(repPer.get(i).getFriendid()));
             }
         }
 
@@ -126,7 +126,7 @@ public class ManyPeopleEventDetial extends BaseDetailActivity {
         if (joinPer != null && joinPer.size() != 0 && !joinPer.isEmpty()) {
             for (int i = 0; i < joinPer.size(); i++) {
                 mTvEventsJoinPer.setText(mTvEventsJoinPer.getText().toString() +
-                        CommonUtil.findFriName(joinPer.get(i).getJoiner_id()));
+                        DBHelper.findFriName(joinPer.get(i).getJoiner_id()));
             }
         }
 

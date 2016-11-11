@@ -95,7 +95,6 @@ public class DropBoxFileActivity extends BaseActivity {
         initView();
         initData();
         setListener();
-
     }
 
     private void initView() {
@@ -263,6 +262,7 @@ public class DropBoxFileActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
+
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -298,7 +298,7 @@ public class DropBoxFileActivity extends BaseActivity {
                         UIUtils.showTip(message);
                         Boolean success = (Boolean) _json_result.get("Success");
                         if (success) {// 网络端删除成功
-                            CommonUtil.deleteFile(YoupanFileAdapter.mChooseFile);
+                            DBHelper.deleteFile(YoupanFileAdapter.mChooseFile);
                             updateUI();
                         }
                     } catch (JSONException e) {

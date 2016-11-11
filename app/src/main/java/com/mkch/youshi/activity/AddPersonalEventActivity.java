@@ -126,7 +126,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
         Intent intent = getIntent();
         mEventID = intent.getIntExtra("eventID", -1);
         if (mEventID != -1) {
-            mScheduleList = CommonUtil.findSch(mEventID + "");
+            mScheduleList = DBHelper.findSch(mEventID + "");
             mEtTheme.setText(mScheduleList.get(0).getTitle());
             //判断选择时间是不是全天
             String begin_time = mScheduleList.get(0).getBegin_time();
@@ -147,7 +147,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
             mRemindTime = mScheduleList.get(0).getAhead_warn();
 
             //好友的初始化显示
-            ArrayList<Schreport> repPer = CommonUtil.findRepPer(mScheduleList.get(0).getId());
+            ArrayList<Schreport> repPer = DBHelper.findRepPer(mScheduleList.get(0).getId());
             UIUtils.showTip(mScheduleList.get(0).getId() + "报送人");
             UIUtils.showTip(repPer.size() + "报送人的数目");
             for (int i = 0; i < repPer.size(); i++) {
@@ -297,7 +297,7 @@ public class AddPersonalEventActivity extends AppCompatActivity implements View.
 //                    return;
 //                }
                 if (mEventID != -1)//当该日程是传送过来的哪个的时候，删除原有的
-                    CommonUtil.DeleteRepPer(mEventID);
+                    DBHelper.DeleteRepPer(mEventID);
                 saveDataOfDb();
                 saveReporterToDb();
                 saveDataOfNet();

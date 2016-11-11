@@ -48,6 +48,7 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
     private User mUser;
     private String _self_openfirename, mGroupName, mMember;
     private boolean isSendFile;
+    private boolean isCollectFile;
 
     @Override
     public void setRootView() {
@@ -65,9 +66,17 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 mFooterView = (TextView) View.inflate(this, R.layout.item_list_contact_count, null);
                 mFooterView.setText(_friends.size() + "位联系人");
                 isSendFile = getIntent().getBooleanExtra("isSendFile", false);
-                if (isSendFile) {//从发送人界面传递过来的
-                    mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
-                    UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
+                isCollectFile = getIntent().getBooleanExtra("isCollectFile", false);
+                String localAddress = getIntent().getStringExtra("localAddress");
+                if (isSendFile) {//转发文件
+                    if (isCollectFile){//转发收藏文件选择联系人
+                        mAdapter = new ChooseGroupMemberAdapter(mListView, _friends
+                                , ChooseGroupMemberActivity.this,true,localAddress);
+                        UIUtils.LogUtils("走到这里了33333333333" + localAddress);
+                    }else {//转发优盘文件选择联系人
+                        mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
+                        UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
+                    }
                 } else {
                     mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
                     UIUtils.LogUtils("走到这里了222222222222" + isSendFile);
@@ -124,7 +133,6 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 }
             }
         });
-
     }
 
     private void createGroup(final String groupName, final ArrayList<String> members) {

@@ -15,6 +15,7 @@ import com.mkch.youshi.R;
 import com.mkch.youshi.model.Schedule;
 import com.mkch.youshi.model.Schreport;
 import com.mkch.youshi.util.CommonUtil;
+import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.UIUtils;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
         mSchedule = gson.fromJson(s,
                 new TypeToken<Schedule>() {
                 }.getType());
-        ArrayList<Schreport> repPer = CommonUtil.findRepPer(mSchedule.getId());
+        ArrayList<Schreport> repPer = DBHelper.findRepPer(mSchedule.getId());
         mTvEventTheme.setText(mSchedule.getTitle());
         mTvEventLabel.setText(CommonUtil.getLabelName(mSchedule.getLabel()));
         mTvEventLoc.setText(mSchedule.getAddress());
@@ -100,7 +101,7 @@ public class PersonalDetialEventActivity extends BaseDetailActivity {
         if (repPer != null && repPer.size() != 0 && !repPer.isEmpty()) {
             for (int i = 0; i < repPer.size(); i++) {
                 mTvEventRepPer.setText(mTvEventRepPer.getText().toString() +
-                        CommonUtil.findFriName(repPer.get(i).getFriendid()));
+                        DBHelper.findFriName(repPer.get(i).getFriendid()));
             }
         }
         mTvEventBeTime.setText("提前" + mSchedule.getAhead_warn() + "分钟");
