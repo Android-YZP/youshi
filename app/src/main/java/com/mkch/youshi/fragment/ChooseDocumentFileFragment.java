@@ -24,7 +24,6 @@ import com.mkch.youshi.model.YoupanFile;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
 import com.mkch.youshi.util.IntentUtil;
-import com.mkch.youshi.util.StringUtils;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.util.XUtil;
 
@@ -44,7 +43,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

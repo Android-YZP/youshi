@@ -110,7 +110,7 @@ public class XUtil {
                             //下载成功之后,更新本地的储存地址
                             try {
                                 DbManager mDbManager = DBHelper.getDbManager();
-                                ArrayList<YoupanFile> files = CommonUtil.findFile(youpanFile.getFile_id() + "");
+                                ArrayList<YoupanFile> files = DBHelper.findFile(youpanFile.getFile_id() + "");
                                 YoupanFile file = files.get(0);
                                 file.setLocal_address(CommonConstants.YOU_PAN_PIC_PATH + youpanFile.getName());
                                 mDbManager.saveOrUpdate(file);
