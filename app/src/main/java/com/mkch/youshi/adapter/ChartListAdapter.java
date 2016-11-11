@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mkch.youshi.R;
+import com.mkch.youshi.bean.GroupFriend;
 import com.mkch.youshi.bean.User;
 import com.mkch.youshi.model.ChatBean;
 import com.mkch.youshi.model.Friend;
-import com.mkch.youshi.model.Group;
 import com.mkch.youshi.util.TimesUtils;
 import com.mkch.youshi.view.Expression;
 
@@ -44,7 +44,7 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private String mSendNickname;//发送者昵称
     private String mFromNickname;//接受者昵称
     private Friend mFriend;
-    private Group mGroup;
+    private List<GroupFriend> mGroupFriends;
     private User mUser;
     private Context mContext;
     private String _headPic;
@@ -57,9 +57,9 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         fullNicname();//填充两个昵称
     }
 
-    public ChartListAdapter(List<ChatBean> mChatBeen, Group mGroup, User mUser, Context mContext) {
+    public ChartListAdapter(List<ChatBean> mChatBeen, List<GroupFriend> mGroupFriends, User mUser, Context mContext) {
         this.mChatBeen = mChatBeen;
-        this.mGroup = mGroup;
+        this.mGroupFriends = mGroupFriends;
         this.mUser = mUser;
         this.mContext = mContext;
         fullNicname();//填充两个昵称
@@ -82,14 +82,8 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 this.mSendNickname = mUser.getOpenFireUserName();
             }
-        } else if (mGroup != null) {
-            String _fromNickname = mGroup.getGroupName();
+        } else if (mGroupFriends != null) {
             String _senderNickname = mUser.getNickName();
-            if (_fromNickname != null && !_fromNickname.equals("") && !_fromNickname.equals("null")) {
-                this.mFromNickname = _fromNickname;
-            } else {
-                this.mFromNickname = mGroup.getGroupID();
-            }
             if (_senderNickname != null && !_senderNickname.equals("") && !_senderNickname.equals("null")) {
                 this.mSendNickname = _senderNickname;
             } else {
@@ -103,8 +97,9 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      *
      * @param chart_bean
      */
-    public void addData(ChatBean chart_bean) {
+    public void addData(ChatBean chart_bean,GroupFriend groupFriend) {
         mChatBeen.add(mChatBeen.size(), chart_bean);
+        mGroupFriends.add(mGroupFriends.size(),groupFriend);
         notifyItemInserted(mChatBeen.size());
     }
 
@@ -200,13 +195,17 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((FromTxtViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
                 }
                 //显示昵称
-                ((FromTxtViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                if (mFriend != null) {
+                    ((FromTxtViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                }else {
+                    ((FromTxtViewHolder) holder).tv_item_from_nickname.setText(mGroupFriends.get(position).getMemberCard());
+                }
                 //显示内容
                 ((FromTxtViewHolder) holder).tv_item_from_txt.setText(_char_bean.getContent());
                 if (mFriend != null) {
                     _headPic = mFriend.getHead_pic();//头像地址
                 } else {
-                    _headPic = mGroup.getGroupHead();
+                    _headPic = mGroupFriends.get(position).getMemberHead();
                 }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromTxtViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
@@ -245,13 +244,17 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((FromSoundViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
                 }
                 //显示昵称
-                ((FromSoundViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                if (mFriend != null) {
+                    ((FromSoundViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                }else {
+                    ((FromSoundViewHolder) holder).tv_item_from_nickname.setText(mGroupFriends.get(position).getMemberCard());
+                }
                 //显示内容
                 ((FromSoundViewHolder) holder).tv_item_from_duration.setText(_char_bean.getDuration() + "'");
                 if (mFriend != null) {
                     _headPic = mFriend.getHead_pic();//头像地址
                 } else {
-                    _headPic = mGroup.getGroupHead();
+                    _headPic = mGroupFriends.get(position).getMemberHead();
                 }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromSoundViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
@@ -290,7 +293,11 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((FromPicViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
                 }
                 //显示昵称
-                ((FromPicViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                if (mFriend != null) {
+                    ((FromPicViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                }else {
+                    ((FromPicViewHolder) holder).tv_item_from_nickname.setText(mGroupFriends.get(position).getMemberCard());
+                }
                 //显示内容
                 String path = _char_bean.getFileName();
                 Bitmap bm = BitmapFactory.decodeFile(path);
@@ -298,7 +305,7 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if (mFriend != null) {
                     _headPic = mFriend.getHead_pic();//头像地址
                 } else {
-                    _headPic = mGroup.getGroupHead();
+                    _headPic = mGroupFriends.get(position).getMemberHead();
                 }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromPicViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
@@ -339,14 +346,18 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((FromFileViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
                 }
                 //显示昵称
-                ((FromFileViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                if (mFriend != null) {
+                    ((FromFileViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                }else {
+                    ((FromFileViewHolder) holder).tv_item_from_nickname.setText(mGroupFriends.get(position).getMemberCard());
+                }
                 //显示内容
                 ((FromFileViewHolder) holder).tv_item_from_file.setText(_char_bean.getFileName());
                 //头像
                 if (mFriend != null) {
                     _headPic = mFriend.getHead_pic();//头像地址
                 } else {
-                    _headPic = mGroup.getGroupHead();
+                    _headPic = mGroupFriends.get(position).getMemberHead();
                 }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromFileViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);
@@ -385,14 +396,18 @@ public class ChartListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     ((FromFaceViewHolder) holder).tv_item_from_time.setText(_char_bean.getDate());
                 }
                 //显示昵称
-                ((FromFaceViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                if (mFriend != null) {
+                    ((FromFaceViewHolder) holder).tv_item_from_nickname.setText(mFromNickname);
+                }else {
+                    ((FromFaceViewHolder) holder).tv_item_from_nickname.setText(mGroupFriends.get(position).getMemberCard());
+                }
                 //显示内容
                 ((FromFaceViewHolder) holder).iv_item_from_face.setImageResource(Expression.expressions[_char_bean.getExpPosition()]);
                 //头像
                 if (mFriend != null) {
                     _headPic = mFriend.getHead_pic();//头像地址
                 } else {
-                    _headPic = mGroup.getGroupHead();
+                    _headPic = mGroupFriends.get(position).getMemberHead();
                 }
                 if (_headPic != null && !_headPic.equals("") && !_headPic.equals("null")) {
                     x.image().bind(((FromFaceViewHolder) holder).iv_item_from_headpic, _headPic, _image_options);

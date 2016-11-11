@@ -1,59 +1,40 @@
 package com.mkch.youshi.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mkch.youshi.R;
 import com.mkch.youshi.adapter.ChooseGroupMemberAdapter;
 import com.mkch.youshi.bean.User;
-import com.mkch.youshi.config.CommonConstants;
 import com.mkch.youshi.model.Friend;
 import com.mkch.youshi.util.CommonUtil;
 import com.mkch.youshi.util.DBHelper;
-import com.mkch.youshi.util.JsonUtils;
 import com.mkch.youshi.util.UIUtils;
 import com.mkch.youshi.view.ContactListView;
-import com.mkch.youshi.view.HanziToPinyin;
 import com.mkch.youshi.view.SideBar;
 import com.tencent.TIMGroupManager;
 import com.tencent.TIMValueCallBack;
 
-import org.apache.http.conn.ConnectTimeoutException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.kymjs.kjframe.KJActivity;
 import org.kymjs.kjframe.ui.BindView;
 import org.xutils.DbManager;
-import org.xutils.common.Callback;
 import org.xutils.ex.DbException;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         .OnTouchingLetterChangedListener, TextWatcher {
-    private static ProgressDialog mProgressDialog = null;
     @BindView(id = R.id.list_choose_group_member)
     private ContactListView mListView;
     private TextView mFooterView;
-    private List<Friend> datas = new ArrayList<>();
     //创建待加入群组的用户列表
     private ArrayList<String> listMembers = new ArrayList<String>();
     private ChooseGroupMemberAdapter mAdapter;
@@ -81,6 +62,8 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         try {
             _friends = dbManager.selector(Friend.class).where("status", "=", "1").and("userid", "=", _self_openfirename).findAll();
             if (_friends != null && _friends.size() > 0) {
+                mFooterView = (TextView) View.inflate(this, R.layout.item_list_contact_count, null);
+                mFooterView.setText(_friends.size() + "位联系人");
                 isSendFile = getIntent().getBooleanExtra("isSendFile", false);
                 if (isSendFile) {//从发送人界面传递过来的
                     mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
@@ -99,8 +82,6 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         if (_intent != null) {
             mGroupName = _intent.getStringExtra("groupName");
         }
-        //加载好友列表
-        getFriendListFromNet();
     }
 
     @Override
@@ -117,7 +98,6 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
         mSideBar.setOnTouchingLetterChangedListener(this);
         mSearchInput.addTextChangedListener(this);
         // 给listView设置adapter
-        mFooterView = (TextView) View.inflate(this, R.layout.item_list_contact_count, null);
         mListView.addFooterView(mFooterView);
         mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,191 +121,6 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
                 } else {
                     UIUtils.showTip("至少选择一个联系人");
                 }
-            }
-        });
-
-    }
-
-    private class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            if (mProgressDialog != null) {
-                mProgressDialog.dismiss();
-            }
-            int flag = msg.what;
-            switch (flag) {
-                case 0:
-                    //出现错误
-                    String errorMsg = (String) msg.getData().getSerializable("ErrorMsg");
-                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
-                    break;
-                case CommonConstants.FLAG_GET_FRIEND_LIST_SHOW:
-                    //加载好友列表
-                    showListVerfy();
-                    break;
-                case CommonConstants.FLAG_CHANGE_ERROR1:
-                    String errorMsg1 = ("认证错误");
-                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg1, Toast.LENGTH_SHORT).show();
-                    break;
-                case CommonConstants.FLAG_CHANGE_ERROR3:
-                    //请求失败
-                    String errorMsg3 = ("请求失败");
-                    Toast.makeText(ChooseGroupMemberActivity.this, errorMsg3, Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    /**
-     * 获取联系人列表
-     */
-    private void showListVerfy() {
-        mFooterView.setText(datas.size() + "位联系人");
-        if (isSendFile) {//从发送人界面传递过来的
-            mAdapter = new ChooseGroupMemberAdapter(mListView, _friends, ChooseGroupMemberActivity.this);
-            UIUtils.LogUtils("走到这里了1111111111" + isSendFile);
-        } else {
-            mAdapter = new ChooseGroupMemberAdapter(mListView, _friends);
-            UIUtils.LogUtils("走到这里了222222222222" + isSendFile);
-        }
-        mListView.setAdapter(mAdapter);
-    }
-
-    private MyHandler myHandler = new MyHandler();
-
-    /**
-     * 获取好友列表
-     */
-    private void getFriendListFromNet() {
-        //使用xutils3访问网络并获取返回值
-        RequestParams requestParams = new RequestParams(CommonConstants.GetFriendList);
-        //包装请求参数
-        String code = CommonUtil.getUserInfo(this).getLoginCode();
-        requestParams.addHeader("sVerifyCode", code);//头信息
-        x.http().post(requestParams, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                if (result != null) {
-                    try {
-                        JSONObject _json_result = new JSONObject(result);
-                        Boolean _success = (Boolean) _json_result.get("Success");
-                        if (_success) {
-                            JSONArray mDatas = _json_result.getJSONArray("Datas");
-                            //再次获取网络端数据时清除datas的数据-from JLJ
-                            datas.clear();
-                            for (int i = 0; i < mDatas.length(); i++) {
-                                Friend data = new Friend();
-                                JSONObject jobj = mDatas.getJSONObject(i);
-                                String HeadPic = JsonUtils.getString(jobj, "HeadPic");//头像
-                                String _head_pic = null;
-                                if (HeadPic != null && !HeadPic.equals("") && !HeadPic.equals("null")) {
-                                    _head_pic = CommonConstants.NOW_ADDRESS_PRE + HeadPic;
-                                    data.setHead_pic(_head_pic);
-                                }
-                                String Nickname = JsonUtils.getString(jobj, "NickName");
-                                String MobileNumber = JsonUtils.getString(jobj, "MobileNumber");
-                                String Remark = JsonUtils.getString(jobj, "Remark");
-                                //若登录名为空，则显示OpenFireUserName
-                                String OpenFireUserName = JsonUtils.getString(jobj, "OpenFireUserName");
-                                if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
-                                    data.setNickname(Nickname);
-                                    data.setPinyin(HanziToPinyin.getPinYin(Nickname));
-                                } else {
-                                    data.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
-                                }
-                                String youshiNumber = JsonUtils.getString(jobj, "UserName");
-                                data.setYoushi_number(youshiNumber);
-                                String place = JsonUtils.getString(jobj, "Place");
-                                data.setPlace(place);
-                                String phoneNumber = JsonUtils.getString(jobj, "PhoneNumber");
-                                data.setPhone_number(phoneNumber);
-                                String description = JsonUtils.getString(jobj, "Description");
-                                data.setDescription(description);
-                                String sex = JsonUtils.getString(jobj, "Sex");
-                                data.setSex(sex);
-                                String sign = JsonUtils.getString(jobj, "Sign");
-                                data.setSign(sign);
-                                data.setFriendid(OpenFireUserName);
-                                datas.add(data);
-                                //存储所有的优时好友列表数据
-                                User _self_user = CommonUtil.getUserInfo(ChooseGroupMemberActivity.this);
-                                int status = 1;//已添加好友
-                                String _self_userid = _self_user.getOpenFireUserName();
-                                try {
-                                    Friend _friend_tab = dbManager.selector(Friend.class)
-                                            .where("friendid", "=", OpenFireUserName)
-                                            .and("userid", "=", _self_userid)
-                                            .findFirst();
-                                    if (_friend_tab != null) {
-                                        //有就更改他的字段
-                                        _friend_tab.setNickname(Nickname);
-                                        if (Nickname != null && !Nickname.equals("") && !Nickname.equals("null")) {
-                                            _friend_tab.setNickname(Nickname);
-                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(Nickname));
-                                        } else {
-                                            _friend_tab.setPinyin(HanziToPinyin.getPinYin(OpenFireUserName));
-                                        }
-                                        _friend_tab.setHead_pic(_head_pic);
-                                        _friend_tab.setPhone(MobileNumber);
-                                        _friend_tab.setRemark(Remark);
-                                        _friend_tab.setStatus(1);
-                                        _friend_tab.setYoushi_number(youshiNumber);
-                                        _friend_tab.setPlace(place);
-                                        _friend_tab.setPhone_number(phoneNumber);
-                                        _friend_tab.setDescription(description);
-                                        _friend_tab.setSex(sex);
-                                        _friend_tab.setSign(sign);
-                                        dbManager.saveOrUpdate(_friend_tab);
-                                    } else {
-                                        //没有就插入
-                                        Friend _friend = new Friend(OpenFireUserName, _head_pic, Nickname, Remark, MobileNumber, youshiNumber, place, phoneNumber, description, sex, sign, status, _self_userid);
-                                        dbManager.save(_friend);
-                                    }
-                                } catch (DbException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            myHandler.sendEmptyMessage(CommonConstants.FLAG_GET_FRIEND_LIST_SHOW);
-                        } else {
-                            String _Message = JsonUtils.getString(_json_result, "Message");
-                            String _ErrorCode = JsonUtils.getString(_json_result, "ErrorCode");
-                            if (_ErrorCode != null && _ErrorCode.equals("1001")) {
-                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR1);
-                            } else if (_ErrorCode != null && _ErrorCode.equals("1002")) {
-                                myHandler.sendEmptyMessage(CommonConstants.FLAG_CHANGE_ERROR3);
-                            } else {
-                                CommonUtil.sendErrorMessage(_Message, myHandler);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                //使用handler通知UI提示用户错误信息
-                if (ex instanceof ConnectException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_ERROR, myHandler);
-                } else if (ex instanceof ConnectTimeoutException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_CONNECT_TIMEOUT, myHandler);
-                } else if (ex instanceof SocketTimeoutException) {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_SERVER_TIMEOUT, myHandler);
-                } else {
-                    CommonUtil.sendErrorMessage(CommonConstants.MSG_DATA_EXCEPTION, myHandler);
-                }
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-            }
-
-            @Override
-            public void onFinished() {
             }
         });
     }
@@ -369,13 +164,12 @@ public class ChooseGroupMemberActivity extends KJActivity implements SideBar
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        ArrayList<Friend> temp = new ArrayList<>(datas);
-        for (Friend data : datas) {
+        ArrayList<Friend> temp = new ArrayList<>(_friends);
+        for (Friend data : _friends) {
             if (data.getNickname().contains(s) || data.getPinyin().contains(s)) {
             } else {
                 temp.remove(data);

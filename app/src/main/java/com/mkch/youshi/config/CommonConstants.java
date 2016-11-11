@@ -8,7 +8,6 @@ public class CommonConstants {
      * zhangjun
      * 从1开始
      */
-    public static final int FLAG_GET_REG_USER_LOGIN_SUCCESS = 1;
     public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_ERROR = 2;
     public static final int FLAG_GET_REG_USER_LOGIN_IMG_VERIFY_SHOW = 3;
     public static final int FLAG_COVER_TOKEN_ID_SUCCESS = 4;
