@@ -1,0 +1,464 @@
+{
+    "code": 0,
+    "msg": "success",
+    "result": {
+        "topic": {
+            "code": 26,
+            "msg": "你打我啊",
+            "result": [
+                {
+                    "title": "浪迹恋爱秘籍",
+                    "vodInfos": [
+                        {
+                        "isAll": "1",
+                         "desc": "比海更深",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": "00:20",    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d1d3f59031868223016302307/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "情书",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": "00:20",    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d1ede09031868223016302939/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "甜蜜蜜",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d269bd9031868223016303575/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "带着瘫痪女友游玩",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2e1199031868223016304093/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "时光穿越",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2e53b9031868223016304185/f0.f40.mp4"
+                        }
+                    ]
+                
+                },{
+                    "title": "你的童年必不可少",
+                    "vodInfos": [
+                        {
+                        "isAll": "0",
+                         "desc": "海洋之歌",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f1ff9031868223016304486/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "海贼王特别篇：黄金之心",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f2009031868223016304487/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "火影忍者：博人传",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f2029031868223016304489/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "熊出没之过年",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f21c9031868223016304492/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "熊出没之年货",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f21f9031868223016304495/f0.f30.mp4"
+                        }
+                    ]
+                
+                },{
+                    "title": "全景无极限",
+                    "vodInfos": [
+                        {
+                        "isAll": "0",
+                         "desc": "城市风光",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e9497d9031868223016563450/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "豪华酒店参观",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e94d609031868223016563525/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "美女酒店拍摄现场",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e951849031868223016563619/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "美女体验酒店",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e955bd9031868223016563711/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "田园酒店实拍",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e95ac69031868223016563873/f0.f40.mp4"
+                        }
+                    ]
+                
+                },{
+                    "title": "人心的探索",
+                    "vodInfos": [
+                        {
+                        "isAll": "1",
+                         "desc": "比利·林恩",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/4a4238749031868222918627966/f0.f40.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "第二个妈妈",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d2f5989031868223016304533/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "人类",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d307259031868223016304978/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "为奴十二年",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d385da9031868223016305606/f0.f30.mp4"
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "辛德勒的名单",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/952e7bfa9031868223016356222/f0.f30.mp4"
+                        },
+                      {
+                        "title": "眼界大开的idea",
+                        "vodInfos": [
+                          {
+                            "isAll": "0",
+                            "desc": "冲浪体验",
+                            "pic1": null,
+                            "pic2": null,
+                            "time": null,
+                            "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/972a3edc9031868223016408145/f0.f40.mp4"
+                          },
+                          {
+                            "isAll": "0",
+                            "desc": "飞机航拍",
+                            "pic1": null,
+                            "pic2": null,
+                            "time": null,
+                            "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/972a431c9031868223016408244/f0.f40.mp4"
+                          },
+                          {
+                            "isAll": "0",
+                            "desc": "高空跳伞",
+                            "pic1": null,
+                            "pic2": null,
+                            "time": null,
+                            "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/972a473e9031868223016408336/f0.f40.mp4"
+                          },
+                          {
+                            "isAll": "1",
+                            "desc": "滑雪实拍",
+                            "pic1": null,
+                            "pic2": null,
+                            "time": null,
+                            "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/972a477a9031868223016408350/f0.f40.mp4"
+                          },
+                          {
+                            "isAll": "1",
+                            "desc": "潜水",
+                            "pic1": null,
+                            "pic2": null,
+                            "time": null,
+                            "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/9784c59b9031868223016458400/f0.f40.mp4"
+                          }
+                        ]
+
+                      }
+                    ]
+                
+                }, {
+                "title": "爱旅行",
+                "vodInfos": [
+                  {
+                    "isAll": "1",
+                    "desc": "普吉岛风光",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": "00:20",
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e19bcf89031868223016040914/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "梯田风光",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": "00:20",
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e1a232e9031868223016041021/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "吴哥窟美景",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e1a27d69031868223016041155/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "西藏人文",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e1a2b8e9031868223016041210/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "自然美景",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e1a2fb19031868223016041303/f0.f40.mp4"
+                  }
+                ]
+
+              },{
+                "title": "大咖剧星",
+                "vodInfos": [
+                  {
+                    "isAll": "0",
+                    "desc": "金刚骷髅岛",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e75b6de9031868223016093057/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "摔跤吧爸爸",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e7643599031868223016094060/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "长城",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/907118009031868223016144980/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "纵横四海",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/8e1a34369031868223016041425/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "水上飞机",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90719f809031868223016145835/f0.f40.mp4"
+                  }
+                ]
+
+              },{
+                "title": "疯视角",
+                "vodInfos": [
+                  {
+                    "isAll": "0",
+                    "desc": "机械姬",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/99e95f2a9031868223016563985/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "生化危机6：终章",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/907209f69031868223016146041/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "星球大战外传：侠盗一号",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90722bc19031868223016146826/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "花满楼",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90cd2eaa9031868223016197748/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "西藏旅游",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90cdae869031868223016198464/f0.f40.mp4"
+                  }
+                ]
+
+              },{
+                "title": "鬼叔怪谈灵异系列",
+                "vodInfos": [
+                  {
+                    "isAll": "0",
+                    "desc": "宝贝计划",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/92d604d19031868223016250121/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "沃伦",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90cdbac29031868223016198721/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "0",
+                    "desc": "新世纪福尔摩斯",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d13bf89031868223016301095/f0.f30.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "绑架",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90ce42e29031868223016199621/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "神秘探案",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/90ce4c2a9031868223016199881/f0.f40.mp4"
+                  }
+                ]
+
+              },{
+                "title": "精彩赛事",
+                "vodInfos": [
+                  {
+                    "isAll": "1",
+                    "desc": "卡丁车",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d150959031868223016301542/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "摩托赛事",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d15cf49031868223016301811/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "赛车比赛",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d1615c9031868223016301927/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "赛车体验",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d162009031868223016301976/f0.f40.mp4"
+                  },
+                  {
+                    "isAll": "1",
+                    "desc": "山地摩托实拍",
+                    "pic1": null,
+                    "pic2": null,
+                    "time": null,
+                    "playurl": "http://1253520711.vod2.myqcloud.com/e45ccc42vodtransgzp1253520711/94d1d07b9031868223016302268/f0.f40.mp4"
+                  }
+                ]
+
+              }
+            ]
+        }
+        }
+        }
