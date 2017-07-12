@@ -1,0 +1,238 @@
+{
+    "code": 0,
+    "msg": "success",
+    "result": {
+        "topic": {
+            "code": 26,
+            "msg": "你打我啊",
+            "result": [
+                {
+                    "title": "爱旅行",
+                    "vodInfos": [
+                        {
+                        "isAll": "1",
+                         "desc": "普吉岛风光",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": "00:20",    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "梯田风光",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": "00:20",    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "吴哥窟美景",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "西藏人文",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null  
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "自然美景",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        }
+                    ]
+                
+                },{
+                    "title": "大咖剧星",
+                    "vodInfos": [
+                        {
+                        "isAll": "0",
+                         "desc": "金刚骷髅岛",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "摔跤吧爸爸",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "长城",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "纵横四海",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null  
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "水上飞机",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        }
+                    ]
+                
+                },{
+                    "title": "疯视角",
+                    "vodInfos": [
+                        {
+                        "isAll": "0",
+                         "desc": "机械姬",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "生化危机6：终章",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "星球大战外传：侠盗一号",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null  
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "花满楼",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "西藏旅游",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        }
+                    ]
+                
+                },{
+                    "title": "鬼叔怪谈灵异系列",
+                    "vodInfos": [
+                        {
+                        "isAll": "0",
+                         "desc": "宝贝计划",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "沃伦",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "0",
+                         "desc": "新世纪福尔摩斯",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "绑架",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null  
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "神秘探案",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        }
+                    ]
+                
+                },{
+                    "title": "精彩赛事",
+                    "vodInfos": [
+                        {
+                        "isAll": "1",
+                         "desc": "卡丁车",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "摩托赛事",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "赛车比赛",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null   
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "赛车体验",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null  
+                        },
+                        {
+                        "isAll": "1",
+                         "desc": "山地摩托实拍",
+                         "pic1": null,
+                         "pic2": null,
+                         "time": null,    
+                         "playurl": null 
+                        }
+                    ]
+                
+                }
+            ]
+        }
+        }
+        }
